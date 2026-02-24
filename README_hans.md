@@ -1,5 +1,7 @@
 # Midea Smart Home
 
+[English](README.md) | 简体中文
+
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
 [![License][license-shield]](LICENSE)
