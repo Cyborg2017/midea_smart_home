@@ -2,6 +2,7 @@ import logging
 from typing import Any
 
 from homeassistant.components.switch import SwitchDeviceClass, SwitchEntity
+from homeassistant.const import Platform
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -18,34 +19,41 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    data = hass.data[DOMAIN][entry.entry_id]
-    coordinator = data["coordinator"]
-    device_id = data[CONF_DEVICE_ID]
-    device_type = data[CONF_DEVICE_TYPE]
-    sn8 = data.get(CONF_SN8, "")
-    sn = data.get(CONF_SN, "")
-    device_name = data.get("device_name", f"Midea Device {device_id}")
+    entry_data = hass.data[DOMAIN][entry.entry_id]
+    entities = []
     
-    device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
-    
-    device_mapping = get_device_mapping(device_type_int, sn8)
-    entities_config = device_mapping.get("entities", {})
-    rationale = device_mapping.get("rationale", ["off", "on"])
-    
-    switch_config = entities_config.get("switch", {})
-    if switch_config:
-        entities = []
-        for switch_id, config in switch_config.items():
-            name = config.get("name", switch_id)
-            translation_key = config.get("translation_key")
-            switch_rationale = config.get("rationale", rationale)
-            entities.append(
-                MideaSwitchEntity(
-                    coordinator, device_id, device_type, sn, sn8, device_name,
-                    switch_id, name, translation_key, switch_rationale
+    for device_id_str, data in entry_data.items():
+        if device_id_str == "device_list":
+            continue
+        coordinator = data.get("coordinator")
+        if not coordinator:
+            continue
+        device_id = data[CONF_DEVICE_ID]
+        device_type = data[CONF_DEVICE_TYPE]
+        sn8 = data.get(CONF_SN8, "")
+        sn = data.get(CONF_SN, "")
+        device_name = data.get("device_name", f"Midea Device {device_id}")
+        
+        device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
+        
+        device_mapping = get_device_mapping(device_type_int, sn8)
+        entities_config = device_mapping.get("entities", {})
+        rationale = device_mapping.get("rationale", ["off", "on"])
+        
+        switch_config = entities_config.get(Platform.SWITCH, {})
+        if switch_config:
+            for switch_id, config in switch_config.items():
+                translation_key = config.get("translation_key")
+                switch_rationale = config.get("rationale", rationale)
+                condition = config.get("condition")
+                entities.append(
+                    MideaSwitchEntity(
+                        coordinator, device_id, device_type, sn, sn8, device_name,
+                        switch_id, translation_key, switch_rationale, condition
+                    )
                 )
-            )
-        async_add_entities(entities)
+    
+    async_add_entities(entities)
 
 class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
     _attr_device_class = SwitchDeviceClass.SWITCH
@@ -59,14 +67,40 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         sn8: str,
         device_name: str,
         switch_id: str,
-        name: str,
         translation_key: str = None,
         rationale: list = None,
+        condition: dict = None,
     ):
         super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, switch_id)
         self._switch_id = switch_id
         self._attr_translation_key = translation_key or switch_id
         self._rationale = rationale or ["off", "on"]
+        self._condition = condition
+    
+    def _check_condition(self) -> bool:
+        if not self._condition:
+            return True
+        
+        data = self.coordinator.data or {}
+        
+        if "not" in self._condition:
+            attrs = self._condition["not"]
+            for attr in attrs:
+                value = data.get(attr)
+                if value:
+                    return False
+            return True
+        
+        if "eq" in self._condition:
+            attr, expected_value = self._condition["eq"]
+            actual_value = data.get(attr)
+            return actual_value == expected_value
+        
+        return True
+    
+    @property
+    def available(self) -> bool:
+        return super().available and self._check_condition()
     
     @property
     def is_on(self) -> bool:
