@@ -146,8 +146,7 @@
                         }
                     }
                 }
-            },
-            "water_heater": { "name": "Thermostat" }
+            }
         },
         "fan": {
             "fan": {
@@ -157,6 +156,11 @@
         "humidifier": {
             "humidifier": {
                 "name": "Humidifier"
+            }
+        },
+        "light": {
+            "light": {
+                "name": "Light"
             }
         },
         "number": {
@@ -753,6 +757,19 @@
         "vacuum": {
             "vacuum": {
                 "name": "Vacuum"
+            }
+        },
+        "water_heater": {
+            "water_heater": {
+                "name": "Water Heater",
+                "state_attributes": {
+                    "operation_mode": {
+                        "state": {
+                            "off": "Off",
+                            "heat": "Heat"
+                        }
+                    }
+                }
             }
         }
     },

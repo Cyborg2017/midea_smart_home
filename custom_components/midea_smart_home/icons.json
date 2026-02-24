@@ -67,14 +67,21 @@
       },
       "thermostat": {
         "default": "mdi:thermostat"
-      },
-      "water_heater": {
-        "default": "mdi:water-boiler"
       }
     },
     "fan": {
       "fan": {
         "default": "mdi:fan"
+      }
+    },
+    "humidifier": {
+      "humidifier": {
+        "default": "mdi:air-humidifier"
+      }
+    },
+    "light": {
+      "light": {
+        "default": "mdi:lightbulb"
       }
     },
     "number": {
@@ -814,6 +821,11 @@
     "vacuum": {
       "vacuum": {
         "default": "mdi:robot-vacuum"
+      }
+    },
+    "water_heater": {
+      "water_heater": {
+        "default": "mdi:water-boiler"
       }
     }
   }
