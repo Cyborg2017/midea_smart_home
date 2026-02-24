@@ -14,6 +14,7 @@ from .entity import MideaBaseEntity
 
 _LOGGER = logging.getLogger(__name__)
 
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
@@ -21,7 +22,7 @@ async def async_setup_entry(
 ) -> None:
     entry_data = hass.data[DOMAIN][entry.entry_id]
     entities = []
-    
+
     for device_id_str, data in entry_data.items():
         if device_id_str == "device_list":
             continue
@@ -33,12 +34,12 @@ async def async_setup_entry(
         sn8 = data.get(CONF_SN8, "")
         sn = data.get(CONF_SN, "")
         device_name = data.get("device_name", f"Midea Device {device_id}")
-        
+
         device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
-        
+
         device_mapping = get_device_mapping(device_type_int, sn8)
         entities_config = device_mapping.get("entities", {})
-        
+
         select_config = entities_config.get(Platform.SELECT, {})
         if select_config:
             for select_id, config in select_config.items():
@@ -56,7 +57,7 @@ async def async_setup_entry(
                         select_id, option_list, options, command, translation_key, condition
                     )
                 )
-    
+
     async_add_entities(entities)
 
 
@@ -85,49 +86,15 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
         self._attr_options = options
         self._last_option: str | None = None
         self._condition = condition
-    
-    def _check_condition(self) -> bool:
-        if not self._condition:
-            return True
-        
-        data = self.coordinator.data or {}
-        
-        if "not" in self._condition:
-            attrs = self._condition["not"]
-            for attr in attrs:
-                value = data.get(attr)
-                if value:
-                    return False
-            return True
-        
-        if "eq" in self._condition:
-            attr, expected_value = self._condition["eq"]
-            actual_value = data.get(attr)
-            return actual_value == expected_value
-        
-        return True
-    
+
     @property
     def available(self) -> bool:
-        return super().available and self._check_condition()
-    
-    def _get_nested_value(self, key: str) -> Any:
-        data = self.coordinator.data or {}
-        if '.' in key:
-            keys = key.split('.')
-            value = data
-            for k in keys:
-                if isinstance(value, dict):
-                    value = value.get(k)
-                else:
-                    return None
-            return value
-        return data.get(key)
-    
-    def _dict_get_selected(self) -> str | None:
+        return super().available and self._check_condition(self._condition)
+
+    def _dict_get_selected_for_select(self) -> str | None:
         if not isinstance(self._options_map, dict):
             return None
-        
+
         for mode, status in self._options_map.items():
             match = True
             for attr, value in status.items():
@@ -148,18 +115,18 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
             if match:
                 return mode
         return None
-    
+
     @property
     def current_option(self) -> str | None:
         if isinstance(self._options_map, dict):
-            matched = self._dict_get_selected()
+            matched = self._dict_get_selected_for_select()
             if matched is not None:
                 self._last_option = matched
                 return matched
-        
+
         data = self.coordinator.data or {}
         value = data.get(self._select_id)
-        
+
         if value is not None:
             if isinstance(value, str):
                 if value in self._options:
@@ -176,25 +143,25 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
                 if 0 <= value < len(self._options):
                     self._last_option = self._options[value]
                     return self._options[value]
-        
+
         return self._last_option
-    
+
     async def async_select_option(self, option: str) -> None:
         if option not in self._options:
             return
-        
+
         self._last_option = option
-        
+
         merged_command = {}
-        
+
         if isinstance(self._options_map, dict) and option in self._options_map:
             option_value = self._options_map[option]
             if isinstance(option_value, dict):
                 merged_command.update(option_value)
-        
+
         if self._command and isinstance(self._command, dict):
             merged_command.update(self._command)
-        
+
         if merged_command:
             await self.coordinator.async_set_control(merged_command)
         else:

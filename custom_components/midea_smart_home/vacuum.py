@@ -23,7 +23,6 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up vacuum entities for Midea devices."""
     entry_data = hass.data[DOMAIN][entry.entry_id]
     entities = []
 
@@ -73,8 +72,9 @@ class MideaVacuumEntity(MideaBaseEntity, StateVacuumEntity):
         self._vacuum_id = vacuum_id
         self._config = config
         self._key_battery_level = config.get("battery_level")
-        self._key_status = config.get("status")
+        self._key_control = config.get("control")
         self._key_fan_speeds = config.get("fan_speeds", {})
+        self._control_actions = config.get("control_actions", {})
 
     @property
     def supported_features(self):
@@ -90,28 +90,23 @@ class MideaVacuumEntity(MideaBaseEntity, StateVacuumEntity):
 
     @property
     def battery_level(self):
-        """Return the battery level of the vacuum cleaner."""
         if self._key_battery_level:
-            data = self.coordinator.data or {}
-            battery = self._get_nested_value(data, self._key_battery_level)
-            if battery is not None:
+            value = self._get_nested_value(self._key_battery_level)
+            if value is not None:
                 try:
-                    return int(battery)
+                    return int(value)
                 except (ValueError, TypeError):
                     return None
         return None
 
     @property
     def status(self):
-        """Return the status of the vacuum cleaner."""
-        if self._key_status:
-            data = self.coordinator.data or {}
-            return self._get_nested_value(data, self._key_status)
+        if self._key_control:
+            return self._get_nested_value(self._key_control)
         return None
 
     @property
     def state(self):
-        """Return the state of the vacuum cleaner."""
         status = self.status
         if not status:
             return None
@@ -134,60 +129,33 @@ class MideaVacuumEntity(MideaBaseEntity, StateVacuumEntity):
 
     @property
     def fan_speed(self):
-        """Return the current fan speed."""
         return self._dict_get_selected(self._key_fan_speeds)
 
     @property
     def fan_speed_list(self):
-        """Return the list of available fan speeds."""
         return list(self._key_fan_speeds.keys())
 
     async def async_start(self):
-        """Start or resume the cleaning task."""
-        if self._key_status:
-            await self.coordinator.async_set_control(self._key_status, "work")
+        if self._key_control:
+            control_value = self._control_actions.get("start", "work")
+            await self._async_set_control(self._key_control, control_value)
 
     async def async_stop(self):
-        """Stop the vacuum cleaner."""
-        if self._key_status:
-            await self.coordinator.async_set_control(self._key_status, "stop")
+        if self._key_control:
+            control_value = self._control_actions.get("stop", "stop")
+            await self._async_set_control(self._key_control, control_value)
 
     async def async_pause(self):
-        """Pause the cleaning task."""
-        if self._key_status:
-            await self.coordinator.async_set_control(self._key_status, "pause")
+        if self._key_control:
+            control_value = self._control_actions.get("pause", "pause")
+            await self._async_set_control(self._key_control, control_value)
 
     async def async_return_to_base(self):
-        """Return the vacuum cleaner to its base."""
-        if self._key_status:
-            await self.coordinator.async_set_control(self._key_status, "charge")
+        if self._key_control:
+            control_value = self._control_actions.get("return", "charge")
+            await self._async_set_control(self._key_control, control_value)
 
     async def async_set_fan_speed(self, fan_speed: str):
-        """Set the fan speed."""
         new_status = self._key_fan_speeds.get(fan_speed)
         if new_status is not None:
             await self.coordinator.async_set_controls(new_status)
-
-    def _get_nested_value(self, data: dict, key):
-        """Get nested value from device data."""
-        if not key or not data:
-            return None
-        if isinstance(key, str):
-            return data.get(key)
-        return None
-
-    def _dict_get_selected(self, options_dict: dict):
-        """Get the currently selected option from a dict of options."""
-        if not options_dict:
-            return None
-        data = self.coordinator.data or {}
-        for key, value in options_dict.items():
-            if isinstance(value, dict):
-                match = True
-                for k, v in value.items():
-                    if data.get(k) != v:
-                        match = False
-                        break
-                if match:
-                    return key
-        return None

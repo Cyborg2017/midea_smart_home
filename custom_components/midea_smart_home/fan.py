@@ -19,7 +19,6 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up fan entities for Midea devices."""
     entry_data = hass.data[DOMAIN][entry.entry_id]
     entities = []
 
@@ -254,39 +253,7 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
         if new_status:
             await self.coordinator.async_set_controls(new_status)
 
-    def _get_status_on_off(self, key):
-        """Get on/off status from device data."""
-        if not key:
-            return False
-        data = self.coordinator.data or {}
-        value = data.get(key)
-        return value == "on" or value == 1 or value is True
-
-    async def _async_set_status_on_off(self, key, value: bool):
-        """Set on/off status."""
-        if not key:
-            return
-        attr_value = "on" if value else "off"
-        await self.coordinator.async_set_control(key, attr_value)
-
-    def _dict_get_selected(self, options_dict: dict):
-        """Get the currently selected option from a dict of options."""
-        if not options_dict:
-            return None
-        data = self.coordinator.data or {}
-        for key, value in options_dict.items():
-            if isinstance(value, dict):
-                match = True
-                for k, v in value.items():
-                    if data.get(k) != v:
-                        match = False
-                        break
-                if match:
-                    return key
-        return None
-
     def _list_get_selected(self, options_list: list):
-        """Get the currently selected option from a list of options."""
         if not options_list:
             return None
         data = self.coordinator.data or {}

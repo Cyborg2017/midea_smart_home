@@ -57,7 +57,7 @@ async def async_setup_entry(
 
 class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
     _attr_device_class = SwitchDeviceClass.SWITCH
-    
+
     def __init__(
         self,
         coordinator: MideaCoordinator,
@@ -76,32 +76,11 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         self._attr_translation_key = translation_key or switch_id
         self._rationale = rationale or ["off", "on"]
         self._condition = condition
-    
-    def _check_condition(self) -> bool:
-        if not self._condition:
-            return True
-        
-        data = self.coordinator.data or {}
-        
-        if "not" in self._condition:
-            attrs = self._condition["not"]
-            for attr in attrs:
-                value = data.get(attr)
-                if value:
-                    return False
-            return True
-        
-        if "eq" in self._condition:
-            attr, expected_value = self._condition["eq"]
-            actual_value = data.get(attr)
-            return actual_value == expected_value
-        
-        return True
-    
+
     @property
     def available(self) -> bool:
-        return super().available and self._check_condition()
-    
+        return super().available and self._check_condition(self._condition)
+
     @property
     def is_on(self) -> bool:
         data = self.coordinator.data or {}

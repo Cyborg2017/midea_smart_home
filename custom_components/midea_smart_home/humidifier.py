@@ -24,7 +24,6 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up humidifier entities for Midea devices."""
     entry_data = hass.data[DOMAIN][entry.entry_id]
     entities = []
 
@@ -86,37 +85,27 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
 
     @property
     def device_class(self):
-        """Return the device class."""
         return self._config.get("device_class", HumidifierDeviceClass.HUMIDIFIER)
 
     @property
     def min_humidity(self) -> int:
-        """Return the minimum humidity."""
         return self._min_humidity
 
     @property
     def max_humidity(self) -> int:
-        """Return the maximum humidity."""
         return self._max_humidity
 
     @property
     def is_on(self):
-        """Return if the humidifier is on."""
         if not self._key_power:
             return False
-        data = self.coordinator.data or {}
-        value = data.get(self._key_power)
-        if isinstance(value, bool):
-            return value
-        return value == "on" or value == 1 or value == "true"
+        return self._get_status_on_off(self._key_power)
 
     @property
     def target_humidity(self):
-        """Return the target humidity."""
         if not self._key_target_humidity:
             return None
-        data = self.coordinator.data or {}
-        value = data.get(self._key_target_humidity)
+        value = self._get_nested_value(self._key_target_humidity)
         if value is not None:
             try:
                 return int(value)
@@ -126,11 +115,9 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
 
     @property
     def current_humidity(self):
-        """Return the current humidity."""
         if not self._key_current_humidity:
             return None
-        data = self.coordinator.data or {}
-        value = self._get_nested_value(data, self._key_current_humidity)
+        value = self._get_nested_value(self._key_current_humidity)
         if value is not None:
             try:
                 return int(float(value))
@@ -140,7 +127,6 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
 
     @property
     def mode(self):
-        """Return the current mode."""
         if not self._key_mode:
             return None
         data = self.coordinator.data or {}
@@ -148,39 +134,26 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
 
     @property
     def available_modes(self):
-        """Return the available modes."""
         if self._key_modes:
             return list(self._key_modes.keys())
         return None
 
     async def async_turn_on(self, **kwargs: Any) -> None:
-        """Turn the humidifier on."""
         if self._key_power:
-            await self.coordinator.async_set_control(self._key_power, "on")
+            await self._async_set_control(self._key_power, "on")
 
     async def async_turn_off(self, **kwargs: Any) -> None:
-        """Turn the humidifier off."""
         if self._key_power:
-            await self.coordinator.async_set_control(self._key_power, "off")
+            await self._async_set_control(self._key_power, "off")
 
     async def async_set_humidity(self, humidity: int) -> None:
-        """Set the target humidity."""
         if self._key_target_humidity:
-            await self.coordinator.async_set_control(self._key_target_humidity, humidity)
+            await self._async_set_control(self._key_target_humidity, humidity)
 
     async def async_set_mode(self, mode: str) -> None:
-        """Set the mode."""
         if mode in self._key_modes:
             mode_config = self._key_modes[mode]
             if isinstance(mode_config, dict):
                 await self.coordinator.async_set_control(mode_config)
             else:
-                await self.coordinator.async_set_control(self._key_mode, mode)
-
-    def _get_nested_value(self, data: dict, key):
-        """Get nested value from device data."""
-        if not key or not data:
-            return None
-        if isinstance(key, str):
-            return data.get(key)
-        return None
+                await self._async_set_control(self._key_mode, mode)
