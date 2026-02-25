@@ -42,67 +42,38 @@
         }
     },
     "device": {
-        "air_conditioner": {
-            "name": "空调"
-        },
-        "air_purifier": {
-            "name": "空气净化器"
-        },
-        "air_sensor": {
-            "name": "空气检测仪"
-        },
-        "bath_heater": {
-            "name": "浴霸"
-        },
-        "cylinder_washing_machine": {
-            "name": "滚筒洗衣机"
-        },
-        "electric_fan": {
-            "name": "风扇"
-        },
-        "electric_heater": {
-            "name": "取暖器"
-        },
-        "electric_water_heater": {
-            "name": "热水器"
-        },
-        "humidifier": {
-            "name": "加湿器"
-        },
-        "laundry_machine": {
-            "name": "晾衣架"
-        },
-        "range_hood": {
-            "name": "油烟机"
-        },
-        "smart_robot_vacuum": {
-            "name": "扫地机器人"
-        },
-        "twin_tub_washing_machine": {
-            "name": "复式滚筒洗衣机"
-        },
-        "unknown_device": {
-            "name": "未知设备"
-        }
+        "air_conditioner": { "name": "空调" },
+        "air_purifier": { "name": "空气净化器" },
+        "air_sensor": { "name": "空气检测仪" },
+        "bath_heater": { "name": "浴霸" },
+        "cylinder_washing_machine": { "name": "滚筒洗衣机" },
+        "electric_fan": { "name": "风扇" },
+        "electric_heater": { "name": "取暖器" },
+        "electric_water_heater": { "name": "热水器" },
+        "humidifier": { "name": "加湿器" },
+        "laundry_machine": { "name": "晾衣架" },
+        "light": { "name": "灯" },
+        "range_hood": { "name": "油烟机" },
+        "smart_robot_vacuum": { "name": "扫地机器人" },
+        "twin_tub_washing_machine": { "name": "复式滚筒洗衣机" },
+        "unknown_device": { "name": "未知设备" }
     },
     "entity": {
         "binary_sensor": {
             "add_water_flag": { "name": "加水提醒" },
             "bucket_water_overheating": { "name": "桶内水温过高" },
-            "carpet_switch": { "name": "地毯模式" },
+            "db_bucket_water_overheating": { "name": "桶内水温过高" },
+            "db_detergent_needed": { "name": "洗涤剂不足" },
+            "db_door_opened": { "name": "门已打开" },
+            "db_drying_tunnel_overheating": { "name": "烘干通道过热" },
             "detergent_lack": { "name": "洗涤剂不足" },
             "device_status": { "name": "设备状态" },
             "door_opened": { "name": "门已打开" },
-            "drying_tunnel_overheating": { "name": "烘干通道过热" },
-            "have_reserve_task": { "name": "预约任务" },
             "is_charging": { "name": "充电中" },
             "softener_lack": { "name": "柔顺剂不足" }
         },
         "button": {
             "left_stove_off": { "name": "关闭左灶" },
-            "light_off": { "name": "关灯" },
-            "light_on": { "name": "开灯" },
-            "middle_stove_off": { "name": "关闭中灶" },
             "right_stove_off": { "name": "关闭右灶" }
         },
         "climate": {
@@ -150,41 +121,26 @@
             }
         },
         "fan": {
-            "fan": {
-                "name": "风扇"
-            }
+            "fan": { "name": "风扇" }
         },
         "humidifier": {
-            "humidifier": {
-                "name": "加湿器"
-            }
+            "humidifier": { "name": "加湿器" }
         },
         "light": {
-            "light": {
-                "name": "智能灯"
-            }
+            "light": { "name": "智能灯" }
         },
         "number": {
-            "auto_purifier_on_pm": { "name": "自动净化PM2.5阈值" },
             "bath_temperature": { "name": "浴霸温度" },
             "custom_height": { "name": "晾衣高度" },
             "custom_timing": { "name": "定时关灯" },
-            "dehydration_speed": { "name": "脱水转速" },
-            "dehydration_time": { "name": "脱水时间" },
-            "detergent": { "name": "洗涤剂" },
-            "dirty_degree": { "name": "脏污程度" },
+            "delay_light_off": { "name": "延时关灯" },
             "heating_temperature": { "name": "加热温度" },
             "hosting_lower": { "name": "PM2.5下限(停止净化)" },
             "hosting_upper": { "name": "PM2.5上限(自动净化)" },
             "light_brightness": { "name": "灯光亮度" },
             "lightness": { "name": "亮度" },
             "main_light_brightness": { "name": "主灯亮度" },
-            "manul_humi_value": { "name": "设定湿度" },
-            "radar_induction_closing_time": { "name": "雷达感应关闭时间" },
-            "softener": { "name": "柔顺剂" },
-            "soak_count": { "name": "浸泡次数" },
-            "temperature": { "name": "温度" },
-            "wash_time": { "name": "洗涤时间" }
+            "radar_induction_closing_time": { "name": "雷达感应关闭时间" }
         },
         "select": {
             "aidry": {
@@ -195,52 +151,48 @@
                 }
             },
             "bias_gear": {
-                "name": "偏置档位"
-            },
-            "bath_direction": {
-                "name": "吹风方向"
-            },
-            "bath_mode": {
-                "name": "浴霸模式",
+                "name": "偏置档位",
                 "state": {
-                    "bath": "浴霸",
-                    "blowing": "吹风",
-                    "close_all": "关闭",
-                    "drying": "烘干",
-                    "drying_fast": "快速烘干",
-                    "drying_safe_power": "安全烘干",
-                    "heating": "暖风",
-                    "morning_ventilation": "晨间换气",
-                    "soft_wind": "柔风",
-                    "strong_heating": "强暖",
-                    "ventilation": "换气",
-                    "weak_heating": "弱暖"
+                    "conversation_scene": "室内对话场景",
+                    "yoga_scene": "瑜伽静修场景"
                 }
-            },
-            "blowing_direction": {
-                "name": "吹风方向"
             },
             "bright": {
                 "name": "亮度",
                 "state": {
-                    "full_bright": "全亮",
-                    "half_bright": "半亮",
-                    "off": "关闭"
-                }
-            },
-            "bright_led": {
-                "name": "LED亮度",
-                "state": {
-                    "dark": "暗",
-                    "exit": "关闭",
-                    "light": "亮"
+                    "full": "全亮",
+                    "half": "半亮",
+                    "off": "熄灭"
                 }
             },
             "db_dehydration_speed": {
-                "name": "脱水转速"
+                "name": "脱水转速",
+                "state": {
+                    "1000rpm": "1000转",
+                    "800rpm": "800转",
+                    "no_spin": "免脱水"
+                }
+            },
+            "db_detergent": {
+                "name": "洗涤剂",
+                "state": {
+                    "l1": "L1",
+                    "l2": "L2",
+                    "l3": "L3",
+                    "off": "关闭"
+                }
             },
             "db_dry": {
-                "name": "烘干"
+                "name": "烘干",
+                "state": {
+                    "off": "关闭",
+                    "smart": "智能",
+                    "timer_120": "定时120",
+                    "timer_180": "定时180",
+                    "timer_240": "定时240",
+                    "timer_30": "定时30",
+                    "timer_60": "定时60"
+                }
             },
             "db_location_selection": {
                 "name": "桶选择",
@@ -250,61 +202,75 @@
                 }
             },
             "db_program": {
-                "name": "程序"
+                "name": "程序",
+                "state": {
+                    "baby_clothes": "童装",
+                    "baby_clothes_dry": "童装烘干",
+                    "clean_stains": "去渍",
+                    "cold_wash": "冷水洗",
+                    "cook_wash": "煮洗",
+                    "fast_wash": "快洗",
+                    "hot_wind_dry": "热风烘干",
+                    "rinsing_dehydration": "漂脱",
+                    "self_wash_5": "自洗5分钟",
+                    "single_dehytration": "单脱水",
+                    "single_drying": "单烘干",
+                    "small_wash_dry": "小件洗烘",
+                    "socks": "袜子",
+                    "standard": "标准",
+                    "underpants": "内裤",
+                    "underwear": "内衣",
+                    "water_ssp": "水洗筒自洁"
+                }
             },
             "db_rinse_count": {
-                "name": "漂洗次数"
+                "name": "漂洗次数",
+                "state": {
+                    "1_time": "1次",
+                    "2_times": "2次",
+                    "3_times": "3次",
+                    "4_times": "4次",
+                    "5_times": "5次"
+                }
             },
             "db_temperature": {
-                "name": "温度"
+                "name": "温度",
+                "state": {
+                    "30c": "30℃",
+                    "40c": "40℃",
+                    "60c": "60℃",
+                    "95c": "95℃",
+                    "cold_water": "冷水"
+                }
             },
             "dehydration_speed": {
                 "name": "脱水转速",
                 "state": {
-                    "0": "关闭",
-                    "1000": "1000 转/分",
-                    "1200": "1200 转/分",
-                    "1400": "1400 转/分",
-                    "400": "400 转/分",
-                    "600": "600 转/分",
-                    "800": "800 转/分"
+                    "1000rpm": "1000转",
+                    "1200rpm": "1200转",
+                    "1400rpm": "1400转",
+                    "400rpm": "400转",
+                    "600rpm": "600转",
+                    "800rpm": "800转",
+                    "no_spin": "免脱水"
                 }
             },
             "detergent": {
                 "name": "洗涤剂",
                 "state": {
-                    "0": "关闭",
-                    "1": "L1",
-                    "2": "L2",
-                    "3": "L3",
-                    "4": "智能",
-                    "5": "L4"
+                    "l1": "L1",
+                    "l2": "L2",
+                    "l3": "L3",
+                    "l4": "L4",
+                    "off": "关闭",
+                    "smart": "智能"
                 }
-            },
-            "drying_direction": {
-                "name": "烘干方向"
             },
             "follow_body_sense": {
                 "name": "跟随体感",
                 "state": {
                     "off": "关闭",
                     "on": "开启"
-                }
-            },
-            "fresh_air_fan_speed": {
-                "name": "新风风速",
-                "state": {
-                    "high": "高速",
-                    "low": "低速",
-                    "medium": "中速",
-                    "turbo": "全速"
-                }
-            },
-            "fresh_air_setting_mode": {
-                "name": "新风模式",
-                "state": {
-                    "fresh_air": "外循环",
-                    "recirculation": "内外循环"
                 }
             },
             "gear": {
@@ -333,19 +299,12 @@
                 }
             },
             "gesture_value": {
-                "name": "手势功能"
-            },
-            "heating_direction": {
-                "name": "加热方向"
-            },
-            "humidity": {
-                "name": "湿度",
+                "name": "手势功能",
                 "state": {
-                    "40%": "40%",
-                    "50%": "50%",
-                    "60%": "60%",
-                    "70%": "70%",
-                    "off": "关闭"
+                    "adjust_speed": "调风速",
+                    "light_toggle": "开关灯",
+                    "power_and_speed": "开关机+调风速",
+                    "power_toggle": "开关机"
                 }
             },
             "humidity_mode": {
@@ -353,7 +312,6 @@
                 "state": {
                     "auto": "自动",
                     "manual": "手动",
-                    "moist_skin": "润肤",
                     "sleep": "睡眠"
                 }
             },
@@ -371,13 +329,6 @@
                     "on": "开启"
                 }
             },
-            "light_color": {
-                "name": "灯光颜色",
-                "state": {
-                    "off": "关闭",
-                    "warm": "暖光"
-                }
-            },
             "light_mode": {
                 "name": "灯光模式",
                 "state": {
@@ -391,95 +342,81 @@
                 "state": {
                     "air_dry": "风干",
                     "auto": "自动",
-                    "constant_humidity": "恒湿",
+                    "bath": "浴霸",
+                    "blowing": "吹风",
+                    "close_all": "关闭",
+                    "drying": "烘干",
                     "factory_test": "工厂测试",
-                    "fast": "快速",
+                    "heating": "暖风",
                     "manual": "手动",
                     "normal": "正常",
                     "normal_continus": "正常持续",
                     "service": "服务",
-                    "sleep": "睡眠"
+                    "sleep": "睡眠",
+                    "ventilation": "换气"
                 }
             },
-            "new_wind_model_exhaust_enable": {
-                "name": "排风",
+            "no_wind_sense": {
+                "name": "无风感",
                 "state": {
-                    "full": "全速",
-                    "high": "高速",
+                    "down_no_wind": "下无风感",
                     "off": "关闭",
-                    "silent": "静音"
-                }
-            },
-            "new_wind_model_intake_enable": {
-                "name": "进风",
-                "state": {
-                    "full": "全速",
-                    "high": "高速",
-                    "low": "低速",
-                    "medium": "中速",
-                    "off": "关闭"
+                    "up_down_no_wind": "上+下无风感",
+                    "up_no_wind": "上无风感"
                 }
             },
             "program": {
                 "name": "程序",
                 "state": {
-                    "air_wash": "空气洗",
                     "baby_clothes": "童装",
                     "big": "大件",
                     "clean_stains": "去渍",
                     "cold_wash": "冷水洗",
-                    "color": "有色衣物",
-                    "cook_wash": "煮洗",
                     "cotton": "棉麻",
+                    "deep_ssp": "深度筒自洁",
                     "down_jacket": "羽绒服",
-                    "eco": "节能",
                     "enzyme": "酵素洗",
-                    "fast_wash": "快洗15分钟",
+                    "fast_wash": "快洗",
                     "fast_wash_30": "快洗30分钟",
-                    "fast_wash_60": "快洗60分钟",
                     "fiber": "化纤",
-                    "green_wool": "绿色羊毛",
                     "intelligent": "智能",
+                    "jacket": "夹克",
                     "jean": "牛仔",
-                    "kids": "童装",
                     "mixed_wash": "混合洗",
                     "new_clothes_wash": "新衣洗",
                     "outdoor": "户外",
-                    "quick_wash": "快洗",
                     "remove_mite_wash": "除螨洗",
                     "rinsing_dehydration": "漂脱",
                     "shirt": "衬衫",
                     "silk": "丝绸",
                     "single_dehytration": "单脱水",
-                    "single_drying": "单烘干",
                     "sport_clothes": "运动服",
+                    "spring_autumn_wash": "春秋洗",
                     "ssp": "筒自洁",
-                    "deep_ssp": "深度筒自洁",
-                    "standard": "标准",
-                    "steep": "浸泡洗",
-                    "sterilize_wash": "杀菌洗",
                     "steam_sterilize_wash": "蒸汽杀菌洗",
+                    "steep": "浸泡洗",
+                    "summer_wash": "夏季洗",
                     "underwear": "内衣",
+                    "winter_wash": "冬季洗",
                     "wool": "羊毛"
                 }
             },
             "soak_count": {
                 "name": "漂洗次数",
                 "state": {
-                    "1": "1 次",
-                    "2": "2 次",
-                    "3": "3 次",
-                    "4": "4 次",
-                    "5": "5 次"
+                    "1_time": "1次",
+                    "2_times": "2次",
+                    "3_times": "3次",
+                    "4_times": "4次"
                 }
             },
             "stains": {
                 "name": "污渍",
                 "state": {
-                    "0": "关闭",
-                    "83": "酱料",
-                    "84": "化妆品",
-                    "85": "果汁"
+                    "fruit": "果渍",
+                    "makeup": "妆渍",
+                    "off": "关闭",
+                    "sauce": "酱渍"
                 }
             },
             "sweep_mop_mode": {
@@ -491,27 +428,15 @@
                     "sweep_then_mop": "先扫后拖"
                 }
             },
-            "swing_angle": {
-                "name": "摆风角度"
-            },
-            "swing_direction": {
-                "name": "摆风方向",
-                "state": {
-                    "both": "双向",
-                    "horizontal": "水平",
-                    "unknown": "未知",
-                    "vertical": "垂直"
-                }
-            },
             "temperature": {
                 "name": "温度",
                 "state": {
-                    "0": "冷水",
-                    "20": "20°C",
-                    "30": "30°C",
-                    "40": "40°C",
-                    "60": "60°C",
-                    "95": "95°C"
+                    "20c": "20℃",
+                    "30c": "30℃",
+                    "40c": "40℃",
+                    "60c": "60℃",
+                    "95c": "95℃",
+                    "cold_water": "冷水"
                 }
             },
             "updown": {
@@ -522,29 +447,14 @@
                     "up": "上升"
                 }
             },
-            "voice": {
-                "name": "声音",
-                "state": {
-                    "close_buzzer": "关闭",
-                    "mute": "静音",
-                    "open_buzzer": "开启"
-                }
-            },
             "water_level": {
                 "name": "水位",
                 "state": {
                     "auto": "自动",
-                    "high": "高",
-                    "low": "低",
-                    "medium": "中"
-                }
-            },
-            "water_tank_setting": {
-                "name": "水箱设置",
-                "state": {
-                    "high": "高",
-                    "low": "低",
-                    "normal": "正常"
+                    "l1": "L1",
+                    "l2": "L2",
+                    "l3": "L3",
+                    "l4": "L4"
                 }
             },
             "wind_direction": {
@@ -560,102 +470,67 @@
                     "swing": "摆风"
                 }
             },
-            "wind_gear": {
-                "name": "风速档位",
-                "state": {
-                    "auto": "自动",
-                    "high": "高档",
-                    "low": "低档",
-                    "medium": "中档"
-                }
-            },
-            "wind_pressure": {
-                "name": "风压档位",
-                "state": {
-                    "extreme": "极高",
-                    "high": "高",
-                    "low": "低",
-                    "medium": "中",
-                    "off": "关闭"
-                }
-            },
             "wind_speed": {
                 "name": "风速",
                 "state": {
-                    "auto": "自动",
                     "high": "高速",
                     "low": "低速",
-                    "medium": "中速"
+                    "middle": "中速"
                 }
             },
-            "work_mode": {
-                "name": "工作模式",
+            "wind_swing_lr_angle": {
+                "name": "左右摆风角度",
                 "state": {
-                    "mop": "单拖",
-                    "sweep": "单扫",
-                    "sweep_and_mop": "扫拖一体",
-                    "sweep_then_mop": "先扫后拖"
+                    "left": "偏左",
+                    "leftmost": "最左",
+                    "middle": "中间",
+                    "off": "关闭",
+                    "right": "偏右",
+                    "rightmost": "最右"
                 }
             },
-            "work_status": {
-                "name": "工作状态",
+            "wind_swing_ud_angle": {
+                "name": "上下摆风角度",
                 "state": {
-                    "dry_mop_off": "拖布烘干关",
-                    "dry_mop_on": "拖布烘干开",
-                    "mop_clean": "拖布清洗",
-                    "video_cruise_pause": "视频巡航暂停",
-                    "video_cruise_start": "视频巡航开始"
+                    "bottom": "最下",
+                    "lower": "偏下",
+                    "middle": "中间",
+                    "off": "关闭",
+                    "top": "最上",
+                    "upper": "偏上"
                 }
             }
         },
         "sensor": {
-            "add_water_flag": { "name": "加水提醒" },
             "air_dry_left_time": { "name": "风干剩余时间" },
-            "appointment_time": { "name": "预约时间" },
             "area": { "name": "清扫面积" },
-            "ash_tvoc": { "name": "TVOC 值" },
             "b7_left_status": { "name": "左灶状态" },
             "b7_right_status": { "name": "右灶状态" },
-            "battery_level": { "name": "电量" },
-            "battery_voltage": { "name": "电池电压" },
-            "bath_heating_time": { "name": "浴霸加热时间" },
-            "bath_temperature": { "name": "浴霸温度" },
+            "b7_vbattery": { "name": "电池电压" },
             "battery_percent": { "name": "电量百分比" },
-            "blowing_speed": { "name": "吹风速度" },
             "co2_value": { "name": "CO2 值" },
+            "cur_humidity": { "name": "当前湿度" },
             "cur_temperature": { "name": "当前温度" },
-            "current_angle": { "name": "当前角度" },
-            "customize_machine_cycle": { "name": "自定义周期" },
+            "current_temperature": { "name": "当前温度" },
+            "db_error_code": { "name": "错误代码" },
+            "db_progress": { "name": "进度" },
+            "db_remain_time": { "name": "剩余时间" },
+            "db_running_status": { "name": "运行状态" },
+            "deep_filter_percent": { "name": "滤芯剩余寿命" },
             "delay_time": { "name": "延时时间" },
             "dehydration_time_value": { "name": "脱水时间" },
-            "detergent_density_global": { "name": "洗涤剂浓度" },
-            "detergent_global": { "name": "洗涤剂全局" },
-            "dryer": { "name": "烘干状态" },
-            "drying_time": { "name": "烘干时间" },
             "dust_count": { "name": "灰尘计数" },
-            "dust_life_time": { "name": "尘盒寿命" },
             "end_time": { "name": "结束时间" },
             "error_code": { "name": "错误代码" },
-            "error_desc": { "name": "错误描述" },
-            "fan_level": { "name": "风扇等级" },
-            "filter_life_time": { "name": "滤芯寿命" },
-            "fresh_air_temp": { "name": "新风温度" },
             "hcho": { "name": "甲醛" },
-            "heating_target_temperature": { "name": "加热目标温度" },
             "humidity": { "name": "湿度" },
             "humidify_feedback": { "name": "加湿反馈" },
-            "indoor_humidity": { "name": "室内湿度" },
             "indoor_temperature": { "name": "室内温度" },
-            "laundry_height": { "name": "晾衣高度" },
-            "lr_diy_down_percent": { "name": "左右自定义下限" },
-            "lr_diy_up_percent": { "name": "左右自定义上限" },
-            "lr_swing_angle": { "name": "左右摆风角度" },
             "main_light_brightness": { "name": "主灯亮度" },
+            "mode": { "name": "模式" },
             "mop": { "name": "拖布模式" },
-            "move_direction": { "name": "移动方向" },
             "night_light_brightness": { "name": "夜灯亮度" },
             "outdoor_temperature": { "name": "室外温度" },
-            "planner_status": { "name": "规划状态" },
             "pm1": { "name": "PM1" },
             "pm10": { "name": "PM10" },
             "pm10_value": { "name": "PM10 值" },
@@ -663,107 +538,67 @@
             "pm25_value": { "name": "PM2.5 值" },
             "power_statistics": { "name": "功率统计" },
             "progress": { "name": "进度" },
-            "real_gear": { "name": "实际档位" },
-            "remaining_time": { "name": "剩余时间" },
-            "room_temp_ctrl": { "name": "室温控制" },
+            "remain_time": { "name": "剩余时间" },
             "running_percent": { "name": "运行百分比" },
             "running_status": { "name": "运行状态" },
-            "sensor_battery": { "name": "电池" },
-            "sensor_temperature": { "name": "温度" },
-            "station_error_desc": { "name": "基站错误描述" },
             "sub_work_status": { "name": "子工作状态" },
+            "sweep_mop_mode": { "name": "扫拖模式" },
             "sweep_then_mop_mode_progress": { "name": "先扫后拖进度" },
-            "switch_status": { "name": "开关状态" },
             "tank_status": { "name": "水箱状态" },
-            "temp_set": { "name": "设定温度" },
-            "temperature": { "name": "设定温度" },
+            "temperature": { "name": "温度" },
             "temperature_feedback": { "name": "温度反馈" },
             "time_off": { "name": "定时关机" },
             "time_on": { "name": "定时开机" },
             "total_elec_value": { "name": "总耗电量" },
+            "total_energy_consumption": { "name": "总能耗" },
             "total_working_time": { "name": "总工作时间" },
-            "tvoc_value": { "name": "TVOC 值" },
-            "ud_diy_down_percent": { "name": "上下自定义下限" },
-            "ud_diy_up_percent": { "name": "上下自定义上限" },
-            "ud_swing_angle": { "name": "上下摆风角度" },
             "voltage": { "name": "电量" },
             "voice_level": { "name": "音量等级" },
             "wash_time_value": { "name": "洗涤时间" },
             "water_feedback": { "name": "水位反馈" },
-            "water_model_go_out": { "name": "外出模式" },
-            "water_station_status": { "name": "水箱状态" },
             "wind_pressure": { "name": "风压" },
-            "work_time": { "name": "工作时间" },
-            "deep_filter_percent": { "name": "滤芯剩余寿命" }
+            "work_status": { "name": "工作状态" },
+            "work_time": { "name": "工作时间" }
         },
         "switch": {
             "airDry_on_off": { "name": "风干" },
-            "anion": { "name": "负离子" },
+            "auto_off": { "name": "自动关机" },
             "auto_power_off": { "name": "自动关机" },
-            "aux_heat": { "name": "辅助加热" },
-            "bath_direction": { "name": "吹风方向" },
             "buzzer": { "name": "蜂鸣器" },
-            "child_lock": { "name": "童锁" },
-            "comfort_fresh_air": { "name": "舒适新风" },
             "control_status": { "name": "启动暂停" },
             "db_baby_lock": { "name": "童锁" },
             "db_control_status": { "name": "启动暂停" },
             "db_power": { "name": "电源" },
-            "delay_enable": { "name": "延时启用" },
-            "dehumidity_trigger": { "name": "除湿触发" },
-            "digit_led_enable": { "name": "数字指示灯" },
-            "disinfect": { "name": "消毒" },
             "display_on_off": { "name": "显示屏" },
             "dry": { "name": "烘干" },
-            "drying_direction": { "name": "烘干方向" },
-            "eco": { "name": "节能模式" },
-            "elec_dust_remove": { "name": "静电除尘" },
+            "efficient": { "name": "高效" },
             "eplus": { "name": "大水量" },
-            "eye_wash": { "name": "护眼洗" },
+            "fengguan_remove_odor": { "name": "风管除味" },
             "frequency_hot": { "name": "变频加热" },
-            "fresh_air_remove_odor": { "name": "新风除味" },
-            "function_led_enable": { "name": "功能指示灯" },
-            "heating_direction": { "name": "加热方向" },
             "humidification": { "name": "加湿" },
             "humidify": { "name": "加湿" },
             "laundry": { "name": "洗衣液" },
             "light": { "name": "照明" },
-            "light_mode": { "name": "灯光模式" },
             "lock": { "name": "童锁" },
-            "manul_humi": { "name": "手动加湿" },
-            "microbubble": { "name": "微气泡" },
-            "mute_voice": { "name": "静音" },
-            "netIons_on_off": { "name": "负离子" },
+            "nightly": { "name": "夜间模式" },
             "offline_voice_function": { "name": "离线语音" },
-            "out_mode": { "name": "外出模式" },
             "power": { "name": "电源" },
             "power_off_timer": { "name": "定时关机" },
             "power_on_timer": { "name": "定时开机" },
             "prevent_straight_wind": { "name": "防直吹" },
+            "prevent_super_cool": { "name": "防过冷" },
             "protect": { "name": "出水断电" },
             "ptc": { "name": "PTC 加热" },
-            "remove_arofene": { "name": "除甲醛" },
-            "remove_peculiar_smell": { "name": "除异味" },
+            "radar_induction_enable": { "name": "雷达感应" },
             "screen_close": { "name": "屏幕关闭" },
+            "screen_display": { "name": "屏幕显示" },
             "smart_sterilize": { "name": "智能杀菌" },
-            "smelly_trigger": { "name": "异味触发" },
-            "temp_wind_switch": { "name": "温风开关" },
-            "temperature_control_switch": { "name": "温控开关" },
-            "ultraviolet_lamp": { "name": "紫外线灯" },
             "voice": { "name": "声音" },
             "waterions": { "name": "杀菌" },
-            "wifi_led_enable": { "name": "WiFi 指示灯" },
-            "wisdom_wind": { "name": "智慧风" },
-            "wind_dispel": { "name": "防直吹" },
-            "auto_fresh_off_co2": { "name": "自动新风关CO2" },
-            "air_exhaust": { "name": "排风" },
-            "cycle_memory": { "name": "记忆洗" },
-            "flocks_switcher": { "name": "毛絮开关" }
+            "wifi_led_enable": { "name": "WiFi 指示灯" }
         },
         "vacuum": {
-            "vacuum": {
-                "name": "扫地机"
-            }
+            "vacuum": { "name": "扫地机" }
         },
         "water_heater": {
             "water_heater": {
@@ -771,8 +606,8 @@
                 "state_attributes": {
                     "operation_mode": {
                         "state": {
-                            "off": "关闭",
-                            "heat": "加热"
+                            "heat": "加热",
+                            "off": "关闭"
                         }
                     }
                 }
@@ -782,12 +617,8 @@
     "options": {
         "step": {
             "init": {
-                "data": {
-                    "update_interval": "更新间隔（秒）"
-                },
-                "data_description": {
-                    "update_interval": "设备状态轮询间隔，范围 1-30 秒"
-                },
+                "data": { "update_interval": "更新间隔（秒）" },
+                "data_description": { "update_interval": "设备状态轮询间隔，范围 1-30 秒" },
                 "title": "Midea Smart Home 选项"
             }
         }

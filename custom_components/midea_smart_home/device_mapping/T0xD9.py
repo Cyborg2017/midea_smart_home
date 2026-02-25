@@ -82,50 +82,50 @@ DEVICE_MAPPING = {
                 },
                 "db_temperature": {
                     "options": {
-                        "冷水": {"db_temperature": 0},
-                        "30℃": {"db_temperature": 3},
-                        "40℃": {"db_temperature": 4},
-                        "60℃": {"db_temperature": 5},
-                        "95℃": {"db_temperature": 6}
+                        "cold_water": {"db_temperature": 0},
+                        "30c": {"db_temperature": 3},
+                        "40c": {"db_temperature": 4},
+                        "60c": {"db_temperature": 5},
+                        "95c": {"db_temperature": 6}
                     },
                     "translation_key": "temperature"
                 },
                 "db_detergent": {
                     "options": {
-                        "关闭": {"db_detergent": 0},
-                        "L1": {"db_detergent": 1},
-                        "L2": {"db_detergent": 2},
-                        "L3": {"db_detergent": 3}
+                        "off": {"db_detergent": 0},
+                        "l1": {"db_detergent": 1},
+                        "l2": {"db_detergent": 2},
+                        "l3": {"db_detergent": 3}
                     },
                     "translation_key": "detergent"
                 },
                 "db_dehydration_speed": {
                     "options": {
-                        "免脱水": {"db_dehydration_speed": 0},
-                        "800转": {"db_dehydration_speed": 3},
-                        "1000转": {"db_dehydration_speed": 4}
+                        "no_spin": {"db_dehydration_speed": 0},
+                        "800rpm": {"db_dehydration_speed": 3},
+                        "1000rpm": {"db_dehydration_speed": 4}
                     },
                     "translation_key": "dehydration_speed"
                 },
                 "db_rinse_count": {
                     "options": {
-                        "1次": {"db_rinse_count": 1},
-                        "2次": {"db_rinse_count": 2},
-                        "3次": {"db_rinse_count": 3},
-                        "4次": {"db_rinse_count": 4},
-                        "5次": {"db_rinse_count": 5}
+                        "1_time": {"db_rinse_count": 1},
+                        "2_times": {"db_rinse_count": 2},
+                        "3_times": {"db_rinse_count": 3},
+                        "4_times": {"db_rinse_count": 4},
+                        "5_times": {"db_rinse_count": 5}
                     },
                     "translation_key": "soak_count"
                 },
                 "db_dry": {
                     "options": {
-                        "关闭": {"db_dry": 0},
-                        "智能": {"db_dry": 1},
-                        "定时240": {"db_dry": 12},
-                        "定时180": {"db_dry": 11},
-                        "定时120": {"db_dry": 7},
-                        "定时60": {"db_dry": 5},
-                        "定时30": {"db_dry": 4}              
+                        "off": {"db_dry": 0},
+                        "smart": {"db_dry": 1},
+                        "timer_240": {"db_dry": 12},
+                        "timer_180": {"db_dry": 11},
+                        "timer_120": {"db_dry": 7},
+                        "timer_60": {"db_dry": 5},
+                        "timer_30": {"db_dry": 4}              
                     }
                 }
             },

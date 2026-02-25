@@ -1,832 +1,184 @@
 {
-  "entity": {
-    "binary_sensor": {
-      "add_water_flag": {
-        "default": "mdi:water-plus"
-      },
-      "bucket_water_overheating": {
-        "default": "mdi:thermometer-alert"
-      },
-      "carpet_switch": {
-        "default": "mdi:rug"
-      },
-      "db_bucket_water_overheating": {
-        "default": "mdi:thermometer-alert"
-      },
-      "db_detergent_needed": {
-        "default": "mdi:spray-bottle-alert"
-      },
-      "db_door_opened": {
-        "default": "mdi:door-open"
-      },
-      "db_drying_tunnel_overheating": {
-        "default": "mdi:thermometer-alert"
-      },
-      "detergent_lack": {
-        "default": "mdi:spray-bottle-alert"
-      },
-      "device_status": {
-        "default": "mdi:devices"
-      },
-      "door_opened": {
-        "default": "mdi:door-open"
-      },
-      "drying_tunnel_overheating": {
-        "default": "mdi:thermometer-alert"
-      },
-      "have_reserve_task": {
-        "default": "mdi:calendar-clock"
-      },
-      "is_charging": {
-        "default": "mdi:battery-charging"
-      },
-      "softener_lack": {
-        "default": "mdi:water-alert"
-      }
-    },
-    "button": {
-      "left_stove_off": {
-        "default": "mdi:stove"
-      },
-      "light_off": {
-        "default": "mdi:lightbulb-off"
-      },
-      "light_on": {
-        "default": "mdi:lightbulb"
-      },
-      "middle_stove_off": {
-        "default": "mdi:stove"
-      },
-      "right_stove_off": {
-        "default": "mdi:stove"
-      }
-    },
-    "climate": {
-      "electric_heater": {
-        "default": "mdi:radiator"
-      },
-      "thermostat": {
-        "default": "mdi:thermostat"
-      }
-    },
-    "fan": {
-      "fan": {
-        "default": "mdi:fan"
-      }
-    },
-    "humidifier": {
-      "humidifier": {
-        "default": "mdi:air-humidifier"
-      }
-    },
-    "light": {
-      "light": {
-        "default": "mdi:lightbulb"
-      }
-    },
-    "number": {
-      "auto_purifier_on_pm": {
-        "default": "mdi:blur"
-      },
-      "bath_temperature": {
-        "default": "mdi:thermometer"
-      },
-      "custom_height": {
-        "default": "mdi:arrow-up-down"
-      },
-      "custom_timing": {
-        "default": "mdi:timer"
-      },
-      "dehydration_speed": {
-        "default": "mdi:speedometer"
-      },
-      "dehydration_time": {
-        "default": "mdi:timer"
-      },
-      "detergent": {
-        "default": "mdi:spray-bottle"
-      },
-      "dirty_degree": {
-        "default": "mdi:blur"
-      },
-      "heating_temperature": {
-        "default": "mdi:thermometer"
-      },
-      "hosting_lower": {
-        "default": "mdi:blur"
-      },
-      "hosting_upper": {
-        "default": "mdi:blur"
-      },
-      "light_brightness": {
-        "default": "mdi:brightness-6"
-      },
-      "lightness": {
-        "default": "mdi:brightness-6"
-      },
-      "main_light_brightness": {
-        "default": "mdi:brightness-6"
-      },
-      "manul_humi_value": {
-        "default": "mdi:water-percent"
-      },
-      "radar_induction_closing_time": {
-        "default": "mdi:timer"
-      },
-      "softener": {
-        "default": "mdi:water"
-      },
-      "soak_count": {
-        "default": "mdi:water"
-      },
-      "temperature": {
-        "default": "mdi:thermometer"
-      },
-      "wash_time": {
-        "default": "mdi:timer"
-      }
-    },
-    "select": {
-      "aidry": {
-        "default": "mdi:air-filter"
-      },
-      "bias_gear": {
-        "default": "mdi:tune"
-      },
-      "bath_direction": {
-        "default": "mdi:arrow-all"
-      },
-      "blowing_direction": {
-        "default": "mdi:arrow-all"
-      },
-      "bright": {
-        "default": "mdi:brightness-6"
-      },
-      "bright_led": {
-        "default": "mdi:brightness-6"
-      },
-      "db_dehydration_speed": {
-        "default": "mdi:speedometer"
-      },
-      "db_dry": {
-        "default": "mdi:tumble-dryer"
-      },
-      "db_location_selection": {
-        "default": "mdi:arrow-left-right"
-      },
-      "db_program": {
-        "default": "mdi:washing-machine"
-      },
-      "db_rinse_count": {
-        "default": "mdi:water"
-      },
-      "db_temperature": {
-        "default": "mdi:thermometer"
-      },
-      "dehydration_speed": {
-        "default": "mdi:speedometer"
-      },
-      "detergent": {
-        "default": "mdi:spray-bottle"
-      },
-      "drying_direction": {
-        "default": "mdi:arrow-all"
-      },
-      "follow_body_sense": {
-        "default": "mdi:human"
-      },
-      "fresh_air_fan_speed": {
-        "default": "mdi:fan"
-      },
-      "fresh_air_setting_mode": {
-        "default": "mdi:air-filter"
-      },
-      "gear": {
-        "default": "mdi:fan"
-      },
-      "gesture": {
-        "default": "mdi:hand-wave"
-      },
-      "gesture_sensitivity_value": {
-        "default": "mdi:tune-variant"
-      },
-      "gesture_value": {
-        "default": "mdi:gesture"
-      },
-      "heating_direction": {
-        "default": "mdi:arrow-all"
-      },
-      "humidity": {
-        "default": "mdi:water-percent"
-      },
-      "humidity_mode": {
-        "default": "mdi:water-percent"
-      },
-      "inverter": {
-        "default": "mdi:sine-wave"
-      },
-      "light": {
-        "default": "mdi:lightbulb"
-      },
-      "light_color": {
-        "default": "mdi:lightbulb"
-      },
-      "light_mode": {
-        "default": "mdi:lightbulb"
-      },
-      "lr_shake_switch": {
-        "default": "mdi:arrow-left-right"
-      },
-      "mode": {
-        "default": "mdi:tune"
-      },
-      "new_wind_model_exhaust_enable": {
-        "default": "mdi:air-filter"
-      },
-      "new_wind_model_intake_enable": {
-        "default": "mdi:air-filter"
-      },
-      "program": {
-        "default": "mdi:washing-machine"
-      },
-      "sleep_sensor": {
-        "default": "mdi:sleep"
-      },
-      "soak_count": {
-        "default": "mdi:water"
-      },
-      "stains": {
-        "default": "mdi:blur"
-      },
-      "sweep_mop_mode": {
-        "default": "mdi:robot-vacuum"
-      },
-      "swing_angle": {
-        "default": "mdi:arrow-all"
-      },
-      "swing_direction": {
-        "default": "mdi:arrow-all"
-      },
-      "temperature": {
-        "default": "mdi:thermometer"
-      },
-      "updown": {
-        "default": "mdi:arrow-up-down"
-      },
-      "ud_shake_switch": {
-        "default": "mdi:arrow-up-down"
-      },
-      "voice": {
-        "default": "mdi:volume-high"
-      },
-      "water_level": {
-        "default": "mdi:water"
-      },
-      "water_tank_setting": {
-        "default": "mdi:water"
-      },
-      "wind_direction": {
-        "default": "mdi:arrow-all"
-      },
-      "wind_gear": {
-        "default": "mdi:fan"
-      },
-      "wind_pressure": {
-        "default": "mdi:weather-windy"
-      },
-      "wind_speed": {
-        "default": "mdi:fan"
-      },
-      "work_mode": {
-        "default": "mdi:robot-vacuum"
-      },
-      "work_status": {
-        "default": "mdi:robot-vacuum"
-      }
-    },
-    "sensor": {
-      "active_oxygen": {
-        "default": "mdi:molecule"
-      },
-      "add_water_flag": {
-        "default": "mdi:water-plus"
-      },
-      "air_dry_left_time": {
-        "default": "mdi:timer"
-      },
-      "appointment_time": {
-        "default": "mdi:clock-outline"
-      },
-      "area": {
-        "default": "mdi:texture-box"
-      },
-      "ash_tvoc": {
-        "default": "mdi:chemical-weapon"
-      },
-      "b7_left_status": {
-        "default": "mdi:stove"
-      },
-      "b7_right_status": {
-        "default": "mdi:stove"
-      },
-      "battery_level": {
-        "default": "mdi:battery"
-      },
-      "battery_percent": {
-        "default": "mdi:battery"
-      },
-      "battery_voltage": {
-        "default": "mdi:battery"
-      },
-      "bath_heating_time": {
-        "default": "mdi:timer"
-      },
-      "bath_temperature": {
-        "default": "mdi:thermometer"
-      },
-      "blowing_speed": {
-        "default": "mdi:fan"
-      },
-      "co2_value": {
-        "default": "mdi:molecule-co2"
-      },
-      "cloud_cycle_jiepai_time2": {
-        "default": "mdi:timer"
-      },
-      "cur_humidity": {
-        "default": "mdi:water-percent"
-      },
-      "cur_temperature": {
-        "default": "mdi:thermometer"
-      },
-      "current_angle": {
-        "default": "mdi:angle-acute"
-      },
-      "current_temperature": {
-        "default": "mdi:thermometer"
-      },
-      "customize_machine_cycle": {
-        "default": "mdi:refresh"
-      },
-      "db_error_code": {
-        "default": "mdi:alert-circle"
-      },
-      "db_progress": {
-        "default": "mdi:progress-check"
-      },
-      "db_remain_time": {
-        "default": "mdi:timer"
-      },
-      "db_running_status": {
-        "default": "mdi:run"
-      },
-      "delay_time": {
-        "default": "mdi:timer"
-      },
-      "deep_filter_percent": {
-        "default": "mdi:air-filter"
-      },
-      "dehydration_time_value": {
-        "default": "mdi:timer"
-      },
-      "detergent_density_global": {
-        "default": "mdi:spray-bottle"
-      },
-      "detergent_global": {
-        "default": "mdi:spray-bottle"
-      },
-      "drying_time": {
-        "default": "mdi:timer"
-      },
-      "dryer": {
-        "default": "mdi:tumble-dryer"
-      },
-      "dust_count": {
-        "default": "mdi:dots-circle"
-      },
-      "dust_life_time": {
-        "default": "mdi:delete"
-      },
-      "end_time": {
-        "default": "mdi:clock-end"
-      },
-      "error_code": {
-        "default": "mdi:alert-circle"
-      },
-      "error_desc": {
-        "default": "mdi:alert-circle"
-      },
-      "expert_step": {
-        "default": "mdi:stairs"
-      },
-      "fan_level": {
-        "default": "mdi:fan"
-      },
-      "filter_life_time": {
-        "default": "mdi:air-filter"
-      },
-      "flocks_remind_period": {
-        "default": "mdi:bell"
-      },
-      "flocks_wash_count": {
-        "default": "mdi:counter"
-      },
-      "fresh_air_temp": {
-        "default": "mdi:thermometer"
-      },
-      "fresh_air_time": {
-        "default": "mdi:timer"
-      },
-      "hcho": {
-        "default": "mdi:chemical-weapon"
-      },
-      "heating_target_temperature": {
-        "default": "mdi:thermometer"
-      },
-      "humidity": {
-        "default": "mdi:water-percent"
-      },
-      "humidify_feedback": {
-        "default": "mdi:water-percent"
-      },
-      "indoor_humidity": {
-        "default": "mdi:water-percent"
-      },
-      "indoor_temperature": {
-        "default": "mdi:thermometer"
-      },
-      "laundry_height": {
-        "default": "mdi:arrow-up-down"
-      },
-      "lr_diy_down_percent": {
-        "default": "mdi:tune"
-      },
-      "lr_diy_up_percent": {
-        "default": "mdi:tune"
-      },
-      "lr_swing_angle": {
-        "default": "mdi:arrow-left-right"
-      },
-      "main_light_brightness": {
-        "default": "mdi:lightbulb-on"
-      },
-      "mode": {
-        "default": "mdi:tune"
-      },
-      "mop": {
-        "default": "mdi:square-rounded"
-      },
-      "move_direction": {
-        "default": "mdi:arrow-all"
-      },
-      "night_light_brightness": {
-        "default": "mdi:lightbulb-on"
-      },
-      "outdoor_temperature": {
-        "default": "mdi:thermometer"
-      },
-      "planner_status": {
-        "default": "mdi:map-marker-path"
-      },
-      "pm1": {
-        "default": "mdi:blur"
-      },
-      "pm10": {
-        "default": "mdi:blur"
-      },
-      "pm10_value": {
-        "default": "mdi:blur"
-      },
-      "pm25": {
-        "default": "mdi:blur"
-      },
-      "pm25_value": {
-        "default": "mdi:blur"
-      },
-      "power_statistics": {
-        "default": "mdi:flash"
-      },
-      "progress": {
-        "default": "mdi:progress-check"
-      },
-      "real_gear": {
-        "default": "mdi:tune"
-      },
-      "remain_time": {
-        "default": "mdi:timer"
-      },
-      "remaining_time": {
-        "default": "mdi:timer"
-      },
-      "remote_control_flag": {
-        "default": "mdi:remote"
-      },
-      "room_temp_ctrl": {
-        "default": "mdi:thermometer"
-      },
-      "running_percent": {
-        "default": "mdi:percent"
-      },
-      "running_status": {
-        "default": "mdi:run"
-      },
-      "sensor_battery": {
-        "default": "mdi:battery"
-      },
-      "sensor_humidify": {
-        "default": "mdi:water-percent"
-      },
-      "sensor_temperature": {
-        "default": "mdi:thermometer"
-      },
-      "softener_density_global": {
-        "default": "mdi:water"
-      },
-      "softener_global": {
-        "default": "mdi:water"
-      },
-      "station_error_desc": {
-        "default": "mdi:alert-circle"
-      },
-      "sub_work_status": {
-        "default": "mdi:cog"
-      },
-      "sweep_then_mop_mode_progress": {
-        "default": "mdi:progress-check"
-      },
-      "switch_status": {
-        "default": "mdi:toggle-switch"
-      },
-      "tank_status": {
-        "default": "mdi:water"
-      },
-      "temp_set": {
-        "default": "mdi:thermometer"
-      },
-      "target_angle": {
-        "default": "mdi:angle-acute"
-      },
-      "temperature": {
-        "default": "mdi:thermometer"
-      },
-      "temperature_feedback": {
-        "default": "mdi:thermometer"
-      },
-      "time_off": {
-        "default": "mdi:timer-off"
-      },
-      "time_on": {
-        "default": "mdi:timer"
-      },
-      "total_elec_value": {
-        "default": "mdi:lightning-bolt"
-      },
-      "total_working_time": {
-        "default": "mdi:timer"
-      },
-      "tvoc_value": {
-        "default": "mdi:chemical-weapon"
-      },
-      "ud_diy_down_percent": {
-        "default": "mdi:tune"
-      },
-      "ud_diy_up_percent": {
-        "default": "mdi:tune"
-      },
-      "ud_swing_angle": {
-        "default": "mdi:arrow-up-down"
-      },
-      "voltage": {
-        "default": "mdi:battery"
-      },
-      "voice_level": {
-        "default": "mdi:volume-high"
-      },
-      "wash_time_value": {
-        "default": "mdi:timer"
-      },
-      "water_feedback": {
-        "default": "mdi:water"
-      },
-      "water_model_go_out": {
-        "default": "mdi:home-export-outline"
-      },
-      "water_station_status": {
-        "default": "mdi:water"
-      },
-      "wind_pressure": {
-        "default": "mdi:weather-windy"
-      },
-      "work_time": {
-        "default": "mdi:timer"
-      }
-    },
-    "switch": {
-      "airDry_on_off": {
-        "default": "mdi:air-humidifier"
-      },
-      "anion": {
-        "default": "mdi:electron-framework"
-      },
-      "auto_comfort_fresh_air": {
-        "default": "mdi:air-filter"
-      },
-      "auto_fresh_off_co2": {
-        "default": "mdi:molecule-co2"
-      },
-      "auto_power_off": {
-        "default": "mdi:timer-off"
-      },
-      "aux_heat": {
-        "default": "mdi:fire"
-      },
-      "bath_direction": {
-        "default": "mdi:arrow-all"
-      },
-      "buzzer": {
-        "default": "mdi:volume-high"
-      },
-      "child_lock": {
-        "default": "mdi:lock"
-      },
-      "comfort_fresh_air": {
-        "default": "mdi:air-filter"
-      },
-      "control_status": {
-        "default": "mdi:play-pause"
-      },
-      "cycle_memory": {
-        "default": "mdi:memory"
-      },
-      "db_baby_lock": {
-        "default": "mdi:lock"
-      },
-      "db_control_status": {
-        "default": "mdi:play-pause"
-      },
-      "db_power": {
-        "default": "mdi:power"
-      },
-      "delay_enable": {
-        "default": "mdi:timer"
-      },
-      "dehumidity_trigger": {
-        "default": "mdi:water-percent"
-      },
-      "digit_led_enable": {
-        "default": "mdi:led-on"
-      },
-      "disinfect": {
-        "default": "mdi:bacteria"
-      },
-      "display_on_off": {
-        "default": "mdi:monitor"
-      },
-      "dry": {
-        "default": "mdi:tumble-dryer"
-      },
-      "drying_direction": {
-        "default": "mdi:arrow-all"
-      },
-      "eco": {
-        "default": "mdi:leaf"
-      },
-      "elec_dust_remove": {
-        "default": "mdi:air-filter"
-      },
-      "eplus": {
-        "default": "mdi:plus-circle"
-      },
-      "eye_wash": {
-        "default": "mdi:eye"
-      },
-      "fengguan_remove_odor": {
-        "default": "mdi:air-filter"
-      },
-      "flocks_switcher": {
-        "default": "mdi:toggle-switch"
-      },
-      "frequency_hot": {
-        "default": "mdi:fire"
-      },
-      "fresh_air_remove_odor": {
-        "default": "mdi:air-filter"
-      },
-      "function_led_enable": {
-        "default": "mdi:led-on"
-      },
-      "heating_direction": {
-        "default": "mdi:arrow-all"
-      },
-      "humidification": {
-        "default": "mdi:water-percent"
-      },
-      "humidify": {
-        "default": "mdi:water-percent"
-      },
-      "laundry": {
-        "default": "mdi:spray-bottle"
-      },
-      "light": {
-        "default": "mdi:lightbulb"
-      },
-      "light_mode": {
-        "default": "mdi:lightbulb"
-      },
-      "lock": {
-        "default": "mdi:lock"
-      },
-      "manul_humi": {
-        "default": "mdi:water-percent"
-      },
-      "microbubble": {
-        "default": "mdi:bubble"
-      },
-      "mute_voice": {
-        "default": "mdi:volume-off"
-      },
-      "netIons_on_off": {
-        "default": "mdi:ion"
-      },
-      "nightly": {
-        "default": "mdi:weather-night"
-      },
-      "offline_voice_function": {
-        "default": "mdi:microphone"
-      },
-      "out_mode": {
-        "default": "mdi:home-export-outline"
-      },
-      "power": {
-        "default": "mdi:power"
-      },
-      "power_off_timer": {
-        "default": "mdi:timer-off"
-      },
-      "power_on_timer": {
-        "default": "mdi:timer"
-      },
-      "prevent_straight_wind": {
-        "default": "mdi:weather-windy"
-      },
-      "protect": {
-        "default": "mdi:shield-check"
-      },
-      "ptc": {
-        "default": "mdi:fire"
-      },
-      "remove_arofene": {
-        "default": "mdi:chemical-weapon"
-      },
-      "remove_peculiar_smell": {
-        "default": "mdi:air-filter"
-      },
-      "screen_close": {
-        "default": "mdi:television-shimmer"
-      },
-      "smart_sterilize": {
-        "default": "mdi:bacteria"
-      },
-      "smelly_trigger": {
-        "default": "mdi:nose"
-      },
-      "temp_wind_switch": {
-        "default": "mdi:thermometer-lines"
-      },
-      "temperature_control_switch": {
-        "default": "mdi:thermometer"
-      },
-      "ultraviolet_lamp": {
-        "default": "mdi:lightbulb-uv"
-      },
-      "voice": {
-        "default": "mdi:microphone"
-      },
-      "waterions": {
-        "default": "mdi:water"
-      },
-      "wifi_led_enable": {
-        "default": "mdi:wifi"
-      },
-      "wisdom_wind": {
-        "default": "mdi:weather-windy"
-      },
-      "wind_dispel": {
-        "default": "mdi:weather-windy"
-      },
-      "air_exhaust": {
-        "default": "mdi:air-filter"
-      }
-    },
-    "vacuum": {
-      "vacuum": {
-        "default": "mdi:robot-vacuum"
-      }
-    },
-    "water_heater": {
-      "water_heater": {
-        "default": "mdi:water-boiler"
-      }
+    "entity": {
+        "binary_sensor": {
+            "add_water_flag": { "default": "mdi:water-plus" },
+            "bucket_water_overheating": { "default": "mdi:thermometer-alert" },
+            "db_bucket_water_overheating": { "default": "mdi:thermometer-alert" },
+            "db_detergent_needed": { "default": "mdi:water-alert" },
+            "db_door_opened": { "default": "mdi:door-open" },
+            "db_drying_tunnel_overheating": { "default": "mdi:thermometer-alert" },
+            "detergent_lack": { "default": "mdi:water-alert" },
+            "door_opened": { "default": "mdi:door-open" },
+            "is_charging": { "default": "mdi:battery-charging" },
+            "softener_lack": { "default": "mdi:water-alert" }
+        },
+        "button": {
+            "left_stove_off": { "default": "mdi:stove" },
+            "right_stove_off": { "default": "mdi:stove" }
+        },
+        "climate": {
+            "electric_heater": { "default": "mdi:thermostat" },
+            "thermostat": { "default": "mdi:thermostat" }
+        },
+        "fan": {
+            "fan": { "default": "mdi:fan" }
+        },
+        "humidifier": {
+            "humidifier": { "default": "mdi:air-humidifier" }
+        },
+        "light": {
+            "light": { "default": "mdi:lightbulb" }
+        },
+        "number": {
+            "bath_temperature": { "default": "mdi:thermometer" },
+            "custom_height": { "default": "mdi:arrow-up-down" },
+            "custom_timing": { "default": "mdi:timer" },
+            "delay_light_off": { "default": "mdi:timer" },
+            "heating_temperature": { "default": "mdi:thermometer" },
+            "hosting_lower": { "default": "mdi:arrow-down" },
+            "hosting_upper": { "default": "mdi:arrow-up" },
+            "light_brightness": { "default": "mdi:brightness-6" },
+            "lightness": { "default": "mdi:brightness-6" },
+            "main_light_brightness": { "default": "mdi:brightness-6" },
+            "radar_induction_closing_time": { "default": "mdi:timer" }
+        },
+        "select": {
+            "aidry": { "default": "mdi:tshirt-crew" },
+            "bias_gear": { "default": "mdi:tune" },
+            "bright": { "default": "mdi:brightness-6" },
+            "db_dehydration_speed": { "default": "mdi:speedometer" },
+            "db_detergent": { "default": "mdi:water" },
+            "db_dry": { "default": "mdi:tumble-dryer" },
+            "db_location_selection": { "default": "mdi:arrow-left-right" },
+            "db_program": { "default": "mdi:washing-machine" },
+            "db_rinse_count": { "default": "mdi:water-sync" },
+            "db_temperature": { "default": "mdi:thermometer" },
+            "dehydration_speed": { "default": "mdi:speedometer" },
+            "detergent": { "default": "mdi:water" },
+            "follow_body_sense": { "default": "mdi:account" },
+            "gear": { "default": "mdi:tune" },
+            "gesture": { "default": "mdi:hand-wave" },
+            "gesture_sensitivity_value": { "default": "mdi:tune" },
+            "gesture_value": { "default": "mdi:hand-wave" },
+            "humidity_mode": { "default": "mdi:air-humidifier" },
+            "inverter": { "default": "mdi:sync" },
+            "light": { "default": "mdi:lightbulb" },
+            "light_mode": { "default": "mdi:lightbulb" },
+            "mode": { "default": "mdi:tune" },
+            "no_wind_sense": { "default": "mdi:wind-turbine-off" },
+            "program": { "default": "mdi:washing-machine" },
+            "soak_count": { "default": "mdi:water-sync" },
+            "stains": { "default": "mdi:water-alert" },
+            "sweep_mop_mode": { "default": "mdi:robot-vacuum" },
+            "temperature": { "default": "mdi:thermometer" },
+            "updown": { "default": "mdi:arrow-up-down" },
+            "water_level": { "default": "mdi:water" },
+            "wind_direction": { "default": "mdi:weather-windy" },
+            "wind_speed": { "default": "mdi:weather-windy" },
+            "wind_swing_lr_angle": { "default": "mdi:arrow-left-right" },
+            "wind_swing_ud_angle": { "default": "mdi:arrow-up-down" }
+        },
+        "sensor": {
+            "air_dry_left_time": { "default": "mdi:timer" },
+            "area": { "default": "mdi:texture-box" },
+            "b7_left_status": { "default": "mdi:stove" },
+            "b7_right_status": { "default": "mdi:stove" },
+            "b7_vbattery": { "default": "mdi:battery" },
+            "battery_percent": { "default": "mdi:battery" },
+            "co2_value": { "default": "mdi:molecule-co2" },
+            "cur_humidity": { "default": "mdi:water-percent" },
+            "cur_temperature": { "default": "mdi:thermometer" },
+            "current_temperature": { "default": "mdi:thermometer" },
+            "db_error_code": { "default": "mdi:alert-circle" },
+            "db_progress": { "default": "mdi:progress-check" },
+            "db_remain_time": { "default": "mdi:timer" },
+            "db_running_status": { "default": "mdi:information" },
+            "deep_filter_percent": { "default": "mdi:air-filter" },
+            "delay_time": { "default": "mdi:timer" },
+            "dehydration_time_value": { "default": "mdi:timer" },
+            "dust_count": { "default": "mdi:cloud" },
+            "end_time": { "default": "mdi:clock-end" },
+            "error_code": { "default": "mdi:alert-circle" },
+            "hcho": { "default": "mdi:molecule" },
+            "humidity": { "default": "mdi:water-percent" },
+            "humidify_feedback": { "default": "mdi:air-humidifier" },
+            "indoor_temperature": { "default": "mdi:thermometer" },
+            "main_light_brightness": { "default": "mdi:brightness-6" },
+            "mode": { "default": "mdi:tune" },
+            "mop": { "default": "mdi:water" },
+            "night_light_brightness": { "default": "mdi:brightness-5" },
+            "outdoor_temperature": { "default": "mdi:thermometer" },
+            "pm1": { "default": "mdi:blur" },
+            "pm10": { "default": "mdi:blur" },
+            "pm10_value": { "default": "mdi:blur" },
+            "pm25": { "default": "mdi:blur" },
+            "pm25_value": { "default": "mdi:blur" },
+            "power_statistics": { "default": "mdi:flash" },
+            "progress": { "default": "mdi:progress-check" },
+            "remain_time": { "default": "mdi:timer" },
+            "running_percent": { "default": "mdi:percent" },
+            "running_status": { "default": "mdi:information" },
+            "sub_work_status": { "default": "mdi:information" },
+            "sweep_mop_mode": { "default": "mdi:robot-vacuum" },
+            "sweep_then_mop_mode_progress": { "default": "mdi:progress-check" },
+            "tank_status": { "default": "mdi:water" },
+            "temperature": { "default": "mdi:thermometer" },
+            "temperature_feedback": { "default": "mdi:thermometer" },
+            "time_off": { "default": "mdi:clock-end" },
+            "time_on": { "default": "mdi:clock-start" },
+            "total_elec_value": { "default": "mdi:flash" },
+            "total_energy_consumption": { "default": "mdi:flash" },
+            "total_working_time": { "default": "mdi:clock-outline" },
+            "voltage": { "default": "mdi:battery" },
+            "voice_level": { "default": "mdi:volume-high" },
+            "wash_time_value": { "default": "mdi:timer" },
+            "water_feedback": { "default": "mdi:water" },
+            "wind_pressure": { "default": "mdi:weather-windy" },
+            "work_status": { "default": "mdi:information" },
+            "work_time": { "default": "mdi:clock-outline" }
+        },
+        "switch": {
+            "airDry_on_off": { "default": "mdi:wind-turbine" },
+            "auto_off": { "default": "mdi:timer-off" },
+            "auto_power_off": { "default": "mdi:timer-off" },
+            "buzzer": { "default": "mdi:volume-high" },
+            "control_status": { "default": "mdi:play-pause" },
+            "db_baby_lock": { "default": "mdi:account-lock" },
+            "db_control_status": { "default": "mdi:play-pause" },
+            "db_power": { "default": "mdi:power" },
+            "display_on_off": { "default": "mdi:monitor" },
+            "dry": { "default": "mdi:tumble-dryer" },
+            "efficient": { "default": "mdi:flash" },
+            "eplus": { "default": "mdi:water-plus" },
+            "fengguan_remove_odor": { "default": "mdi:air-filter" },
+            "frequency_hot": { "default": "mdi:fire" },
+            "humidification": { "default": "mdi:air-humidifier" },
+            "humidify": { "default": "mdi:air-humidifier" },
+            "laundry": { "default": "mdi:washing-machine" },
+            "light": { "default": "mdi:lightbulb" },
+            "lock": { "default": "mdi:account-lock" },
+            "nightly": { "default": "mdi:weather-night" },
+            "offline_voice_function": { "default": "mdi:microphone" },
+            "power": { "default": "mdi:power" },
+            "power_off_timer": { "default": "mdi:timer-off" },
+            "power_on_timer": { "default": "mdi:timer" },
+            "prevent_straight_wind": { "default": "mdi:wind-turbine-off" },
+            "prevent_super_cool": { "default": "mdi:snowflake-off" },
+            "protect": { "default": "mdi:shield" },
+            "ptc": { "default": "mdi:fire" },
+            "radar_induction_enable": { "default": "mdi:radar" },
+            "screen_close": { "default": "mdi:monitor-off" },
+            "screen_display": { "default": "mdi:monitor" },
+            "smart_sterilize": { "default": "mdi:shield-check" },
+            "voice": { "default": "mdi:volume-high" },
+            "waterions": { "default": "mdi:water-check" },
+            "wifi_led_enable": { "default": "mdi:wifi" }
+        },
+        "vacuum": {
+            "vacuum": { "default": "mdi:robot-vacuum" }
+        },
+        "water_heater": {
+            "water_heater": { "default": "mdi:water-boiler" }
+        }
     }
-  }
 }
