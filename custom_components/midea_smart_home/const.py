@@ -17,17 +17,19 @@ CONF_IP = "ip"
 CONF_PORT = "port"
 CONF_SN = "sn"
 CONF_SN8 = "sn8"
+CONF_PRODUCT_MODEL = "product_model"
+CONF_MODEL_NUMBER = "model_number"
+CONF_MANUFACTURER_CODE = "manufacturer_code"
+CONF_DEVICE_NAME = "device_name"
 
 DEFAULT_PORT = 6444
 
 DEVICE_TYPES = {
-    0x13: "Light",
     0x17: "Laundry Machine",
     0x26: "Bath Heater",
     0xAC: "Air Conditioner",
     0xB6: "Range Hood",
     0xB8: "Smart Robot Vacuum",
-    0xBC: "Air Sensor",
     0xD9: "Twin Tub Washing Machine",
     0xDB: "Cylinder Washing Machine",
     0xE2: "Electric Water Heater",
@@ -38,13 +40,11 @@ DEVICE_TYPES = {
 }
 
 DEVICE_TYPES_ZH = {
-    0x13: "智能灯",
     0x17: "晾衣架",
     0x26: "浴霸",
     0xAC: "空调",
     0xB6: "油烟机",
     0xB8: "扫地机器人",
-    0xBC: "空气检测仪",
     0xD9: "复式滚筒洗衣机",
     0xDB: "滚筒洗衣机",
     0xE2: "热水器",
