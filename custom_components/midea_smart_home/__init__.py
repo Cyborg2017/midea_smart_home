@@ -6,13 +6,17 @@ from pathlib import Path
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from .const import (
     CONF_DEVICE_ID,
+    CONF_DEVICE_NAME,
     CONF_DEVICE_TYPE,
     CONF_IP,
     CONF_KEY,
     CONF_LUA_FILE,
+    CONF_PRODUCT_MODEL,
+    CONF_MODEL_NUMBER,
     CONF_PORT,
     CONF_SN,
     CONF_SN8,
@@ -85,19 +89,27 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     
     for device_data in devices:
         device_id = device_data[CONF_DEVICE_ID]
-        ip_address = device_data[CONF_IP]
+        ip_address = device_data.get(CONF_IP, "")
         port = device_data.get(CONF_PORT, DEFAULT_PORT)
-        token = device_data[CONF_TOKEN]
-        key = device_data[CONF_KEY]
-        lua_file = device_data[CONF_LUA_FILE]
+        token = device_data.get(CONF_TOKEN, "")
+        key = device_data.get(CONF_KEY, "")
+        lua_file = device_data.get(CONF_LUA_FILE, "")
         sn = device_data.get(CONF_SN, "")
         sn8 = device_data.get(CONF_SN8, "")
         device_type = device_data.get(CONF_DEVICE_TYPE)
+        device_type_int = int(device_type, 16) if isinstance(device_type, str) else 0
+        
+        device_name = device_data.get(CONF_DEVICE_NAME, "")
+        if not device_name:
+            if language.startswith("zh"):
+                device_name = DEVICE_TYPES_ZH.get(device_type_int, f"设备 {device_type}")
+            else:
+                device_name = DEVICE_TYPES.get(device_type_int, f"Device {device_type}")
         
         lua_common_dir = Path(hass.config.config_dir) / LUA_COMMON_PATH
         
         def init_device():
-            codec = MideaCodec(lua_file, str(lua_common_dir), sn=sn, subtype=0)
+            codec = MideaCodec(lua_file, str(lua_common_dir), sn=sn, subtype=0, device_type=device_type_int, sn8=sn8)
             controller = DeviceController(
                 device_id=device_id,
                 ip_address=ip_address,
@@ -112,16 +124,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         
         controller = await hass.async_add_executor_job(init_device)
         if not controller:
-            _LOGGER.error("Failed to connect to device %s at %s", device_id, ip_address)
+            _LOGGER.warning("Device %s initialization failed", device_id)
             continue
         
-        device_type_int = int(device_type, 16) if isinstance(device_type, str) else 0
         device_mapping = get_device_mapping(device_type_int, sn8)
         calculate_config = device_mapping.get("calculate", {})
         queries = get_queries(device_type_int, sn8)
         centralized = get_centralized(device_type_int, sn8)
         default_values = get_default_values(device_type_int, sn8)
-        
+
         preset_keys = set(centralized)
         entities_cfg = (device_mapping.get("entities") or {})
         for platform_cfg in entities_cfg.values():
@@ -134,14 +145,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     attr_name = ecfg.get("attribute", entity_key)
                     default_values[attr_name] = ecfg["default_value"]
         
-        if device_type_int == 0xD9:
-            default_values["db_location_selection"] = "left"
-        
-        if language.startswith("zh"):
-            device_name = DEVICE_TYPES_ZH.get(device_type_int, f"设备 {device_type}")
-        else:
-            device_name = DEVICE_TYPES.get(device_type_int, f"Device {device_type}")
-        
         coordinator = MideaCoordinator(
             hass,
             controller,
@@ -152,9 +155,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             centralized=centralized,
             default_values=default_values,
             device_type=device_type_int,
+
         )
         
-        await coordinator.async_config_entry_first_refresh()
+        try:
+            await coordinator.async_config_entry_first_refresh()
+        except UpdateFailed as e:
+            _LOGGER.error("Failed first refresh for device %s: %s", device_id, e)
+            controller.close()
+            continue
         
         hass.data[DOMAIN][entry.entry_id][str(device_id)] = {
             "coordinator": coordinator,
@@ -163,10 +172,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             CONF_DEVICE_TYPE: device_type,
             CONF_SN8: sn8,
             CONF_SN: sn,
-            "device_name": device_name,
+            CONF_PRODUCT_MODEL: device_data.get(CONF_PRODUCT_MODEL, ""),
+            CONF_MODEL_NUMBER: device_data.get(CONF_MODEL_NUMBER, ""),
+            CONF_DEVICE_NAME: device_name,
         }
     
-    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    try:
+        await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    except (ValueError, KeyError, OSError) as e:
+        _LOGGER.error("Failed to set up platforms: %s", e)
+        return False
     
     entry.async_on_unload(entry.add_update_listener(async_update_options))
     
@@ -176,9 +191,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         entry_data = hass.data[DOMAIN].pop(entry.entry_id)
         for device_id_str, data in entry_data.items():
-            controller = data["controller"]
-            await hass.async_add_executor_job(controller.close)
-    
+            controller = data.get("controller")
+            if controller:
+                controller.close()
     return unload_ok
 
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
