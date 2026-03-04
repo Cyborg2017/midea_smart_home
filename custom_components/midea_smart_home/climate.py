@@ -12,7 +12,7 @@ from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_DEVICE_ID, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, DOMAIN
+from .const import CONF_DEVICE_ID, CONF_DEVICE_NAME, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, CONF_PRODUCT_MODEL, DOMAIN
 from .coordinator import MideaCoordinator
 from .device_mapping import get_device_mapping
 from .entity import MideaBaseEntity
@@ -38,26 +38,20 @@ async def async_setup_entry(
         device_type = data[CONF_DEVICE_TYPE]
         sn8 = data.get(CONF_SN8, "")
         sn = data.get(CONF_SN, "")
-        device_name = data.get("device_name", f"Midea Device {device_id}")
-
+        model = data.get(CONF_PRODUCT_MODEL, "")
+        device_name = data.get(CONF_DEVICE_NAME, f"Midea Device {device_id}")
         device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
-        _LOGGER.debug(f"设置Climate实体 - 设备类型: 0x{device_type_int:X}, sn8: {sn8}")
-
         device_mapping = get_device_mapping(device_type_int, sn8)
-        _LOGGER.debug(f"设备映射: {device_mapping}")
-
         entities_config = device_mapping.get("entities", {})
         rationale = device_mapping.get("rationale", ["off", "on"])
-
         climate_config = entities_config.get(Platform.CLIMATE, {})
-        _LOGGER.debug(f"实体配置: {climate_config}")
 
         if climate_config:
             for climate_key, config in climate_config.items():
                 entities.append(
                     MideaClimateEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        climate_key, config, rationale
+                        climate_key, config, rationale, model
                     )
                 )
 
@@ -76,10 +70,13 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
         entity_key: str,
         config: dict,
         rationale: list,
+        model: str = None,
     ):
-        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, entity_key)
+        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, entity_key, model)
         self._config = config
         self._rationale = rationale
+        self._attr_unique_id = f"climate.midea_{device_id}_{entity_key}"
+        self.entity_id = f"climate.midea_{device_id}_{entity_key}"
 
         self._key_power = self._config.get("power")
         self._key_hvac_modes = self._config.get("hvac_modes")
@@ -119,7 +116,7 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             features |= ClimateEntityFeature.FAN_MODE
         if self._key_swing_modes is not None:
             features |= ClimateEntityFeature.SWING_MODE
-        if self._aux_heat is not None:
+        if self._aux_heat is not None and hasattr(ClimateEntityFeature, 'AUX_HEAT'):
             features |= ClimateEntityFeature.AUX_HEAT
         self._attr_supported_features = features
 

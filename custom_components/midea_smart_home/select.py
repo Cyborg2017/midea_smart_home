@@ -7,7 +7,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_DEVICE_ID, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, DOMAIN
+from .const import CONF_DEVICE_ID, CONF_DEVICE_NAME, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, CONF_PRODUCT_MODEL, DOMAIN
 from .coordinator import MideaCoordinator
 from .device_mapping import get_device_mapping
 from .entity import MideaBaseEntity
@@ -33,14 +33,13 @@ async def async_setup_entry(
         device_type = data[CONF_DEVICE_TYPE]
         sn8 = data.get(CONF_SN8, "")
         sn = data.get(CONF_SN, "")
-        device_name = data.get("device_name", f"Midea Device {device_id}")
-
+        model = data.get(CONF_PRODUCT_MODEL, "")
+        device_name = data.get(CONF_DEVICE_NAME, f"Midea Device {device_id}")
         device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
-
         device_mapping = get_device_mapping(device_type_int, sn8)
         entities_config = device_mapping.get("entities", {})
-
         select_config = entities_config.get(Platform.SELECT, {})
+        
         if select_config:
             for select_id, config in select_config.items():
                 options = config.get("options", {})
@@ -54,7 +53,7 @@ async def async_setup_entry(
                 entities.append(
                     MideaSelectEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        select_id, option_list, options, command, translation_key, condition
+                        select_id, option_list, options, command, translation_key, condition, model
                     )
                 )
 
@@ -76,14 +75,17 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
         command: dict | None,
         translation_key: str = None,
         condition: dict = None,
+        model: str = None,
     ):
-        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, select_id)
+        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, select_id, model)
         self._select_id = select_id
         self._options = options
         self._options_map = options_map
         self._command = command
         self._attr_translation_key = translation_key or select_id
         self._attr_options = options
+        self._attr_unique_id = f"select.midea_{device_id}_{select_id}"
+        self.entity_id = f"select.midea_{device_id}_{select_id}"
         self._last_option: str | None = None
         self._condition = condition
 
@@ -109,7 +111,7 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
                     elif isinstance(value, str) and str(state_value) != value:
                         match = False
                         break
-                except Exception:
+                except (TypeError, ValueError):
                     match = False
                     break
             if match:

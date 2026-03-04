@@ -7,7 +7,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_DEVICE_ID, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, DOMAIN
+from .const import CONF_DEVICE_ID, CONF_DEVICE_NAME, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, CONF_PRODUCT_MODEL, DOMAIN
 from .coordinator import MideaCoordinator
 from .device_mapping import get_device_mapping
 from .entity import MideaBaseEntity
@@ -32,15 +32,14 @@ async def async_setup_entry(
         device_type = data[CONF_DEVICE_TYPE]
         sn8 = data.get(CONF_SN8, "")
         sn = data.get(CONF_SN, "")
-        device_name = data.get("device_name", f"Midea Device {device_id}")
-        
+        model = data.get(CONF_PRODUCT_MODEL, "")
+        device_name = data.get(CONF_DEVICE_NAME, f"Midea Device {device_id}")
         device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
-        
         device_mapping = get_device_mapping(device_type_int, sn8)
         entities_config = device_mapping.get("entities", {})
         rationale = device_mapping.get("rationale", ["off", "on"])
-        
         switch_config = entities_config.get(Platform.SWITCH, {})
+        
         if switch_config:
             for switch_id, config in switch_config.items():
                 translation_key = config.get("translation_key")
@@ -49,7 +48,7 @@ async def async_setup_entry(
                 entities.append(
                     MideaSwitchEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        switch_id, translation_key, switch_rationale, condition
+                        switch_id, translation_key, switch_rationale, condition, model
                     )
                 )
     
@@ -70,39 +69,46 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         translation_key: str = None,
         rationale: list = None,
         condition: dict = None,
+        model: str = None,
     ):
-        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, switch_id)
+        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, switch_id, model)
         self._switch_id = switch_id
         self._attr_translation_key = translation_key or switch_id
         self._rationale = rationale or ["off", "on"]
         self._condition = condition
+        self._attr_unique_id = f"switch.midea_{device_id}_{switch_id}"
+        self.entity_id = f"switch.midea_{device_id}_{switch_id}"
 
     @property
     def available(self) -> bool:
         return super().available and self._check_condition(self._condition)
 
+    def _get_status_on_off(self, attribute_key: str) -> bool:
+        data = self.coordinator.data or {}
+        status = data.get(attribute_key)
+        if status is None:
+            return False
+        try:
+            return bool(self._rationale.index(status))
+        except ValueError:
+            if isinstance(status, int) or status in ['0', '1']:
+                return int(status) != 0
+            _LOGGER.warning(
+                "The value of attribute %s ('%s') is not in rationale %s",
+                attribute_key, status, self._rationale
+            )
+        return False
+
     @property
     def is_on(self) -> bool:
-        data = self.coordinator.data or {}
-        value = data.get(self._switch_id)
-        if value is None:
-            return False
-        
-        try:
-            return bool(self._rationale.index(value))
-        except ValueError:
-            if isinstance(value, bool):
-                return value
-            elif isinstance(value, int) or value in ['0', '1']:
-                return bool(int(value))
-            elif isinstance(value, str):
-                return value in ["on", "open", "1", "true", "True"]
-        return False
+        return self._get_status_on_off(self._switch_id)
     
+    async def _async_set_status_on_off(self, attribute_key: str, turn_on: bool) -> None:
+        value = self._rationale[int(turn_on)]
+        await self.coordinator.async_set_control(attribute_key, value)
+
     async def async_turn_on(self, **kwargs: Any) -> None:
-        on_value = self._rationale[1] if len(self._rationale) > 1 else "on"
-        await self.coordinator.async_set_control(self._switch_id, on_value)
+        await self._async_set_status_on_off(self._switch_id, True)
     
     async def async_turn_off(self, **kwargs: Any) -> None:
-        off_value = self._rationale[0] if self._rationale else "off"
-        await self.coordinator.async_set_control(self._switch_id, off_value)
+        await self._async_set_status_on_off(self._switch_id, False)

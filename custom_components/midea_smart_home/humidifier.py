@@ -11,7 +11,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_DEVICE_ID, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, DOMAIN
+from .const import CONF_DEVICE_ID, CONF_DEVICE_NAME, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, CONF_PRODUCT_MODEL, DOMAIN
 from .coordinator import MideaCoordinator
 from .device_mapping import get_device_mapping
 from .entity import MideaBaseEntity
@@ -37,20 +37,19 @@ async def async_setup_entry(
         device_type = data[CONF_DEVICE_TYPE]
         sn8 = data.get(CONF_SN8, "")
         sn = data.get(CONF_SN, "")
-        device_name = data.get("device_name", f"Midea Device {device_id}")
-
+        model = data.get(CONF_PRODUCT_MODEL, "")
+        device_name = data.get(CONF_DEVICE_NAME, f"Midea Device {device_id}")
         device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
-
         device_mapping = get_device_mapping(device_type_int, sn8)
         entities_config = device_mapping.get("entities", {})
-
         humidifier_config = entities_config.get(Platform.HUMIDIFIER, {})
+        
         if humidifier_config:
             for humidifier_id, config in humidifier_config.items():
                 entities.append(
                     MideaHumidifierEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        humidifier_id, config
+                        humidifier_id, config, model
                     )
                 )
 
@@ -68,10 +67,13 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
         device_name: str,
         humidifier_id: str,
         config: dict,
+        model: str = None,
     ):
-        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, humidifier_id)
+        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, humidifier_id, model)
         self._humidifier_id = humidifier_id
         self._config = config
+        self._attr_unique_id = f"humidifier.midea_{device_id}_{humidifier_id}"
+        self.entity_id = f"humidifier.midea_{device_id}_{humidifier_id}"
         self._key_power = config.get("power")
         self._key_target_humidity = config.get("target_humidity")
         self._key_current_humidity = config.get("current_humidity")

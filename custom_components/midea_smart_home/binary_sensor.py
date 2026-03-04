@@ -9,7 +9,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_DEVICE_ID, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, DOMAIN
+from .const import CONF_DEVICE_ID, CONF_DEVICE_NAME, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, CONF_PRODUCT_MODEL, DOMAIN
 from .coordinator import MideaCoordinator
 from .device_mapping import get_device_mapping
 from .entity import MideaBaseEntity
@@ -36,16 +36,14 @@ async def async_setup_entry(
         device_type = data[CONF_DEVICE_TYPE]
         sn8 = data.get(CONF_SN8, "")
         sn = data.get(CONF_SN, "")
-        device_name = data.get("device_name", f"Midea Device {device_id}")
-
+        model = data.get(CONF_PRODUCT_MODEL, "")
+        device_name = data.get(CONF_DEVICE_NAME, f"Midea Device {device_id}")
         device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
-
         device_mapping = get_device_mapping(device_type_int, sn8)
         entities_config = device_mapping.get("entities", {})
-
         entities.append(
             MideaDeviceStatusSensorEntity(
-                coordinator, device_id, device_type, sn, sn8, device_name
+                coordinator, device_id, device_type, sn, sn8, device_name, model
             )
         )
 
@@ -59,7 +57,7 @@ async def async_setup_entry(
                 entities.append(
                     MideaBinarySensorEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        sensor_id, device_class, translation_key, on_values, off_values
+                        sensor_id, device_class, translation_key, on_values, off_values, model
                     )
                 )
 
@@ -80,8 +78,11 @@ class MideaDeviceStatusSensorEntity(MideaBaseEntity, BinarySensorEntity):
         sn: str,
         sn8: str,
         device_name: str,
+        model: str = None,
     ):
-        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, "device_status")
+        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, "device_status", model)
+        self._attr_unique_id = f"binary_sensor.midea_{device_id}_device_status"
+        self.entity_id = f"binary_sensor.midea_{device_id}_device_status"
 
     @property
     def is_on(self) -> bool:
@@ -99,16 +100,28 @@ class MideaDeviceStatusSensorEntity(MideaBaseEntity, BinarySensorEntity):
     def extra_state_attributes(self) -> dict:
         """Return extra state attributes with all device data."""
         data = self.coordinator.data or {}
-        attributes = {}
+        device_type_int = int(self._device_type, 16) if isinstance(self._device_type, str) else 0
+        device_type_str = f"T0x{device_type_int:02X}" if device_type_int else self._device_type
+        attributes = {
+            "device_id": str(self._device_id),
+            "sn": self._sn,
+            "sn8": self._sn8,
+            "model": self._model,
+            "device_type": device_type_str,
+        }
         
+        other_attrs = {}
         for key, value in data.items():
             if value is not None:
                 if isinstance(value, (str, int, float, bool)):
-                    attributes[key] = value
+                    other_attrs[key] = value
                 elif isinstance(value, dict):
                     for sub_key, sub_value in value.items():
                         if sub_value is not None and isinstance(sub_value, (str, int, float, bool)):
-                            attributes[f"{key}_{sub_key}"] = sub_value
+                            other_attrs[f"{key}_{sub_key}"] = sub_value
+        
+        for key in sorted(other_attrs.keys()):
+            attributes[key] = other_attrs[key]
         
         return attributes
 
@@ -127,8 +140,9 @@ class MideaBinarySensorEntity(MideaBaseEntity, BinarySensorEntity):
         translation_key: str = None,
         on_values: list = None,
         off_values: list = None,
+        model: str = None,
     ):
-        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, sensor_id)
+        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, sensor_id, model)
         self._sensor_id = sensor_id
         self._on_values = on_values or []
         self._off_values = off_values or []
@@ -138,10 +152,16 @@ class MideaBinarySensorEntity(MideaBaseEntity, BinarySensorEntity):
             except ValueError:
                 pass
         self._attr_translation_key = translation_key or sensor_id
+        self._attr_unique_id = f"binary_sensor.midea_{device_id}_{sensor_id}"
+        self.entity_id = f"binary_sensor.midea_{device_id}_{sensor_id}"
 
     @property
     def is_on(self):
         """Return if the binary sensor is on."""
+        #检查实体是否可用
+        if not self.available:
+            return None
+            
         data = self.coordinator.data or {}
         value = data.get(self._sensor_id)
 
@@ -153,3 +173,8 @@ class MideaBinarySensorEntity(MideaBaseEntity, BinarySensorEntity):
         if isinstance(value, bool):
             return value
         return value == 1 or value == "on" or value == "true"
+    
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return super().available

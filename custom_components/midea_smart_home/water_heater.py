@@ -11,7 +11,7 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_DEVICE_ID, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, DOMAIN
+from .const import CONF_DEVICE_ID, CONF_DEVICE_NAME, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, CONF_PRODUCT_MODEL, DOMAIN
 from .coordinator import MideaCoordinator
 from .device_mapping import get_device_mapping
 from .entity import MideaBaseEntity
@@ -37,26 +37,20 @@ async def async_setup_entry(
         device_type = data[CONF_DEVICE_TYPE]
         sn8 = data.get(CONF_SN8, "")
         sn = data.get(CONF_SN, "")
-        device_name = data.get("device_name", f"Midea Device {device_id}")
-
+        model = data.get(CONF_PRODUCT_MODEL, "")
+        device_name = data.get(CONF_DEVICE_NAME, f"Midea Device {device_id}")
         device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
-        _LOGGER.debug(f"设置Water Heater实体 - 设备类型: 0x{device_type_int:X}, sn8: {sn8}")
-
         device_mapping = get_device_mapping(device_type_int, sn8)
-        _LOGGER.debug(f"设备映射: {device_mapping}")
-
         entities_config = device_mapping.get("entities", {})
         rationale = device_mapping.get("rationale", ["off", "on"])
-
         water_heater_config = entities_config.get(Platform.WATER_HEATER, {})
-        _LOGGER.debug(f"实体配置: {water_heater_config}")
 
         if water_heater_config:
             for water_heater_key, config in water_heater_config.items():
                 entities.append(
                     MideaWaterHeaterEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        water_heater_key, config, rationale
+                        water_heater_key, config, rationale, model
                     )
                 )
 
@@ -75,10 +69,13 @@ class MideaWaterHeaterEntity(MideaBaseEntity, WaterHeaterEntity):
         entity_key: str,
         config: dict,
         rationale: list,
+        model: str = None,
     ):
-        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, entity_key)
+        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, entity_key, model)
         self._config = config
         self._rationale = rationale
+        self._attr_unique_id = f"water_heater.midea_{device_id}_{entity_key}"
+        self.entity_id = f"water_heater.midea_{device_id}_{entity_key}"
 
         self._key_power = self._config.get("power")
         self._key_operation_list = self._config.get("operation_list")

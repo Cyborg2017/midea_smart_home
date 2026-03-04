@@ -6,7 +6,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_DEVICE_ID, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, DOMAIN
+from .const import CONF_DEVICE_ID, CONF_DEVICE_NAME, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, CONF_PRODUCT_MODEL, DOMAIN
 from .coordinator import MideaCoordinator
 from .device_mapping import get_device_mapping
 from .entity import MideaBaseEntity
@@ -32,20 +32,19 @@ async def async_setup_entry(
         device_type = data[CONF_DEVICE_TYPE]
         sn8 = data.get(CONF_SN8, "")
         sn = data.get(CONF_SN, "")
-        device_name = data.get("device_name", f"Midea Device {device_id}")
-
+        model = data.get(CONF_PRODUCT_MODEL, "")
+        device_name = data.get(CONF_DEVICE_NAME, f"Midea Device {device_id}")
         device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
-
         device_mapping = get_device_mapping(device_type_int, sn8)
         entities_config = device_mapping.get("entities", {})
-
         number_config = entities_config.get(Platform.NUMBER, {})
+        
         if number_config:
             for number_id, config in number_config.items():
                 entities.append(
                     MideaNumberEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        number_id, config
+                        number_id, config, model
                     )
                 )
 
@@ -63,14 +62,17 @@ class MideaNumberEntity(MideaBaseEntity, NumberEntity):
         device_name: str,
         entity_key: str,
         config: dict,
+        model: str = None,
     ):
-        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, entity_key)
+        super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, entity_key, model)
         self._config = config
+        self._attr_translation_key = config.get("translation_key", entity_key)
         self._attr_native_min_value = config.get("min", 0.0)
         self._attr_native_max_value = config.get("max", 100.0)
         self._attr_native_step = config.get("step", 1.0)
         self._attr_mode = config.get("mode", "auto")
-        self._attr_translation_key = config.get("translation_key", entity_key)
+        self._attr_unique_id = f"number.midea_{device_id}_{entity_key}"
+        self.entity_id = f"number.midea_{device_id}_{entity_key}"
         self._condition = config.get("condition")
 
         if "unit_of_measurement" in config:
