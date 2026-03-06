@@ -23,7 +23,12 @@
           "lua_file": "Lua 文件路径",
           "token": "Token"
         },
-        "description": "设备名称: {device_name}\n设备型号: {model}\n设备 ID: {device_id}\nIP 地址: {ip}\nSN8: {sn8}\n\n{error}",
+        "data_description": {
+          "key": "{key_required}",
+          "lua_file": "设备协议文件路径",
+          "token": "{token_required}"
+        },
+        "description": "{description}",
         "title": "设备认证 {progress}"
       },
       "select_device": {

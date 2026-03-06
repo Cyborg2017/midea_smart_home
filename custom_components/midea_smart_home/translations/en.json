@@ -23,7 +23,12 @@
           "lua_file": "Lua File Path",
           "token": "Token"
         },
-        "description": "Device Name: {device_name}\nModel: {model}\nDevice ID: {device_id}\nIP Address: {ip}\nSN8: {sn8}\n\n{error}",
+        "data_description": {
+          "key": "{key_required}",
+          "lua_file": "Device protocol file path",
+          "token": "{token_required}"
+        },
+        "description": "{description}",
         "title": "Device Authentication {progress}"
       },
       "select_device": {
