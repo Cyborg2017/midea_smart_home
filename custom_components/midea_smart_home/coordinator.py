@@ -36,6 +36,7 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         centralized: Optional[list] = None,
         default_values: Optional[dict] = None,
         device_type: int = 0,
+        respose: Optional[list] = None,
     ):
         """Initialize the Midea device coordinator.
         
@@ -49,6 +50,7 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             centralized: List of attributes that must be sent together.
             default_values: Default values for missing attributes.
             device_type: Device type identifier (e.g., 0xD9 for twin tub).
+            respose: List of attributes to filter from response.
         """
         self.controller = controller
         self.device_name = device_name
@@ -57,6 +59,7 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.centralized = centralized or []
         self.default_values = default_values or {}
         self.device_type = device_type
+        self.respose = respose or []
         
         self._control_lock = asyncio.Lock()
         self._db_location = 1
@@ -348,12 +351,12 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     
                     for attr_name, val in control.items():
                         new_data[attr_name] = val
-                    if response:
-                        if self.device_type != 0xD9:
-                            if self._is_valid_data_type(response):
-                                for attr_name, val in response.items():
-                                    if val is not None and attr_name not in self.centralized:
-                                        new_data[attr_name] = val
+                    
+                    if response and self.respose == ["on"]:
+                        if self._is_valid_data_type(response):
+                            for attr_name, val in response.items():
+                                if val is not None:
+                                    new_data[attr_name] = val
                 else:
                     current_status = self.data.copy() if self.data else {}
                     for attr_name, val in control.items():

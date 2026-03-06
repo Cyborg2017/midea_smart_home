@@ -74,6 +74,11 @@ def get_centralized(device_type: int, sn8: str = "") -> list:
     mapping = get_device_mapping(device_type, sn8)
     return mapping.get("centralized", [])
 
+def get_respose(device_type: int, sn8: str = "") -> list:
+    """Get device response filter list."""
+    mapping = get_device_mapping(device_type, sn8)
+    return mapping.get("respose", [])
+
 def get_default_values(device_type: int, sn8: str = "") -> dict:
     """Get device attribute default values."""
     mapping = get_device_mapping(device_type, sn8)

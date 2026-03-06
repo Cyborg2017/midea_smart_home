@@ -35,7 +35,7 @@ from .const import (
 )
 from .coordinator import MideaCoordinator
 from .device import DeviceController, MideaCodec
-from .device_mapping import get_device_mapping, get_queries, get_centralized, get_default_values
+from .device_mapping import get_device_mapping, get_queries, get_centralized, get_default_values, get_respose
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -140,6 +140,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         queries = get_queries(device_type_int, sn8)
         centralized = get_centralized(device_type_int, sn8)
         default_values = get_default_values(device_type_int, sn8)
+        respose = get_respose(device_type_int, sn8)
 
         entities_cfg = (device_mapping.get("entities") or {})
         for platform_cfg in entities_cfg.values():
@@ -162,7 +163,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             centralized=centralized,
             default_values=default_values,
             device_type=device_type_int,
-
+            respose=respose,
         )
         
         try:
