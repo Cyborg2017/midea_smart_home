@@ -91,7 +91,6 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
             self._key_speeds = speeds_config
 
         self._attr_speed_count = len(self._key_speeds) if self._key_speeds else 0
-        self._current_preset_mode = None
         self._current_speeds = self._key_speeds
 
     @property
@@ -134,7 +133,6 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
             else:
                 self._current_speeds = self._key_speeds
                 self._attr_speed_count = len(self._current_speeds) if self._current_speeds else 0
-            self._current_preset_mode = current_mode
 
         return current_mode
 
@@ -156,7 +154,9 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
         if index is None:
             return 0
 
-        if self._attr_speed_count <= 1:
+        if self._attr_speed_count == 0:
+            return 0
+        if self._attr_speed_count == 1:
             return 100
 
         return round((index + 1) * 100 / self._attr_speed_count)
@@ -186,7 +186,6 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
             else:
                 self._current_speeds = self._key_speeds
                 self._attr_speed_count = len(self._current_speeds) if self._current_speeds else 0
-            self._current_preset_mode = preset_mode
 
             if "speeds" in mode_config and len(mode_config["speeds"]) == 1:
                 new_status.update(mode_config["speeds"][0])
@@ -196,13 +195,9 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
                 await self.async_turn_off()
                 return
 
-            if self._attr_speed_count <= 1:
-                index = 0
-            else:
-                index = round(percentage * self._attr_speed_count / 100) - 1
-                index = max(0, min(index, len(self._current_speeds) - 1))
-
-            new_status.update(self._current_speeds[index])
+            index = self._get_speed_index_from_percentage(percentage)
+            if index >= 0:
+                new_status.update(self._current_speeds[index])
 
         await self._async_set_status_on_off(self._key_power, True)
         if new_status:
@@ -222,14 +217,9 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
         if not self.is_on:
             await self._async_set_status_on_off(self._key_power, True)
 
-        if self._attr_speed_count <= 1:
-            index = 0
-        else:
-            index = round((percentage / 100) * self._attr_speed_count)
-            index = max(1, min(index, self._attr_speed_count))
-
-        if 1 <= index <= len(self._current_speeds):
-            new_status = self._current_speeds[index - 1]
+        index = self._get_speed_index_from_percentage(percentage)
+        if index >= 0:
+            new_status = self._current_speeds[index]
             await self.coordinator.async_set_controls(new_status)
 
     async def async_set_preset_mode(self, preset_mode: str):
@@ -247,8 +237,6 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
             else:
                 self._current_speeds = self._key_speeds
                 self._attr_speed_count = len(self._current_speeds) if self._current_speeds else 0
-
-            self._current_preset_mode = preset_mode
 
             new_status = {}
             if "mode" in mode_config:
@@ -284,3 +272,12 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
                 if match:
                     return i
         return None
+
+    def _get_speed_index_from_percentage(self, percentage: int) -> int:
+        """Convert percentage to speed index (0-based)."""
+        if not self._current_speeds or self._attr_speed_count == 0:
+            return -1
+        if self._attr_speed_count == 1:
+            return 0
+        index = round(percentage * (self._attr_speed_count - 1) / 100)
+        return max(0, min(index, self._attr_speed_count - 1))

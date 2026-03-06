@@ -195,7 +195,10 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
 
         brightness_value = self._get_nested_value(self._brightness_key)
         if brightness_value is not None:
-            brightness_value = int(brightness_value)
+            try:
+                brightness_value = int(brightness_value)
+            except (ValueError, TypeError):
+                return None
         if brightness_value is not None:
             if self._brightness_min == 0 and self._brightness_max == 255:
                 return max(1, min(255, brightness_value))

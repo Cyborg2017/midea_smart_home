@@ -156,11 +156,10 @@ class MideaBinarySensorEntity(MideaBaseEntity, BinarySensorEntity):
         self.entity_id = f"binary_sensor.midea_{device_id}_{sensor_id}"
 
     @property
-    def is_on(self):
+    def is_on(self) -> bool | None:
         """Return if the binary sensor is on."""
-        #检查实体是否可用
         if not self.available:
-            return None
+            return False
             
         data = self.coordinator.data or {}
         value = data.get(self._sensor_id)
@@ -173,8 +172,3 @@ class MideaBinarySensorEntity(MideaBaseEntity, BinarySensorEntity):
         if isinstance(value, bool):
             return value
         return value == 1 or value == "on" or value == "true"
-    
-    @property
-    def available(self) -> bool:
-        """Return if entity is available."""
-        return super().available
