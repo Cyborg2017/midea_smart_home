@@ -164,5 +164,303 @@ DEVICE_MAPPING = {
                 }
             }
         }
+    },
+    "38133671": {
+        "rationale": ["off", "on"],
+        "queries": [{}],
+        "entities": {
+            Platform.BINARY_SENSOR: {
+                "door_opened": {
+                    "device_class": BinarySensorDeviceClass.OPENING,
+                },
+                "detergent_lack": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                },
+                "bucket_water_overheating": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "control_status": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["pause", "start"],
+                },
+                "lock": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "nightly": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                }
+            },
+            Platform.SELECT: {
+                "mode": {
+                    "options": {
+                        "normal": {"mode": "normal"},
+                        "factory_test": {"mode": "factory_test"},
+                        "service": {"mode": "service"},
+                        "normal_continus": {"mode": "normal_continus"}
+                    }
+                },
+                "program": {
+                    "options": {
+                        "baby_clothes": {"program": "water_cotton"},
+                        "big": {"program": "big"},
+                        "clean_stains": {"program": "clean_stains"},
+                        "cold_wash": {"program": "water_cold_wash"},
+                        "cotton": {"program": "new_water_cotton"},
+                        "deep_ssp": {"program": 163},
+                        "down_jacket": {"program": "down_jacket"},
+                        "enzyme": {"program": "enzyme"},
+                        "fast_wash": {"program": "fast_wash"},
+                        "fast_wash_30": {"program": "fast_wash_30"},
+                        "fiber": {"program": "water_fiber"},
+                        "intelligent": {"program": "water_intelligent"},
+                        "jacket": {"program": "jacket"},
+                        "jean": {"program": "jean"},
+                        "mixed_wash": {"program": "water_mixed_wash"},
+                        "new_clothes_wash": {"program": "new_clothes_wash"},
+                        "outdoor": {"program": "water_outdoor"},
+                        "remove_mite_wash": {"program": "water_remove_mite_wash"},
+                        "rinsing_dehydration": {"program": "rinsing_dehydration"},
+                        "shirt": {"program": "fast_wash_60"},
+                        "silk": {"program": "silk"},
+                        "single_dehytration": {"program": "single_dehytration"},
+                        "sport_clothes": {"program": "sport_clothes"},
+                        "spring_autumn_wash": {"program": "spring_autumn_wash"},
+                        "ssp": {"program": "water_ssp"},
+                        "steam_sterilize_wash": {"program": "steam_sterilize_wash"},
+                        "steep": {"program": "water_steep"},
+                        "summer_wash": {"program": "summer_wash"},
+                        "underwear": {"program": "water_underwear"},
+                        "winter_wash": {"program": "winter_wash"},
+                        "wool": {"program": "green_wool"}
+                    }
+                },
+                "dehydration_speed": {
+                    "options": {
+                        "no_spin": {"dehydration_speed": "0"},
+                        "400rpm": {"dehydration_speed": "400"},
+                        "600rpm": {"dehydration_speed": "600"},
+                        "800rpm": {"dehydration_speed": "800"},
+                        "1000rpm": {"dehydration_speed": "1000"},
+                        "1200rpm": {"dehydration_speed": "1200"},
+                        "1400rpm": {"dehydration_speed": "1400"}
+                    }
+                },
+                "soak_count": {
+                    "options": {
+                        "1_time": {"soak_count": "1"},
+                        "2_times": {"soak_count": "2"},
+                        "3_times": {"soak_count": "3"},
+                        "4_times": {"soak_count": "4"}
+                    }
+                },
+                "water_level": {
+                    "options": {
+                        "auto": {"water_level": "auto"},
+                        "l1": {"water_level": "low"},
+                        "l2": {"water_level": "mid"},
+                        "l3": {"water_level": "high"},
+                        "l4": {"water_level": "4"}
+                    }
+                },
+                "detergent": {
+                    "options": {
+                        "smart": {"detergent": "4"},
+                        "off": {"detergent": "0"},
+                        "l1": {"detergent": "1"},
+                        "l2": {"detergent": "2"},
+                        "l3": {"detergent": "3"},
+                        "l4": {"detergent": "5"}
+                    }
+                },
+                "temperature": {
+                    "options": {
+                        "cold_water": {"temperature": "0"},
+                        "20c": {"temperature": "20"},
+                        "30c": {"temperature": "30"},
+                        "40c": {"temperature": "40"},
+                        "60c": {"temperature": "60"},
+                        "95c": {"temperature": "95"}
+                    }
+                },
+                "stains": {
+                    "options": {
+                        "off": {"stains": "0"},
+                        "sauce": {"stains": "83"},
+                        "fruit": {"stains": "85"},
+                        "makeup": {"stains": "84"}
+                    }
+                }
+            },
+            Platform.SENSOR: {
+                "running_status": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "remain_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "progress": {
+                    "device_class": SensorDeviceClass.BATTERY,
+                    "unit_of_measurement": "%",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "error_code": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "wash_time_value": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "dehydration_time_value": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
+    },
+    "38124584": {
+        "rationale": ["off", "on"],
+        "queries": [{}],
+        "entities": {
+            Platform.BINARY_SENSOR: {
+                "door_opened": {
+                    "device_class": BinarySensorDeviceClass.OPENING,
+                },
+                "detergent_lack": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "control_status": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["pause", "start"],
+                },
+                "lock": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ultraviolet_lamp": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["0", "1"]
+                }
+            },
+            Platform.SELECT: {
+                "mode": {
+                    "options": {
+                        "normal": {"mode": "normal"},
+                        "factory_test": {"mode": "factory_test"},
+                        "service": {"mode": "service"},
+                        "normal_continus": {"mode": "normal_continus"}
+                    }
+                },
+                "program": {
+                    "options": {
+                        "big": {"program": "big"},
+                        "down_jacket": {"program": "down_jacket"},
+                        "eco": {"program": "eco"},
+                        "fast_wash": {"program": "fast_wash"},
+                        "jacket": {"program": "jacket"},
+                        "mixed_wash": {"program": "water_mixed_wash"},
+                        "rinsing_dehydration": {"program": "rinsing_dehydration"},
+                        "single_dehytration": {"program": "single_dehytration"},
+                        "steam_sterilize_wash": {"program": "steam_sterilize_wash"},
+                        "baby_clothes": {"program": "baby_clothes"},
+                        "fast_wash_30": {"program": "fast_wash_30"},
+                        "intelligent": {"program": "intelligent"},
+                        "shirt": {"program": "shirt"},
+                        "remove_mite_wash": {"program": "remove_mite_wash"},
+                        "ssp": {"program": "ssp"},
+                        "steep": {"program": "steep"},
+                        "underwear": {"program": "underwear"},
+                        "wool": {"program": "wool"}
+                    }
+                },
+                "dehydration_speed": {
+                    "options": {
+                        "no_spin": {"dehydration_speed": "0"},
+                        "400rpm": {"dehydration_speed": "400"},
+                        "600rpm": {"dehydration_speed": "600"},
+                        "800rpm": {"dehydration_speed": "800"},
+                        "1000rpm": {"dehydration_speed": "1000"},
+                        "1200rpm": {"dehydration_speed": "1200"}
+                    }
+                },
+                "soak_count": {
+                    "options": {
+                        "1_time": {"soak_count": "1"},
+                        "2_times": {"soak_count": "2"},
+                        "3_times": {"soak_count": "3"},
+                        "4_times": {"soak_count": "4"}
+                    }
+                },
+                "water_level": {
+                    "options": {
+                        "auto": {"water_level": "auto"},
+                        "l1": {"water_level": "low"},
+                        "l2": {"water_level": "mid"},
+                        "l3": {"water_level": "high"},
+                        "l4": {"water_level": "4"}
+                    }
+                },
+                "detergent": {
+                    "options": {
+                        "smart": {"detergent": "4"},
+                        "off": {"detergent": "0"},
+                        "l1": {"detergent": "1"},
+                        "l2": {"detergent": "2"},
+                        "l3": {"detergent": "3"},
+                        "l4": {"detergent": "5"}
+                    }
+                },
+                "temperature": {
+                    "options": {
+                        "cold_water": {"temperature": "0"},
+                        "20c": {"temperature": "20"},
+                        "30c": {"temperature": "30"},
+                        "40c": {"temperature": "40"},
+                        "60c": {"temperature": "60"},
+                        "95c": {"temperature": "95"}
+                    }
+                }
+            },
+            Platform.SENSOR: {
+                "running_status": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "remain_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "progress": {
+                    "device_class": SensorDeviceClass.BATTERY,
+                    "unit_of_measurement": "%",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "error_code": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "wash_time_value": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "dehydration_time_value": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
     }
 }
