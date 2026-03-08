@@ -9,14 +9,14 @@ from .coordinator import MideaCoordinator, ControlValue
 
 class MideaBaseEntity(CoordinatorEntity[MideaCoordinator]):
     _attr_has_entity_name = True
+    _attr_should_poll = False
     
     @property
     def available(self) -> bool:
-        """Return if entity is available."""
         if not self.coordinator.last_update_success:
             return False
         
-        if not self.coordinator.controller.connected:
+        if not self.coordinator.controller.available:
             return False
             
         data = self.coordinator.data

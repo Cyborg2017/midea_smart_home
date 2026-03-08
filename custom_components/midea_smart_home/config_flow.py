@@ -42,6 +42,7 @@ from .const import (
     LUA_DEVICE_PATH,
     ProtocolVersion,
 )
+from .midea_lib.packet_builder import PacketBuilder
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -452,8 +453,38 @@ class MideaLocalConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             
             def validate_device():
                 try:
+                    if not lua_file or not lua_file.strip():
+                        return False, "请填写 Lua 文件路径"
+                    
+                    lua_path = Path(lua_file)
+                    if not lua_path.exists():
+                        return False, f"Lua 文件不存在：{lua_file}"
+                    
                     _LOGGER.info("Validating device %s with lua: %s, protocol: %s", device_id, lua_file, protocol)
                     codec = MideaCodec(lua_file, str(lua_common_dir), sn=sn, subtype=0, device_type=device_type, sn8=sn8)
+                    
+                    query_hex = codec.build_query()
+                    if not query_hex:
+                        return False, "设备不支持本地控制：无法构建查询命令"
+                    
+                    import socket as socket_module
+                    
+                    try:
+                        test_sock = socket_module.socket(socket_module.AF_INET, socket_module.SOCK_STREAM)
+                        test_sock.settimeout(3)
+                        test_sock.connect((ip_address, DEFAULT_PORT))
+                        test_sock.close()
+                    except socket_module.timeout:
+                        return False, "连接超时：设备可能不在线或网络不通"
+                    except ConnectionRefusedError:
+                        return False, "连接被拒绝：设备端口未开放或不支持本地控制"
+                    except OSError as e:
+                        if "No route to host" in str(e) or "Network is unreachable" in str(e):
+                            return False, "网络不可达：请检查设备IP和网段"
+                        elif "Host is down" in str(e):
+                            return False, "设备离线：设备已关机或网络断开"
+                        else:
+                            return False, f"网络错误：{str(e)}"
                     
                     if is_v3:
                         controller = DeviceController(
@@ -476,12 +507,52 @@ class MideaLocalConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         )
                     if not controller.connect():
                         _LOGGER.warning("Device %s validation failed: cannot connect", device_id)
-                        return False, "无法连接设备"
+                        return False, "认证失败：Token 或 Key 无效"
                     
-                    controller.close()
+                    try:
+                        sock = controller._sock
+                        security = controller._security
+                        
+                        data_bytes = bytes.fromhex(query_hex)
+                        packet = PacketBuilder(device_id, data_bytes).finalize()
+                        
+                        if is_v3:
+                            encrypted = security.encode_8370(bytes(packet), 0x6)
+                            sock.send(encrypted)
+                            response = sock.recv(512)
+                            messages, _ = security.decode_8370(response)
+                        else:
+                            sock.send(packet)
+                            response = sock.recv(512)
+                            messages = []
+                            if len(response) > 6:
+                                msg_len = response[4] + (response[5] << 8)
+                                if len(response) >= msg_len:
+                                    messages = [response[:msg_len]]
+                        
+                        if messages and len(messages[0]) > 56:
+                            encrypted_data = bytes(messages[0][40:-16])
+                            decrypted = security.aes_decrypt(encrypted_data)
+                            status = codec.decode_status(decrypted.hex())
+                            if not status:
+                                return False, "设备不支持本地控制：Lua脚本无法解析设备响应"
+                            _LOGGER.info("Device %s status: %s", device_id, status)
+                        else:
+                            return False, "设备不支持本地控制：未收到有效响应"
+                    except socket.timeout:
+                        return False, "响应超时：设备未返回数据"
+                    except Exception as e:
+                        _LOGGER.warning("Device %s query test failed: %s", device_id, e)
+                        return False, f"设备不支持本地控制：{str(e)}"
+                    finally:
+                        controller.close()
+                    
                     _LOGGER.info("Device %s validation successful", device_id)
                     return True, None
-                except (socket.error, OSError, ValueError, lupa.lua51.LuaError) as e:
+                except lupa.lua51.LuaError as e:
+                    _LOGGER.error("Device %s Lua error: %s", device_id, e)
+                    return False, f"设备不支持本地控制：Lua脚本解析错误"
+                except (socket.error, OSError, ValueError) as e:
                     _LOGGER.error("Device %s validation error: %s", device_id, e)
                     return False, str(e)
             

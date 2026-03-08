@@ -2,13 +2,12 @@ import asyncio
 import json
 import logging
 import re
-import socket
 import ast
-from datetime import timedelta
+import time
 from typing import Any, Optional, Union
 
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .device import DeviceController
 
@@ -22,7 +21,7 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Coordinator for Midea Smart Home devices.
     
     This class manages data updates and control commands for Midea devices.
-    It handles polling, state management, and device-specific logic.
+    All updates are received via push from the device background thread.
     """
     
     def __init__(
@@ -30,55 +29,68 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         hass: HomeAssistant,
         controller: DeviceController,
         device_name: str,
-        update_interval: float = 1.0,
         calculate_config: Optional[dict] = None,
-        queries: Optional[list] = None,
         centralized: Optional[list] = None,
         default_values: Optional[dict] = None,
         device_type: int = 0,
-        respose: Optional[list] = None,
+        **kwargs,
     ):
-        """Initialize the Midea device coordinator.
-        
-        Args:
-            hass: Home Assistant instance.
-            controller: Device controller for communication.
-            device_name: Human-readable device name.
-            update_interval: Polling interval in seconds.
-            calculate_config: Configuration for calculated attributes.
-            queries: List of query configurations for device status.
-            centralized: List of attributes that must be sent together.
-            default_values: Default values for missing attributes.
-            device_type: Device type identifier (e.g., 0xD9 for twin tub).
-            respose: List of attributes to filter from response.
-        """
         self.controller = controller
         self.device_name = device_name
         self.calculate_config = calculate_config or {}
-        self.queries = queries or [{}]
         self.centralized = centralized or []
         self.default_values = default_values or {}
         self.device_type = device_type
-        self.respose = respose or []
         
         self._control_lock = asyncio.Lock()
-        self._polling_paused = False
-        self._polling_resume_event = asyncio.Event()
-        self._polling_resume_event.set()
         self._db_location = 1
         self._db_location_selection = "left"
         self._last_db_position = 1
-        
-        # Track recent control commands to prevent state jumps
         self._recent_controls = {}
-        self._control_timeout = 3
+        self._control_timeout = 1
         
         super().__init__(
             hass,
             _LOGGER,
             name=f"Midea Smart Home {device_name}",
-            update_interval=timedelta(seconds=update_interval),
+            update_interval=None,
         )
+        
+        controller.register_update(self._device_update_callback)
+    
+    def _device_update_callback(self, status: dict[str, Any]) -> None:
+        if not self.hass or self.hass.is_stopping:
+            return
+        
+        self.hass.add_job(self._async_device_update, status)
+    
+    @callback
+    async def _async_device_update(self, status: dict[str, Any]) -> None:
+        update_start_time = time.time()
+        if "available" in status and len(status) == 1:
+            self.async_update_listeners()
+            return
+        
+        current_time = time.time()
+        for attr in list(self._recent_controls.keys()):
+            value, timestamp = self._recent_controls[attr]
+            if current_time - timestamp < self._control_timeout:
+                if attr in status:
+                    del status[attr]
+            else:
+                del self._recent_controls[attr]
+        
+        new_data = self.data.copy() if self.data else {}
+        new_data.update(status)
+        
+        new_data = self._apply_default_values(new_data)
+        new_data = self._apply_calculations(new_data)
+        
+        self._apply_special_handling(new_data)
+        
+        self.async_set_updated_data(new_data)
+        _LOGGER.debug("[DeviceType:%s] HA update completed at %.3f, elapsed %.3f seconds", 
+                      hex(self.device_type), time.time(), time.time() - update_start_time)
 
     def _evaluate_expression(self, expression: str, data: dict) -> Union[str, int, float, bool, None]:
         def replace_var(match):
@@ -159,16 +171,12 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     else:
                         data["db_control_status"] = "pause"
             else:
-                # Check if db_control_status is in recent controls
-                import time
                 current_time = time.time()
                 if "db_control_status" not in [attr for attr, (_, timestamp) in self._recent_controls.items() if current_time - timestamp < self._control_timeout]:
                     if "db_running_status" in data:
                         self._adjust_control_status(data, data["db_running_status"])
         
         elif self.device_type in [0xDA, 0xDB, 0xDC]:
-            # Check if control_status is in recent controls
-            import time
             current_time = time.time()
             if "control_status" not in [attr for attr, (_, timestamp) in self._recent_controls.items() if current_time - timestamp < self._control_timeout]:
                 if "running_status" in data:
@@ -222,132 +230,7 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             self._db_location_selection = "right"
 
     async def _async_update_data(self) -> dict[str, Any]:
-        if self._polling_paused:
-            await self._polling_resume_event.wait()
-        
-        if self._control_lock.locked():
-            return self.data
-  
-        try:
-            all_data = {}
-            
-            for query in self.queries:
-                actual_query = query.copy() if isinstance(query, dict) else query
-                
-                if self.device_type == 0xD9 and isinstance(actual_query, dict):
-                    actual_query["db_location"] = self._db_location
-                
-                try:
-                    data = await self.hass.async_add_executor_job(
-                        self.controller.get_status, actual_query
-                    )
-                    if data:
-                        if not self._is_valid_data_type(data):
-                            continue
-                        all_data.update(data)
-                except (socket.error, OSError, ValueError, json.JSONDecodeError) as e:
-                    _LOGGER.error("Error getting status for query %s: %s", query, e)
-            
-            if self.device_type == 0xD9 and all_data:
-                data_type = all_data.get("data_type", "")
-                
-                if data_type == "03db":
-                    db_position = all_data.get("db_position", 1)
-                    
-                    if db_position == 1:
-                        self._last_db_position = 1
-                    
-                    elif db_position == 0 and self._last_db_position == 1:
-                        _LOGGER.info(
-                            "[%s] 03db: db_position changed from 1 to 0, switching bucket location",
-                            self.device_name
-                        )
-                        
-                        if self._db_location == 1:
-                            self._db_location = 2
-                            self._db_location_selection = "right"
-                        else:
-                            self._db_location = 1
-                            self._db_location_selection = "left"
-                        
-                        self._last_db_position = 0
-                        
-                        _LOGGER.info(
-                            "[%s] Switched to db_location=%d, querying new status",
-                            self.device_name, self._db_location
-                        )
-                        
-                        retry_query = {"db_location": self._db_location}
-                        retry_data = await self.hass.async_add_executor_job(
-                            self.controller.get_status, retry_query
-                        )
-                        if retry_data and self._is_valid_data_type(retry_data):
-                            all_data.update(retry_data)
-                            _LOGGER.info(
-                                "[%s] Updated status after bucket switch",
-                                self.device_name
-                            )
-                
-                all_data["db_location"] = self._db_location
-                all_data["db_location_selection"] = self._db_location_selection
-            
-            # Check for recent control commands and use expected values
-            import time
-            current_time = time.time()
-            recent_control_attrs = []
-            
-            for attr, (expected_value, timestamp) in list(self._recent_controls.items()):
-                if current_time - timestamp < self._control_timeout:
-                    # Use expected value for recently controlled attributes
-                    all_data[attr] = expected_value
-                    recent_control_attrs.append(attr)
-                else:
-                    # Remove expired control entries
-                    del self._recent_controls[attr]
-            
-            if self.data:
-                for attr, old_value in self.data.items():
-                    # Don't override recent control values
-                    if attr in recent_control_attrs:
-                        continue
-                    if old_value is not None:
-                        if attr not in all_data or all_data[attr] is None:
-                            all_data[attr] = old_value
-            
-            if not all_data:
-                _LOGGER.warning("No data received from device %s, attempting to reconnect", self.device_name)
-                await self.hass.async_add_executor_job(self.controller.connect)
-                
-                for query in self.queries:
-                    actual_query = query.copy() if isinstance(query, dict) else query
-                    
-                    if self.device_type == 0xD9 and isinstance(actual_query, dict):
-                        actual_query["db_location"] = self._db_location
-                    
-                    try:
-                        data = await self.hass.async_add_executor_job(
-                            self.controller.get_status, actual_query
-                        )
-                        if data:
-                            if not self._is_valid_data_type(data):
-                                continue
-                            all_data.update(data)
-                    except (socket.error, OSError, ValueError, json.JSONDecodeError) as e:
-                        _LOGGER.error("Retry failed for query %s: %s", query, e)
-                        
-                if not all_data:
-                    raise UpdateFailed("No data received from device after retry")
-            
-            result = self._apply_default_values(all_data)
-            result = self._apply_calculations(result)
-            
-            self._apply_special_handling(result)
-            
-            return result
-        except UpdateFailed:
-            raise
-        except (socket.error, OSError, ValueError, json.JSONDecodeError, TypeError) as e:
-            raise UpdateFailed(f"Failed to update device status: {e}") from e
+        return self.data or {}
 
     async def async_set_control(
         self,
@@ -360,9 +243,6 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             control = {attr: value}
             
         async with self._control_lock:
-            self._polling_paused = True
-            self._polling_resume_event.clear()
-            
             try:
                 new_data = self.data.copy() if self.data else {}
                 
@@ -387,41 +267,28 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     
                     self._apply_special_handling(full_control, is_control=True, control_attrs=control)
                     
-                    current_status = self.data.copy() if self.data else {}
-                    response = await self.hass.async_add_executor_job(
-                        self.controller.set_control, full_control, None, current_status
+                    await self.hass.async_add_executor_job(
+                        self.controller.set_control, full_control, None, None
                     )
-                    
-                    for attr_name, val in control.items():
-                        new_data[attr_name] = val
-                    
-                    if response and self.respose == ["on"]:
-                        if self._is_valid_data_type(response):
-                            for attr_name, val in response.items():
-                                if val is not None:
-                                    new_data[attr_name] = val
                 else:
-                    current_status = self.data.copy() if self.data else {}
-                    
                     if self.device_type == 0xD9:
                         control["bucket"] = "db"
                         control["db_location"] = self._db_location
                     
                     self._apply_special_handling(control, is_control=True, control_attrs=control)
                     
-                    response = await self.hass.async_add_executor_job(
-                        self.controller.set_control, control, None, current_status
+                    await self.hass.async_add_executor_job(
+                        self.controller.set_control, control, None, None
                     )
-                    
-                    for attr_name, val in control.items():
+                
+                for attr_name, val in control.items():
+                    if attr_name not in ["bucket", "db_location"]:
                         new_data[attr_name] = val
                 
                 if self.device_type == 0xD9:
                     new_data["db_location"] = self._db_location
                     new_data["db_location_selection"] = self._db_location_selection
 
-                # Record recent control commands
-                import time
                 current_time = time.time()
                 for attr_name, val in control.items():
                     if attr_name not in ["bucket", "db_location"]:
@@ -430,10 +297,7 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 self.async_set_updated_data(new_data)
                 
             except (socket.error, OSError, ValueError, json.JSONDecodeError, TypeError) as e:
-                _LOGGER.error("Control command execution failed: %s", e)
-            finally:
-                self._polling_paused = False
-                self._polling_resume_event.set()
+                _LOGGER.error("[%s] Control command execution failed: %s", self.device_name, e)
         
         return self.data
     

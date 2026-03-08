@@ -3,8 +3,9 @@ import json
 import threading
 import logging
 import time
+from collections.abc import Callable
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 import lupa.lua51
 
@@ -20,6 +21,8 @@ MAX_RETRY_DELAY = 30.0
 RETRY_MULTIPLIER = 2.0
 CONNECTION_TIMEOUT = 10
 SOCKET_TIMEOUT = 10
+HEARTBEAT_INTERVAL = 10
+MIN_MSG_LENGTH = 56
 
 
 class LuaRuntime:
@@ -182,12 +185,13 @@ class MideaCodec(LuaRuntime):
             return None
 
 
-class DeviceController:
+class DeviceController(threading.Thread):
     """Controller for Midea smart devices.
     
     This class manages the connection to a Midea device and handles
     all communication including status queries and control commands.
     It implements automatic reconnection with exponential backoff.
+    Runs a background thread to listen for device push notifications.
     """
     
     def __init__(
@@ -200,6 +204,7 @@ class DeviceController:
         codec: MideaCodec,
         protocol: int = 3
     ):
+        threading.Thread.__init__(self)
         self._device_id = device_id
         self._ip = ip_address
         self._port = port
@@ -215,6 +220,11 @@ class DeviceController:
         self._retry_delay: float = INITIAL_RETRY_DELAY
         self._connection_errors: int = 0
         self._buffer = b""
+        self._updates: list[Callable[[dict[str, Any]], None]] = []
+        self._is_run = False
+        self._available = False
+        self._previous_heartbeat: float = 0.0
+        self.name = f"MideaDevice-{device_id}"
     
     @property
     def device_id(self) -> int:
@@ -232,28 +242,96 @@ class DeviceController:
     def protocol(self) -> int:
         return self._protocol
     
+    @property
+    def available(self) -> bool:
+        return self._available
+    
+    def register_update(self, update: Callable[[dict[str, Any]], None]) -> None:
+        self._updates.append(update)
+    
+    def update_all(self, status: dict[str, Any]) -> None:
+        _LOGGER.debug("[%s] Status update: %s", self._device_id, status)
+        for update in self._updates:
+            try:
+                update(status)
+            except Exception as e:
+                _LOGGER.error("[%s] Error in update callback: %s", self._device_id, e)
+    
+    def set_available(self, available: bool = True) -> None:
+        self._available = available
+        self.update_all({"available": available})
+    
+    def open(self) -> None:
+        if not self._is_run:
+            self._is_run = True
+            threading.Thread.start(self)
+    
+    def close(self) -> None:
+        self._is_run = False
+        self._close_socket()
+    
+    def _close_socket(self) -> None:
+        self._buffer = b""
+        self._connected = False
+        sock = self._sock
+        self._sock = None
+        if sock:
+            try:
+                sock.shutdown(socket.SHUT_RDWR)
+                sock.close()
+            except OSError:
+                pass
+    
     def connect(self) -> bool:
         with self._lock:
             return self._connect_internal()
     
-    def close(self):
-        with self._lock:
-            self._disconnect_internal()
-    
-    def _disconnect_internal(self):
-        self._connected = False
-        self._buffer = b""
-        if self._sock:
-            try:
-                self._sock.close()
-            except OSError:
-                pass
-            self._sock = None
-    
-    def _should_retry_connect(self) -> bool:
+    def _connect_internal(self) -> bool:
         current_time = time.time()
-        time_since_last = current_time - self._last_connect_attempt
-        return time_since_last >= self._retry_delay
+        self._last_connect_attempt = current_time
+        
+        self._close_socket()
+        
+        try:
+            self._security = LocalSecurity()
+            self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self._sock.settimeout(CONNECTION_TIMEOUT)
+            self._sock.connect((self._ip, self._port))
+            
+            if self._protocol == 3 and self._token and self._key:
+                handshake = self._security.encode_8370(bytes.fromhex(self._token), 0x0)
+                if self._sock is None:
+                    return False
+                self._sock.send(handshake)
+                response = self._sock.recv(256)
+                
+                if len(response) < 72:
+                    raise DataUnexpectedLength(f"Response too short: {len(response)}")
+                
+                auth_data = response[8:72]
+                self._security.tcp_key(auth_data, bytes.fromhex(self._key))
+            
+            if self._sock is None:
+                return False
+            
+            self._sock.settimeout(SOCKET_TIMEOUT)
+            self._connected = True
+            self._update_retry_delay(True)
+            _LOGGER.debug("[%s] Connected successfully with protocol V%s", self._device_id, self._protocol)
+            return True
+            
+        except (socket.timeout, socket.error, OSError) as e:
+            _LOGGER.debug("[%s] Connection error: %s", self._device_id, e)
+        except (CannotAuthenticate, DataUnexpectedLength, MessageWrongFormat) as e:
+            _LOGGER.debug("[%s] Authentication error: %s", self._device_id, e)
+        except ValueError as e:
+            _LOGGER.debug("[%s] Invalid token/key format: %s", self._device_id, e)
+        except AttributeError as e:
+            _LOGGER.debug("[%s] Socket closed during connection: %s", self._device_id, e)
+        
+        self._update_retry_delay(False)
+        self._connected = False
+        return False
     
     def _update_retry_delay(self, success: bool):
         if success:
@@ -265,60 +343,6 @@ class DeviceController:
                 INITIAL_RETRY_DELAY * (RETRY_MULTIPLIER ** self._connection_errors),
                 MAX_RETRY_DELAY
             )
-    
-    def _connect_internal(self) -> bool:
-        current_time = time.time()
-        self._last_connect_attempt = current_time
-        
-        self._disconnect_internal()
-        
-        try:
-            self._security = LocalSecurity()
-            self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self._sock.settimeout(CONNECTION_TIMEOUT)
-            self._sock.connect((self._ip, self._port))
-            
-            if self._protocol == 3 and self._token and self._key:
-                handshake = self._security.encode_8370(bytes.fromhex(self._token), 0x0)
-                self._sock.send(handshake)
-                response = self._sock.recv(256)
-                
-                if len(response) < 72:
-                    raise DataUnexpectedLength(f"Response too short: {len(response)}")
-                
-                auth_data = response[8:72]
-                self._security.tcp_key(auth_data, bytes.fromhex(self._key))
-            
-            self._sock.settimeout(SOCKET_TIMEOUT)
-            self._connected = True
-            self._update_retry_delay(True)
-            _LOGGER.debug("Device %s connected successfully with protocol V%s", self._device_id, self._protocol)
-            return True
-            
-        except (socket.timeout, socket.error, OSError) as e:
-            _LOGGER.error("Socket error connecting device %s: %s", self._device_id, e)
-        except (CannotAuthenticate, DataUnexpectedLength, MessageWrongFormat) as e:
-            _LOGGER.error("Authentication error for device %s: %s", self._device_id, e)
-        except ValueError as e:
-            _LOGGER.error("Invalid token/key format for device %s: %s", self._device_id, e)
-        
-        self._update_retry_delay(False)
-        self._connected = False
-        return False
-    
-    def _ensure_connection(self) -> bool:
-        if self._connected and self._sock is not None:
-            return True
-        
-        if not self._should_retry_connect():
-            _LOGGER.debug(
-                "Device %s waiting for retry delay (%.1fs remaining)",
-                self._device_id,
-                self._retry_delay - (time.time() - self._last_connect_attempt)
-            )
-            return False
-        
-        return self._connect_internal()
     
     def _fetch_v2_message(self, msg: bytes) -> tuple[list, bytes]:
         result = []
@@ -334,75 +358,144 @@ class DeviceController:
                 break
         return result, msg
     
-    def _send_and_receive(self, data_hex: str, retry: int = 2) -> Optional[bytes]:
-        with self._lock:
-            for attempt in range(retry):
-                if not self._ensure_connection():
-                    continue
+    def _parse_message(self, msg: bytes) -> bool:
+        try:
+            if self._protocol == 3:
+                messages, self._buffer = self._security.decode_8370(self._buffer + msg)
+            else:
+                messages, self._buffer = self._fetch_v2_message(self._buffer + msg)
+            
+            if len(messages) == 0:
+                return False
+            
+            for message in messages:
+                if message == b"ERROR":
+                    return False
                 
+                if len(message) > MIN_MSG_LENGTH:
+                    payload_len = message[4] + (message[5] << 8) - 56
+                    payload_type = message[2] + (message[3] << 8)
+                    
+                    if payload_type not in [0x1001, 0x0001]:
+                        cryptographic = bytes(message[40:-16])
+                        if payload_len % 16 == 0:
+                            decrypted = self._security.aes_decrypt(cryptographic)
+                            receive_time = time.time()
+                            status = self._codec.decode_status(decrypted.hex())
+                            if status:
+                                device_type_hex = hex(self._codec._device_type) if hasattr(self._codec, '_device_type') else 'unknown'
+                                _LOGGER.debug("[DeviceType:%s] Received status at %.3f: %s", device_type_hex, receive_time, status)
+                                self.update_all(status)
+            return True
+        except Exception as e:
+            _LOGGER.error("[%s] Error parsing message: %s", self._device_id, e)
+            return False
+    
+    def refresh_status(self) -> None:
+        query_hex = self._codec.build_query()
+        if query_hex:
+            self._send_message(query_hex, query=True)
+    
+    def _send_message(self, data_hex: str, query: bool = False) -> None:
+        sock = self._sock
+        if not sock or not self._connected:
+            return
+        
+        try:
+            data_bytes = bytes.fromhex(data_hex)
+            packet = PacketBuilder(self._device_id, data_bytes).finalize()
+            
+            if self._protocol == 3:
+                encrypted = self._security.encode_8370(bytes(packet), 0x6)
+                sock.send(encrypted)
+            else:
+                sock.send(packet)
+        except (socket.error, OSError, AttributeError) as e:
+            _LOGGER.debug("[%s] Send error: %s", self._device_id, e)
+            self._close_socket()
+    
+    def _send_heartbeat(self) -> None:
+        sock = self._sock
+        if sock and self._connected:
+            try:
+                msg = PacketBuilder(self._device_id, bytearray([0x00])).finalize(msg_type=0)
+                if self._protocol == 3:
+                    encrypted = self._security.encode_8370(msg, 0x6)
+                    sock.send(encrypted)
+                else:
+                    sock.send(msg)
+            except (socket.error, OSError, AttributeError):
+                self._close_socket()
+    
+    def _check_heartbeat(self, now: float) -> None:
+        if now - self._previous_heartbeat >= HEARTBEAT_INTERVAL:
+            self._send_heartbeat()
+            self._previous_heartbeat = now
+    
+    def _connect_loop(self) -> None:
+        connection_retries = 0
+        while self._is_run and self._sock is None:
+            if self._connect_internal():
+                self.set_available(True)
+                break
+            self._close_socket()
+            connection_retries += 1
+            sleep_time = min(5 * (2 ** (connection_retries - 1)), 600)
+            _LOGGER.warning("[%s] Unable to connect, sleep %s seconds", self._device_id, sleep_time)
+            time.sleep(sleep_time)
+    
+    def run(self) -> None:
+        while self._is_run:
+            self._connect_loop()
+            
+            timeout_counter = 0
+            start = time.time()
+            self._previous_heartbeat = start
+            
+            while self._is_run:
                 try:
-                    data_bytes = bytes.fromhex(data_hex)
-                    packet = PacketBuilder(self._device_id, data_bytes).finalize()
+                    sock = self._sock
+                    if not sock:
+                        raise OSError("Socket is None")
                     
-                    if self._protocol == 3:
-                        encrypted = self._security.encode_8370(bytes(packet), 0x6)
-                        self._sock.send(encrypted)
-                        response = self._sock.recv(4096)
-                        packets, self._buffer = self._security.decode_8370(self._buffer + response)
-                    else:
-                        self._sock.send(packet)
-                        response = self._sock.recv(4096)
-                        packets, self._buffer = self._fetch_v2_message(self._buffer + response)
+                    now = time.time()
+                    self._check_heartbeat(now)
                     
-                    if packets:
-                        data = packets[0]
-                        encrypted_data = data[40:-16]
-                        self._update_retry_delay(True)
-                        return self._security.aes_decrypt(encrypted_data)
+                    sock.settimeout(SOCKET_TIMEOUT)
+                    msg = sock.recv(512)
+                    
+                    if len(msg) == 0:
+                        raise ConnectionResetError("Connection closed by peer")
+                    
+                    if self._parse_message(msg):
+                        timeout_counter = 0
                         
                 except socket.timeout:
-                    _LOGGER.warning(
-                        "Timeout for device %s, retry %d/%d",
-                        self._device_id, attempt + 1, retry
-                    )
-                    self._disconnect_internal()
+                    timeout_counter += 1
+                    if timeout_counter >= 12:
+                        _LOGGER.debug("[%s] Heartbeat timed out", self._device_id)
+                        self._close_socket()
+                        self.set_available(False)
+                        break
+                        
+                except (socket.error, OSError, ConnectionResetError) as e:
+                    _LOGGER.debug("[%s] Connection error: %s", self._device_id, e)
+                    self._close_socket()
+                    self.set_available(False)
+                    break
                     
-                except (socket.error, OSError) as e:
-                    _LOGGER.error(
-                        "Socket error for device %s: %s, reconnecting...",
-                        self._device_id, e
-                    )
-                    self._disconnect_internal()
+                except AttributeError as e:
+                    _LOGGER.debug("[%s] Socket closed: %s", self._device_id, e)
+                    self._close_socket()
+                    self.set_available(False)
+                    break
                     
-                except (MessageWrongFormat, DataUnexpectedLength) as e:
-                    _LOGGER.error(
-                        "Protocol error for device %s: %s",
-                        self._device_id, e
-                    )
-                    self._disconnect_internal()
-                    
-                except ValueError as e:
-                    _LOGGER.error(
-                        "Data format error for device %s: %s",
-                        self._device_id, e
-                    )
-                    self._disconnect_internal()
-                    
-            return None
-
-    def get_status(self, query: Optional[dict] = None) -> dict:
-        try:
-            query_hex = self._codec.build_query(query)
-            if not query_hex:
-                return {}
-            decrypted = self._send_and_receive(query_hex)
-            if decrypted:
-                return self._codec.decode_status(decrypted.hex()) or {}
-            _LOGGER.warning("No decrypted response for device %s", self._device_id)
-        except (json.JSONDecodeError, ValueError) as e:
-            _LOGGER.error("Failed to get status for device %s: %s", self._device_id, e)
-        return {}
-
+                except Exception as e:
+                    _LOGGER.error("[%s] Unexpected error: %s", self._device_id, e)
+                    self._close_socket()
+                    self.set_available(False)
+                    break
+    
     def set_control(
         self,
         attr: str | dict,
@@ -416,9 +509,9 @@ class DeviceController:
         control_hex = self._codec.build_control(control, current_status)
         if not control_hex:
             return {}
-        decrypted = self._send_and_receive(control_hex, retry=1)
-        if decrypted:
-            status = self._codec.decode_status(decrypted.hex(), is_control_response=True)
-            if status:
-                return status
-        return {}
+        # Send control command asynchronously through background thread
+        # Response will be handled by background thread via _parse_message -> update_all
+        self._send_message(control_hex)
+        # Return the control values that were sent
+        # Actual status updates come through the registered update callbacks
+        return control

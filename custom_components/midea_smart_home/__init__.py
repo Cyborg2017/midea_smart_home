@@ -35,7 +35,7 @@ from .const import (
 )
 from .coordinator import MideaCoordinator
 from .device import DeviceController, MideaCodec
-from .device_mapping import get_device_mapping, get_queries, get_centralized, get_default_values, get_respose
+from .device_mapping import get_device_mapping, get_centralized, get_default_values
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -89,7 +89,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if not devices:
         devices = [entry.data]
     
-    update_interval = entry.options.get("update_interval", 1)
     language = hass.config.language or "en"
     
     for device_data in devices:
@@ -126,21 +125,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 codec=codec,
                 protocol=protocol,
             )
-            if controller.connect():
-                return controller
-            return None
+            controller.open()
+            import time
+            for _ in range(30):
+                if controller.available:
+                    break
+                time.sleep(0.5)
+            return controller
         
         controller = await hass.async_add_executor_job(init_device)
-        if not controller:
-            _LOGGER.warning("Device %s initialization failed", device_id)
+        
+        if not controller.available:
+            _LOGGER.warning("Device %s failed to connect after 15 seconds", device_id)
+            controller.close()
             continue
         
         device_mapping = get_device_mapping(device_type_int, sn8)
         calculate_config = device_mapping.get("calculate", {})
-        queries = get_queries(device_type_int, sn8)
         centralized = get_centralized(device_type_int, sn8)
         default_values = get_default_values(device_type_int, sn8)
-        respose = get_respose(device_type_int, sn8)
 
         entities_cfg = (device_mapping.get("entities") or {})
         for platform_cfg in entities_cfg.values():
@@ -157,19 +160,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             hass,
             controller,
             f"Device_{device_id}",
-            update_interval=update_interval,
             calculate_config=calculate_config,
-            queries=queries,
             centralized=centralized,
             default_values=default_values,
             device_type=device_type_int,
-            respose=respose,
         )
         
-        try:
-            await coordinator.async_config_entry_first_refresh()
-        except UpdateFailed as e:
-            _LOGGER.error("Failed first refresh for device %s: %s", device_id, e)
+        controller.refresh_status()
+        
+        import asyncio
+        for _ in range(30):
+            if coordinator.data is not None:
+                break
+            await asyncio.sleep(0.5)
+        
+        if coordinator.data is None:
+            _LOGGER.warning("Device %s did not receive initial data", device_id)
             controller.close()
             continue
         
