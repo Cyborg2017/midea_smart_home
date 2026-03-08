@@ -305,7 +305,7 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
 
         await self._async_set_status_on_off(self._key_power, True)
         if new_status:
-            await self._async_set_multiple_controls(new_status)
+            await self.coordinator.async_set_controls(new_status)
 
     async def async_turn_off(self):
         await self._async_set_status_on_off(self._key_power, False)

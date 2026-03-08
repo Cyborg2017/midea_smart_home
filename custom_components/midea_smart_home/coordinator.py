@@ -267,10 +267,13 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     
                     self._apply_special_handling(full_control, is_control=True, control_attrs=control)
                     
+                    current_status = self.data.copy() if self.data else {}
                     await self.hass.async_add_executor_job(
-                        self.controller.set_control, full_control, None, None
+                        self.controller.set_control, full_control, None, current_status
                     )
                 else:
+                    current_status = self.data.copy() if self.data else {}
+                    
                     if self.device_type == 0xD9:
                         control["bucket"] = "db"
                         control["db_location"] = self._db_location
@@ -278,7 +281,7 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     self._apply_special_handling(control, is_control=True, control_attrs=control)
                     
                     await self.hass.async_add_executor_job(
-                        self.controller.set_control, control, None, None
+                        self.controller.set_control, control, None, current_status
                     )
                 
                 for attr_name, val in control.items():
@@ -302,4 +305,6 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return self.data
     
     async def async_set_controls(self, controls: dict[str, ControlValue]) -> StatusDict:
-        return await self.async_set_control(controls)
+        for attr, value in controls.items():
+            await self.async_set_control(attr, value)
+        return self.data

@@ -141,22 +141,22 @@ class MideaVacuumEntity(MideaBaseEntity, StateVacuumEntity):
     async def async_start(self):
         if self._key_control:
             control_value = self._control_actions.get("start", "work")
-            await self._async_set_control(self._key_control, control_value)
+            await self.coordinator.async_set_control(self._key_control, control_value)
 
     async def async_stop(self):
         if self._key_control:
             control_value = self._control_actions.get("stop", "stop")
-            await self._async_set_control(self._key_control, control_value)
+            await self.coordinator.async_set_control(self._key_control, control_value)
 
     async def async_pause(self):
         if self._key_control:
             control_value = self._control_actions.get("pause", "pause")
-            await self._async_set_control(self._key_control, control_value)
+            await self.coordinator.async_set_control(self._key_control, control_value)
 
     async def async_return_to_base(self):
         if self._key_control:
             control_value = self._control_actions.get("return", "charge")
-            await self._async_set_control(self._key_control, control_value)
+            await self.coordinator.async_set_control(self._key_control, control_value)
 
     async def async_set_fan_speed(self, fan_speed: str):
         new_status = self._key_fan_speeds.get(fan_speed)

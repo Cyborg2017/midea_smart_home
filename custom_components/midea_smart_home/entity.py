@@ -145,20 +145,6 @@ class MideaBaseEntity(CoordinatorEntity[MideaCoordinator]):
 
         return True
 
-    async def _async_set_control(
-        self,
-        attr: str,
-        value: ControlValue
-    ) -> None:
-        await self.coordinator.async_set_control(attr, value)
-
-    async def _async_set_multiple_controls(
-        self,
-        controls: dict[str, ControlValue]
-    ) -> None:
-        for attr, value in controls.items():
-            await self._async_set_control(attr, value)
-
     async def _async_set_status_on_off(
         self,
         key: Optional[str],
@@ -169,4 +155,4 @@ class MideaBaseEntity(CoordinatorEntity[MideaCoordinator]):
             return
         rationale = rationale or getattr(self, '_rationale', ["off", "on"])
         value = rationale[1] if on_off else rationale[0]
-        await self._async_set_control(key, value)
+        await self.coordinator.async_set_control(key, value)

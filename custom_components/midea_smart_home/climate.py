@@ -247,44 +247,44 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
                 await self.coordinator.async_set_control(new_status)
             else:
                 target_key = self._key_target_temperature[0] if isinstance(self._key_target_temperature, list) else self._key_target_temperature
-                await self._async_set_control(target_key, int(temperature))
+                await self.coordinator.async_set_control(target_key, int(temperature))
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         if self._key_hvac_modes is not None:
             mode_config = self._key_hvac_modes.get(hvac_mode)
             if mode_config:
-                await self._async_set_multiple_controls(mode_config)
+                await self.coordinator.async_set_controls(mode_config)
 
     async def async_set_preset_mode(self, preset_mode: str) -> None:
         if self._key_preset_modes is not None:
             preset_config = self._key_preset_modes.get(preset_mode)
             if preset_config:
-                await self._async_set_multiple_controls(preset_config)
+                await self.coordinator.async_set_controls(preset_config)
 
     async def async_set_fan_mode(self, fan_mode: str) -> None:
         if self._key_fan_modes is not None:
             fan_config = self._key_fan_modes.get(fan_mode)
             if fan_config:
-                await self._async_set_multiple_controls(fan_config)
+                await self.coordinator.async_set_controls(fan_config)
 
     async def async_set_swing_mode(self, swing_mode: str) -> None:
         if self._key_swing_modes is not None:
             swing_config = self._key_swing_modes.get(swing_mode)
             if swing_config:
-                await self._async_set_multiple_controls(swing_config)
+                await self.coordinator.async_set_controls(swing_config)
 
     async def async_turn_aux_heat_on(self) -> None:
         if self._aux_heat is not None:
-            await self._async_set_control(self._aux_heat, self._rationale[1] if len(self._rationale) > 1 else "on")
+            await self.coordinator.async_set_control(self._aux_heat, self._rationale[1] if len(self._rationale) > 1 else "on")
 
     async def async_turn_aux_heat_off(self) -> None:
         if self._aux_heat is not None:
-            await self._async_set_control(self._aux_heat, self._rationale[0] if self._rationale else "off")
+            await self.coordinator.async_set_control(self._aux_heat, self._rationale[0] if self._rationale else "off")
 
     async def async_turn_on(self) -> None:
         if self._key_power is not None:
-            await self._async_set_control(self._key_power, self._rationale[1])
+            await self.coordinator.async_set_control(self._key_power, self._rationale[1])
 
     async def async_turn_off(self) -> None:
         if self._key_power is not None:
-            await self._async_set_control(self._key_power, self._rationale[0])
+            await self.coordinator.async_set_control(self._key_power, self._rationale[0])

@@ -207,10 +207,10 @@ class MideaWaterHeaterEntity(MideaBaseEntity, WaterHeaterEntity):
             new_status[self._key_target_temperature[1]] = temp_dec
         else:
             new_status[self._key_target_temperature] = temperature
-        await self._async_set_multiple_controls(new_status)
+        await self.coordinator.async_set_controls(new_status)
 
     async def async_set_operation_mode(self, operation_mode: str) -> None:
         if self._key_operation_list is not None:
             new_status = self._key_operation_list.get(operation_mode)
             if new_status:
-                await self._async_set_multiple_controls(new_status)
+                await self.coordinator.async_set_controls(new_status)

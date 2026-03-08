@@ -143,15 +143,15 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         if self._key_power:
-            await self._async_set_control(self._key_power, "on")
+            await self.coordinator.async_set_control(self._key_power, "on")
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         if self._key_power:
-            await self._async_set_control(self._key_power, "off")
+            await self.coordinator.async_set_control(self._key_power, "off")
 
     async def async_set_humidity(self, humidity: int) -> None:
         if self._key_target_humidity:
-            await self._async_set_control(self._key_target_humidity, humidity)
+            await self.coordinator.async_set_control(self._key_target_humidity, humidity)
 
     async def async_set_mode(self, mode: str) -> None:
         if self._key_modes and mode in self._key_modes:
@@ -159,4 +159,4 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
             if isinstance(mode_config, dict):
                 await self.coordinator.async_set_control(mode_config)
             else:
-                await self._async_set_control(self._key_mode, mode)
+                await self.coordinator.async_set_control(self._key_mode, mode)
