@@ -165,6 +165,7 @@
       }
     },
     "fan": {
+      "fresh_air_fan": {"name": "Fresh Air Fan"},
       "fan": {
         "name": "Fan",
         "state_attributes": {
@@ -735,6 +736,12 @@
       },
       "work_time": {
         "name": "Work Time"
+      },
+      "fresh_filter_usage": {
+        "name": "Fresh Air Filter Usage Rate"
+      },
+      "fresh_air_humidity": {
+        "name": "Fresh Air Humidity"
       }
     },
     "switch": {
@@ -845,6 +852,9 @@
       },
       "wifi_led_enable": {
         "name": "WiFi LED"
+      },
+      "fresh_air_remove_odor": {
+        "name": "Fresh Air Remove Odor"
       }
     },
     "vacuum": {
