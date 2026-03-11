@@ -1,4 +1,4 @@
-"""Midea cloud - inlined minimal version."""
+"""Midea Smart Home Cloud API client."""
 
 import json
 import logging
@@ -18,7 +18,7 @@ SN8_MIN_SERIAL_LENGTH = 17
 _LOGGER = logging.getLogger(__name__)
 
 SUPPORTED_CLOUDS = {
-    "美的美居": {
+    "Meiju Cloud": {
         "class_name": "MeijuCloud",
         "app_id": "900",
         "app_key": "46579c15",
@@ -441,7 +441,6 @@ class MideaAirCloud(MideaCloud):
             return appliances
         return None
 
-
 def get_midea_cloud(
     cloud_name: str,
     session: ClientSession,
@@ -461,3 +460,95 @@ def get_midea_cloud(
             password=password,
         ),
     )
+
+async def download_lua_file(hass, access_token: str, sn: str, device_type: int, mf_code: str, model_number: str = "0") -> tuple[bool, str]:
+    """Download and process Lua file from cloud.
+    
+    Returns:
+        tuple[bool, str]: (success, lua_content)
+    """
+    import hashlib
+    import hmac
+    
+    # Use the same hardcoded keys as in all_in_one_getter.py
+    iot_key = bytes.fromhex(format(9795516279659324117647275084689641883661667, 'x')).decode()
+    hmac_key = bytes.fromhex(format(117390035944627627450677220413733956185864939010425, 'x')).decode()
+    
+    lua_data = {
+        "applianceSn": sn,
+        "applianceType": f"0x{device_type:X}",
+        "applianceMFCode": mf_code,
+        "version": "0",
+        "iotAppId": "900",
+        "modelNumber": model_number or "0",
+        "reqId": token_hex(16),
+        "stamp": datetime.now().strftime("%Y%m%d%H%M%S"),
+    }
+    
+    # Build request
+    json_data = json.dumps(lua_data, separators=(',', ':'))
+    random = str(int(time.time()))
+    
+    # Sign
+    msg = iot_key + json_data + random
+    sign = hmac.new(hmac_key.encode("ascii"), msg.encode("ascii"), hashlib.sha256).hexdigest()
+    
+    # Build headers
+    headers = {
+        "content-type": "application/json; charset=utf-8",
+        "secretVersion": "1",
+        "accesstoken": access_token,
+    }
+    headers["random"] = random
+    headers["sign"] = sign
+    
+    _LOGGER.info("Lua download request data: %s", lua_data)
+    
+    # Send request
+    api_url = "https://mp-prod.smartmidea.net/mas/v5/app/proxy?alias=/v1/appliance/protocol/lua/luaGet"
+    
+    try:
+        async with ClientSession() as session:
+            async with session.post(api_url, headers=headers, data=json_data, timeout=30) as response:
+                result = await response.json()
+                
+                _LOGGER.info("Lua download response: %s", result)
+                
+                if str(result.get("code")) == "0" and "data" in result:
+                    data_section = result["data"]
+                    if "url" in data_section:
+                        lua_url = data_section["url"]
+                        
+                        # Download Lua file content
+                        async with session.get(lua_url, timeout=30) as lua_response:
+                            if lua_response.status == 200:
+                                lua_content = await lua_response.text()
+                                
+                                # Decrypt and process Lua code
+                                from .lua import decrypt_lua_code
+                                formatted_lua = decrypt_lua_code(lua_content)
+                                
+                                # Remove local bit = require("bit")
+                                modified = formatted_lua.replace('local bit = require("bit")', '')
+                                
+                                # Add local bit = require "bit" at the beginning
+                                modified = 'local bit = require "bit".bit\n' + modified
+                                
+                                # Modify dataType check
+                                modified = modified.replace(
+                                    'if ((dataType ~= 0x02) and (dataType ~= 0x03) and (dataType ~= 0x04)) then         return nil     end',
+                                    ''
+                                )
+                                
+                                modified = modified.replace("\r\n", "\n")
+                                return True, modified
+                            else:
+                                _LOGGER.error("Failed to download Lua file from URL: %s", lua_response.status)
+                    else:
+                        _LOGGER.error("No URL in Lua download response")
+                else:
+                    _LOGGER.error("Lua download API failed: %s", result)
+    except Exception as e:
+        _LOGGER.error("Lua download exception: %s", e)
+        
+    return False, ""

@@ -1,7 +1,10 @@
-"""Midea packet builder - inlined minimal version."""
+"""Midea Smart Home Packet Builder."""
 
 from datetime import UTC, datetime
 from hashlib import md5
+
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
 
 from .security import LocalSecurity
 
@@ -29,7 +32,11 @@ class PacketBuilder:
             self.packet[3] = 0x10
             self.packet[6] = 0x7B
         else:
-            self.packet.extend(self.security.aes_encrypt(self.command))
+            self.packet.extend(
+                AES.new(self.security.aes_key, AES.MODE_ECB).encrypt(
+                    bytearray(pad(self.command, 16))
+                )
+            )
         self.packet[4:6] = (len(self.packet) + 16).to_bytes(2, "little")
         salt = bytes.fromhex(
             format(

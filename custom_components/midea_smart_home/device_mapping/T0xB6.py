@@ -7,7 +7,7 @@ DEVICE_MAPPING = {
         "rationale": ["off", "on"],
         "queries": [{}],
         "centralized": ["lightness"],
-        "respose": ["on"],
+        "response": ["on"],
         "calculate": {
             "get": [
                 {

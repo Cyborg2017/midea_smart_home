@@ -33,7 +33,7 @@ DEVICE_MAPPING = {
                     "max": 5,
                     "step": 1,
                     "unit_of_measurement": UnitOfTime.MINUTES
-                } 
+                }
             },
             Platform.SWITCH: {
                 "radar_induction_enable": {

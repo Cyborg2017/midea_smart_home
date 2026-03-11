@@ -1,4 +1,4 @@
-"""Midea library exceptions."""
+"""Midea Smart Home library exceptions."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Midea security - inlined minimal version."""
+"""Midea Smart Home Security."""
 
 import hmac
 from hashlib import md5, sha256
@@ -94,28 +94,9 @@ class CloudSecurity:
         self._aes_key = key
         self._aes_iv = iv
 
-    def aes_encrypt_with_fixed_key(self, data: bytes) -> bytes:
-        return self.aes_encrypt(data, self._fixed_key, self._fixed_iv)
-
     def aes_decrypt_with_fixed_key(self, data: str) -> str:
         return self.aes_decrypt(data, self._fixed_key, self._fixed_iv)
 
-    def aes_encrypt(
-        self,
-        data: str | bytes,
-        key: bytes | None = None,
-        iv: bytes | None = None,
-    ) -> bytes:
-        if len(data) == 0:
-            return b""
-        aes_key = key if key is not None else self._aes_key
-        if aes_key is None:
-            raise ValueError("Encrypt need a key")
-        if isinstance(data, str):
-            data = bytes.fromhex(data)
-        if iv is None or iv == b"0":
-            return AES.new(aes_key, AES.MODE_ECB).encrypt(pad(data, 16))
-        return AES.new(aes_key, AES.MODE_CBC, iv=iv).encrypt(pad(data, 16))
 
     def aes_decrypt(
         self,
@@ -191,9 +172,6 @@ class LocalSecurity:
             )
         except ValueError:
             return bytearray(0)
-
-    def aes_encrypt(self, raw: bytes) -> bytes:
-        return AES.new(self.aes_key, AES.MODE_ECB).encrypt(bytearray(pad(raw, 16)))
 
     def aes_cbc_decrypt(self, raw: bytes, key: Buffer) -> bytes:
         return AES.new(key=key, mode=AES.MODE_CBC, iv=self.iv).decrypt(raw)

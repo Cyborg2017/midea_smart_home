@@ -6,7 +6,7 @@ DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
         "queries": [{}, {"query_type": "prevent_straight_wind"}, {"query_type": "prevent_super_cool"},
-                    {"query_type": "wind_swing_ud_angle"}, {"query_type": "wind_swing_lr_angle"}, {"query_type": "no_wind_sense"}], 
+                    {"query_type": "wind_swing_ud_angle"}, {"query_type": "wind_swing_lr_angle"}, {"query_type": "no_wind_sense"}],
         "centralized": ["buzzer"],
         "calculate":{
             "get": [
@@ -223,7 +223,7 @@ DEVICE_MAPPING = {
     ("22040055", "22040023", "22040053"): {
         "rationale": ["off", "on"],
         "queries": [{}, {"query_type": "prevent_straight_wind"}, {"query_type": "prevent_super_cool"},
-                    {"query_type": "wind_swing_ud_angle"}, {"query_type": "wind_swing_lr_angle"}], 
+                    {"query_type": "wind_swing_ud_angle"}, {"query_type": "wind_swing_lr_angle"}],
         "centralized": ["buzzer"],
         "calculate":{
             "get": [

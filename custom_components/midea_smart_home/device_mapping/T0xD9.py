@@ -115,7 +115,7 @@ DEVICE_MAPPING = {
                         "timer_180": {"db_dry": 11},
                         "timer_120": {"db_dry": 7},
                         "timer_60": {"db_dry": 5},
-                        "timer_30": {"db_dry": 4}              
+                        "timer_30": {"db_dry": 4}
                     }
                 }
             },
