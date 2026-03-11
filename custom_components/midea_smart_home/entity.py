@@ -1,28 +1,63 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Generator
 
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
+from .const import (
+    CONF_DEVICE_ID,
+    CONF_DEVICE_NAME,
+    CONF_DEVICE_TYPE,
+    CONF_PRODUCT_MODEL,
+    CONF_SN,
+    CONF_SN8,
+    DOMAIN,
+)
 from .coordinator import MideaCoordinator, ControlValue
+from .device_mapping import get_device_mapping
+
+
+def iter_midea_device_configs(
+    hass: HomeAssistant, entry: ConfigEntry
+) -> Generator[tuple[MideaCoordinator, int, str, str, str, str, str, dict], None, None]:
+    entry_data = hass.data[DOMAIN][entry.entry_id]
+
+    for device_id_str, data in entry_data.items():
+        if device_id_str == "device_list":
+            continue
+        coordinator = data.get("coordinator")
+        if not coordinator:
+            continue
+        device_id = data[CONF_DEVICE_ID]
+        device_type = data[CONF_DEVICE_TYPE]
+        sn8 = data.get(CONF_SN8, "")
+        sn = data.get(CONF_SN, "")
+        model = data.get(CONF_PRODUCT_MODEL, "")
+        device_name = data.get(CONF_DEVICE_NAME, f"Midea Device {device_id}")
+        device_type_int = (
+            int(device_type, 16) if isinstance(device_type, str) else device_type
+        )
+        device_mapping = get_device_mapping(device_type_int, sn8)
+        yield coordinator, device_id, device_type, sn, sn8, device_name, model, device_mapping
 
 
 class MideaBaseEntity(CoordinatorEntity[MideaCoordinator]):
     _attr_has_entity_name = True
     _attr_should_poll = False
-    
+
     @property
     def available(self) -> bool:
         if not self.coordinator.last_update_success:
             return False
-        
+
         if not self.coordinator.controller.available:
             return False
-            
+
         data = self.coordinator.data
         if data is None:
             return False
-            
+
         return True
 
     def __init__(

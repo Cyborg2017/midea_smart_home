@@ -9,10 +9,9 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_DEVICE_ID, CONF_DEVICE_NAME, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, CONF_PRODUCT_MODEL, DOMAIN
+from .const import DOMAIN
 from .coordinator import MideaCoordinator
-from .device_mapping import get_device_mapping
-from .entity import MideaBaseEntity
+from .entity import MideaBaseEntity, iter_midea_device_configs
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,31 +22,17 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up binary sensor entities for Midea devices."""
-    entry_data = hass.data[DOMAIN][entry.entry_id]
     entities = []
 
-    for device_id_str, data in entry_data.items():
-        if device_id_str == "device_list":
-            continue
-        coordinator = data.get("coordinator")
-        if not coordinator:
-            continue
-        device_id = data[CONF_DEVICE_ID]
-        device_type = data[CONF_DEVICE_TYPE]
-        sn8 = data.get(CONF_SN8, "")
-        sn = data.get(CONF_SN, "")
-        model = data.get(CONF_PRODUCT_MODEL, "")
-        device_name = data.get(CONF_DEVICE_NAME, f"Midea Device {device_id}")
-        device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
-        device_mapping = get_device_mapping(device_type_int, sn8)
-        entities_config = device_mapping.get("entities", {})
+    for coordinator, device_id, device_type, sn, sn8, device_name, model, device_mapping in iter_midea_device_configs(hass, entry):
         entities.append(
             MideaDeviceStatusSensorEntity(
                 coordinator, device_id, device_type, sn, sn8, device_name, model
             )
         )
-
+        entities_config = device_mapping.get("entities", {})
         binary_sensor_config = entities_config.get(Platform.BINARY_SENSOR, {})
+
         if binary_sensor_config:
             for sensor_id, config in binary_sensor_config.items():
                 device_class = config.get("device_class")
@@ -109,7 +94,7 @@ class MideaDeviceStatusSensorEntity(MideaBaseEntity, BinarySensorEntity):
             "model": self._model,
             "device_type": device_type_str,
         }
-        
+
         other_attrs = {}
         for key, value in data.items():
             if value is not None:
@@ -119,10 +104,10 @@ class MideaDeviceStatusSensorEntity(MideaBaseEntity, BinarySensorEntity):
                     for sub_key, sub_value in value.items():
                         if sub_value is not None and isinstance(sub_value, (str, int, float, bool)):
                             other_attrs[f"{key}_{sub_key}"] = sub_value
-        
+
         for key in sorted(other_attrs.keys()):
             attributes[key] = other_attrs[key]
-        
+
         return attributes
 
 
@@ -160,7 +145,7 @@ class MideaBinarySensorEntity(MideaBaseEntity, BinarySensorEntity):
         """Return if the binary sensor is on."""
         if not self.available:
             return False
-            
+
         data = self.coordinator.data or {}
         value = data.get(self._sensor_id)
 

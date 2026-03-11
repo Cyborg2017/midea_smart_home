@@ -1,12 +1,10 @@
 import logging
 import os
-import base64
 from pathlib import Path
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
-from homeassistant.helpers.update_coordinator import UpdateFailed
 import homeassistant.helpers.config_validation as cv
 
 from .const import (
@@ -25,57 +23,37 @@ from .const import (
     CONF_TOKEN,
     DEFAULT_PORT,
     DEVICE_TYPES,
-    DEVICE_TYPES_ZH,
     DOMAIN,
     PLATFORMS,
-    CJSON_LUA,
-    BIT_LUA,
     LUA_COMMON_PATH,
     ProtocolVersion,
 )
 from .coordinator import MideaCoordinator
-from .device import DeviceController, MideaCodec
+from .midea_lib.device import MideaDevice
+from .midea_lib.lua import write_file, ensure_lua_files
 from .device_mapping import get_device_mapping, get_centralized, get_default_values
 
 _LOGGER = logging.getLogger(__name__)
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
-def _write_lua_file(file_path: str, content: str) -> bool:
-    try:
-        with open(file_path, "w", encoding="utf-8") as fp:
-            fp.write(content)
-        return True
-    except PermissionError as e:
-        _LOGGER.error("Failed to create %s: %s", file_path, e)
-        return False
-
-def _ensure_lua_files(lua_path: str) -> tuple:
-    cjson = os.path.join(lua_path, "cjson.lua")
-    bit = os.path.join(lua_path, "bit.lua")
-    
-    cjson_lua = base64.b64decode(CJSON_LUA.encode("utf-8")).decode("utf-8")
-    bit_lua = base64.b64decode(BIT_LUA.encode("utf-8")).decode("utf-8")
-    
-    return cjson, bit, cjson_lua, bit_lua
-
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     hass.data.setdefault(DOMAIN, {})
-    
+
     lua_path = hass.config.path(LUA_COMMON_PATH)
     os.makedirs(lua_path, exist_ok=True)
-    
+
     cjson, bit, cjson_lua, bit_lua = await hass.async_add_executor_job(
-        _ensure_lua_files, lua_path
+        ensure_lua_files, lua_path
     )
-    
+
     if not os.path.exists(cjson):
-        success = await hass.async_add_executor_job(_write_lua_file, cjson, cjson_lua)
+        success = await hass.async_add_executor_job(write_file, cjson, cjson_lua)
         if success:
             _LOGGER.info("Created cjson.lua at %s", cjson)
-    
+
     if not os.path.exists(bit):
-        success = await hass.async_add_executor_job(_write_lua_file, bit, bit_lua)
+        success = await hass.async_add_executor_job(write_file, bit, bit_lua)
         if success:
             _LOGGER.info("Created bit.lua at %s", bit)
 
@@ -84,13 +62,13 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN].setdefault(entry.entry_id, {})
-    
+
     devices = entry.data.get("devices", [])
     if not devices:
         devices = [entry.data]
-    
+
     language = hass.config.language or "en"
-    
+
     for device_data in devices:
         device_id = device_data[CONF_DEVICE_ID]
         ip_address = device_data.get(CONF_IP, "")
@@ -102,44 +80,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         sn8 = device_data.get(CONF_SN8, "")
         device_type = device_data.get(CONF_DEVICE_TYPE)
         device_type_int = int(device_type, 16) if isinstance(device_type, str) else 0
-        
+
         device_name = device_data.get(CONF_DEVICE_NAME, "")
         if not device_name:
-            if language.startswith("zh"):
-                device_name = DEVICE_TYPES_ZH.get(device_type_int, f"设备 {device_type}")
-            else:
-                device_name = DEVICE_TYPES.get(device_type_int, f"Device {device_type}")
-        
+            device_name = DEVICE_TYPES.get(device_type_int, f"Device {device_type}")
+
         protocol = device_data.get(CONF_PROTOCOL, ProtocolVersion.V3)
-        
-        lua_common_dir = Path(hass.config.config_dir) / LUA_COMMON_PATH
-        
-        def init_device():
-            codec = MideaCodec(lua_file, str(lua_common_dir), sn=sn, subtype=0, device_type=device_type_int, sn8=sn8)
-            controller = DeviceController(
-                device_id=device_id,
-                ip_address=ip_address,
-                port=port,
-                token=token,
-                key=key,
-                codec=codec,
-                protocol=protocol,
-            )
-            controller.open()
-            import time
-            for _ in range(30):
-                if controller.available:
-                    break
-                time.sleep(0.5)
-            return controller
-        
-        controller = await hass.async_add_executor_job(init_device)
-        
-        if not controller.available:
-            _LOGGER.warning("Device %s failed to connect after 15 seconds", device_id)
-            controller.close()
-            continue
-        
+
+        lua_common_dir = str(Path(hass.config.config_dir) / LUA_COMMON_PATH)
+
         device_mapping = get_device_mapping(device_type_int, sn8)
         calculate_config = device_mapping.get("calculate", {})
         centralized = get_centralized(device_type_int, sn8)
@@ -155,33 +104,64 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 if "default_value" in ecfg:
                     attr_name = ecfg.get("attribute", entity_key)
                     default_values[attr_name] = ecfg["default_value"]
-        
+
+        def init_device():
+            device = MideaDevice(
+                device_id=device_id,
+                device_type=device_type_int,
+                ip_address=ip_address,
+                port=port,
+                token=token,
+                key=key,
+                protocol=protocol,
+                model=device_data.get(CONF_PRODUCT_MODEL, ""),
+                subtype=0,
+                sn=sn,
+                sn8=sn8,
+                lua_file=lua_file,
+                lua_common_dir=lua_common_dir,
+                device_name=device_name,
+                calculate_config=calculate_config,
+                centralized=centralized,
+                default_values=default_values,
+            )
+            device.open()
+            import time
+            for _ in range(30):
+                if device.available:
+                    break
+                time.sleep(0.5)
+            return device
+
+        device = await hass.async_add_executor_job(init_device)
+
+        if not device.available:
+            _LOGGER.warning("Device %s failed to connect after 15 seconds", device_id)
+            device.close()
+            continue
+
         coordinator = MideaCoordinator(
             hass,
-            controller,
+            device,
             f"Device_{device_id}",
-            calculate_config=calculate_config,
-            centralized=centralized,
-            default_values=default_values,
-            device_type=device_type_int,
         )
-        
-        controller.refresh_status()
-        
+
+        device.refresh_status()
+
         import asyncio
         for _ in range(30):
             if coordinator.data is not None:
                 break
             await asyncio.sleep(0.5)
-        
+
         if coordinator.data is None:
             _LOGGER.warning("Device %s did not receive initial data", device_id)
-            controller.close()
+            device.close()
             continue
-        
+
         hass.data[DOMAIN][entry.entry_id][str(device_id)] = {
             "coordinator": coordinator,
-            "controller": controller,
+            "device": device,
             CONF_DEVICE_ID: device_id,
             CONF_DEVICE_TYPE: device_type,
             CONF_SN8: sn8,
@@ -191,24 +171,24 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             CONF_DEVICE_NAME: device_name,
             CONF_PROTOCOL: protocol,
         }
-    
+
     try:
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     except (ValueError, KeyError, OSError) as e:
         _LOGGER.error("Failed to set up platforms: %s", e)
         return False
-    
+
     entry.async_on_unload(entry.add_update_listener(async_update_options))
-    
+
     return True
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         entry_data = hass.data[DOMAIN].pop(entry.entry_id)
         for device_id_str, data in entry_data.items():
-            controller = data.get("controller")
-            if controller:
-                controller.close()
+            device = data.get("device")
+            if device:
+                device.close()
     return unload_ok
 
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:

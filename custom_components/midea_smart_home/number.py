@@ -6,10 +6,8 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_DEVICE_ID, CONF_DEVICE_NAME, CONF_DEVICE_TYPE, CONF_SN, CONF_SN8, CONF_PRODUCT_MODEL, DOMAIN
 from .coordinator import MideaCoordinator
-from .device_mapping import get_device_mapping
-from .entity import MideaBaseEntity
+from .entity import MideaBaseEntity, iter_midea_device_configs
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -19,26 +17,14 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    entry_data = hass.data[DOMAIN][entry.entry_id]
     entities = []
 
-    for device_id_str, data in entry_data.items():
-        if device_id_str == "device_list":
-            continue
-        coordinator = data.get("coordinator")
-        if not coordinator:
-            continue
-        device_id = data[CONF_DEVICE_ID]
-        device_type = data[CONF_DEVICE_TYPE]
-        sn8 = data.get(CONF_SN8, "")
-        sn = data.get(CONF_SN, "")
-        model = data.get(CONF_PRODUCT_MODEL, "")
-        device_name = data.get(CONF_DEVICE_NAME, f"Midea Device {device_id}")
-        device_type_int = int(device_type, 16) if isinstance(device_type, str) else device_type
-        device_mapping = get_device_mapping(device_type_int, sn8)
+    for coordinator, device_id, device_type, sn, sn8, device_name, model, device_mapping in iter_midea_device_configs(
+        hass, entry
+    ):
         entities_config = device_mapping.get("entities", {})
         number_config = entities_config.get(Platform.NUMBER, {})
-        
+
         if number_config:
             for number_id, config in number_config.items():
                 entities.append(
