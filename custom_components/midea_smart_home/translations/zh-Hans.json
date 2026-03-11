@@ -165,7 +165,22 @@
       }
     },
     "fan": {
-      "fresh_air_fan": {"name": "新风"},
+      "fresh_air_fan": {
+        "name": "新风",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "heat_exchange": "热交换",
+              "smooth_in": "舒适进风",
+              "rough_in": "快速进风",
+              "smooth_out": "舒适排风",
+              "rough_out": "快速排风",
+              "auto": "自动",
+              "innercycle": "内循环"
+            }
+          }
+        }
+      },
       "fan": {
         "name": "风扇",
         "state_attributes": {

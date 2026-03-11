@@ -165,7 +165,22 @@
       }
     },
     "fan": {
-      "fresh_air_fan": {"name": "Fresh Air Fan"},
+      "fresh_air_fan": {
+        "name": "Fresh Air",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "heat_exchange": "Heat Exchange",
+              "smooth_in": "Comfort Intake",
+              "rough_in": "Boost Intake",
+              "smooth_out": "Comfort Exhaust",
+              "rough_out": "Boost Exhaust",
+              "auto": "Auto",
+              "innercycle": "Internal Circulation"
+            }
+          }
+        }
+      },
       "fan": {
         "name": "Fan",
         "state_attributes": {
