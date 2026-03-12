@@ -39,6 +39,7 @@ DEVICE_TYPES = {
     0x17: "Laundry Machine",
     0x26: "Bath Heater",
     0xAC: "Air Conditioner",
+    0xB0: "Microwave Oven",
     0xB6: "Range Hood",
     0xB8: "Smart Robot Vacuum",
     0xD9: "Twin Tub Washing Machine",

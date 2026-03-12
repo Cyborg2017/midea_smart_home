@@ -191,6 +191,9 @@
       "soak_time": {
         "name": "浸泡时间"
       },
+      "temperature": {
+        "name": "设定温度"
+      },
       "wash_level": {
         "name": "洗涤水位"
       },
@@ -199,6 +202,18 @@
       },
       "wash_time": {
         "name": "洗涤时间"
+      },
+      "work_hour": {
+        "name": "设定小时"
+      },
+      "work_minute": {
+        "name": "设定分钟"
+      },
+      "work_second": {
+        "name": "设定秒"
+      },
+      "weight": {
+        "name": "重量"
       }
     },
     "select": {
@@ -323,6 +338,24 @@
           "l4": "L4",
           "off": "关闭",
           "smart": "智能"
+        }
+      },
+      "fire_power": {
+        "name": "微波档位",
+        "state": {
+          "100": "100%",
+          "80": "80%",
+          "50": "50%",
+          "30": "30%",
+          "10": "10%",
+          "none": "无"
+        }
+      },
+      "pre_heat": {
+        "name": "预热",
+        "state": {
+          "off": "关闭",
+          "on": "开启"
         }
       },
       "follow_body_sense": {
@@ -582,6 +615,23 @@
           "top": "最上",
           "upper": "偏上"
         }
+      },
+      "work_mode": {
+        "name": "工作模式",
+        "state": {
+          "microwave_1": "微波加热",
+          "double_tube_hot_wind_tube_fan_1": "空气炸",
+          "steam_double_tube_fan_1": "轻脂蒸烤",
+          "double_tube_1": "烘焙烧烤",
+          "steam_double_tube_1": "低卡嫩蒸",
+          "fast_unfreeze": "快速解冻",
+          "zymosis": "发酵",
+          "warm": "保温",
+          "stop": "停止",
+          "pause": "暂停",
+          "work": "工作",
+          "none": "无"
+        }
       }
     },
     "sensor": {
@@ -626,6 +676,9 @@
       },
       "error_code": {
         "name": "错误代码"
+      },
+      "fire_power": {
+        "name": "微波档位"
       },
       "hcho": {
         "name": "甲醛浓度"
@@ -686,6 +739,9 @@
       },
       "work_status": {
         "name": "工作状态"
+      },
+      "work_mode": {
+        "name": "工作模式"
       },
       "work_time": {
         "name": "工作时间"

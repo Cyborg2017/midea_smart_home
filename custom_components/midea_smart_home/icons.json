@@ -44,9 +44,14 @@
             "rinse_level": { "default": "mdi:arrow-up-down" },
             "softener": { "default": "mdi:water" },
             "soak_time": { "default": "mdi:timer" },
+            "temperature": { "default": "mdi:thermometer" },
             "wash_level": { "default": "mdi:arrow-up-down" },
             "wash_strength": { "default": "mdi:arrow-up-down" },
-            "wash_time": { "default": "mdi:timer" }
+            "wash_time": { "default": "mdi:timer" },
+            "weight": { "default": "mdi:weight" },
+            "work_hour": { "default": "mdi:clock-outline" },
+            "work_minute": { "default": "mdi:clock-outline" },
+            "work_second": { "default": "mdi:timer" }
         },
         "select": {
             "aidry": { "default": "mdi:tshirt-crew" },
@@ -61,6 +66,7 @@
             "db_temperature": { "default": "mdi:thermometer" },
             "dehydration_speed": { "default": "mdi:speedometer" },
             "detergent": { "default": "mdi:water" },
+            "fire_power": { "default": "mdi:microwave" },
             "follow_body_sense": { "default": "mdi:account" },
             "gear": { "default": "mdi:tune" },
             "gesture": { "default": "mdi:hand-wave" },
@@ -73,6 +79,7 @@
             "light_mode": { "default": "mdi:lightbulb" },
             "mode": { "default": "mdi:tune" },
             "no_wind_sense": { "default": "mdi:air-filter" },
+            "pre_heat": { "default": "mdi:thermometer-chevron-up" },
             "program": { "default": "mdi:washing-machine" },
             "soak_count": { "default": "mdi:water-sync" },
             "stains": { "default": "mdi:water-alert" },
@@ -83,7 +90,8 @@
             "wind_direction": { "default": "mdi:weather-windy" },
             "wind_speed": { "default": "mdi:weather-windy" },
             "wind_swing_lr_angle": { "default": "mdi:arrow-left-right" },
-            "wind_swing_ud_angle": { "default": "mdi:arrow-up-down" }
+            "wind_swing_ud_angle": { "default": "mdi:arrow-up-down" },
+            "work_mode": { "default": "mdi:tune" }
         },
         "sensor": {
             "air_dry_left_time": { "default": "mdi:timer" },
@@ -100,6 +108,7 @@
             "dry_time": { "default": "mdi:timer" },
             "end_time": { "default": "mdi:clock-end" },
             "error_code": { "default": "mdi:alert-circle" },
+            "fire_power": { "default": "mdi:microwave" },
             "hcho": { "default": "mdi:molecule" },
             "main_light_brightness": { "default": "mdi:brightness-6" },
             "mode": { "default": "mdi:tune" },
@@ -119,7 +128,8 @@
             "wash_time_value": { "default": "mdi:timer" },
             "water_feedback": { "default": "mdi:water" },
             "wind_pressure": { "default": "mdi:weather-windy" },
-            "work_status": { "default": "mdi:information" },
+            "work_mode": { "default": "mdi:tune" },
+            "work_status": { "default": "mdi:play-circle-outline" },
             "work_time": { "default": "mdi:clock-outline" }
         },
         "switch": {

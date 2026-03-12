@@ -191,6 +191,9 @@
       "soak_time": {
         "name": "Soak Time"
       },
+      "temperature": {
+        "name": "Set Temperature"
+      },
       "wash_level": {
         "name": "Wash Level"
       },
@@ -199,6 +202,18 @@
       },
       "wash_time": {
         "name": "Wash Time"
+      },
+      "work_hour": {
+        "name": "Set Hour"
+      },
+      "work_minute": {
+        "name": "Set Minute"
+      },
+      "work_second": {
+        "name": "Set Second"
+      },
+      "weight": {
+        "name": "Weight"
       }
     },
     "select": {
@@ -323,6 +338,24 @@
           "l4": "L4",
           "off": "Off",
           "smart": "Smart"
+        }
+      },
+      "fire_power": {
+        "name": "Microwave Power",
+        "state": {
+          "100": "100%",
+          "80": "80%",
+          "50": "50%",
+          "30": "30%",
+          "10": "10%",
+          "none": "None"
+        }
+      },
+      "pre_heat": {
+        "name": "Preheat",
+        "state": {
+          "off": "Off",
+          "on": "On"
         }
       },
       "follow_body_sense": {
@@ -582,6 +615,23 @@
           "top": "Top",
           "upper": "Upper"
         }
+      },
+      "work_mode": {
+        "name": "Work Mode",
+        "state": {
+          "microwave_1": "Microwave Heating",
+          "double_tube_hot_wind_tube_fan_1": "Air Fry",
+          "steam_double_tube_fan_1": "Low-fat Steam Bake",
+          "double_tube_1": "Bake & Grill",
+          "steam_double_tube_1": "Low-cal Steam",
+          "fast_unfreeze": "Quick Defrost",
+          "zymosis": "Fermentation",
+          "warm": "Keep Warm",
+          "stop": "Stop",
+          "pause": "Pause",
+          "work": "Work",
+          "none": "None"
+        }
       }
     },
     "sensor": {
@@ -626,6 +676,9 @@
       },
       "error_code": {
         "name": "Error Code"
+      },
+      "fire_power": {
+        "name": "Microwave Power"
       },
       "hcho": {
         "name": "Formaldehyde Level"
@@ -686,6 +739,9 @@
       },
       "work_status": {
         "name": "Work Status"
+      },
+      "work_mode": {
+        "name": "Work Mode"
       },
       "work_time": {
         "name": "Work Time"
