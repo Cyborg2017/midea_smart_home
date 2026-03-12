@@ -63,14 +63,3 @@ def get_device_mapping(device_type: int, sn8: str = "") -> dict:
         return mapping["default"]
 
     return mapping
-
-def get_centralized(device_type: int, sn8: str = "") -> list:
-    """Get device centralized control attributes list."""
-    mapping = get_device_mapping(device_type, sn8)
-    return mapping.get("centralized", [])
-
-def get_default_values(device_type: int, sn8: str = "") -> dict:
-    """Get device attribute default values."""
-    mapping = get_device_mapping(device_type, sn8)
-    return mapping.get("default_values", {})
-

@@ -31,7 +31,7 @@ from .const import (
 from .coordinator import MideaCoordinator
 from .midea_lib.device import MideaDevice
 from .midea_lib.lua import write_file, ensure_lua_files
-from .device_mapping import get_device_mapping, get_centralized, get_default_values
+from .device_mapping import get_device_mapping
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -91,8 +91,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
         device_mapping = get_device_mapping(device_type_int, sn8)
         calculate_config = device_mapping.get("calculate", {})
-        centralized = get_centralized(device_type_int, sn8)
-        default_values = get_default_values(device_type_int, sn8)
+        centralized = list(device_mapping.get("centralized", []))
+        default_values = dict(device_mapping.get("default_values", {}))
 
         entities_cfg = (device_mapping.get("entities") or {})
         for platform_cfg in entities_cfg.values():
