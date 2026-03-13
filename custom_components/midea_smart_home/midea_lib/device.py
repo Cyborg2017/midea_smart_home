@@ -377,6 +377,7 @@ class MideaDevice:
         calculate_config: Optional[dict] = None,
         centralized: Optional[list[str]] = None,
         default_values: Optional[dict] = None,
+        category: str = "",
     ):
         self._device_id = device_id
         self._device_type = device_type
@@ -396,7 +397,8 @@ class MideaDevice:
             sn=sn, 
             subtype=subtype, 
             device_type=device_type, 
-            sn8=sn8
+            sn8=sn8,
+            category=category
         )
         
         # Initialize Controller

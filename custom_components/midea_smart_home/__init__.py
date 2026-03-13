@@ -8,6 +8,7 @@ from homeassistant.helpers.typing import ConfigType
 import homeassistant.helpers.config_validation as cv
 
 from .const import (
+    CONF_CATEGORY,
     CONF_DEVICE_ID,
     CONF_DEVICE_NAME,
     CONF_DEVICE_TYPE,
@@ -85,11 +86,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if not device_name:
             device_name = DEVICE_TYPES.get(device_type_int, f"Device {device_type}")
 
+        category = device_data.get(CONF_CATEGORY, "")
         protocol = device_data.get(CONF_PROTOCOL, ProtocolVersion.V3)
 
         lua_common_dir = str(Path(hass.config.config_dir) / LUA_COMMON_PATH)
 
-        device_mapping = get_device_mapping(device_type_int, sn8)
+        device_mapping = get_device_mapping(device_type_int, sn8, category)
         calculate_config = device_mapping.get("calculate", {})
         centralized = list(device_mapping.get("centralized", []))
         default_values = dict(device_mapping.get("default_values", {}))
@@ -124,6 +126,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 calculate_config=calculate_config,
                 centralized=centralized,
                 default_values=default_values,
+                category=category,
             )
             device.open()
             import time
@@ -170,6 +173,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             CONF_MODEL_NUMBER: device_data.get(CONF_MODEL_NUMBER, ""),
             CONF_DEVICE_NAME: device_name,
             CONF_PROTOCOL: protocol,
+            CONF_CATEGORY: category,
         }
 
     try:

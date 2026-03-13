@@ -299,6 +299,7 @@ class MeijuCloud(MideaCloud):
                             ),
                             "model": appliance.get("productModel"),
                             "online": appliance.get("onlineStatus") == "1",
+                            "category": appliance.get("category", ""),
                         }
                         sn8 = device_info.get("sn8")
                         if not sn8 or len(sn8) == 0:

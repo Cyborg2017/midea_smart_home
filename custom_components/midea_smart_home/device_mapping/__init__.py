@@ -37,29 +37,43 @@ def load_device_mappings():
 
 load_device_mappings()
 
-def get_device_mapping(device_type: int, sn8: str = "") -> dict:
+def get_device_mapping(device_type: int, sn8: str = "", category: str = "") -> dict:
     """Get device mapping for specified device type.
 
     Args:
         device_type: Device type (e.g., 0xFB)
         sn8: Device model code (8 digits), used to get specific device mapping
+        category: Product category from cloud, used for default mapping fallback
 
     Returns:
-        Device mapping dict, returns sn8 mapping if available, otherwise default
+        Device mapping dict, returns sn8 mapping if available, 
+        otherwise default+category if exists, finally fallback to default
     """
     mapping = DEVICE_MAPPINGS.get(device_type, {})
 
     if not mapping:
         return {}
 
+    result = None
+    
     if sn8:
         if sn8 in mapping:
-            return mapping[sn8]
-        for key in mapping:
-            if isinstance(key, tuple) and sn8 in key:
-                return mapping[key]
+            result = mapping[sn8]
+        else:
+            for key in mapping:
+                if isinstance(key, tuple) and sn8 in key:
+                    result = mapping[key]
+                    break
 
-    if "default" in mapping:
-        return mapping["default"]
+    if result is None and category:
+        category_key = f"default_{category.replace('-', '_')}"
+        if category_key in mapping:
+            result = mapping[category_key]
 
-    return mapping
+    if result is None and "default" in mapping:
+        result = mapping["default"]
+
+    if result is None:
+        result = mapping
+		
+    return result

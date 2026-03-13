@@ -176,13 +176,15 @@ class MideaCodec(LuaRuntime):
         sn: str = "",
         subtype: int = 0,
         device_type: int = 0,
-        sn8: str = ""
+        sn8: str = "",
+        category: str = ""
     ):
         super().__init__(file_path, lua_default_dir)
         self._sn = sn or ""
         self._subtype = subtype
         self._device_type = device_type
         self._sn8 = sn8 or ""
+        self._category = category or ""
 
     def build_query(self, query: Optional[dict] = None) -> str:
         try:
@@ -223,6 +225,8 @@ class MideaCodec(LuaRuntime):
             }))
             if result:
                 status = json.loads(result).get("status")
+                if status and self._category:
+                    status["category"] = self._category
                 return status
             return None
         except json.JSONDecodeError as e:
