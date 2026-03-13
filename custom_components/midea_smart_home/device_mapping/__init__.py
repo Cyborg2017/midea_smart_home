@@ -46,7 +46,7 @@ def get_device_mapping(device_type: int, sn8: str = "", category: str = "") -> d
         category: Product category from cloud, used for default mapping fallback
 
     Returns:
-        Device mapping dict, returns sn8 mapping if available, 
+        Device mapping dict, returns sn8 mapping if available,
         otherwise default+category if exists, finally fallback to default
     """
     mapping = DEVICE_MAPPINGS.get(device_type, {})
@@ -55,7 +55,7 @@ def get_device_mapping(device_type: int, sn8: str = "", category: str = "") -> d
         return {}
 
     result = None
-    
+
     if sn8:
         if sn8 in mapping:
             result = mapping[sn8]
@@ -75,5 +75,5 @@ def get_device_mapping(device_type: int, sn8: str = "", category: str = "") -> d
 
     if result is None:
         result = mapping
-		
+
     return result

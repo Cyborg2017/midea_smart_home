@@ -44,6 +44,7 @@ async def async_setup_entry(
 
     async_add_entities(entities)
 
+
 class MideaSensorEntity(MideaBaseEntity, SensorEntity):
 
     def __init__(

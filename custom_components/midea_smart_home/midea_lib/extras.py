@@ -5,6 +5,7 @@ from typing import Any, Optional
 
 _LOGGER = logging.getLogger(__name__)
 
+
 class DeviceLogicHandler:
     def __init__(self, device_type: int, device_name: str):
         self.device_type = device_type

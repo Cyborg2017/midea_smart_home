@@ -18,7 +18,6 @@ from .const import (
 from .coordinator import MideaCoordinator, ControlValue
 from .device_mapping import get_device_mapping
 
-
 def iter_midea_device_configs(
     hass: HomeAssistant, entry: ConfigEntry
 ) -> Generator[tuple[MideaCoordinator, int, str, str, str, str, str, dict], None, None]:

@@ -7,6 +7,7 @@ from typing import Union, Any, Optional
 
 _LOGGER = logging.getLogger(__name__)
 
+
 class ExpressionEvaluator:
     """Evaluates expressions and applies calculations to device data."""
 

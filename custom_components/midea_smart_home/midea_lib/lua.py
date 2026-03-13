@@ -73,6 +73,7 @@ def decrypt_lua_code(lua_code: str) -> str:
     except (ValueError, OSError):
         return lua_code
 
+
 class LuaRuntime:
     """Lua runtime wrapper for Midea device protocol handling.
 

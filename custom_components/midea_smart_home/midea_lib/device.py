@@ -383,24 +383,24 @@ class MideaDevice:
         self._device_type = device_type
         self._default_values = default_values or {}
         self._centralized = list(centralized) if isinstance(centralized, (list, tuple, set)) else []
-        
+
         # Initialize Logic Handler
         self._logic_handler = DeviceLogicHandler(device_type, device_name)
-        
+
         # Initialize Expression Evaluator
         self._expression_evaluator = ExpressionEvaluator(calculate_config)
-        
+
         # Initialize Codec
         self._codec = MideaCodec(
-            lua_file, 
-            lua_common_dir, 
-            sn=sn, 
-            subtype=subtype, 
-            device_type=device_type, 
+            lua_file,
+            lua_common_dir,
+            sn=sn,
+            subtype=subtype,
+            device_type=device_type,
             sn8=sn8,
             category=category
         )
-        
+
         # Initialize Controller
         self._controller = DeviceController(
             device_id=device_id,
@@ -411,14 +411,14 @@ class MideaDevice:
             codec=self._codec,
             protocol=protocol,
         )
-        
+
         self._data = {}
         self._available = False
         self._recent_controls = {}  # {attr: (value, timestamp)}
         self._control_timeout = 5.0
         self._control_hold = 5.0 if self._centralized else 1.0
         self._callbacks = []
-        
+
         # Register controller update callback
         self._controller.register_update(self._on_device_update)
 
@@ -429,11 +429,11 @@ class MideaDevice:
     @property
     def available(self):
         return self._available
-    
+
     @property
     def data(self):
         return self._data
-        
+
     @property
     def controller(self):
         return self._controller
@@ -458,33 +458,33 @@ class MideaDevice:
         # Merge with existing data
         new_data = self._data.copy()
         new_data.update(status)
-        
+
         # Apply logic handler special handling
         self._logic_handler.apply_special_handling(
-            new_data, 
-            self._recent_controls, 
+            new_data,
+            self._recent_controls,
             self._control_timeout
         )
-        
+
         # Clean up expired recent controls
         now = time.time()
         self._recent_controls = {
-            k: v for k, v in self._recent_controls.items() 
+            k: v for k, v in self._recent_controls.items()
             if now - v[1] < self._control_timeout
         }
 
         for key, (value, timestamp) in self._recent_controls.items():
             if now - timestamp < self._control_hold and new_data.get(key) != value:
                 new_data[key] = value
-        
+
         # Apply default values
         for key, value in self._default_values.items():
             if key not in new_data:
                 new_data[key] = value
-                
+
         # Apply calculations
         new_data = self._expression_evaluator.apply_calculations(new_data)
-        
+
         self._data = new_data
         self._available = True
         self._notify_update()
@@ -499,9 +499,9 @@ class MideaDevice:
     def set_attribute(self, attr: str, value: Any):
         """Set a device attribute."""
         _LOGGER.debug("Setting attribute %s to %s", attr, value)
-        
+
         control = {attr: value}
-        
+
         # Handle centralized control
         if self._centralized:
             now = time.time()
@@ -513,38 +513,38 @@ class MideaDevice:
                     control[key] = recent[0]
                 elif key in self._data:
                     control[key] = self._data[key]
-                    
+
         # Handle special logic preparation
         control = self._logic_handler.prepare_control_data(control, self._data)
-        
+
         # Update local state optimistically
         now = time.time()
         for k, v in control.items():
             self._recent_controls[k] = (v, now)
-		     
+
         # Send control
         self._controller.send_control(control, current_status=self._data)
-        
+
         # Trigger update to reflect optimistic state
         self._on_device_update(control)
 
     def set_attributes(self, controls: dict):
         """Set multiple device attributes as a single command."""
         _LOGGER.debug("Setting attributes: %s", controls)
-        
+
         control = controls.copy()
-        
+
         # Handle special logic preparation
         control = self._logic_handler.prepare_control_data(control, self._data)
-        
+
         # Update local state optimistically
         now = time.time()
         for k, v in control.items():
             self._recent_controls[k] = (v, now)
-		
+
         # Send control
         self._controller.send_control(control, current_status=self._data)
-        
+
         # Trigger update to reflect optimistic state
         self._on_device_update(control)
 

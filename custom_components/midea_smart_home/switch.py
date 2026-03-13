@@ -39,6 +39,7 @@ async def async_setup_entry(
 
     async_add_entities(entities)
 
+
 class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
     _attr_device_class = SwitchDeviceClass.SWITCH
 

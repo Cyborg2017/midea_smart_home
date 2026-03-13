@@ -46,7 +46,7 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         """Handle device data updates."""
         if not self.hass or self.hass.is_stopping:
             return
-            
+
         # The device update callback is called from a separate thread.
         # We need to schedule the update on the event loop.
         self.hass.loop.call_soon_threadsafe(
@@ -67,7 +67,7 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             await self.hass.async_add_executor_job(self.device.set_attributes, attr)
         else:
             await self.hass.async_add_executor_job(self.device.set_attribute, attr, value)
-            
+
         return self.device.data
 
     async def async_set_controls(self, controls: dict[str, ControlValue]) -> StatusDict:

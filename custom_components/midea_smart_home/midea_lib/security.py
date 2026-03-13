@@ -97,7 +97,6 @@ class CloudSecurity:
     def aes_decrypt_with_fixed_key(self, data: str) -> str:
         return self.aes_decrypt(data, self._fixed_key, self._fixed_iv)
 
-
     def aes_decrypt(
         self,
         data: str | bytes,

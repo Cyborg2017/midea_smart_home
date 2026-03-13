@@ -109,7 +109,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     break
 
             return await self.async_step_discover()
-        
+
         return self.async_show_form(
             step_id="user",
             data_schema=STEP_USER_DATA_SCHEMA,
@@ -280,7 +280,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         current_device = self._selected_devices[self._current_device_index]
         device_id = current_device[CONF_DEVICE_ID]
         protocol = current_device.get(CONF_PROTOCOL, ProtocolVersion.V3)
-        
+
         # Ensure protocol has a valid value (V1, V2, or V3), default to V3 if None
         if protocol is None:
             protocol = ProtocolVersion.V3
@@ -317,7 +317,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 sn8=sn8,
                 device_type=device_type
             )
-            
+
             if not valid:
                 return self._show_token_form(
                     current_device, device_id, protocol, token, key, lua_file,
@@ -389,29 +389,28 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 lua_storage_dir = get_lua_storage_path(self.hass.config.config_dir)
                 lua_storage_dir.mkdir(parents=True, exist_ok=True)
-                
+
                 success, downloaded_lua = await download_lua_file(
-                    self.hass, 
-                    self._user_cloud._access_token, 
-                    sn, 
-                    device_type, 
-                    manufacturer_code, 
+                    self.hass,
+                    self._user_cloud._access_token,
+                    sn,
+                    device_type,
+                    manufacturer_code,
                     model_number
                 )
-                
+
                 if success:
                     if sn8:
                         lua_file_path = lua_storage_dir / f"{device_id}_T0x{hex(device_type)[2:].upper()}_{sn8}.lua"
                     else:
                         lua_file_path = lua_storage_dir / f"{device_id}_T0x{hex(device_type)[2:]}.lua"
-                    
+
                     await self.hass.async_add_executor_job(write_file, lua_file_path, downloaded_lua)
                     lua_file = str(lua_file_path)
                     _LOGGER.info("Downloaded Lua file to %s", lua_file)
 
         except (socket.error, OSError, ValueError, json.JSONDecodeError) as err:
             _LOGGER.error("Failed to get token/key or lua: %s", err)
-
 
         device_type = current_device.get(CONF_DEVICE_TYPE)
         sn8 = current_device.get(CONF_SN8, "")
@@ -443,7 +442,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if not device_name:
             device_name = DEVICE_TYPES.get(device_type, f"Device {device_type}")
         model = current_device.get(CONF_PRODUCT_MODEL, "")
-        
+
         if is_v3:
             data_schema = vol.Schema({
                 vol.Required(CONF_TOKEN, default=token): str,
@@ -456,7 +455,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Optional(CONF_KEY, default=key): str,
                 vol.Required(CONF_LUA_FILE, default=lua_file): str,
             })
-        
+
         return self.async_show_form(
             step_id="get_token",
             data_schema=data_schema,
@@ -512,6 +511,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         config_entry: config_entries.ConfigEntry,
     ) -> config_entries.OptionsFlow:
         return MideaSmartHomeOptionsFlowHandler(config_entry)
+
 
 class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     def __init__(self, config_entry: config_entries.ConfigEntry):
