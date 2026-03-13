@@ -162,6 +162,15 @@
       "bath_temperature": {
         "name": "沐浴温度"
       },
+      "quantify_21": {
+        "name": "小量用水量"
+      },
+      "quantify_22": {
+        "name": "普通用水量"
+      },
+      "quantify_23": {
+        "name": "大量用水量"
+      },
       "custom_height": {
         "name": "晾衣高度"
       },
@@ -233,6 +242,75 @@
       }
     },
     "select": {
+      "no_obsolete_water": {
+        "name": "智慧零冷水",
+        "state": {
+          "water_saving": "省水优先",
+          "water_quality": "水质优先"
+        }
+      },
+      "cur_quantify": {
+        "name": "定量设置",
+        "state": {
+          "off_quantify": "关定量(连续出水)",
+          "small_amount": "小量用水",
+          "normal_amount": "普通用水",
+          "large_amount": "大量用水"
+        }
+      },
+      "first_custom_out_water_ml_0": {
+        "name": "生活水量",
+        "state": {
+          "none": "无",
+          "500": "500mL",
+          "600": "600mL",
+          "700": "700mL",
+          "800": "800mL",
+          "900": "900mL",
+          "1000": "1000mL",
+          "1250": "1250mL",
+          "1500": "1500mL",
+          "1750": "1750mL",
+          "2000": "2000mL",
+          "2250": "2250mL",
+          "2500": "2500mL",
+          "3000": "3000mL",
+          "3500": "3500mL",
+          "4000": "4000mL",
+          "4500": "4500mL",
+          "5000": "5000mL"
+        }
+      },
+      "first_custom_out_water_ml_1": {
+        "name": "饮用水量",
+        "state": {
+          "none": "无",
+          "500": "500mL",
+          "600": "600mL",
+          "700": "700mL",
+          "800": "800mL",
+          "900": "900mL",
+          "1000": "1000mL",
+          "1250": "1250mL",
+          "1500": "1500mL",
+          "1750": "1750mL",
+          "2000": "2000mL",
+          "2250": "2250mL",
+          "2500": "2500mL",
+          "3000": "3000mL",
+          "3500": "3500mL",
+          "4000": "4000mL",
+          "4500": "4500mL",
+          "5000": "5000mL"
+        }
+      },
+      "heat_start": {
+        "name": "加热",
+        "state": {
+          "start": "开始",
+          "stop": "停止"
+        }
+      },
       "aidry": {
         "name": "智感干洗",
         "state": {
@@ -658,6 +736,18 @@
       }
     },
     "sensor": {
+      "in_tds": {
+        "name": "原水TDS"
+      },
+      "out_tds": {
+        "name": "纯水TDS"
+      },
+      "life_1": {
+        "name": "PCB滤芯寿命"
+      },
+      "life_2": {
+        "name": "RO滤芯寿命"
+      },
       "air_dry_left_time": {
         "name": "风干剩余时间"
       },
@@ -789,6 +879,9 @@
       }
     },
     "switch": {
+      "wash": {
+        "name": "滤芯冲洗"
+      },
       "airdry_on_off": {
         "name": "湿帘风干"
       },

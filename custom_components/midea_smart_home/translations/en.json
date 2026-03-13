@@ -162,6 +162,15 @@
       "bath_temperature": {
         "name": "Bath Temperature"
       },
+      "quantify_21": {
+        "name": "Small Amount Water Volume"
+      },
+      "quantify_22": {
+        "name": "Normal Amount Water Volume"
+      },
+      "quantify_23": {
+        "name": "Large Amount Water Volume"
+      },
       "custom_height": {
         "name": "Laundry Height"
       },
@@ -233,6 +242,75 @@
       }
     },
     "select": {
+      "no_obsolete_water": {
+        "name": "Water Mode",
+        "state": {
+          "water_saving": "Water Saving Priority",
+          "water_quality": "Water Quality Priority"
+        }
+      },
+      "cur_quantify": {
+        "name": "Quantitative Water",
+        "state": {
+          "off_quantify": "Off",
+          "small_amount": "Small Amount",
+          "normal_amount": "Normal Amount",
+          "large_amount": "Large Amount"
+        }
+      },
+      "first_custom_out_water_ml_0": {
+        "name": "Custom Water Volume 1",
+        "state": {
+          "none": "None",
+          "500": "500mL",
+          "600": "600mL",
+          "700": "700mL",
+          "800": "800mL",
+          "900": "900mL",
+          "1000": "1000mL",
+          "1250": "1250mL",
+          "1500": "1500mL",
+          "1750": "1750mL",
+          "2000": "2000mL",
+          "2250": "2250mL",
+          "2500": "2500mL",
+          "3000": "3000mL",
+          "3500": "3500mL",
+          "4000": "4000mL",
+          "4500": "4500mL",
+          "5000": "5000mL"
+        }
+      },
+      "first_custom_out_water_ml_1": {
+        "name": "Custom Water Volume 2",
+        "state": {
+          "none": "None",
+          "500": "500mL",
+          "600": "600mL",
+          "700": "700mL",
+          "800": "800mL",
+          "900": "900mL",
+          "1000": "1000mL",
+          "1250": "1250mL",
+          "1500": "1500mL",
+          "1750": "1750mL",
+          "2000": "2000mL",
+          "2250": "2250mL",
+          "2500": "2500mL",
+          "3000": "3000mL",
+          "3500": "3500mL",
+          "4000": "4000mL",
+          "4500": "4500mL",
+          "5000": "5000mL"
+        }
+      },
+      "heat_start": {
+        "name": "Heating",
+        "state": {
+          "start": "Start",
+          "stop": "Stop"
+        }
+      },
       "aidry": {
         "name": "AI Dry",
         "state": {
@@ -658,6 +736,18 @@
       }
     },
     "sensor": {
+      "in_tds": {
+        "name": "Inlet TDS"
+      },
+      "out_tds": {
+        "name": "Outlet TDS"
+      },
+      "life_1": {
+        "name": "Filter 1 Life"
+      },
+      "life_2": {
+        "name": "Filter 2 Life"
+      },
       "air_dry_left_time": {
         "name": "Air Dry Remaining Time"
       },
@@ -789,6 +879,9 @@
       }
     },
     "switch": {
+      "wash": {
+        "name": "Wash"
+      },
       "airdry_on_off": {
         "name": "Curtain Air Dry"
       },

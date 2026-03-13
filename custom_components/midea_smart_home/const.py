@@ -49,6 +49,7 @@ DEVICE_TYPES = {
     0xDC: "Clothes Dryer",
     0xE2: "Electric Water Heater",
     0xE3: "Gas Water Heater",
+    0xED: "Water Purifier",
     0xFA: "Electric Fan",
     0xFB: "Electric Heater",
     0xFC: "Air Purifier",
