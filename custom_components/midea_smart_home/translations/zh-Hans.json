@@ -471,6 +471,17 @@
           "swing": "摆风"
         }
       },
+      "dryer": {
+        "name": "烘干",
+        "state": {
+          "auto": "AUTO",
+          "off": "关闭",
+          "timer_120": "120分",
+          "timer_180": "180分",
+          "timer_60": "60分",
+          "timer_90": "90分"
+        }
+      },
       "dsp_sterilization_mode": {
         "name": "DSP除菌模式",
         "state": {
@@ -586,6 +597,20 @@
       },
       "follow_body_sense": {
         "name": "随身感",
+        "state": {
+          "off": "关闭",
+          "on": "开启"
+        }
+      },
+      "fresh_anion_switch": {
+        "name": "净后新风",
+        "state": {
+          "off": "关闭",
+          "on": "开启"
+        }
+      },
+      "fresh_anion_switch_38129929": {
+        "name": "忘取无忧",
         "state": {
           "off": "关闭",
           "on": "开启"
@@ -754,6 +779,8 @@
           "baby_clothes": "婴儿服",
           "bed_clothes": "床上用品",
           "big": "大件",
+          "blood_stain_wash": "血渍洗",
+          "blue_oxygen_color_protect": "蓝氧护色洗",
           "blanket": "家纺",
           "bucket_self_clean": "筒自洁",
           "child": "童装",
@@ -762,6 +789,7 @@
           "cotton": "棉麻",
           "deep_ssp": "深度筒自洁",
           "dehumidification": "除螨除潮",
+          "detergent_box_clean": "智投盒清洁",
           "down_jacket": "羽绒服",
           "eco": "节能洗",
           "embathe": "浸洗",
@@ -771,33 +799,48 @@
           "fast_wash_30": "快洗30分钟",
           "fiber": "化纤",
           "fresh_air": "清新",
+          "girl_underwear": "少女内衣",
+          "hot_wind_dry": "热风暖衣",
           "intelligent": "智能洗",
           "jacket": "冲锋衣",
           "jean": "牛仔",
           "memory": "记忆",
+          "mixed_dry": "混合烘",
           "mixed_wash": "混合",
           "new_clothes_wash": "新衣洗",
+          "no_channeling_color": "防串色",
+          "nursing_underwear": "哺乳内衣",
           "outdoor": "户外服",
           "quick_dry_20": "快烘20分钟",
+          "refresh_deodorize": "清新祛味",
           "remove_mite_wash": "除螨洗",
           "rinsing_dehydration": "漂+脱",
+          "secretion_wash": "分泌物洗",
           "shirt": "衬衫",
           "silk": "丝绸",
           "single_dehytration": "单脱水",
+          "single_drying": "单烘干",
+          "socks": "袜子",
+          "socks_dry": "袜子烘",
           "sport_clothes": "运动服",
+          "sports_underwear": "运动内衣",
           "spring_autumn_wash": "春秋洗",
           "ssp": "筒自洁",
-          "steam_sterilize_wash": "蒸汽消毒洗",
           "sterilize_wash": "消毒洗",
+          "steam_sterilize_wash": "蒸汽消毒洗",
           "steep": "浸泡洗",
           "sterilize": "除菌烘",
           "strong_wash": "强洗",
           "summer_wash": "夏日洗",
           "super_clean": "超净洗",
           "towel": "毛巾",
+          "underpants": "内裤",
           "underwear": "内衣",
           "uniforms": "校服",
+          "underpants_dry": "内裤烘",
+          "underwear_dry": "内衣烘",
           "warm_clothes": "暖衣",
+          "white_clothes_clean": "白衣净",
           "winter_wash": "冬季洗",
           "wool": "羊毛",
           "windbreaker": "风衣",
@@ -868,6 +911,18 @@
           "makeup": "妆渍",
           "off": "关闭",
           "sauce": "酱渍"
+        }
+      },
+      "stains_38129929": {
+        "name": "特渍",
+        "state": {
+          "blood": "血渍",
+          "coffee": "咖啡渍",
+          "grass": "草渍",
+          "lipstick": "口红渍",
+          "mud": "泥渍",
+          "off": "关闭",
+          "wine": "酒渍"
         }
       },
       "sweep_mop_mode": {

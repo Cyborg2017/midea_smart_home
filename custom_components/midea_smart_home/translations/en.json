@@ -471,6 +471,17 @@
           "swing": "Swing"
         }
       },
+      "dryer": {
+        "name": "Dryer",
+        "state": {
+          "auto": "AUTO",
+          "off": "Off",
+          "timer_120": "120 min",
+          "timer_180": "180 min",
+          "timer_60": "60 min",
+          "timer_90": "90 min"
+        }
+      },
       "fire_power": {
         "name": "Microwave Power",
         "state": {
@@ -586,6 +597,20 @@
       },
       "follow_body_sense": {
         "name": "Body Sense",
+        "state": {
+          "off": "Off",
+          "on": "On"
+        }
+      },
+      "fresh_anion_switch": {
+        "name": "Fresh Air Care",
+        "state": {
+          "off": "Off",
+          "on": "On"
+        }
+      },
+      "fresh_anion_switch_38129929": {
+        "name": "Worry-Free Care",
         "state": {
           "off": "Off",
           "on": "On"
@@ -754,6 +779,8 @@
           "baby_clothes": "Baby Clothes",
           "bed_clothes": "Bed Clothes",
           "big": "Big Items",
+          "blood_stain_wash": "Blood Stain Wash",
+          "blue_oxygen_color_protect": "Blue Oxygen Color Protect",
           "blanket": "Blanket",
           "bucket_self_clean": "Bucket Self Clean",
           "child": "Child Clothes",
@@ -762,6 +789,7 @@
           "cotton": "Cotton",
           "deep_ssp": "Deep Self-Clean",
           "dehumidification": "Dehumidification",
+          "detergent_box_clean": "Detergent Box Clean",
           "down_jacket": "Down Jacket",
           "eco": "Eco Wash",
           "embathe": "Soak Wash",
@@ -771,33 +799,48 @@
           "fast_wash_30": "Quick Wash 30min",
           "fiber": "Synthetic",
           "fresh_air": "Fresh Air",
+          "girl_underwear": "Teen Underwear",
+          "hot_wind_dry": "Hot Wind Dry",
           "intelligent": "Intelligent",
           "jacket": "Jacket",
           "jean": "Jeans",
           "memory": "Memory",
+          "mixed_dry": "Mixed Dry",
           "mixed_wash": "Mixed",
           "new_clothes_wash": "New Clothes",
+          "no_channeling_color": "Color Separation Protection",
+          "nursing_underwear": "Nursing Underwear",
           "outdoor": "Outdoor",
           "quick_dry_20": "Quick Dry 20min",
+          "refresh_deodorize": "Refresh & Deodorize",
           "remove_mite_wash": "Mite Removal",
           "rinsing_dehydration": "Rinse+Spin",
+          "secretion_wash": "Secretion Wash",
           "shirt": "Shirt",
           "silk": "Silk",
           "single_dehytration": "Spin Only",
+          "single_drying": "Dry Only",
+          "socks": "Socks",
+          "socks_dry": "Socks Dry",
           "sport_clothes": "Sportswear",
+          "sports_underwear": "Sports Underwear",
           "spring_autumn_wash": "Spring/Autumn",
           "ssp": "Self Clean",
-          "steam_sterilize_wash": "Steam Sterilize",
           "sterilize_wash": "Sterilize Wash",
+          "steam_sterilize_wash": "Steam Sterilize",
           "sterilize": "Sterilize Dry",
           "steep": "Soak Wash",
           "strong_wash": "Strong Wash",
           "summer_wash": "Summer",
           "super_clean": "Super Clean",
           "towel": "Towel",
+          "underpants": "Underpants",
           "underwear": "Underwear",
           "uniforms": "Uniforms",
+          "underpants_dry": "Underpants Dry",
+          "underwear_dry": "Underwear Dry",
           "warm_clothes": "Warm Clothes",
+          "white_clothes_clean": "White Clothes Clean",
           "winter_wash": "Winter",
           "wool": "Wool",
           "windbreaker": "Windbreaker",
@@ -868,6 +911,18 @@
           "makeup": "Makeup Stain",
           "off": "Off",
           "sauce": "Sauce Stain"
+        }
+      },
+      "stains_38129929": {
+        "name": "Stains",
+        "state": {
+          "blood": "Blood Stain",
+          "coffee": "Coffee Stain",
+          "grass": "Grass Stain",
+          "lipstick": "Lipstick Stain",
+          "mud": "Mud Stain",
+          "off": "Off",
+          "wine": "Wine Stain"
         }
       },
       "sweep_mop_mode": {
