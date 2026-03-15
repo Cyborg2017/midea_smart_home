@@ -60,6 +60,11 @@
       }
     }
   },
+  "device": {
+    "dishwasher": {
+      "name": "洗碗机"
+    }
+  },
   "entity": {
     "binary_sensor": {
       "bucket_water_overheating": {
@@ -67,6 +72,9 @@
       },
       "detergent_lack": {
         "name": "洗涤剂状态"
+      },
+      "bright_lack": {
+        "name": "光亮剂不足"
       },
       "device_status": {
         "name": "设备状态"
@@ -100,6 +108,9 @@
       },
       "wash_stage": {
         "name": "洗涤阶段"
+      },
+      "water_lack": {
+        "name": "缺水"
       }
     },
     "button": {
@@ -197,6 +208,9 @@
     "number": {
       "bath_temperature": {
         "name": "沐浴温度"
+      },
+      "dishwasher_storage_duration": {
+        "name": "抑菌存储"
       },
       "custom_height": {
         "name": "晾衣高度"
@@ -355,6 +369,48 @@
           "normal_amount": "普通用水",
           "off_quantify": "关定量(连续出水)",
           "small_amount": "小量用水"
+        }
+      },
+      "dishwasher_mode": {
+        "name": "洗涤模式",
+        "state": {
+          "auto_wash": "智能洗",
+          "eco_wash": "节能洗",
+          "fast_wash": "快速洗",
+          "fruit_wash": "瓜果洗",
+          "gentle_wash": "轻柔洗",
+          "germ": "除菌洗",
+          "hotpot_wash": "火锅洗",
+          "less_wash": "少量洗",
+          "oilnet_wash": "油网洗",
+          "pre_rinse": "预冲洗",
+          "quietnight_wash": "静音洗",
+          "seafood_wash": "海鲜洗",
+          "self_clean": "自清洁",
+          "single_disinfect": "单消毒",
+          "standard_wash": "标准洗",
+          "storage": "抑菌存储",
+          "strong_wash": "超强洗"
+        }
+      },
+      "dishwasher_work_status_control": {
+        "name": "控制",
+        "state": {
+          "cancel": "取消",
+          "pause": "暂停",
+          "power_off": "关机",
+          "power_on": "开机",
+          "resume": "继续"
+        }
+      },
+      "dishwasher_wash_region": {
+        "name": "分层洗",
+        "state": {
+          "lower": "下层",
+          "lower_zone_strong": "下层洗+专区强洗",
+          "upper": "上层",
+          "upper_lower": "上层+下层",
+          "zone_strong": "专区强洗"
         }
       },
       "db_dehydration_speed": {
@@ -1118,6 +1174,49 @@
       "dry_time": {
         "name": "烘干时间"
       },
+      "dry_set_min": {
+        "name": "烘干设定时间"
+      },
+      "dishwasher_mode": {
+        "name": "当前模式",
+        "state": {
+          "90min_wash": "90分钟洗",
+          "auto_wash": "智能洗",
+          "bowl_wash": "碗碟洗",
+          "cloud_wash": "云程序",
+          "eco_wash": "节能洗",
+          "fast_wash": "快速洗",
+          "fruit_wash": "瓜果洗",
+          "germ": "除菌洗",
+          "glass_wash": "玻璃洗",
+          "hotpot_wash": "火锅洗",
+          "hour_wash": "一小时洗",
+          "kill_germ": "高温除菌",
+          "less_wash": "少量洗",
+          "max_rapid_wash": "超快洗",
+          "neutral_gear": "待机",
+          "oilnet_wash": "油网洗",
+          "quietnight_wash": "静音洗",
+          "seafood_wash": "海鲜洗",
+          "self_clean": "自清洁",
+          "self_define": "自定义",
+          "single_disinfect": "单消毒",
+          "single_dry": "单独烘干",
+          "soak_wash": "浸泡洗",
+          "standard_wash": "标准洗",
+          "strong_wash": "超强洗"
+        }
+      },
+      "dishwasher_work_status": {
+        "name": "工作状态",
+        "state": {
+          "cancel": "待机",
+          "error": "故障",
+          "order": "预约中",
+          "power_off": "关机",
+          "work": "运行中"
+        }
+      },
       "end_time": {
         "name": "加热结束时间"
       },
@@ -1257,7 +1356,7 @@
         "name": "软水档位"
       },
       "air_left_hour": {
-        "name": "烘干存储剩余时间"
+        "name": "烘干剩余时间"
       }
     },
     "switch": {
@@ -1303,6 +1402,9 @@
       "display_on_off": {
         "name": "屏幕显示"
       },
+      "airswitch": {
+        "name": "风干"
+      },
       "drainage": {
         "name": "一键排水"
       },
@@ -1311,6 +1413,9 @@
       },
       "dry": {
         "name": "干燥模式"
+      },
+      "door_auto_open": {
+        "name": "自动开门"
       },
       "eco_dry_switch": {
         "name": "节能干燥开关"
@@ -1396,8 +1501,14 @@
       "remind_sound": {
         "name": "提醒声音"
       },
+      "smart_storage": {
+        "name": "智能存储"
+      },
       "set_germicidal_countdown": {
         "name": "高温杀菌提醒"
+      },
+      "strong_flash_dry": {
+        "name": "强闪烘干"
       },
       "smart_sterilize": {
         "name": "智能杀菌"
@@ -1425,6 +1536,9 @@
       },
       "microbubble": {
         "name": "超微浸泡"
+      },
+      "uvswitch": {
+        "name": "UV除菌"
       },
       "ultraviolet_lamp": {
         "name": "UV除菌"

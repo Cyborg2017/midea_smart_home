@@ -60,6 +60,11 @@
       }
     }
   },
+  "device": {
+    "dishwasher": {
+      "name": "Dishwasher"
+    }
+  },
   "entity": {
     "binary_sensor": {
       "bucket_water_overheating": {
@@ -67,6 +72,9 @@
       },
       "detergent_lack": {
         "name": "Detergent Status"
+      },
+      "bright_lack": {
+        "name": "Rinse Aid Low"
       },
       "device_status": {
         "name": "Device Status"
@@ -100,6 +108,9 @@
       },
       "wash_stage": {
         "name": "Wash Stage"
+      },
+      "water_lack": {
+        "name": "Water Shortage"
       }
     },
     "button": {
@@ -197,6 +208,9 @@
     "number": {
       "bath_temperature": {
         "name": "Bath Temperature"
+      },
+      "dishwasher_storage_duration": {
+        "name": "Antibacterial Storage"
       },
       "custom_height": {
         "name": "Laundry Height"
@@ -355,6 +369,48 @@
           "normal_amount": "Normal Amount",
           "off_quantify": "Off",
           "small_amount": "Small Amount"
+        }
+      },
+      "dishwasher_mode": {
+        "name": "Wash Mode",
+        "state": {
+          "auto_wash": "Auto Wash",
+          "eco_wash": "Eco Wash",
+          "fast_wash": "Quick Wash",
+          "fruit_wash": "Fruit Wash",
+          "gentle_wash": "Gentle Wash",
+          "germ": "Germ Wash",
+          "hotpot_wash": "Hotpot Wash",
+          "less_wash": "Half Load",
+          "oilnet_wash": "Oil Filter Wash",
+          "pre_rinse": "Pre Rinse",
+          "quietnight_wash": "Quiet Night Wash",
+          "seafood_wash": "Seafood Wash",
+          "self_clean": "Self Clean",
+          "single_disinfect": "Disinfect Only",
+          "standard_wash": "Standard Wash",
+          "storage": "Storage",
+          "strong_wash": "Strong Wash"
+        }
+      },
+      "dishwasher_work_status_control": {
+        "name": "Control",
+        "state": {
+          "cancel": "Cancel",
+          "pause": "Pause",
+          "power_off": "Power Off",
+          "power_on": "Power On",
+          "resume": "Resume"
+        }
+      },
+      "dishwasher_wash_region": {
+        "name": "Zone Wash",
+        "state": {
+          "lower": "Lower",
+          "lower_zone_strong": "Lower + Zone Strong",
+          "upper": "Upper",
+          "upper_lower": "Upper + Lower",
+          "zone_strong": "Zone Strong"
         }
       },
       "db_dehydration_speed": {
@@ -1118,6 +1174,49 @@
       "dry_time": {
         "name": "Dry Time"
       },
+      "dry_set_min": {
+        "name": "Dry Time Setting"
+      },
+      "dishwasher_mode": {
+        "name": "Current Mode",
+        "state": {
+          "90min_wash": "90 Min Wash",
+          "auto_wash": "Auto Wash",
+          "bowl_wash": "Bowl Wash",
+          "cloud_wash": "Cloud Wash",
+          "eco_wash": "Eco Wash",
+          "fast_wash": "Quick Wash",
+          "fruit_wash": "Fruit Wash",
+          "germ": "Germ Wash",
+          "glass_wash": "Glass Wash",
+          "hotpot_wash": "Hotpot Wash",
+          "hour_wash": "1 Hour Wash",
+          "kill_germ": "High Temp Sterilize",
+          "less_wash": "Half Load",
+          "max_rapid_wash": "Max Rapid Wash",
+          "neutral_gear": "Standby",
+          "oilnet_wash": "Oil Filter Wash",
+          "quietnight_wash": "Quiet Night Wash",
+          "seafood_wash": "Seafood Wash",
+          "self_clean": "Self Clean",
+          "self_define": "Custom",
+          "single_disinfect": "Disinfect Only",
+          "single_dry": "Dry Only",
+          "soak_wash": "Soak Wash",
+          "standard_wash": "Standard Wash",
+          "strong_wash": "Strong Wash"
+        }
+      },
+      "dishwasher_work_status": {
+        "name": "Work Status",
+        "state": {
+          "cancel": "Standby",
+          "error": "Error",
+          "order": "Scheduled",
+          "power_off": "Powered Off",
+          "work": "Running"
+        }
+      },
       "end_time": {
         "name": "Heating End Time"
       },
@@ -1303,6 +1402,9 @@
       "display_on_off": {
         "name": "Screen Display"
       },
+      "airswitch": {
+        "name": "Air Dry"
+      },
       "drainage": {
         "name": "One-Key Drainage"
       },
@@ -1311,6 +1413,9 @@
       },
       "dry": {
         "name": "Dry Mode"
+      },
+      "door_auto_open": {
+        "name": "Auto Open"
       },
       "eco_dry_switch": {
         "name": "Eco Dry Switch"
@@ -1405,8 +1510,14 @@
       "remind_sound": {
         "name": "Reminder Sound"
       },
+      "smart_storage": {
+        "name": "Smart Storage"
+      },
       "set_germicidal_countdown": {
         "name": "Sterilization Reminder"
+      },
+      "strong_flash_dry": {
+        "name": "Strong Flash Dry"
       },
       "smart_sterilize": {
         "name": "Smart Sterilization"
@@ -1425,6 +1536,9 @@
       },
       "microbubble": {
         "name": "Microbubble Soak"
+      },
+      "uvswitch": {
+        "name": "UV Sterilization"
       },
       "ultraviolet_lamp": {
         "name": "UV Sterilization"
