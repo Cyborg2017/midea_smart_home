@@ -604,6 +604,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 self._config_entry,
                 data=new_data,
             )
+            await self.hass.config_entries.async_reload(self._config_entry.entry_id)
             return self.async_create_entry(title="", data={})
 
         return self.async_show_form(
