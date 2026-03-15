@@ -85,6 +85,8 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
         for mode, status in self._options_map.items():
             match = True
             for attr, value in status.items():
+                if attr == "useCycleValue":
+                    continue
                 state_value = self._get_nested_value(attr)
                 if state_value is None:
                     match = False

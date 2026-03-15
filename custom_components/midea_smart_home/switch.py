@@ -30,10 +30,13 @@ async def async_setup_entry(
                 translation_key = config.get("translation_key")
                 switch_rationale = config.get("rationale", rationale)
                 condition = config.get("condition")
+                command_on = config.get("command_on")
+                command_off = config.get("command_off")
                 entities.append(
                     MideaSwitchEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        switch_id, translation_key, switch_rationale, condition, model
+                        switch_id, translation_key, switch_rationale, condition, model,
+                        command_on, command_off,
                     )
                 )
 
@@ -56,12 +59,16 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         rationale: list = None,
         condition: dict = None,
         model: str = None,
+        command_on: dict | None = None,
+        command_off: dict | None = None,
     ):
         super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, switch_id, model)
         self._switch_id = switch_id
         self._attr_translation_key = translation_key or switch_id
         self._rationale = rationale or ["off", "on"]
         self._condition = condition
+        self._command_on = command_on
+        self._command_off = command_off
         self._attr_unique_id = f"switch.midea_{device_id}_{switch_id}"
         self.entity_id = f"switch.midea_{device_id}_{switch_id}"
 
@@ -90,6 +97,10 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         return self._get_status_on_off(self._switch_id)
 
     async def _async_set_status_on_off(self, attribute_key: str, turn_on: bool) -> None:
+        command = self._command_on if turn_on else self._command_off
+        if isinstance(command, dict):
+            await self.coordinator.async_set_control(command)
+            return
         value = self._rationale[int(turn_on)]
         await self.coordinator.async_set_control(attribute_key, value)
 
