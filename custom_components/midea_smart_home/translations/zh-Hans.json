@@ -770,9 +770,11 @@
           "spring_autumn_wash": "春秋洗",
           "ssp": "筒自洁",
           "steam_sterilize_wash": "蒸汽消毒洗",
+          "sterilize_wash": "消毒洗",
           "steep": "浸泡洗",
           "strong_wash": "强洗",
           "summer_wash": "夏日洗",
+          "super_clean": "超净洗",
           "towel": "毛巾",
           "underwear": "内衣",
           "warm_clothes": "暖衣",
@@ -1260,6 +1262,12 @@
       },
       "sterilize": {
         "name": "除菌"
+      },
+      "steam_wash": {
+        "name": "蒸汽洗"
+      },
+      "microbubble": {
+        "name": "超微浸泡"
       },
       "ultraviolet_lamp": {
         "name": "UV除菌"

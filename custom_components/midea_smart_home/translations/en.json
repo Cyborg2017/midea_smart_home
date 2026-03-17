@@ -770,9 +770,11 @@
           "spring_autumn_wash": "Spring/Autumn",
           "ssp": "Self Clean",
           "steam_sterilize_wash": "Steam Sterilize",
+          "sterilize_wash": "Sterilize Wash",
           "steep": "Soak Wash",
           "strong_wash": "Strong Wash",
           "summer_wash": "Summer",
+          "super_clean": "Super Clean",
           "towel": "Towel",
           "underwear": "Underwear",
           "warm_clothes": "Warm Clothes",
@@ -1260,6 +1262,12 @@
       },
       "sterilize": {
         "name": "Sterilize"
+      },
+      "steam_wash": {
+        "name": "Steam Wash"
+      },
+      "microbubble": {
+        "name": "Microbubble Soak"
       },
       "ultraviolet_lamp": {
         "name": "UV Sterilization"

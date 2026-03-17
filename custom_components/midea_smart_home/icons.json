@@ -222,6 +222,8 @@
             "steam": { "default": "mdi:steam" },
             "steam_switch": { "default": "mdi:steam" },
             "sterilize": { "default": "mdi:shield-check" },
+            "steam_wash": { "default": "mdi:steam" },
+            "microbubble": { "default": "mdi:bubble" },
             "storage_mode": { "default": "mdi:snowflake" },
             "storage_power": { "default": "mdi:fridge-top" },
             "ultraviolet_lamp": { "default": "mdi:lightbulb-uv" },
