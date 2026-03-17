@@ -36,12 +36,11 @@ async def async_setup_entry(
             for sensor_id, config in binary_sensor_config.items():
                 device_class = config.get("device_class")
                 translation_key = config.get("translation_key")
-                on_values = config.get("on_value", [])
-                off_values = config.get("off_value", [])
+                rationale = config.get("rationale", [])
                 entities.append(
                     MideaBinarySensorEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        sensor_id, device_class, translation_key, on_values, off_values, model
+                        sensor_id, device_class, translation_key, rationale, model
                     )
                 )
 
@@ -122,14 +121,12 @@ class MideaBinarySensorEntity(MideaBaseEntity, BinarySensorEntity):
         sensor_id: str,
         device_class: str = None,
         translation_key: str = None,
-        on_values: list = None,
-        off_values: list = None,
+        rationale: list = None,
         model: str = None,
     ):
         super().__init__(coordinator, device_id, device_type, sn, sn8, device_name, sensor_id, model)
         self._sensor_id = sensor_id
-        self._on_values = on_values or []
-        self._off_values = off_values or []
+        self._rationale = rationale or []
         if device_class:
             try:
                 self._attr_device_class = BinarySensorDeviceClass(device_class)
@@ -148,10 +145,11 @@ class MideaBinarySensorEntity(MideaBaseEntity, BinarySensorEntity):
         data = self.coordinator.data or {}
         value = data.get(self._sensor_id)
 
-        if self._on_values and value in self._on_values:
-            return True
-        if self._off_values and value in self._off_values:
-            return False
+        if self._rationale and len(self._rationale) == 2:
+            try:
+                return bool(self._rationale.index(value))
+            except ValueError:
+                pass
 
         if isinstance(value, bool):
             return value
