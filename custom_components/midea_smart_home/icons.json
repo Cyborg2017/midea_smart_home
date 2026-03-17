@@ -9,6 +9,8 @@
             "drying_tunnel_overheating": { "default": "mdi:thermometer-alert" },
             "failed_device": { "default": "mdi:alert-circle" },
             "freezer_door_state": { "default": "mdi:fridge-bottom" },
+            "lack_water": { "default": "mdi:water-off" },
+            "change_water": { "default": "mdi:water-sync" },
             "softener_lack": { "default": "mdi:water-alert" },
             "storage_door_state": { "default": "mdi:fridge-top" }
         },
@@ -118,7 +120,8 @@
             "wind_speed": { "default": "mdi:weather-windy" },
             "wind_swing_lr_angle": { "default": "mdi:arrow-left-right" },
             "wind_swing_ud_angle": { "default": "mdi:arrow-up-down" },
-            "work_mode": { "default": "mdi:tune" }
+            "work_mode": { "default": "mdi:tune" },
+            "steam_quantity": { "default": "mdi:steam" }
         },
         "sensor": {
             "air_dry_left_time": { "default": "mdi:timer" },
@@ -175,7 +178,10 @@
             "wind_pressure": { "default": "mdi:weather-windy" },
             "work_mode": { "default": "mdi:tune" },
             "work_status": { "default": "mdi:play-circle-outline" },
-            "work_time": { "default": "mdi:clock-outline" }
+            "work_time": { "default": "mdi:clock-outline" },
+            "set_time": { "default": "mdi:timer" },
+            "cur_temperature_above": { "default": "mdi:thermometer-high" },
+            "cur_temperature_underside": { "default": "mdi:thermometer-low" }
         },
         "switch": {
             "airdry_on_off": { "default": "mdi:wind-turbine" },

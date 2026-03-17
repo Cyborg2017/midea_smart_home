@@ -88,6 +88,12 @@
       },
       "freezer_door_state": {
         "name": "冷冻门状态"
+      },
+      "lack_water": {
+        "name": "缺水状态"
+      },
+      "change_water": {
+        "name": "换水提醒"
       }
     },
     "button": {
@@ -911,18 +917,44 @@
           "upper": "偏上"
         }
       },
+      "steam_quantity": {
+        "name": "蒸汽档位",
+        "state": {
+          "off": "关闭",
+          "low": "1档",
+          "middle": "2档",
+          "high": "3档"
+        }
+      },
       "work_mode": {
         "name": "工作模式",
         "state": {
+          "above_inside_outside_tube": "双上管",
+          "above_inside_outside_tube_fan": "双上管风扇",
           "double_tube_1": "烘焙烧烤",
+          "double_tube_fan": "上下管风扇",
           "double_tube_hot_wind_tube_fan_1": "空气炸",
           "fast_unfreeze": "快速解冻",
+          "hot_wind_tube_fan_1": "热风",
+          "hot_wind_tube_fan_5": "干果",
           "microwave_1": "微波加热",
           "none": "无",
           "pause": "暂停",
+          "pure_preheat": "烘烤预热",
+          "pure_preheat_2": "空气炸",
+          "pure_steam_1": "纯蒸",
+          "pure_steam_2": "蒸汽预热",
+          "pure_steam_5": "发酵",
+          "pure_steam_7": "快蒸",
           "steam_double_tube_1": "低卡嫩蒸",
           "steam_double_tube_fan_1": "轻脂蒸烤",
+          "steam_hot_wind_tube_fan_1": "补湿嫩烤",
+          "steam_hot_wind_tube_fan_2": "高温蒸",
           "stop": "停止",
+          "unfreeze_1": "解冻",
+          "underside_tube_1": "下管",
+          "underside_tube_hot_wind_tube_fan": "下管热风对流",
+          "upper_lower_tube": "上下管",
           "warm": "保温",
           "work": "工作",
           "zymosis": "发酵"
@@ -966,6 +998,12 @@
       },
       "cur_temperature": {
         "name": "当前温度"
+      },
+        "cur_temperature_above": {
+        "name": "上管温度"
+      },
+      "cur_temperature_underside": {
+        "name": "下管温度"
       },
       "deep_filter_percent": {
         "name": "滤芯剩余寿命"
@@ -1098,6 +1136,9 @@
       },
       "work_time": {
         "name": "工作时间"
+      },
+      "set_time": {
+        "name": "设定时间"
       },
       "warming_time": {
         "name": "保温时间"

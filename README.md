@@ -66,19 +66,20 @@ For detailed configuration guide, please see [Configuration Guide](GUIDE.md)
 | 4 | 0xB0 | Microwave Oven |
 | 5 | 0xB6 | Range Hood |
 | 6 | 0xB8 | Smart Robot Vacuum |
-| 7 | 0xCA | Multi-Door Fridge |
-| 7 | 0xD9 | Twin Tub Washing Machine |
-| 8 | 0xDA | Top Load Washing Machine |
-| 9 | 0xDB | Cylinder Washing Machine |
-| 10 | 0xDC | Clothes Dryer |
-| 11 | 0xE2 | Electric Water Heater |
-| 12 | 0xE3 | Gas Water Heater |
-| 13 | 0xEA | Rice Cooker |
-| 14 | 0xED | Water Purifier / Pipeline Machine |
-| 15 | 0xFA | Electric Fan |
-| 16 | 0xFB | Electric Heater |
-| 17 | 0xFC | Air Purifier |
-| 18 | 0xFD | Humidifier |
+| 7 | 0xBF | Microwave Steam Oven |
+| 8 | 0xCA | Multi-Door Fridge |
+| 9 | 0xD9 | Twin Tub Washing Machine |
+| 10 | 0xDA | Top Load Washing Machine |
+| 11 | 0xDB | Cylinder Washing Machine |
+| 12 | 0xDC | Clothes Dryer |
+| 13 | 0xE2 | Electric Water Heater |
+| 14 | 0xE3 | Gas Water Heater |
+| 15 | 0xEA | Rice Cooker |
+| 16 | 0xED | Water Purifier / Pipeline Machine |
+| 17 | 0xFA | Electric Fan |
+| 18 | 0xFB | Electric Heater |
+| 19 | 0xFC | Air Purifier |
+| 20 | 0xFD | Humidifier |
 
 > More device types are being adapted. Contributions are welcome!
 

@@ -88,6 +88,12 @@
       },
       "freezer_door_state": {
         "name": "Freezer Door State"
+      },
+      "lack_water": {
+        "name": "Water Shortage Status"
+      },
+      "change_water": {
+        "name": "Change Water Reminder"
       }
     },
     "button": {
@@ -911,18 +917,44 @@
           "upper": "Upper"
         }
       },
+      "steam_quantity": {
+        "name": "Steam Level",
+        "state": {
+          "off": "Off",
+          "low": "Level 1",
+          "middle": "Level 2",
+          "high": "Level 3"
+        }
+      },
       "work_mode": {
         "name": "Work Mode",
         "state": {
+          "above_inside_outside_tube": "Double Upper Tube",
+          "above_inside_outside_tube_fan": "Double Upper Tube Fan",
           "double_tube_1": "Bake & Grill",
+          "double_tube_fan": "Upper & Lower Tube Fan",
           "double_tube_hot_wind_tube_fan_1": "Air Fry",
           "fast_unfreeze": "Quick Defrost",
+          "hot_wind_tube_fan_1": "Hot Air",
+          "hot_wind_tube_fan_5": "Dried Fruit",
           "microwave_1": "Microwave Heating",
           "none": "None",
           "pause": "Pause",
+          "pure_preheat": "Bake Preheat",
+          "pure_preheat_2": "Air Fry",
+          "pure_steam_1": "Pure Steam",
+          "pure_steam_2": "Steam Preheat",
+          "pure_steam_5": "Fermentation",
+          "pure_steam_7": "Quick Steam",
           "steam_double_tube_1": "Low-cal Steam",
           "steam_double_tube_fan_1": "Low-fat Steam Bake",
+          "steam_hot_wind_tube_fan_1": "Moist Roast",
+          "steam_hot_wind_tube_fan_2": "High Temp Steam",
           "stop": "Stop",
+          "unfreeze_1": "Defrost",
+          "underside_tube_1": "Lower Tube",
+          "underside_tube_hot_wind_tube_fan": "Lower Tube Hot Air",
+          "upper_lower_tube": "Upper & Lower Tube",
           "warm": "Keep Warm",
           "work": "Work",
           "zymosis": "Fermentation"
@@ -966,6 +998,12 @@
       },
       "cur_temperature": {
         "name": "Current Temperature"
+      },
+      "cur_temperature_above": {
+        "name": "Upper Tube Temperature"
+      },
+      "cur_temperature_underside": {
+        "name": "Lower Tube Temperature"
       },
       "deep_filter_percent": {
         "name": "Filter Life Remaining"
@@ -1098,6 +1136,9 @@
       },
       "work_time": {
         "name": "Work Time"
+      },
+      "set_time": {
+        "name": "Set Time"
       },
       "warming_time": {
         "name": "Warming Time"

@@ -43,6 +43,7 @@ DEVICE_TYPES = {
     0xB0: "Microwave Oven",
     0xB6: "Range Hood",
     0xB8: "Smart Robot Vacuum",
+    0xBF: "Microwave Steam Oven",
     0xCA: "Multi-Door Fridge",
     0xD9: "Twin Tub Washing Machine",
     0xDA: "Top Load Washing Machine",
