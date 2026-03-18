@@ -66,7 +66,6 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         self._condition = condition
         self._command = command
         self._attr_unique_id = f"switch.midea_{device_id}_{switch_id}"
-        self.entity_id = f"switch.midea_{device_id}_{switch_id}"
 
     @property
     def available(self) -> bool:

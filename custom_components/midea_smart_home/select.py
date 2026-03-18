@@ -70,7 +70,6 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
         self._attr_translation_key = translation_key or select_id
         self._attr_options = options
         self._attr_unique_id = f"select.midea_{device_id}_{select_id}"
-        self.entity_id = f"select.midea_{device_id}_{select_id}"
         self._last_option: str | None = None
         self._condition = condition
 

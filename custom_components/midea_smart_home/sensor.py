@@ -76,7 +76,6 @@ class MideaSensorEntity(MideaBaseEntity, SensorEntity):
         self._attr_device_class = device_class
         self._attr_native_unit_of_measurement = unit
         self._attr_unique_id = f"sensor.midea_{device_id}_{sensor_id}"
-        self.entity_id = f"sensor.midea_{device_id}_{sensor_id}"
 
         if state_class is not None:
             if isinstance(state_class, str):

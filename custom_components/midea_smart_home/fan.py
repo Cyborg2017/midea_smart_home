@@ -53,7 +53,6 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
         self._fan_id = fan_id
         self._config = config
         self._attr_unique_id = f"fan.midea_{device_id}_{fan_id}"
-        self.entity_id = f"fan.midea_{device_id}_{fan_id}"
         self._attr_translation_key = config.get("translation_key", fan_id)
         self._key_power = config.get("power")
         self._key_preset_modes = config.get("preset_modes", {})

@@ -56,7 +56,6 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
         self._config = config
         self._rationale = rationale
         self._attr_unique_id = f"light.midea_{device_id}_{entity_key}"
-        self.entity_id = f"light.midea_{device_id}_{entity_key}"
 
         self._key_power = self._config.get("power")
         self._key_preset_modes = self._config.get("preset_modes")

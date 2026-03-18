@@ -57,7 +57,6 @@ class MideaNumberEntity(MideaBaseEntity, NumberEntity):
         self._attr_native_step = config.get("step", 1.0)
         self._attr_mode = config.get("mode", "auto")
         self._attr_unique_id = f"number.midea_{device_id}_{entity_key}"
-        self.entity_id = f"number.midea_{device_id}_{entity_key}"
         self._condition = config.get("condition")
 
         if "unit_of_measurement" in config:
