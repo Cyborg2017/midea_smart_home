@@ -162,17 +162,17 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
         new_status = {}
         if preset_mode is not None and self._key_preset_modes:
             mode_config = self._key_preset_modes.get(preset_mode, {})
-            if "mode" in mode_config:
-                new_status["mode"] = mode_config["mode"]
-            if "speeds" in mode_config:
-                self._current_speeds = mode_config["speeds"]
-                self._attr_speed_count = len(self._current_speeds)
-            else:
-                self._current_speeds = self._key_speeds
-                self._attr_speed_count = len(self._current_speeds) if self._current_speeds else 0
+            if mode_config:
+                new_status = {k: v for k, v in mode_config.items() if k != "speeds"}
 
-            if "speeds" in mode_config and len(mode_config["speeds"]) == 1:
-                new_status.update(mode_config["speeds"][0])
+                if "speeds" in mode_config:
+                    self._current_speeds = mode_config["speeds"]
+                    self._attr_speed_count = len(self._current_speeds)
+                    if len(self._current_speeds) >= 1:
+                        new_status.update(self._current_speeds[0])
+                else:
+                    self._current_speeds = self._key_speeds
+                    self._attr_speed_count = len(self._current_speeds) if self._current_speeds else 0
 
         if percentage is not None and self._current_speeds:
             if percentage == 0:
@@ -222,21 +222,10 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
                 self._current_speeds = self._key_speeds
                 self._attr_speed_count = len(self._current_speeds) if self._current_speeds else 0
 
-            new_status = {}
-            if "mode" in mode_config:
-                new_status["mode"] = mode_config["mode"]
+            new_status = {k: v for k, v in mode_config.items() if k != "speeds"}
 
             if "speeds" in mode_config and len(mode_config["speeds"]) >= 1:
                 new_status.update(mode_config["speeds"][0])
-
-            if "fresh_air_mode" in mode_config:
-                new_status["fresh_air_mode"] = mode_config["fresh_air_mode"]
-
-            if "exhaust_strength" in mode_config:
-                new_status["exhaust_strength"] = mode_config["exhaust_strength"]
-
-            if "wind_strength" in mode_config:
-                new_status["wind_strength"] = mode_config["wind_strength"]
 
             await self.coordinator.async_set_controls(new_status)
 
