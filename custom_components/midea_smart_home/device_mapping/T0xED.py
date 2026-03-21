@@ -1,4 +1,4 @@
-from homeassistant.const import Platform, PERCENTAGE, UnitOfTemperature, UnitOfTime
+from homeassistant.const import Platform, PERCENTAGE, UnitOfTemperature, UnitOfTime, UnitOfVolume
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
 
@@ -186,6 +186,95 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "cur_temperature"
+                }
+            }
+        }
+    },
+    "632009G9": {
+        "rationale": ["off", "on"],
+        "calculate": {
+            "get": [
+                {
+                    "lvalue": "[water_consumption_l]",
+                    "rvalue": "float([water_consumption] / 1000.0)"
+                }
+            ],
+        },
+        "entities": {
+            Platform.SWITCH: {
+                "wash": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.SELECT: {
+                "no_obsolete_water": {
+                    "options": {
+                        "water_saving": {"no_obsolete_water": "off", "save_mode": "on"},
+                        "water_quality": {"no_obsolete_water": "on", "save_mode": "off"}
+                    }
+                },
+                "cur_quantify": {
+                    "options": {
+                        "off_quantify": {"cur_quantify": 0},
+                        "small_amount": {"cur_quantify": 21},
+                        "normal_amount": {"cur_quantify": 22},
+                        "large_amount": {"cur_quantify": 23},
+                    }
+                }
+            },
+            Platform.NUMBER: {
+                "quantify_21": {
+                    "min": 300,
+                    "max": 1000,
+                    "step": 100,
+                    "unit_of_measurement": "mL"
+                },
+                "quantify_22": {
+                    "min": 1100,
+                    "max": 1900,
+                    "step": 100,
+                    "unit_of_measurement": "mL"
+                },
+                "quantify_23": {
+                    "min": 2000,
+                    "max": 5000,
+                    "step": 500,
+                    "unit_of_measurement": "mL"
+                }
+            },
+            Platform.SENSOR: {
+                "in_tds": {
+                    "unit_of_measurement": "mg/L",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "out_tds": {
+                    "unit_of_measurement": "mg/L",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "life_1": {
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "life_ro"
+                },
+                "life_2": {
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "life_pcb"
+                },
+                "maxlife_1": {
+                    "unit_of_measurement": "mths",
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "max_life_ro"
+                },
+                "maxlife_2": {
+                    "unit_of_measurement": "mths",
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "max_life_pcb"
+                },
+                "water_consumption_l": {
+                    "device_class": SensorDeviceClass.WATER,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.TOTAL
                 }
             }
         }

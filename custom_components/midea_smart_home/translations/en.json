@@ -1075,13 +1075,19 @@
         "name": "Inlet Water Temperature"
       },
       "life_pcb": {
-        "name": "PCB Filter Life"
+        "name": "PCB Filter Remaining Quantity"
       },
       "life_ro": {
-        "name": "RO Filter Life"
+        "name": "RO Filter Remaining Quantity"
       },
       "main_light_brightness": {
         "name": "Main Light Brightness"
+      },
+      "max_life_pcb": {
+        "name": "PCB Filter Remaining Life"
+      },
+      "max_life_ro": {
+        "name": "RO Filter Remaining Life"
       },
       "mode": {
         "name": "Running Mode"
@@ -1142,6 +1148,9 @@
       },
       "wash_time_value": {
         "name": "Wash Time"
+      },
+      "water_consumption_l": {
+        "name": "Water Consumption"
       },
       "water_feedback": {
         "name": "Water Level Feedback"

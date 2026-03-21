@@ -1075,13 +1075,19 @@
         "name": "进水温度"
       },
       "life_pcb": {
-        "name": "PCB滤芯寿命"
+        "name": "PCB滤芯剩余量"
       },
       "life_ro": {
-        "name": "RO滤芯寿命"
+        "name": "RO滤芯剩余量"
       },
       "main_light_brightness": {
         "name": "主灯亮度"
+      },
+      "max_life_pcb": {
+        "name": "PCB滤芯剩余寿命"
+      },
+      "max_life_ro": {
+        "name": "RO滤芯剩余寿命"
       },
       "mode": {
         "name": "运行模式"
@@ -1142,6 +1148,9 @@
       },
       "wash_time_value": {
         "name": "洗涤时间"
+      },
+      "water_consumption_l": {
+        "name": "总用水量"
       },
       "water_feedback": {
         "name": "水位反馈"
