@@ -527,7 +527,7 @@
         }
       },
       "flexzone_function": {
-        "name": "舱室功能",
+        "name": "舱室功能(变温空间)",
         "state": {
           "zero_degree": "零度",
           "treasure": "珍品",
@@ -1044,8 +1044,17 @@
       "error_code": {
         "name": "错误代码"
       },
+      "e_cleaning_percentage": {
+        "name": "节能评分"
+      },
       "fire_power": {
         "name": "微波档位"
+      },
+      "flexzone_temperature": {
+        "name": "变温空间设定温度"
+      },
+      "flexzone_real_temperature": {
+        "name": "变温空间实际温度"
       },
       "freezing_temperature": {
         "name": "冷冻设定温度"
@@ -1227,7 +1236,7 @@
         "name": "制冷"
       },
       "deep_cold_mode": {
-        "name": "-30℃深冻"
+        "name": "-30℃深冻(深冻锁鲜)"
       },
       "damp_dry_signal": {
         "name": "潮湿干燥信号"
@@ -1255,6 +1264,9 @@
       },
       "frequency_hot": {
         "name": "变频加热"
+      },
+      "freezing_light_open_chose": {
+        "name": "氛围灯功能"
       },
       "freezing_mode": {
         "name": "速冻"

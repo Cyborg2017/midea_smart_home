@@ -479,7 +479,7 @@
         }
       },
       "flexzone_function": {
-        "name": "FlexZone Function",
+        "name": "FlexZone Function (Variable Temperature Space)",
         "state": {
           "zero_degree": "Zero Degree",
           "treasure": "Treasure",
@@ -1044,8 +1044,17 @@
       "error_code": {
         "name": "Error Code"
       },
+      "e_cleaning_percentage": {
+        "name": "Energy Saving Score"
+      },
       "fire_power": {
         "name": "Microwave Power"
+      },
+      "flexzone_temperature": {
+        "name": "Flexzone Set Temperature"
+      },
+      "flexzone_real_temperature": {
+        "name": "Flexzone Actual Temperature"
       },
       "freezing_temperature": {
         "name": "Freezer Set Temperature"
@@ -1230,7 +1239,7 @@
         "name": "Damp Dry Signal"
       },
       "deep_cold_mode": {
-        "name": "-30°C Deep Freeze"
+        "name": "-30°C Deep Freeze (Deep Freeze Lock Fresh)"
       },
       "display_on_off": {
         "name": "Screen Display"
@@ -1255,6 +1264,9 @@
       },
       "frequency_hot": {
         "name": "Inverter Heating"
+      },
+      "freezing_light_open_chose": {
+        "name": "Ambient Light Function"
       },
       "freezing_mode": {
         "name": "Quick Freeze"
