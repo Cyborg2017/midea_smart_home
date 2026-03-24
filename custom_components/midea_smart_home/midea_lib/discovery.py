@@ -198,7 +198,12 @@ def discover_devices(timeout: float = DISCOVERY_TIMEOUT, scan_address: str = "au
                 if device_id in devices:
                     continue
 
-                protocol_name = "V1" if device_info[CONF_PROTOCOL] == ProtocolVersion.V1 else "V2/V3"
+                if device_info[CONF_PROTOCOL] == ProtocolVersion.V1:
+                    protocol_name = "V1"
+                elif device_info[CONF_PROTOCOL] == ProtocolVersion.V2:
+                    protocol_name = "V2"
+                else:
+                    protocol_name = "V3"
                 _LOGGER.debug(
                     "Found device %d (%s) at %s, type=0x%x",
                     device_id, protocol_name, addr[0], device_info[CONF_DEVICE_TYPE]
