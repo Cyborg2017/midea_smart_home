@@ -752,6 +752,8 @@
           "intelligent": "智能洗",
           "jacket": "冲锋衣",
           "jean": "牛仔",
+          "hanfu_spring_summer": "汉服春夏洗",
+          "hanfu_autumn_winter": "汉服秋冬洗",
           "memory": "记忆",
           "mixed_wash": "混合",
           "new_clothes_wash": "新衣洗",
@@ -837,6 +839,17 @@
           "2_times": "2次",
           "3_times": "3次",
           "4_times": "4次"
+        }
+      },
+      "softener": {
+        "name": "柔顺剂",
+        "state": {
+          "off": "关闭",
+          "auto": "自动",
+          "l1": "L1",
+          "l2": "L2",
+          "l3": "L3",
+          "l4": "L4"
         }
       },
       "stains": {
@@ -1392,7 +1405,7 @@
         "name": "蒸汽洗"
       },
       "microbubble": {
-        "name": "超微浸泡"
+        "name": "超微净泡"
       },
       "ultraviolet_lamp": {
         "name": "UV除菌"

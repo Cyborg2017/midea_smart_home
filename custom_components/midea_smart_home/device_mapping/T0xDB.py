@@ -618,5 +618,160 @@ DEVICE_MAPPING = {
                 }
             }
         }
+    },
+    "38124077": {
+        "rationale": ["off", "on"],
+        "entities": {
+            Platform.BINARY_SENSOR: {
+                "door_opened": {
+                    "device_class": BinarySensorDeviceClass.OPENING,
+                },
+                "detergent_lack": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                },
+                "softener_lack": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                },
+                "bucket_water_overheating": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "control_status": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["pause", "start"],
+                },
+                "lock": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ultraviolet_lamp": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["0", "1"]
+                },
+                "microbubble": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                }
+            },
+            Platform.SELECT: {
+                "mode": {
+                    "options": {
+                        "normal": {"mode": "normal"},
+                        "factory_test": {"mode": "factory_test"},
+                        "service": {"mode": "service"},
+                        "normal_continus": {"mode": "normal_continus"}
+                    }
+                },
+                "program": {
+                    "options": {
+                        "fast_wash": {"program": "fast_wash"},
+                        "mixed_wash": {"program": "water_mixed_wash"},
+                        "single_dehytration": {"program": "single_dehytration"},
+                        "rinsing_dehydration": {"program": "rinsing_dehydration"},
+                        "down_jacket": {"program": "down_jacket"},
+                        "big": {"program": "big"},
+                        "cold_wash": {"program": "water_cold_wash"},
+                        "wool": {"program": "wool"},
+                        "remove_mite_wash": {"program": "water_remove_mite_wash"},
+                        "ssp": {"program": "water_ssp"},
+                        "intelligent": {"program": "water_intelligent"},
+                        "steep": {"program": "water_steep"},
+                        "fast_wash_30": {"program": "fast_wash_30"},
+                        "cotton": {"program": "new_water_cotton"},
+                        "baby_clothes": {"program": "water_cotton"},
+                        "sterilize_wash": {"program": "sterilize_wash"},
+                        "eco": {"program": "water_eco"},
+                        "hanfu_spring_summer": {"program": "hanfu_spring_summer"},
+                        "hanfu_autumn_winter": {"program": "hanfu_autumn_winter"}
+                    }
+                },
+                "dehydration_speed": {
+                    "options": {
+                        "no_spin": {"dehydration_speed": "0"},
+                        "400rpm": {"dehydration_speed": "400"},
+                        "600rpm": {"dehydration_speed": "600"},
+                        "800rpm": {"dehydration_speed": "800"},
+                        "1000rpm": {"dehydration_speed": "1000"},
+                        "1200rpm": {"dehydration_speed": "1200"}
+                    }
+                },
+                "soak_count": {
+                    "options": {
+                        "1_time": {"soak_count": "1"},
+                        "2_times": {"soak_count": "2"},
+                        "3_times": {"soak_count": "3"},
+                        "4_times": {"soak_count": "4"}
+                    }
+                },
+                "water_level": {
+                    "options": {
+                        "auto": {"water_level": "auto"},
+                        "l1": {"water_level": "low"},
+                        "l2": {"water_level": "mid"},
+                        "l3": {"water_level": "high"},
+                        "l4": {"water_level": "4"}
+                    }
+                },
+                "detergent": {
+                    "options": {
+                        "smart": {"detergent": "4"},
+                        "off": {"detergent": "0"},
+                        "l1": {"detergent": "1"},
+                        "l2": {"detergent": "2"},
+                        "l3": {"detergent": "3"},
+                        "l4": {"detergent": "5"}
+                    }
+                },
+                "softener": {
+                    "options": {
+                        "off": {"softener": "0"},
+                        "auto": {"softener": "1"},
+                        "l1": {"softener": "2"},
+                        "l2": {"softener": "3"},
+                        "l3": {"softener": "4"},
+                        "l4": {"softener": "5"}
+                    }
+                },
+                "temperature": {
+                    "options": {
+                        "cold_water": {"temperature": "0"},
+                        "20c": {"temperature": "20"},
+                        "30c": {"temperature": "30"},
+                        "40c": {"temperature": "40"},
+                        "60c": {"temperature": "60"},
+                        "95c": {"temperature": "95"}
+                    }
+                }
+            },
+            Platform.SENSOR: {
+                "running_status": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "remain_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "progress": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "error_code": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "wash_time_value": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "dehydration_time_value": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
     }
 }

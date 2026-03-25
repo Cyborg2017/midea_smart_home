@@ -752,6 +752,8 @@
           "intelligent": "Intelligent",
           "jacket": "Jacket",
           "jean": "Jeans",
+          "hanfu_spring_summer": "Hanfu Spring/Summer",
+          "hanfu_autumn_winter": "Hanfu Autumn/Winter",
           "memory": "Memory",
           "mixed_wash": "Mixed",
           "new_clothes_wash": "New Clothes",
@@ -837,6 +839,17 @@
           "2_times": "2 Times",
           "3_times": "3 Times",
           "4_times": "4 Times"
+        }
+      },
+      "softener": {
+        "name": "Softener",
+        "state": {
+          "off": "Off",
+          "auto": "Auto",
+          "l1": "L1",
+          "l2": "L2",
+          "l3": "L3",
+          "l4": "L4"
         }
       },
       "stains": {
