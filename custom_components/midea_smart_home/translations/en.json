@@ -290,6 +290,30 @@
       }
     },
     "select": {
+      "wind_around": {
+        "name": "Wind Around",
+        "state": {
+          "off": "Off",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
+      "prevent_straight_wind": {
+        "name": "Prevent Straight Wind",
+        "state": {
+          "off": "Off",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
+      "ptc": {
+        "name": "PTC Heater",
+        "state": {
+          "off": "Off",
+          "mode_1": "Mode 1",
+          "mode_2": "Mode 2"
+        }
+      },
       "bath_direction": {
         "name": "Bath Wind Direction",
         "state": {
@@ -1381,6 +1405,12 @@
       },
       "ptc": {
         "name": "PTC Heater"
+      },
+      "light_sensitive": {
+        "name": "Light Sensitive"
+      },
+      "power_saving": {
+        "name": "Power Saving"
       },
       "radar_induction_enable": {
         "name": "Motion Night Light"

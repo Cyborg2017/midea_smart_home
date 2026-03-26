@@ -290,6 +290,30 @@
       }
     },
     "select": {
+      "wind_around": {
+        "name": "环绕风",
+        "state": {
+          "off": "关闭",
+          "up": "上环绕风",
+          "down": "下环绕风"
+        }
+      },
+      "prevent_straight_wind": {
+        "name": "防直吹",
+        "state": {
+          "off": "关闭",
+          "up": "上防直吹",
+          "down": "下防直吹"
+        }
+      },
+      "ptc": {
+        "name": "电辅热",
+        "state": {
+          "off": "关闭",
+          "mode_1": "自动模式1",
+          "mode_2": "自动模式2"
+        }
+      },
       "bath_direction": {
         "name": "沐浴风向",
         "state": {
@@ -1372,6 +1396,12 @@
       },
       "ptc": {
         "name": "电辅热"
+      },
+      "light_sensitive": {
+        "name": "智能光感"
+      },
+      "power_saving": {
+        "name": "静眠"
       },
       "radar_induction_enable": {
         "name": "人感夜灯"
