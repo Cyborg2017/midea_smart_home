@@ -435,6 +435,11 @@ DEVICE_MAPPING = {
                 },
                 "autoclean_ctrl": {
                     "device_class": SwitchDeviceClass.SWITCH
+                },
+                "sleep": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["on", "off"],
+                    "translation_key": "display_on_off"
                 }
             },
             Platform.SELECT: {
@@ -535,6 +540,9 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.RUNNING
                 },
                 "ice_gall_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "filter": {
                     "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },

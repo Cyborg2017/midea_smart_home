@@ -8,6 +8,7 @@
             "door_warn": { "default": "mdi:door-open" },
             "drying_tunnel_overheating": { "default": "mdi:thermometer-alert" },
             "failed_device": { "default": "mdi:alert-circle" },
+            "filter": { "default": "mdi:water-sync" },
             "freezer_door_state": { "default": "mdi:fridge-bottom" },
             "lack_water": { "default": "mdi:water-off" },
             "change_water": { "default": "mdi:water-sync" },

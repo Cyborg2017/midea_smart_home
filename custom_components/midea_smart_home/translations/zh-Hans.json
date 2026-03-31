@@ -80,6 +80,9 @@
       "failed_device": {
         "name": "初始化失败"
       },
+      "filter": {
+        "name": "制水状态"
+      },
       "screen_status": {
         "name": "屏幕状态"
       },

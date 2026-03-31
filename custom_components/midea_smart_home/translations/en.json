@@ -80,6 +80,9 @@
       "failed_device": {
         "name": "Initialization Failed"
       },
+      "filter": {
+        "name": "Filter Status"
+      },
       "softener_lack": {
         "name": "Softener Status"
       },
