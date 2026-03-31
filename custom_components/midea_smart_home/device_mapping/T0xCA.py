@@ -337,10 +337,6 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "flexzone_real_temperature"
-                },
-                "e_cleaning_percentage": {
-                    "unit_of_measurement": PERCENTAGE,
-                    "state_class": SensorStateClass.MEASUREMENT
                 }
             }
         }

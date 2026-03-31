@@ -1148,9 +1148,6 @@
       "error_code": {
         "name": "Error Code"
       },
-      "e_cleaning_percentage": {
-        "name": "Energy Saving Score"
-      },
       "fire_power": {
         "name": "Microwave Power"
       },

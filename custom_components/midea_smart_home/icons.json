@@ -157,7 +157,6 @@
             "deep_filter_percent": { "default": "mdi:air-filter" },
             "dehydration_time_value": { "default": "mdi:timer" },
             "dry_time": { "default": "mdi:timer" },
-            "e_cleaning_percentage": { "default": "mdi:leaf-circle" },
             "end_time": { "default": "mdi:clock-end" },
             "error_code": { "default": "mdi:alert-circle" },
             "fire_power": { "default": "mdi:microwave" },

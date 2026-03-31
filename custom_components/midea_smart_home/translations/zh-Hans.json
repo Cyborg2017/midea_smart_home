@@ -1154,9 +1154,6 @@
       "error_code": {
         "name": "错误代码"
       },
-      "e_cleaning_percentage": {
-        "name": "节能评分"
-      },
       "fire_power": {
         "name": "微波档位"
       },
