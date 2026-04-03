@@ -137,6 +137,19 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 description_placeholders={"note": "No devices found in LAN"},
             )
 
+        existing_device_ids = {d.get(CONF_DEVICE_ID) for d in self._devices_data}
+        self._discovered_devices = {
+            did: info for did, info in self._discovered_devices.items()
+            if did not in existing_device_ids
+        }
+
+        if not self._discovered_devices:
+            return self.async_show_form(
+                step_id="discover",
+                errors={"base": "all_devices_added"},
+                description_placeholders={"note": "All discovered devices have already been added"},
+            )
+
         if self._session is None:
             self._session = ClientSession()
 
@@ -286,16 +299,30 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if self._devices_data:
                 if self._existing_entry:
                     existing_data = dict(self._existing_entry.data)
+                    old_device_ids = {d.get(CONF_DEVICE_ID) for d in existing_data.get("devices", [])}
+
                     existing_data["devices"] = self._devices_data
                     if CONF_ACCOUNT not in existing_data:
                         existing_data[CONF_ACCOUNT] = self._account
                         existing_data[CONF_PASSWORD] = self._password
+
                     self.hass.config_entries.async_update_entry(
                         self._existing_entry,
                         data=existing_data,
                     )
-                    await self.hass.config_entries.async_reload(self._existing_entry.entry_id)
-                    return self.async_abort(reason="devices_updated")
+
+                    import asyncio
+
+                    async def reload_in_background():
+                        try:
+                            await self.hass.config_entries.async_reload(self._existing_entry.entry_id)
+                            _LOGGER.info("Background reload completed successfully")
+                        except Exception as e:
+                            _LOGGER.error("Background reload failed: %s", e)
+
+                    asyncio.create_task(reload_in_background())
+
+                    return self.async_abort(reason="devices_added_background")
 
                 first_device_id = self._devices_data[0].get(CONF_DEVICE_ID) if self._devices_data else None
                 first_cloud_device = self._cloud_devices.get(first_device_id, {}) if first_device_id else {}
@@ -552,14 +579,455 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         self._config_entry = config_entry
         self._account = config_entry.data.get(CONF_ACCOUNT, "")
         self._password = config_entry.data.get(CONF_PASSWORD, "")
+        self._discovered_devices: dict = {}
+        self._selected_devices: list = []
+        self._current_device_index: int = 0
+        self._devices_data: list = list(config_entry.data.get("devices", []))
+        self._session: ClientSession = None
+        self._preset_cloud = None
+        self._user_cloud = None
+        self._cloud_devices: dict = {}
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         return self.async_show_menu(
             step_id="init",
-            menu_options=["update_account", "sync_cloud", "clear_cache"],
+            menu_options=["add_device", "update_account", "sync_cloud", "clear_cache"],
         )
+
+    async def async_step_add_device(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        if user_input is not None:
+            scan_address = user_input.get("scan_address", "auto")
+            return await self._discover_devices(scan_address)
+
+        return self.async_show_form(
+            step_id="add_device",
+            data_schema=vol.Schema({
+                vol.Optional("scan_address", default="auto"): str,
+            }),
+        )
+
+    async def _discover_devices(self, scan_address: str = "auto") -> FlowResult:
+        self._discovered_devices = await self.hass.async_add_executor_job(
+            discover_devices, DISCOVERY_TIMEOUT, scan_address
+        )
+
+        if not self._discovered_devices:
+            return self.async_show_form(
+                step_id="add_device",
+                errors={"base": "no_devices_found"},
+                description_placeholders={"note": "No devices found in LAN"},
+            )
+
+        existing_device_ids = {d.get(CONF_DEVICE_ID) for d in self._devices_data}
+        self._discovered_devices = {
+            did: info for did, info in self._discovered_devices.items()
+            if did not in existing_device_ids
+        }
+
+        if not self._discovered_devices:
+            return self.async_show_form(
+                step_id="add_device",
+                errors={"base": "all_devices_added"},
+                description_placeholders={"note": "All discovered devices have already been added"},
+            )
+
+        if self._session is None:
+            self._session = ClientSession()
+
+            try:
+                from .midea_lib.cloud import get_midea_cloud, get_preset_account_cloud
+
+                preset = get_preset_account_cloud()
+                self._preset_cloud = get_midea_cloud(
+                    cloud_name=preset["cloud_name"],
+                    session=self._session,
+                    account=preset["username"],
+                    password=preset["password"],
+                )
+
+                if not await self._preset_cloud.login():
+                    _LOGGER.warning("Preset cloud login failed")
+
+                if self._account and self._password:
+                    self._user_cloud = get_midea_cloud(
+                        cloud_name="Meiju Cloud",
+                        session=self._session,
+                        account=self._account,
+                        password=self._password,
+                    )
+
+                    if not await self._user_cloud.login():
+                        _LOGGER.warning("User account login failed")
+
+                    _LOGGER.info("Cloud login success")
+                    self._cloud_devices = await self._user_cloud.list_appliances(home_id=None) or {}
+                    _LOGGER.info("Cloud devices list: %s", self._cloud_devices)
+
+                lua_common_dir = get_lua_common_path(self.hass.config.config_dir)
+                await self._download_common_lua_files(lua_common_dir)
+
+            except (json.JSONDecodeError, OSError) as err:
+                _LOGGER.error("Failed to login to cloud: %s", err)
+                await self._cleanup_session()
+
+        return await self.async_step_select_device_option()
+
+    async def async_step_select_device_option(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        device_options = {}
+
+        for did, info in self._discovered_devices.items():
+            cloud_device = self._cloud_devices.get(did, {})
+            device_name = cloud_device.get("name", DEVICE_TYPES.get(info[CONF_DEVICE_TYPE], f"T0x{info[CONF_DEVICE_TYPE]:02X}"))
+            device_options[str(did)] = f"{device_name} ( {info[CONF_IP]} )"
+
+        return self.async_show_menu(
+            step_id="select_device_option",
+            menu_options=["select_device_continue_option", "select_device_rescan_option"],
+            description_placeholders={
+                "device_count": str(len(device_options)),
+            },
+        )
+
+    async def async_step_select_device_continue_option(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        device_options = {}
+
+        for did, info in self._discovered_devices.items():
+            cloud_device = self._cloud_devices.get(did, {})
+            device_name = cloud_device.get("name", DEVICE_TYPES.get(info[CONF_DEVICE_TYPE], f"T0x{info[CONF_DEVICE_TYPE]:02X}"))
+            device_options[str(did)] = f"{device_name} ( {info[CONF_IP]} )"
+
+        if user_input is not None:
+            selected = user_input.get("devices", [])
+            if selected:
+                self._selected_devices = [
+                    self._discovered_devices[int(did)]
+                    for did in selected
+                ]
+                self._current_device_index = 0
+                return await self.async_step_get_token_option()
+
+        all_device_ids = list(device_options.keys())
+        return self.async_show_form(
+            step_id="select_device_continue_option",
+            data_schema=vol.Schema({
+                vol.Required(
+                    "devices",
+                    description={"suggested_value": all_device_ids}
+                ): cv.multi_select(device_options),
+            }),
+        )
+
+    async def async_step_select_device_rescan_option(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        return await self._discover_devices()
+
+    async def async_step_get_token_option(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        if self._current_device_index >= len(self._selected_devices):
+            await self._cleanup_session()
+
+            if self._devices_data:
+                new_data = dict(self._config_entry.data)
+                old_device_ids = {d.get(CONF_DEVICE_ID) for d in new_data.get("devices", [])}
+
+                new_data["devices"] = self._devices_data
+                self.hass.config_entries.async_update_entry(
+                    self._config_entry,
+                    data=new_data,
+                )
+
+                import asyncio
+
+                async def reload_in_background():
+                    try:
+                        await self.hass.config_entries.async_reload(self._config_entry.entry_id)
+                        _LOGGER.info("Background reload completed successfully")
+                    except Exception as e:
+                        _LOGGER.error("Background reload failed: %s", e)
+
+                asyncio.create_task(reload_in_background())
+
+                return self.async_create_entry(title="", data={})
+            return self.async_abort(reason="no_devices")
+
+        current_device = self._selected_devices[self._current_device_index]
+        device_id = current_device[CONF_DEVICE_ID]
+        protocol = current_device.get(CONF_PROTOCOL, ProtocolVersion.V3)
+
+        if protocol is None:
+            protocol = ProtocolVersion.V3
+        is_v3 = protocol == ProtocolVersion.V3
+
+        if user_input is not None:
+            lua_file = user_input.get(CONF_LUA_FILE, "")
+            token = user_input.get(CONF_TOKEN, "")
+            key = user_input.get(CONF_KEY, "")
+            device_type = current_device.get(CONF_DEVICE_TYPE)
+            sn = current_device.get(CONF_SN, "")
+            sn8 = current_device.get(CONF_SN8, "")
+
+            if not lua_file or (is_v3 and (not token or not key)):
+                return self._show_token_form_option(
+                    current_device, device_id, protocol, token, key, lua_file,
+                    error="Please fill in all required fields" if is_v3 else "Please enter Lua file path"
+                )
+
+            from .midea_lib.device import MideaCodec, DeviceController
+            lua_common_dir = Path(self.hass.config.config_dir) / LUA_COMMON_PATH
+            ip_address = current_device[CONF_IP]
+
+            valid, error_msg = await validate_device(
+                self.hass,
+                device_id,
+                ip_address,
+                DEFAULT_PORT,
+                token,
+                key,
+                lua_file,
+                protocol,
+                sn=sn,
+                sn8=sn8,
+                device_type=device_type
+            )
+
+            if not valid:
+                return self._show_token_form_option(
+                    current_device, device_id, protocol, token, key, lua_file,
+                    error=error_msg
+                )
+
+            device_data = {
+                CONF_DEVICE_ID: device_id,
+                CONF_IP: current_device[CONF_IP],
+                CONF_PORT: DEFAULT_PORT,
+                CONF_DEVICE_TYPE: hex(current_device.get(CONF_DEVICE_TYPE)),
+                CONF_SN: sn,
+                CONF_SN8: sn8,
+                CONF_PRODUCT_MODEL: current_device.get(CONF_PRODUCT_MODEL, ""),
+                CONF_MODEL_NUMBER: current_device.get(CONF_MODEL_NUMBER, ""),
+                CONF_DEVICE_NAME: current_device.get(CONF_DEVICE_NAME, ""),
+                CONF_MANUFACTURER_CODE: current_device.get(CONF_MANUFACTURER_CODE, "0000"),
+                CONF_CATEGORY: current_device.get(CONF_CATEGORY, ""),
+                CONF_TOKEN: token if is_v3 else "",
+                CONF_KEY: key if is_v3 else "",
+                CONF_LUA_FILE: lua_file,
+                CONF_PROTOCOL: protocol,
+            }
+
+            existing_index = next(
+                (i for i, d in enumerate(self._devices_data) if d.get(CONF_DEVICE_ID) == device_id),
+                None
+            )
+            if existing_index is not None:
+                self._devices_data[existing_index] = device_data
+            else:
+                self._devices_data.append(device_data)
+
+            await self.hass.async_add_executor_job(self._save_device_to_json, device_data)
+
+            self._current_device_index += 1
+            return await self.async_step_get_token_option()
+
+        token = None
+        key = None
+        lua_file = None
+
+        try:
+            if is_v3 and self._preset_cloud:
+                keys = await self._preset_cloud.get_cloud_keys(device_id)
+                if keys:
+                    method = list(keys.keys())[0]
+                    token = keys[method]["token"]
+                    key = keys[method]["key"]
+                    _LOGGER.info("Got token/key for device %s", device_id)
+
+            if self._user_cloud:
+                cloud_device = self._cloud_devices.get(device_id, {})
+
+                if cloud_device:
+                    current_device[CONF_SN] = cloud_device.get("sn") or current_device.get(CONF_SN, "")
+                    current_device[CONF_SN8] = cloud_device.get("sn8") or current_device.get(CONF_SN8, "")
+                    current_device[CONF_PRODUCT_MODEL] = cloud_device.get("model") or current_device.get(CONF_PRODUCT_MODEL, "")
+                    current_device[CONF_MODEL_NUMBER] = cloud_device.get("model_number") or current_device.get(CONF_MODEL_NUMBER, "")
+                    current_device[CONF_DEVICE_NAME] = cloud_device.get("name") or current_device.get(CONF_DEVICE_NAME, "")
+                    current_device[CONF_MANUFACTURER_CODE] = cloud_device.get("manufacturer_code") or current_device.get(CONF_MANUFACTURER_CODE, "0000")
+                    current_device[CONF_CATEGORY] = cloud_device.get("category") or current_device.get(CONF_CATEGORY, "")
+
+                sn = current_device.get(CONF_SN, "")
+                sn8 = current_device.get(CONF_SN8, "")
+                model_number = current_device.get(CONF_MODEL_NUMBER)
+                device_type = current_device.get(CONF_DEVICE_TYPE)
+                manufacturer_code = current_device.get(CONF_MANUFACTURER_CODE, sn[:4] or "0000")
+
+                lua_storage_dir = get_lua_storage_path(self.hass.config.config_dir)
+                lua_storage_dir.mkdir(parents=True, exist_ok=True)
+
+                success, downloaded_lua = await download_lua_file(
+                    self.hass,
+                    self._user_cloud._access_token,
+                    sn,
+                    device_type,
+                    manufacturer_code,
+                    model_number
+                )
+
+                if success:
+                    if sn8:
+                        lua_file_path = lua_storage_dir / f"{device_id}_T0x{hex(device_type)[2:].upper()}_{sn8}.lua"
+                    else:
+                        lua_file_path = lua_storage_dir / f"{device_id}_T0x{hex(device_type)[2:]}.lua"
+
+                    await self.hass.async_add_executor_job(write_file, lua_file_path, downloaded_lua)
+                    lua_file = str(lua_file_path)
+                    _LOGGER.info("Downloaded Lua file to %s", lua_file)
+
+        except (socket.error, OSError, ValueError, json.JSONDecodeError) as err:
+            _LOGGER.error("Failed to get token/key or lua: %s", err)
+
+        device_type = current_device.get(CONF_DEVICE_TYPE)
+        sn8 = current_device.get(CONF_SN8, "")
+        lua_file_path = get_lua_file_path(self.hass.config.config_dir, device_id, device_type, sn8)
+
+        if not lua_file and lua_file_path.exists():
+            lua_file = str(lua_file_path)
+
+        return self._show_token_form_option(
+            current_device, device_id, protocol, token or "", key or "", lua_file or ""
+        )
+
+    def _show_token_form_option(
+        self,
+        current_device: dict,
+        device_id: int,
+        protocol: int,
+        token: str,
+        key: str,
+        lua_file: str,
+        error: str = ""
+    ) -> FlowResult:
+        is_v3 = protocol == ProtocolVersion.V3
+        device_type = current_device.get(CONF_DEVICE_TYPE)
+        sn8 = current_device.get(CONF_SN8, "")
+
+        protocol_name = f"V{protocol}"
+        device_name = current_device.get(CONF_DEVICE_NAME, "")
+        if not device_name:
+            device_name = DEVICE_TYPES.get(device_type, f"Device {device_type}")
+        model = current_device.get(CONF_PRODUCT_MODEL, "")
+
+        if is_v3:
+            data_schema = vol.Schema({
+                vol.Required(CONF_TOKEN, default=token): str,
+                vol.Required(CONF_KEY, default=key): str,
+                vol.Required(CONF_LUA_FILE, default=lua_file): str,
+            })
+        else:
+            data_schema = vol.Schema({
+                vol.Optional(CONF_TOKEN, default=token): str,
+                vol.Optional(CONF_KEY, default=key): str,
+                vol.Required(CONF_LUA_FILE, default=lua_file): str,
+            })
+
+        return self.async_show_form(
+            step_id="get_token_option",
+            data_schema=data_schema,
+            errors={"base": "lua_error"} if error else None,
+            description_placeholders={
+                "device_name": device_name,
+                "device_model": model if model else "Unknown",
+                "device_id": str(device_id),
+                "ip_address": current_device[CONF_IP],
+                "sn8": sn8 if sn8 else "Unknown",
+                "protocol_version": protocol_name,
+                "error": f"\n{error}" if error else "",
+                "progress": f"({self._current_device_index + 1}/{len(self._selected_devices)})",
+                "token_required": "Required" if is_v3 else "Optional (Not needed for V1/V2)",
+                "key_required": "Required" if is_v3 else "Optional (Not needed for V1/V2)",
+            },
+        )
+
+    async def _cleanup_session(self):
+        if self._session:
+            await self._session.close()
+            self._session = None
+
+    def _save_device_to_json(self, device_data: dict):
+        try:
+            json_dir = get_json_files_path(self.hass.config.config_dir)
+            json_dir.mkdir(parents=True, exist_ok=True)
+
+            device_id = device_data.get(CONF_DEVICE_ID)
+            device_type_str = device_data.get(CONF_DEVICE_TYPE)
+            sn8 = device_data.get(CONF_SN8, "")
+
+            if not device_id or not device_type_str:
+                return
+
+            try:
+                device_type = int(device_type_str, 16)
+            except ValueError:
+                _LOGGER.error("Invalid device type format: %s", device_type_str)
+                return
+
+            json_path = get_device_json_path(self.hass.config.config_dir, device_id, device_type, sn8)
+
+            existing_data = {}
+            if json_path.exists():
+                try:
+                    with open(json_path, 'r', encoding='utf-8') as f:
+                        existing_data = json.load(f)
+                except (json.JSONDecodeError, OSError) as e:
+                    _LOGGER.error("Failed to read existing JSON file: %s", e)
+
+            existing_data.update(device_data)
+
+            with open(json_path, 'w', encoding='utf-8') as f:
+                json.dump(existing_data, f, indent=2, ensure_ascii=False)
+
+            _LOGGER.info("Saved device data to JSON file: %s", json_path)
+        except (json.JSONEncodeError, OSError) as e:
+            _LOGGER.error("Failed to save device data to JSON file: %s", e)
+
+    async def _download_common_lua_files(
+        self, storage_dir: Path
+    ) -> bool:
+        try:
+            storage_dir.mkdir(parents=True, exist_ok=True)
+
+            cjson_path, bit_path, cjson_lua, bit_lua = await self.hass.async_add_executor_job(
+                ensure_lua_files, str(storage_dir)
+            )
+
+            files_to_check = [
+                (Path(cjson_path), cjson_lua),
+                (Path(bit_path), bit_lua),
+            ]
+
+            for file_path, content in files_to_check:
+                if file_path.exists():
+                    _LOGGER.info("Common Lua file already exists: %s", file_path)
+                    continue
+
+                success = await self.hass.async_add_executor_job(
+                    write_file, file_path, content
+                )
+                if success:
+                    _LOGGER.info("Created common Lua file: %s", file_path.name)
+
+            return True
+        except OSError as err:
+            _LOGGER.error("Failed to create common Lua files: %s", err)
+            return False
 
     async def async_step_update_account(
         self, user_input: dict[str, Any] | None = None

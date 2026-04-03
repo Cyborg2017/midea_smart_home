@@ -2,12 +2,12 @@
   "config": {
     "abort": {
       "already_configured": "Device is already configured",
-      "devices_added": "Devices have been successfully added",
-      "devices_updated": "Devices have been successfully updated",
+      "auth_failed": "Authentication failed",
+      "devices_added_background": "✅ Devices submitted! New devices are loading in background, please refresh page to view...",
       "no_devices": "No devices selected"
     },
     "error": {
-      "auth_failed": "Authentication failed",
+      "all_devices_added": "All discovered devices have already been added",
       "connection_failed": "Failed to connect to device",
       "lua_error": "Device validation failed",
       "no_devices_found": "No devices found on local network"
@@ -1578,21 +1578,63 @@
   },
   "options": {
     "error": {
+      "all_devices_added": "All discovered devices have already been added",
       "no_account_password": "Please configure account and password first",
-      "no_cache_found": "No local cache files found, no need to clean"
+      "no_cache_found": "No local cache files found, no need to clean",
+      "no_devices_found": "No new devices found on local network"
     },
     "step": {
+      "add_device": {
+        "data": {
+          "scan_address": "Scan Address"
+        },
+        "data_description": {
+          "scan_address": "Enter router address to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection"
+        },
+        "description": "Search for new devices on local network (already added devices will be filtered out)",
+        "title": "Add New Device"
+      },
       "clear_cache": {
         "description": "Clear local cache files:\n\n    📁 Current cache will be backed up to: .storage/midea_smart_home-backup\n\n    ⚠️ Click Submit to proceed",
         "title": "Clear Local Cache"
       },
+      "get_token_option": {
+        "data": {
+          "key": "Key",
+          "lua_file": "Lua File Path",
+          "token": "Token"
+        },
+        "data_description": {
+          "key": "{key_required}",
+          "lua_file": "Device protocol file path",
+          "token": "{token_required}"
+        },
+        "description": "Device Name: {device_name}\nDevice Model: {device_model}\nDevice ID: {device_id}\nIP Address: {ip_address}\nSN8: {sn8}\nProtocol Version: {protocol_version}\n{error}",
+        "title": "Device Authentication {progress}"
+      },
       "init": {
         "menu_options": {
+          "add_device": "➕ Add New Device",
           "clear_cache": "🗑️ Clear local cache files",
           "sync_cloud": "☁️ Sync device info from cloud",
           "update_account": "🔑 Update Midea Account/Password"
         },
         "title": "Midea Smart Home Options"
+      },
+      "select_device_continue_option": {
+        "data": {
+          "devices": "Devices"
+        },
+        "description": "Select new devices to add (multiple selection allowed)",
+        "title": "Select New Devices"
+      },
+      "select_device_option": {
+        "description": "Found {device_count} new devices. Select an action:",
+        "menu_options": {
+          "select_device_continue_option": "✅ Continue with selected devices",
+          "select_device_rescan_option": "🔄 Rescan for devices"
+        },
+        "title": "Select New Devices"
       },
       "sync_cloud": {
         "description": "Sync device names and info from cloud to local.\n\nNote: Account and password must be configured first.",

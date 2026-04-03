@@ -2,12 +2,12 @@
   "config": {
     "abort": {
       "already_configured": "设备已配置",
-      "devices_added": "设备已成功添加",
-      "devices_updated": "设备已成功更新",
+      "auth_failed": "认证失败",
+      "devices_added_background": "✅ 设备已提交！新设备正在后台自动加载，请稍候刷新页面查看...",
       "no_devices": "没有选择设备"
     },
     "error": {
-      "auth_failed": "认证失败",
+      "all_devices_added": "所有发现的设备都已添加过了",
       "connection_failed": "连接设备失败",
       "lua_error": "此设备验证出错，请尝试其他设备",
       "no_devices_found": "局域网中未发现设备"
@@ -1590,21 +1590,63 @@
   },
   "options": {
     "error": {
+      "all_devices_added": "所有发现的设备都已添加过了",
       "no_account_password": "请先配置账号密码",
-      "no_cache_found": "未发现本地缓存文件，无需清理"
+      "no_cache_found": "未发现本地缓存文件，无需清理",
+      "no_devices_found": "局域网中未发现新设备"
     },
     "step": {
+      "add_device": {
+        "data": {
+          "scan_address": "扫描地址"
+        },
+        "data_description": {
+          "scan_address": "[1] 输入路由器地址扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）"
+        },
+        "description": "搜索局域网中的新设备（已添加的设备将自动过滤）",
+        "title": "添加新设备"
+      },
       "clear_cache": {
         "description": "清理本地缓存文件：\n\n    📁 当前缓存将备份到：.storage/midea_smart_home-backup\n\n    ⚠️ 点击提交执行清理",
         "title": "清理本地缓存"
       },
+      "get_token_option": {
+        "data": {
+          "key": "Key",
+          "lua_file": "Lua 文件路径",
+          "token": "Token"
+        },
+        "data_description": {
+          "key": "{key_required}",
+          "lua_file": "设备协议文件路径",
+          "token": "{token_required}"
+        },
+        "description": "设备名称: {device_name}\n设备型号: {device_model}\n设备 ID: {device_id}\nIP 地址: {ip_address}\nSN8: {sn8}\n协议版本: {protocol_version}\n{error}",
+        "title": "设备认证 {progress}"
+      },
       "init": {
         "menu_options": {
+          "add_device": "➕ 继续添加其他设备",
           "clear_cache": "🗑️ 清理本地缓存文件",
           "sync_cloud": "☁️ 同步云端设备名称",
           "update_account": "🔑 更新美的账号密码"
         },
         "title": "Midea Smart Home 选项"
+      },
+      "select_device_continue_option": {
+        "data": {
+          "devices": "设备"
+        },
+        "description": "选择要添加的新设备（可多选）",
+        "title": "选择新设备"
+      },
+      "select_device_option": {
+        "description": "已发现 {device_count} 台新设备，请选择操作：",
+        "menu_options": {
+          "select_device_continue_option": "✅ 前往添加设备",
+          "select_device_rescan_option": "🔄 重新扫描"
+        },
+        "title": "选择新设备"
       },
       "sync_cloud": {
         "description": "从云端同步设备名称等信息至本地。\n\n注意：需要先配置账号密码。",
