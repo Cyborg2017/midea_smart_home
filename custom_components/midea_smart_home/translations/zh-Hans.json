@@ -1220,6 +1220,9 @@
       "in_water_tem": {
         "name": "进水温度"
       },
+      "lan_ip": {
+        "name": "局域网IP"
+      },
       "life_pcb": {
         "name": "PCB滤芯剩余量"
       },

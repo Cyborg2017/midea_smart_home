@@ -44,6 +44,20 @@ async def async_setup_entry(
                     )
                 )
 
+        ip_address = None
+        if hasattr(coordinator.device, 'controller') and hasattr(coordinator.device.controller, 'ip'):
+            ip_address = coordinator.device.controller.ip
+        elif hasattr(coordinator.device, 'ip_address'):
+            ip_address = coordinator.device.ip_address
+
+        if ip_address:
+            entities.append(
+                MideaLanIPEntity(
+                    coordinator, device_id, device_type, sn, sn8, device_name,
+                    model, ip_address
+                )
+            )
+
     async_add_entities(entities)
 
 
@@ -114,3 +128,39 @@ class MideaSensorEntity(MideaBaseEntity, SensorEntity):
             return None
 
         return value
+
+
+class MideaLanIPEntity(MideaBaseEntity, SensorEntity):
+
+    def __init__(
+        self,
+        coordinator: MideaCoordinator,
+        device_id: int,
+        device_type: str,
+        sn: str,
+        sn8: str,
+        device_name: str,
+        model: str,
+        ip_address: str,
+    ):
+        super().__init__(
+            coordinator, device_id, device_type, sn, sn8, device_name, "lan_ip", model,
+            platform_name="sensor", config={"translation_key": "lan_ip"}
+        )
+        self._ip_address = ip_address
+        self._attr_device_class = None
+        self._attr_native_unit_of_measurement = None
+        self._attr_state_class = None
+
+    @property
+    def native_value(self) -> Optional[str]:
+        """Return the LAN IP address."""
+        if not self.coordinator.device or not self.coordinator.device.available:
+            return None
+
+        if hasattr(self.coordinator.device, 'controller') and hasattr(self.coordinator.device.controller, 'ip'):
+            return self.coordinator.device.controller.ip
+        elif hasattr(self.coordinator.device, 'ip_address'):
+            return self.coordinator.device.ip_address
+
+        return self._ip_address

@@ -1208,6 +1208,9 @@
       "in_water_tem": {
         "name": "Inlet Water Temperature"
       },
+      "lan_ip": {
+        "name": "LAN IP"
+      },
       "life_pcb": {
         "name": "PCB Filter Remaining Quantity"
       },

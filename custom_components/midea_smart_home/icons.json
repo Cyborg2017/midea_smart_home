@@ -180,6 +180,7 @@
             "hcho": { "default": "mdi:molecule" },
             "hot_pot_temperature": { "default": "mdi:thermometer" },
             "in_tds": { "default": "mdi:water-check" },
+            "lan_ip": { "default": "mdi:ip-network" },
             "left_time": { "default": "mdi:timer" },
             "life_pcb": { "default": "mdi:filter" },
             "life_ro": { "default": "mdi:filter" },
