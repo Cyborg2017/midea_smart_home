@@ -7,9 +7,21 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class DeviceLogicHandler:
+    DB_LOCATION_SENSOR_KEYS = [
+        "db_door_opened",
+        "db_bucket_water_overheating",
+        "db_drying_tunnel_overheating",
+        "db_detergent_needed",
+        "db_remain_time",
+        "db_progress",
+        "db_running_status",
+        "db_error_code",
+    ]
+
     def __init__(self, device_type: int, device_name: str):
         self.device_type = device_type
         self.device_name = device_name
+        self._location_data: dict[str, dict[int, Any]] = {}
 
     def adjust_control_status(self, data: dict, running_status: str) -> None:
         control_status = "start" if running_status == "start" else "pause"
@@ -42,6 +54,7 @@ class DeviceLogicHandler:
             if "db_running_status" in data:
                 self.adjust_control_status(data, data["db_running_status"])
             self.process_progress(data, "db_running_status", "db_progress")
+            self.process_location_data(data)
 
         elif self.device_type in [0xDA, 0xDB, 0xDC]:
             if "running_status" in data:
@@ -53,6 +66,29 @@ class DeviceLogicHandler:
 
         elif self.device_type == 0xAC:
             self.adjust_ac_mode(data)
+
+    def process_location_data(self, data: dict) -> None:
+        """Process T0xD9 location-specific sensor data."""
+        db_location = data.get("db_location")
+        if db_location is None:
+            return
+
+        location_suffix = "_l" if db_location == 1 else "_r" if db_location == 2 else None
+        if location_suffix is None:
+            return
+
+        for key in self.DB_LOCATION_SENSOR_KEYS:
+            if key in data:
+                if key not in self._location_data:
+                    self._location_data[key] = {}
+                self._location_data[key][db_location] = data[key]
+                data[key + location_suffix] = data[key]
+
+        for key, location_values in self._location_data.items():
+            for loc, value in location_values.items():
+                suffix = "_l" if loc == 1 else "_r" if loc == 2 else None
+                if suffix:
+                    data[key + suffix] = value
 
     def process_progress(self, data: dict, status_key: str, progress_key: str) -> None:
         """Process progress sensor special logic"""

@@ -65,6 +65,30 @@
       "bucket_water_overheating": {
         "name": "桶内水温过高"
       },
+      "db_bucket_water_overheating_l": {
+        "name": "左筒水温过高"
+      },
+      "db_bucket_water_overheating_r": {
+        "name": "右筒水温过高"
+      },
+      "db_detergent_needed_l": {
+        "name": "左筒洗涤剂不足"
+      },
+      "db_detergent_needed_r": {
+        "name": "右筒洗涤剂不足"
+      },
+      "db_door_opened_l": {
+        "name": "左筒门状态"
+      },
+      "db_door_opened_r": {
+        "name": "右筒门状态"
+      },
+      "db_drying_tunnel_overheating_l": {
+        "name": "左筒烘干通道过热"
+      },
+      "db_drying_tunnel_overheating_r": {
+        "name": "右筒烘干通道过热"
+      },
       "change_water": {
         "name": "换水提醒"
       },
@@ -1171,6 +1195,58 @@
       },
       "cur_temperature_underside": {
         "name": "下管温度"
+      },
+      "db_error_code_l": {
+        "name": "左筒错误代码"
+      },
+      "db_error_code_r": {
+        "name": "右筒错误代码"
+      },
+      "db_progress_l": {
+        "name": "左筒当前进程",
+        "state": {
+          "anti-wrinkle": "防皱中",
+          "cold_air": "吹冷风中",
+          "dry": "烘干中",
+          "idle": "待机中",
+          "pre-wash": "预洗中",
+          "rinse": "漂洗中",
+          "soak": "浸泡中",
+          "spin": "脱水中",
+          "spin_high": "高速脱水中",
+          "unknown": "未知",
+          "wash": "洗涤中",
+          "weight": "称重中"
+        }
+      },
+      "db_progress_r": {
+        "name": "右筒当前进程",
+        "state": {
+          "anti-wrinkle": "防皱中",
+          "cold_air": "吹冷风中",
+          "dry": "烘干中",
+          "idle": "待机中",
+          "pre-wash": "预洗中",
+          "rinse": "漂洗中",
+          "soak": "浸泡中",
+          "spin": "脱水中",
+          "spin_high": "高速脱水中",
+          "unknown": "未知",
+          "wash": "洗涤中",
+          "weight": "称重中"
+        }
+      },
+      "db_remain_time_l": {
+        "name": "左筒剩余时间"
+      },
+      "db_remain_time_r": {
+        "name": "右筒剩余时间"
+      },
+      "db_running_status_l": {
+        "name": "左筒运行状态"
+      },
+      "db_running_status_r": {
+        "name": "右筒运行状态"
       },
       "deep_filter_percent": {
         "name": "滤芯剩余寿命"

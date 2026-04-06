@@ -11,21 +11,29 @@ DEVICE_MAPPING = {
         ],
         "entities": {
             Platform.BINARY_SENSOR: {
-                "db_door_opened": {
-                    "device_class": BinarySensorDeviceClass.OPENING,
-                    "translation_key": "door_opened"
+                "db_door_opened_l": {
+                    "device_class": BinarySensorDeviceClass.OPENING
                 },
-                "db_bucket_water_overheating": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM,
-                    "translation_key": "bucket_water_overheating"
+                "db_door_opened_r": {
+                    "device_class": BinarySensorDeviceClass.OPENING
                 },
-                "db_drying_tunnel_overheating": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM,
-                    "translation_key": "drying_tunnel_overheating"
+                "db_bucket_water_overheating_l": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
                 },
-                "db_detergent_needed": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM,
-                    "translation_key": "detergent_lack"
+                "db_bucket_water_overheating_r": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "db_drying_tunnel_overheating_l": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "db_drying_tunnel_overheating_r": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "db_detergent_needed_l": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "db_detergent_needed_r": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
                 }
             },
             Platform.SWITCH: {
@@ -122,23 +130,33 @@ DEVICE_MAPPING = {
                 }
             },
             Platform.SENSOR: {
-                "db_remain_time": {
+                "db_remain_time_l": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.MINUTES,
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "remain_time"
+                    "state_class": SensorStateClass.MEASUREMENT
                 },
-                "db_progress": {
-                    "device_class": SensorDeviceClass.ENUM,
-                    "translation_key": "progress"
+                "db_remain_time_r": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
                 },
-                "db_running_status": {
-                    "device_class": SensorDeviceClass.ENUM,
-                    "translation_key": "running_status"
+                "db_progress_l": {
+                    "device_class": SensorDeviceClass.ENUM
                 },
-                "db_error_code": {
-                    "device_class": SensorDeviceClass.ENUM,
-                    "translation_key": "error_code"
+                "db_progress_r": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "db_running_status_l": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "db_running_status_r": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "db_error_code_l": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "db_error_code_r": {
+                    "device_class": SensorDeviceClass.ENUM
                 }
             }
         }
