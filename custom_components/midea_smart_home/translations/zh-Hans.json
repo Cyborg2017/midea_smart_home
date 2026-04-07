@@ -1242,6 +1242,9 @@
       "db_remain_time_r": {
         "name": "右筒剩余时间"
       },
+      "db_remain_time_long": {
+        "name": "双筒最长剩余时间"
+      },
       "db_running_status_l": {
         "name": "左筒运行状态"
       },

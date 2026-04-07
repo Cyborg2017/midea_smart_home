@@ -141,6 +141,11 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
+                "db_remain_time_long": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
                 "db_progress_l": {
                     "device_class": SensorDeviceClass.ENUM
                 },

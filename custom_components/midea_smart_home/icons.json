@@ -177,6 +177,7 @@
             "db_progress_r": { "default": "mdi:progress-check" },
             "db_remain_time_l": { "default": "mdi:timer" },
             "db_remain_time_r": { "default": "mdi:timer" },
+            "db_remain_time_long": { "default": "mdi:timer" },
             "db_running_status_l": { "default": "mdi:information" },
             "db_running_status_r": { "default": "mdi:information" },
             "deep_filter_percent": { "default": "mdi:air-filter" },

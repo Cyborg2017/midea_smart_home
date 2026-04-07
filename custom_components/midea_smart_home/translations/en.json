@@ -1230,6 +1230,9 @@
       "db_remain_time_r": {
         "name": "Right Drum Remaining Time"
       },
+      "db_remain_time_long": {
+        "name": "Max Remaining Time"
+      },
       "db_running_status_l": {
         "name": "Left Drum Running Status"
       },

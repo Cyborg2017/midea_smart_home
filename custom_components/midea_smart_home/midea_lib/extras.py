@@ -56,6 +56,7 @@ class DeviceLogicHandler:
             self.process_progress(data, "db_running_status", "db_progress")
             self.process_location_data(data)
             self._adjust_db_running_status_for_power_off(data)
+            self._calculate_db_remain_time_long(data)
 
         elif self.device_type in [0xDA, 0xDB, 0xDC]:
             if "running_status" in data:
@@ -73,6 +74,27 @@ class DeviceLogicHandler:
         if db_power == "off" or db_power == 0:
             data["db_running_status_l"] = "standby"
             data["db_running_status_r"] = "standby"
+
+    def _calculate_db_remain_time_long(self, data: dict) -> None:
+        """Calculate the maximum remaining time between left and right drums."""
+        db_power = data.get("db_power")
+        if db_power == "off" or db_power == 0:
+            data["db_remain_time_long"] = 0
+            return
+
+        running_status_l = data.get("db_running_status_l")
+        running_status_r = data.get("db_running_status_r")
+        remain_time_l = data.get("db_remain_time_l", 0)
+        remain_time_r = data.get("db_remain_time_r", 0)
+
+        if running_status_l == "start" and running_status_r == "start":
+            data["db_remain_time_long"] = max(remain_time_l, remain_time_r)
+        elif running_status_l == "start":
+            data["db_remain_time_long"] = remain_time_l
+        elif running_status_r == "start":
+            data["db_remain_time_long"] = remain_time_r
+        else:
+            data["db_remain_time_long"] = 0
 
     def process_location_data(self, data: dict) -> None:
         """Process T0xD9 location-specific sensor data."""
