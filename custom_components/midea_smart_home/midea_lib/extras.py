@@ -48,13 +48,14 @@ class DeviceLogicHandler:
         recent_controls: dict,
         control_timeout: float,
         is_control: bool = False,
-        control_attrs: dict = None
+        control_attrs: dict = None,
+        original_status: dict = None
     ) -> None:
         if self.device_type == 0xD9:
             if "db_running_status" in data:
                 self.adjust_control_status(data, data["db_running_status"])
             self.process_progress(data, "db_running_status", "db_progress")
-            self.process_location_data(data)
+            self.process_location_data(data, original_status)
             self._adjust_db_running_status_for_power_off(data)
             self._calculate_db_remain_time_long(data)
 
@@ -96,7 +97,7 @@ class DeviceLogicHandler:
         else:
             data["db_remain_time_long"] = 0
 
-    def process_location_data(self, data: dict) -> None:
+    def process_location_data(self, data: dict, original_status: dict = None) -> None:
         """Process T0xD9 location-specific sensor data."""
         db_location = data.get("db_location")
         if db_location is None:
@@ -106,18 +107,15 @@ class DeviceLogicHandler:
         if location_suffix is None:
             return
 
+        if original_status is None:
+            original_status = data
+
         for key in self.DB_LOCATION_SENSOR_KEYS:
-            if key in data:
+            if key in original_status:
                 if key not in self._location_data:
                     self._location_data[key] = {}
                 self._location_data[key][db_location] = data[key]
                 data[key + location_suffix] = data[key]
-
-        for key, location_values in self._location_data.items():
-            for loc, value in location_values.items():
-                suffix = "_l" if loc == 1 else "_r" if loc == 2 else None
-                if suffix:
-                    data[key + suffix] = value
 
     def process_progress(self, data: dict, status_key: str, progress_key: str) -> None:
         """Process progress sensor special logic"""
