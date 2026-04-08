@@ -36,11 +36,14 @@ async def async_setup_entry(
                 translation_key = config.get("translation_key")
                 state_class = config.get("state_class")
                 suggested_display_precision = config.get("suggested_display_precision")
+                status_key = config.get("status_key")
+                options = config.get("options")
+                options_map = config.get("options_map")
                 entities.append(
                     MideaSensorEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
                         sensor_id, name, device_class, unit, translation_key, state_class, model,
-                        suggested_display_precision
+                        suggested_display_precision, status_key, options, options_map
                     )
                 )
 
@@ -79,6 +82,9 @@ class MideaSensorEntity(MideaBaseEntity, SensorEntity):
         state_class: Optional[SensorStateClass] = None,
         model: str = None,
         suggested_display_precision: Optional[int] = None,
+        status_key: str = None,
+        options: list = None,
+        options_map: list = None,
     ):
         config = {"translation_key": translation_key} if translation_key else {}
         super().__init__(
@@ -86,6 +92,14 @@ class MideaSensorEntity(MideaBaseEntity, SensorEntity):
             platform_name="sensor", config=config
         )
         self._sensor_id = sensor_id
+        self._status_key = status_key
+        self._options = options
+        self._options_map = options_map
+        self._reverse_options = None
+
+        if options and isinstance(options, list) and self._options_map and isinstance(self._options_map, list):
+            # options_map is a list of raw values, map by index
+            self._reverse_options = {v: options[i] for i, v in enumerate(self._options_map)}
 
         if device_class and isinstance(device_class, str):
             try:
@@ -106,6 +120,8 @@ class MideaSensorEntity(MideaBaseEntity, SensorEntity):
             self._attr_state_class = state_class
         elif device_class == SensorDeviceClass.ENUM:
             self._attr_state_class = None
+            if options and isinstance(options, list):
+                self._attr_options = options
         elif device_class == SensorDeviceClass.ENERGY:
             self._attr_state_class = SensorStateClass.TOTAL_INCREASING
         elif device_class in (SensorDeviceClass.TEMPERATURE, SensorDeviceClass.HUMIDITY,
@@ -122,10 +138,14 @@ class MideaSensorEntity(MideaBaseEntity, SensorEntity):
             return None
 
         data = self.coordinator.data or {}
-        value = data.get(self._sensor_id)
+        key = self._status_key or self._sensor_id
+        value = data.get(key)
 
         if value is None or value == "":
             return None
+
+        if self._reverse_options and value in self._reverse_options:
+            return self._reverse_options[value]
 
         return value
 

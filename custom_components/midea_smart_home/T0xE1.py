@@ -48,12 +48,11 @@ DEVICE_MAPPING = {
             },
             Platform.SELECT: {
                 "work_status": {
-                    "status_key": "work_status",
                     "options": {
                         "power_off": {"work_status": "power_off"},
                         "cancel": {"work_status": "cancel"},
                         "pause": {"operator": "pause"},
-                        "start": {"work_status": "work"}
+                        "start": {"work_status": "work", "pending_commands": ["wash_mode", "additional"]}
                     }
                 },
                 "wash_mode": {
@@ -97,7 +96,14 @@ DEVICE_MAPPING = {
                     "translation_key": "cur_temperature"
                 },
                 "softwater": {
-                    "name": "软水档位"
+                    "options": {
+                        "1": {"softwater": 1},
+                        "2": {"softwater": 2},
+                        "3": {"softwater": 3},
+                        "4": {"softwater": 4},
+                        "5": {"softwater": 5}
+                    },
+                    "condition": {"not_eq": ["work_status", "work"]}
                 },
                 "left_time": {
                     "device_class": SensorDeviceClass.DURATION,
@@ -111,12 +117,15 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "wash_stage": {
-                    "name": "洗涤阶段",
                     "device_class": SensorDeviceClass.ENUM,
-                    "translation_key": "wash_stage",
                     "status_key": "wash_stage",
-                    "options": ["idle", "pre_wash", "sterilizing", "rinse", "drying"],
-                    "options_map": [0, 1, 2, 3, 4]
+                    "options": {
+                        "idle": {"wash_stage": 0},
+                        "pre_wash": {"wash_stage": 1},
+                        "sterilizing": {"wash_stage": 2},
+                        "rinse": {"wash_stage": 3},
+                        "drying": {"wash_stage": 4}
+                    }
                 }
             }
         }
