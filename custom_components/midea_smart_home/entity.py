@@ -205,6 +205,11 @@ class MideaBaseEntity(CoordinatorEntity[MideaCoordinator]):
                     return False
             return True
 
+        if "not_eq" in condition:
+            attr, unexpected_value = condition["not_eq"]
+            actual_value = data.get(attr)
+            return actual_value != unexpected_value
+
         if "eq" in condition:
             attr, expected_value = condition["eq"]
             actual_value = data.get(attr)

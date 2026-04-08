@@ -79,7 +79,9 @@ DEVICE_MAPPING = {
                     "options": {
                         "none": {"additional": 0},
                         "extra_rinse_1": {"additional": 9},
-                        "extra_rinse_2": {"additional": 10}
+                        "extra_rinse_2": {"additional": 10},
+                        "few_dishes_rinse_1": {"additional": 13},
+                        "few_dishes_rinse_2": {"additional": 14}
                     }
                 }
             },
@@ -94,7 +96,14 @@ DEVICE_MAPPING = {
                     "translation_key": "cur_temperature"
                 },
                 "softwater": {
-                    "device_class": SensorDeviceClass.ENUM
+                    "options": {
+                        "1": {"softwater": 1},
+                        "2": {"softwater": 2},
+                        "3": {"softwater": 3},
+                        "4": {"softwater": 4},
+                        "5": {"softwater": 5}
+                    },
+                    "condition": {"not_eq": ["work_status", "work"]}
                 },
                 "left_time": {
                     "device_class": SensorDeviceClass.DURATION,
