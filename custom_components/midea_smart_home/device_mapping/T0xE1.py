@@ -8,6 +8,14 @@ DEVICE_MAPPING = {
         "rationale": ["off", "on"],
         "entities": {
             Platform.SWITCH: {
+                "dish_wash": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "work_status_key": "work_status",
+                    "defer_update": True,
+                    "pending_commands": ["wash_mode", "additional"],
+                    "start_command": {"work_status": "work"},
+                    "stop_command": {"work_status": "cancel"}
+                },
                 "lock": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
@@ -28,9 +36,6 @@ DEVICE_MAPPING = {
                 },
                 "softwater_lack": {
                     "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "wash_stage": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.NUMBER: {
@@ -45,27 +50,36 @@ DEVICE_MAPPING = {
                 "work_status": {
                     "options": {
                         "power_off": {"work_status": "power_off"},
-                        "power_on": {"work_status": "power_on"},
                         "cancel": {"work_status": "cancel"},
                         "pause": {"operator": "pause"},
-                        "resume": {"operator": "start"}
+                        "start": {"work_status": "work", "pending_commands": ["wash_mode", "additional"]}
                     }
                 },
                 "wash_mode": {
+                    "defer_update": True,
                     "options": {
-                        "neutral_gear": {"work_status": "cancel", "mode": "neutral_gear"},
-                        "strong_wash": {"work_status": "work", "mode": "strong_wash"},
-                        "standard_wash": {"work_status": "work", "mode": "standard_wash"},
-                        "single_disinfect": {"work_status": "work", "mode": "single_disinfect"},
-                        "eco_wash": {"work_status": "work", "mode": "eco_wash"},
-                        "glass_wash": {"work_status": "work", "mode": "glass_wash"},
-                        "fast_wash": {"work_status": "work", "mode": "fast_wash"},
-                        "soak_wash": {"work_status": "work", "mode": "soak_wash"},
-                        "self_clean": {"work_status": "work", "mode": "self_clean"},
-                        "fruit_wash": {"work_status": "work", "mode": "fruit_wash"},
-                        "germ": {"work_status": "work", "mode": "germ"},
-                        "seafood_wash": {"work_status": "work", "mode": "seafood_wash"},
-                        "hotpot_wash": {"work_status": "work", "mode": "hotpot_wash"}
+                        "neutral_gear": {"mode": "neutral_gear"},
+                        "strong_wash": {"mode": "strong_wash"},
+                        "standard_wash": {"mode": "standard_wash"},
+                        "single_disinfect": {"mode": "single_disinfect"},
+                        "eco_wash": {"mode": "eco_wash"},
+                        "glass_wash": {"mode": "glass_wash"},
+                        "fast_wash": {"mode": "fast_wash"},
+                        "soak_wash": {"mode": "soak_wash"},
+                        "self_clean": {"mode": "self_clean"},
+                        "fruit_wash": {"mode": "fruit_wash"},
+                        "germ": {"mode": "germ"},
+                        "seafood_wash": {"mode": "seafood_wash"},
+                        "hotpot_wash": {"mode": "hotpot_wash"}
+                    }
+                },
+                "additional": {
+                    "defer_update": True,
+                    "status_key": "additional",
+                    "options": {
+                        "none": {"additional": 0},
+                        "extra_rinse_1": {"additional": 9},
+                        "extra_rinse_2": {"additional": 10}
                     }
                 }
             },
@@ -92,6 +106,9 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.HOURS,
                     "state_class": SensorStateClass.MEASUREMENT
+                },
+                "wash_stage": {
+                    "device_class": SensorDeviceClass.ENUM
                 }
             }
         }

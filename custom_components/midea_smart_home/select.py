@@ -33,6 +33,8 @@ async def async_setup_entry(
                 condition = config.get("condition")
                 status_key = config.get("status_key")
                 ignore_values = config.get("ignore_values")
+                defer_update = config.get("defer_update", False)
+                pending_commands = config.get("pending_commands", [])
                 if isinstance(options, dict):
                     option_list = list(options.keys())
                 else:
@@ -40,7 +42,8 @@ async def async_setup_entry(
                 entities.append(
                     MideaSelectEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        select_id, option_list, options, command, translation_key, condition, status_key, ignore_values, model
+                        select_id, option_list, options, command, translation_key, condition, status_key, ignore_values, model,
+                        defer_update, pending_commands
                     )
                 )
 
@@ -48,6 +51,9 @@ async def async_setup_entry(
 
 
 class MideaSelectEntity(MideaBaseEntity, SelectEntity):
+    # Class-level storage for deferred commands per device
+    _pending_commands: dict[int, dict[str, dict]] = {}
+
     def __init__(
         self,
         coordinator: MideaCoordinator,
@@ -65,6 +71,8 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
         status_key: str = None,
         ignore_values: list = None,
         model: str = None,
+        defer_update: bool = False,
+        pending_commands: list[str] = None,
     ):
         config = {"translation_key": translation_key} if translation_key else {}
         super().__init__(
@@ -79,6 +87,11 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
         self._ignore_values = ignore_values or []
         self._attr_options = options
         self._last_option: str | None = None
+        self._defer_update = defer_update
+        self._pending_commands_list = pending_commands or []
+        # Initialize pending commands storage for this device if not exists
+        if self._device_id not in MideaSelectEntity._pending_commands:
+            MideaSelectEntity._pending_commands[self._device_id] = {}
 
     def _is_ignored_value(self, value: Any) -> bool:
         if value is None:
@@ -190,6 +203,25 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
 
         if self._command and isinstance(self._command, dict):
             merged_command.update(self._command)
+
+        # Handle deferred update: store command locally without sending
+        if self._defer_update:
+            MideaSelectEntity._pending_commands[self._device_id][self._select_id] = merged_command
+            return
+
+        # Handle commands that need to merge pending commands (e.g., "start")
+        # First, extract pending_commands from the merged command (it's a config key, not a device command)
+        pending_list = merged_command.pop("pending_commands", None) or self._pending_commands_list
+
+        if pending_list:
+            # Add pending commands from specified entities
+            for pending_id in pending_list:
+                pending = MideaSelectEntity._pending_commands[self._device_id].get(pending_id, {})
+                for key, value in pending.items():
+                    if key not in merged_command:
+                        merged_command[key] = value
+            # Clear pending commands after use
+            MideaSelectEntity._pending_commands[self._device_id] = {}
 
         if merged_command:
             await self.coordinator.async_set_control(merged_command)

@@ -32,10 +32,16 @@ async def async_setup_entry(
                 condition = config.get("condition")
                 command = config.get("command")
                 include_current = config.get("include_current")
+                defer_update = config.get("defer_update", False)
+                pending_commands = config.get("pending_commands", [])
+                work_status_key = config.get("work_status_key")
+                start_command = config.get("start_command")
+                stop_command = config.get("stop_command")
                 entities.append(
                     MideaSwitchEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        switch_id, translation_key, switch_rationale, condition, command, include_current, model
+                        switch_id, translation_key, switch_rationale, condition, command, include_current, model,
+                        defer_update, pending_commands, work_status_key, start_command, stop_command
                     )
                 )
 
@@ -44,6 +50,8 @@ async def async_setup_entry(
 
 class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
     _attr_device_class = SwitchDeviceClass.SWITCH
+    # Class-level storage for deferred commands per device
+    _pending_commands: dict[int, dict[str, dict]] = {}
 
     def __init__(
         self,
@@ -60,6 +68,11 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         command: dict = None,
         include_current: list = None,
         model: str = None,
+        defer_update: bool = False,
+        pending_commands: list[str] = None,
+        work_status_key: str = None,
+        start_command: dict = None,
+        stop_command: dict = None,
     ):
         config = {"translation_key": translation_key} if translation_key else {}
         super().__init__(
@@ -69,6 +82,14 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         self._switch_id = switch_id
         self._command = command
         self._include_current = include_current or []
+        self._defer_update = defer_update
+        self._pending_commands_list = pending_commands or []
+        self._work_status_key = work_status_key
+        self._start_command = start_command
+        self._stop_command = stop_command
+        # Initialize pending commands storage for this device if not exists
+        if self._device_id not in MideaSwitchEntity._pending_commands:
+            MideaSwitchEntity._pending_commands[self._device_id] = {}
 
     def _get_status_on_off(self, attribute_key: str) -> bool:
         data = self.coordinator.data or {}
@@ -88,9 +109,39 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
 
     @property
     def is_on(self) -> bool:
+        # If work_status_key is configured, use it to determine switch state
+        if self._work_status_key:
+            data = self.coordinator.data or {}
+            work_status = data.get(self._work_status_key)
+            # Check if work_status indicates "working" state
+            return work_status == "work" or work_status == 8
         return self._get_status_on_off(self._switch_id)
 
     async def _async_set_status_on_off(self, attribute_key: str, turn_on: bool) -> None:
+        # Handle deferred update mode (dish_wash switch)
+        if self._defer_update:
+            merged_command = {}
+            if turn_on and self._start_command:
+                merged_command.update(self._start_command)
+            elif not turn_on and self._stop_command:
+                merged_command.update(self._stop_command)
+
+            # If turning on, merge pending commands from specified entities
+            if turn_on and self._pending_commands_list:
+                from .select import MideaSelectEntity
+                for pending_id in self._pending_commands_list:
+                    pending = MideaSelectEntity._pending_commands[self._device_id].get(pending_id, {})
+                    for key, value in pending.items():
+                        if key not in merged_command:
+                            merged_command[key] = value
+                # Clear pending commands after use
+                MideaSwitchEntity._pending_commands[self._device_id] = {}
+
+            if merged_command:
+                await self.coordinator.async_set_control(merged_command)
+            return
+
+        # Original logic for non-defer switches
         value = self._rationale[int(turn_on)]
         merged_command = {}
         if isinstance(self._command, dict):
