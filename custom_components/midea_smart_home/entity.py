@@ -92,6 +92,7 @@ class MideaBaseEntity(CoordinatorEntity[MideaCoordinator]):
             manufacturer="Midea",
             model=model_display,
             serial_number=sn,
+            configuration_url="https://github.com/Cyborg2017/midea_smart_home",
         )
 
     @property
