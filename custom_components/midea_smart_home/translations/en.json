@@ -146,9 +146,6 @@
       "storage_door_state": {
         "name": "Refrigerator Door State"
       },
-      "wash_stage": {
-        "name": "Wash Stage"
-      },
       "water_output_switch": {
         "name": "Tap Water"
       }
@@ -1399,6 +1396,16 @@
       },
       "wash_time_value": {
         "name": "Wash Time"
+      },
+      "wash_stage": {
+        "name": "Wash Stage",
+        "state": {
+          "0": "Idle",
+          "1": "Pre-wash",
+          "2": "Main Wash",
+          "3": "Rinse",
+          "4": "Dry"
+        }
       },
       "water_consumption_l": {
         "name": "Water Consumption"

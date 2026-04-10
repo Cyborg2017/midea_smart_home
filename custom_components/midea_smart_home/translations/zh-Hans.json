@@ -146,9 +146,6 @@
       "storage_door_state": {
         "name": "冷藏门状态"
       },
-      "wash_stage": {
-        "name": "洗涤阶段"
-      },
       "water_output_switch": {
         "name": "龙头出水"
       }
@@ -1411,6 +1408,16 @@
       },
       "wash_time_value": {
         "name": "洗涤时间"
+      },
+      "wash_stage": {
+        "name": "洗涤阶段",
+        "state": {
+          "0": "待机",
+          "1": "预洗",
+          "2": "灭菌煮洗",
+          "3": "高温漂洗",
+          "4": "干燥"
+        }
       },
       "water_consumption_l": {
         "name": "总用水量"

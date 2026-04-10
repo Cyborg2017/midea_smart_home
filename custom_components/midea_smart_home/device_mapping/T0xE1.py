@@ -28,9 +28,6 @@ DEVICE_MAPPING = {
                 },
                 "softwater_lack": {
                     "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "wash_stage": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.NUMBER: {
@@ -92,6 +89,9 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.HOURS,
                     "state_class": SensorStateClass.MEASUREMENT
+                },
+                "wash_stage": {
+                    "device_class": SensorDeviceClass.ENUM
                 }
             }
         }

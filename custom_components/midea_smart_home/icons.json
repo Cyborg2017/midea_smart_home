@@ -30,7 +30,6 @@
             "softwater_lack": { "default": "mdi:shaker-outline" },
             "storage_door_open_overtime": { "default": "mdi:fridge-alert" },
             "storage_door_state": { "default": "mdi:fridge-top" },
-            "wash_stage": { "default": "mdi:dishwasher" },
             "water_lack": { "default": "mdi:water-off" },
             "water_output_switch": { "default": "mdi:water-pump" }
         },
@@ -228,6 +227,7 @@
             "total_working_time": { "default": "mdi:clock-outline" },
             "warming_time": { "default": "mdi:timer" },
             "wash_time_value": { "default": "mdi:timer" },
+            "wash_stage": { "default": "mdi:dishwasher" },
             "water_consumption_l": { "default": "mdi:water" },
             "water_feedback": { "default": "mdi:water" },
             "wind_pressure": { "default": "mdi:weather-windy" },
