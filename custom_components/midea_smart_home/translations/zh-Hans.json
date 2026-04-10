@@ -131,6 +131,9 @@
       "out_water": {
         "name": "出水状态"
       },
+      "pure_water_status": {
+        "name": "纯水箱水位状态"
+      },
       "screen_status": {
         "name": "屏幕状态"
       },

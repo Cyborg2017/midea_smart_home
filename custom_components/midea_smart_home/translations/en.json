@@ -131,6 +131,9 @@
       "out_water": {
         "name": "Water Output Status"
       },
+      "pure_water_status": {
+        "name": "Pure Water Bucket Status"
+      },
       "screen_status": {
         "name": "Screen Status"
       },
