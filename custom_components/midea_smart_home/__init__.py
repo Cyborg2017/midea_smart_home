@@ -5,6 +5,7 @@ from pathlib import Path
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.helpers import device_registry
 import homeassistant.helpers.config_validation as cv
 
 from .const import (
@@ -227,3 +228,44 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
     await hass.config_entries.async_reload(entry.entry_id)
+
+async def async_remove_config_entry_device(
+    hass: HomeAssistant,
+    config_entry: ConfigEntry,
+    device_entry: device_registry.DeviceEntry
+) -> bool:
+    """Remove a device from the config entry."""
+    device_id = None
+    for identifier in device_entry.identifiers:
+        if identifier[0] == DOMAIN:
+            device_id = identifier[1]
+            break
+
+    if device_id is None:
+        _LOGGER.error("Device identifier not found for removal")
+        return False
+
+    entry_data = hass.data[DOMAIN].get(config_entry.entry_id, {})
+    device_data = entry_data.get(str(device_id))
+
+    if device_data:
+        device = device_data.get("device")
+        if device:
+            device.close()
+        entry_data.pop(str(device_id), None)
+
+    new_devices = [
+        d for d in config_entry.data.get("devices", [])
+        if str(d.get(CONF_DEVICE_ID)) != str(device_id)
+    ]
+
+    new_data = dict(config_entry.data)
+    new_data["devices"] = new_devices
+
+    hass.config_entries.async_update_entry(
+        config_entry,
+        data=new_data,
+    )
+
+    _LOGGER.info("Removed device %s from config entry", device_id)
+    return True
