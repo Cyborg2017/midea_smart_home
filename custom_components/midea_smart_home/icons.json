@@ -25,6 +25,7 @@
             "lack_water": { "default": "mdi:water-off" },
             "out_ice": { "default": "mdi:ice-pop" },
             "out_water": { "default": "mdi:water" },
+            "pure_water_status": { "default": "mdi:water-off" },
             "screen_status": { "default": "mdi:monitor" },
             "softener_lack": { "default": "mdi:water-alert" },
             "softwater_lack": { "default": "mdi:shaker-outline" },

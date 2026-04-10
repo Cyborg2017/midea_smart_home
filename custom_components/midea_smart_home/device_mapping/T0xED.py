@@ -528,7 +528,8 @@ DEVICE_MAPPING = {
                     "translation_key": "screen_status"
                 },
                 "lack_water": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                    "translation_key": "pure_water_status"
                 },
                 "out_water": {
                     "device_class": BinarySensorDeviceClass.RUNNING
