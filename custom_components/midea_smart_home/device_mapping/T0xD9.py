@@ -51,6 +51,16 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1],
                     "translation_key": "lock"
+                },
+                "db_voice_not_disturb_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "nightly"
+                },
+                "db_cycle_memory": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "cycle_memory"
                 }
             },
             Platform.SELECT: {
