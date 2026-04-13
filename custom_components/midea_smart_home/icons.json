@@ -152,7 +152,8 @@
             "wind_swing_lr_angle": { "default": "mdi:arrow-left-right" },
             "wind_swing_ud_angle": { "default": "mdi:arrow-up-down" },
             "work_mode": { "default": "mdi:tune" },
-            "work_status": { "default": "mdi:play-circle-outline" }
+            "work_status": { "default": "mdi:play-circle-outline" },
+            "fresh_air_time": { "default": "mdi:air-filter" }
         },
         "sensor": {
             "air_dry_left_time": { "default": "mdi:timer" },
@@ -249,6 +250,7 @@
             "buzzer": { "default": "mdi:volume-high" },
             "control_status": { "default": "mdi:play-pause" },
             "cool": { "default": "mdi:snowflake" },
+            "cycle_memory": { "default": "mdi:refresh" },
             "damp_dry_signal": { "default": "mdi:water-percent" },
             "deep_cold_mode": { "default": "mdi:snowflake-alert" },
             "display_on_off": { "default": "mdi:monitor" },
@@ -302,6 +304,7 @@
             "wash": { "default": "mdi:water-pump" },
             "water_box": { "default": "mdi:water" },
             "waterions": { "default": "mdi:water-check" },
+            "wind_dispel": { "default": "mdi:weather-windy" },
             "wifi_led_enable": { "default": "mdi:wifi" }
         },
         "vacuum": {
