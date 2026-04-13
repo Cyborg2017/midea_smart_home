@@ -31,6 +31,14 @@ DEVICE_MAPPING = {
                 },
                 "nightly": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "wind_dispel": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["0", "1"]
+                },
+                "cycle_memory": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SELECT: {
@@ -146,6 +154,15 @@ DEVICE_MAPPING = {
                         "120_min": {"dryer": "7"},
                         "180_min": {"dryer": "11"}
                     }
+                },
+                "fresh_air_time": {
+                    "options": {
+                        "2_hours": {"fresh_air_time": 2},
+                        "4_hours": {"fresh_air_time": 4},
+                        "6_hours": {"fresh_air_time": 6},
+                        "8_hours": {"fresh_air_time": 8}
+                    },
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SENSOR: {
@@ -203,6 +220,14 @@ DEVICE_MAPPING = {
                 },
                 "nightly": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "wind_dispel": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["0", "1"]
+                },
+                "cycle_memory": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SELECT: {
@@ -318,6 +343,15 @@ DEVICE_MAPPING = {
                         "120_min": {"dryer": "7"},
                         "180_min": {"dryer": "11"}
                     }
+                },
+                "fresh_air_time": {
+                    "options": {
+                        "2_hours": {"fresh_air_time": 2},
+                        "4_hours": {"fresh_air_time": 4},
+                        "6_hours": {"fresh_air_time": 6},
+                        "8_hours": {"fresh_air_time": 8}
+                    },
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SENSOR: {
@@ -375,6 +409,14 @@ DEVICE_MAPPING = {
                 },
                 "nightly": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "wind_dispel": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["0", "1"]
+                },
+                "cycle_memory": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SELECT: {
@@ -476,6 +518,15 @@ DEVICE_MAPPING = {
                         "fruit": {"stains": "85"},
                         "makeup": {"stains": "84"}
                     }
+                },
+                "fresh_air_time": {
+                    "options": {
+                        "2_hours": {"fresh_air_time": 2},
+                        "4_hours": {"fresh_air_time": 4},
+                        "6_hours": {"fresh_air_time": 6},
+                        "8_hours": {"fresh_air_time": 8}
+                    },
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SENSOR: {
@@ -533,6 +584,14 @@ DEVICE_MAPPING = {
                 },
                 "nightly": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "wind_dispel": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["0", "1"]
+                },
+                "cycle_memory": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SELECT: {
@@ -648,6 +707,15 @@ DEVICE_MAPPING = {
                         "120_min": {"dryer": "7"},
                         "180_min": {"dryer": "11"}
                     }
+                },
+                "fresh_air_time": {
+                    "options": {
+                        "2_hours": {"fresh_air_time": 2},
+                        "4_hours": {"fresh_air_time": 4},
+                        "6_hours": {"fresh_air_time": 6},
+                        "8_hours": {"fresh_air_time": 8}
+                    },
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SENSOR: {
@@ -703,6 +771,14 @@ DEVICE_MAPPING = {
                 "ultraviolet_lamp": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["0", "1"]
+                },
+                "wind_dispel": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["0", "1"]
+                },
+                "cycle_memory": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SELECT: {
@@ -782,6 +858,15 @@ DEVICE_MAPPING = {
                         "60c": {"temperature": "60"},
                         "95c": {"temperature": "95"}
                     }
+                },
+                "fresh_air_time": {
+                    "options": {
+                        "2_hours": {"fresh_air_time": 2},
+                        "4_hours": {"fresh_air_time": 4},
+                        "6_hours": {"fresh_air_time": 6},
+                        "8_hours": {"fresh_air_time": 8}
+                    },
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SENSOR: {
@@ -846,6 +931,14 @@ DEVICE_MAPPING = {
                 "microbubble": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1]
+                },
+                "wind_dispel": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["0", "1"]
+                },
+                "cycle_memory": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SELECT: {
@@ -947,6 +1040,15 @@ DEVICE_MAPPING = {
                         "fruit": {"stains": "85"},
                         "makeup": {"stains": "84"}
                     }
+                },
+                "fresh_air_time": {
+                    "options": {
+                        "2_hours": {"fresh_air_time": 2},
+                        "4_hours": {"fresh_air_time": 4},
+                        "6_hours": {"fresh_air_time": 6},
+                        "8_hours": {"fresh_air_time": 8}
+                    },
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SENSOR: {
@@ -1012,6 +1114,14 @@ DEVICE_MAPPING = {
                 "microbubble": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1]
+                },
+                "wind_dispel": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["0", "1"]
+                },
+                "cycle_memory": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SELECT: {
@@ -1102,6 +1212,15 @@ DEVICE_MAPPING = {
                         "60c": {"temperature": "60"},
                         "95c": {"temperature": "95"}
                     }
+                },
+                "fresh_air_time": {
+                    "options": {
+                        "2_hours": {"fresh_air_time": 2},
+                        "4_hours": {"fresh_air_time": 4},
+                        "6_hours": {"fresh_air_time": 6},
+                        "8_hours": {"fresh_air_time": 8}
+                    },
+                    "command": {"protocol_v": 2}
                 }
             },
             Platform.SENSOR: {

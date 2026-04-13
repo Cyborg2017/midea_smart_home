@@ -630,6 +630,15 @@
           "on": "On"
         }
       },
+      "fresh_air_time": {
+        "name": "Fresh Air Time",
+        "state": {
+          "2_hours": "2 Hours",
+          "4_hours": "4 Hours",
+          "6_hours": "6 Hours",
+          "8_hours": "8 Hours"
+        }
+      },
       "gear": {
         "name": "Gear",
         "state": {
@@ -1476,6 +1485,9 @@
       "cool": {
         "name": "Cooling"
       },
+      "cycle_memory": {
+        "name": "Cycle Memory"
+      },
       "damp_dry_signal": {
         "name": "Damp Dry Signal"
       },
@@ -1640,6 +1652,9 @@
       },
       "wifi_led_enable": {
         "name": "WiFi LED"
+      },
+      "wind_dispel": {
+        "name": "Wind Dispel"
       }
     },
     "vacuum": {

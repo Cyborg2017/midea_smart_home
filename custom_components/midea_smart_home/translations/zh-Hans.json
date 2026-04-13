@@ -636,6 +636,15 @@
           "on": "开启"
         }
       },
+      "fresh_air_time": {
+        "name": "智能抖撒",
+        "state": {
+          "2_hours": "2小时",
+          "4_hours": "4小时",
+          "6_hours": "6小时",
+          "8_hours": "8小时"
+        }
+      },
       "gear": {
         "name": "档位",
         "state": {
@@ -1488,6 +1497,9 @@
       "cool": {
         "name": "制冷"
       },
+      "cycle_memory": {
+        "name": "程序记忆"
+      },
       "damp_dry_signal": {
         "name": "潮湿干燥信号"
       },
@@ -1652,6 +1664,9 @@
       },
       "wifi_led_enable": {
         "name": "WiFi指示灯"
+      },
+      "wind_dispel": {
+        "name": "忘取无忧"
       }
     },
     "vacuum": {
