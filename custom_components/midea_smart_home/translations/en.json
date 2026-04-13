@@ -143,6 +143,12 @@
       "softwater_lack": {
         "name": "Softener Salt Shortage"
       },
+      "bright_lack": {
+        "name": "Rinse Aid Shortage"
+      },
+      "air_status": {
+        "name": "Antibacterial Storage Status"
+      },
       "storage_door_open_overtime": {
         "name": "Refrigerator Door Open Overtime"
       },
@@ -996,6 +1002,27 @@
           "off": "Off"
         }
       },
+      "softwater": {
+        "name": "Softwater Level",
+        "state": {
+          "1": "Level 1",
+          "2": "Level 2",
+          "3": "Level 3",
+          "4": "Level 4",
+          "5": "Level 5",
+          "6": "Level 6"
+        }
+      },
+      "rinse_aid": {
+        "name": "Rinse Aid Level",
+        "state": {
+          "1": "Level 1",
+          "2": "Level 2",
+          "3": "Level 3",
+          "4": "Level 4",
+          "5": "Level 5"
+        }
+      },
       "stains": {
         "name": "Stain Type",
         "state": {
@@ -1376,9 +1403,6 @@
       "set_time": {
         "name": "Set Time"
       },
-      "softwater": {
-        "name": "Softwater Level"
-      },
       "storage_temperature": {
         "name": "Refrigerator Set Temperature"
       },
@@ -1505,6 +1529,18 @@
       },
       "dryswitch": {
         "name": "Dry & Sterilize"
+      },
+      "airswitch": {
+        "name": "Antibacterial Storage Switch"
+      },
+      "door_auto_open": {
+        "name": "Door Auto Open"
+      },
+      "auto_throw": {
+        "name": "Auto throw"
+      },
+      "uvswitch": {
+        "name": "UV Sterilization"
       },
       "eco_dry_switch": {
         "name": "Eco Dry Switch"
