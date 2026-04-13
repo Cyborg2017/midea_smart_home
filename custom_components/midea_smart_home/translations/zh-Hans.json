@@ -143,6 +143,12 @@
       "softwater_lack": {
         "name": "软水盐不足"
       },
+      "bright_lack": {
+        "name": "漂洗剂不足"
+      },
+      "air_status": {
+        "name": "抑菌存储状态"
+      },
       "storage_door_open_overtime": {
         "name": "冷藏门打开超时"
       },
@@ -1002,6 +1008,37 @@
           "off": "关闭"
         }
       },
+      "softwater": {
+        "name": "软水剂挡位",
+        "state": {
+          "1": "1档",
+          "2": "2档",
+          "3": "3档",
+          "4": "4档",
+          "5": "5档",
+          "6": "6档"
+        }
+      },
+      "rinse_aid": {
+        "name": "漂洗剂挡位",
+        "state": {
+          "1": "1档",
+          "2": "2档",
+          "3": "3档",
+          "4": "4档",
+          "5": "5档"
+        }
+      },
+      "additional": {
+        "name": "附加功能",
+        "state": {
+          "none": "无",
+          "extra_rinse_1": "+漂洗1次",
+          "extra_rinse_2": "+漂洗2次",
+          "few_dishes_extra_rinse_1": "少量餐具+漂洗1次",
+          "few_dishes_extra_rinse_2": "少量餐具+漂洗2次"
+        }
+      },
       "stains": {
         "name": "特渍类型",
         "state": {
@@ -1388,9 +1425,6 @@
       "set_time": {
         "name": "设定时间"
       },
-      "softwater": {
-        "name": "软水档位"
-      },
       "storage_temperature": {
         "name": "冷藏设定温度"
       },
@@ -1517,6 +1551,18 @@
       },
       "dryswitch": {
         "name": "消毒烘干"
+      },
+      "airswitch": {
+        "name": "抑菌存储开关"
+      },
+      "door_auto_open": {
+        "name": "自动开门"
+      },
+      "auto_throw": {
+        "name": "自动投放"
+      },
+      "uvswitch": {
+        "name": "UV杀菌"
       },
       "eco_dry_switch": {
         "name": "节能干燥开关"
