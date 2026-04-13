@@ -1023,6 +1023,16 @@
           "5": "Level 5"
         }
       },
+      "additional": {
+        "name": "Additional Function",
+        "state": {
+          "none": "None",
+          "extra_rinse_1": "Extra Rinse 1 Time",
+          "extra_rinse_2": "Extra Rinse 2 Times",
+          "few_dishes_rinse_1": "Few Dishes + Extra Rinse 1 Time",
+          "few_dishes_rinse_2": "Few Dishes + Extra Rinse 2 Times"
+        }
+      },
       "stains": {
         "name": "Stain Type",
         "state": {

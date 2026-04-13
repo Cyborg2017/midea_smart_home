@@ -545,6 +545,18 @@ class MideaDevice:
 
         control = controls.copy()
 
+        # Handle centralized control - add centralized fields not already in control
+        if self._centralized:
+            now = time.time()
+            for key in self._centralized:
+                if key in control:
+                    continue
+                recent = self._recent_controls.get(key)
+                if recent and now - recent[1] < self._control_timeout:
+                    control[key] = recent[0]
+                elif key in self._data:
+                    control[key] = self._data[key]
+
         # Handle special logic preparation
         control = self._logic_handler.prepare_control_data(control, self._data)
 

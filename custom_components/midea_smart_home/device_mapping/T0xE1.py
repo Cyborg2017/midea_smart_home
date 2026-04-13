@@ -136,6 +136,7 @@ DEVICE_MAPPING = {
     },
     "760Y0026": {
         "rationale": ["off", "on"],
+        "centralized": ["additional"],
         "entities": {
             Platform.SWITCH: {
                 "lock": {
@@ -195,6 +196,15 @@ DEVICE_MAPPING = {
                         "germ": {"work_status": "work", "mode": "germ"},
                         "seafood_wash": {"work_status": "work", "mode": "seafood_wash"},
                         "hotpot_wash": {"work_status": "work", "mode": "hotpot_wash"}
+                    }
+                },
+                "additional": {
+                    "options": {
+                        "none": {"additional": 0},
+                        "extra_rinse_1": {"additional": 9},
+                        "extra_rinse_2": {"additional": 10},
+                        "few_dishes_extra_rinse_1": {"additional": 13},
+                        "few_dishes_extra_rinse_2": {"additional": 14}
                     }
                 },
                 "softwater": {
