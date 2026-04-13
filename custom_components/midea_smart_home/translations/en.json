@@ -1416,7 +1416,8 @@
           "1": "Pre-wash",
           "2": "Main Wash",
           "3": "Rinse",
-          "4": "Dry"
+          "4": "Dry",
+          "5": "Wash Complete"
         }
       },
       "water_consumption_l": {
