@@ -545,12 +545,6 @@ class MideaDevice:
 
         control = controls.copy()
 
-        # Handle centralized control - add centralized fields not already in control
-        if self._centralized:
-            for key in self._centralized:
-                if key not in control and key in self._data:
-                    control[key] = self._data[key]
-
         # Handle special logic preparation
         control = self._logic_handler.prepare_control_data(control, self._data)
 
