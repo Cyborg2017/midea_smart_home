@@ -65,30 +65,6 @@
       "bucket_water_overheating": {
         "name": "Bucket Water Overheating"
       },
-      "db_bucket_water_overheating_l": {
-        "name": "Left Drum Water Overheating"
-      },
-      "db_bucket_water_overheating_r": {
-        "name": "Right Drum Water Overheating"
-      },
-      "db_detergent_needed_l": {
-        "name": "Left Drum Detergent Low"
-      },
-      "db_detergent_needed_r": {
-        "name": "Right Drum Detergent Low"
-      },
-      "db_door_opened_l": {
-        "name": "Left Drum Door Status"
-      },
-      "db_door_opened_r": {
-        "name": "Right Drum Door Status"
-      },
-      "db_drying_tunnel_overheating_l": {
-        "name": "Left Drum Drying Tunnel Overheating"
-      },
-      "db_drying_tunnel_overheating_r": {
-        "name": "Right Drum Drying Tunnel Overheating"
-      },
       "change_water": {
         "name": "Change Water Reminder"
       },
@@ -1183,58 +1159,6 @@
       },
       "cur_temperature_underside": {
         "name": "Lower Tube Temperature"
-      },
-      "db_error_code_l": {
-        "name": "Left Drum Error Code"
-      },
-      "db_error_code_r": {
-        "name": "Right Drum Error Code"
-      },
-      "db_progress_l": {
-        "name": "Left Drum Progress",
-        "state": {
-          "anti-wrinkle": "Anti-wrinkle",
-          "cold_air": "Cold Air",
-          "dry": "Drying",
-          "idle": "Idle",
-          "pre-wash": "Pre-wash",
-          "rinse": "Rinsing",
-          "soak": "Soaking",
-          "spin": "Spinning",
-          "spin_high": "High Speed Spinning",
-          "unknown": "Unknown",
-          "wash": "Washing",
-          "weight": "Weighing"
-        }
-      },
-      "db_progress_r": {
-        "name": "Right Drum Progress",
-        "state": {
-          "anti-wrinkle": "Anti-wrinkle",
-          "cold_air": "Cold Air",
-          "dry": "Drying",
-          "idle": "Idle",
-          "pre-wash": "Pre-wash",
-          "rinse": "Rinsing",
-          "soak": "Soaking",
-          "spin": "Spinning",
-          "spin_high": "High Speed Spinning",
-          "unknown": "Unknown",
-          "wash": "Washing",
-          "weight": "Weighing"
-        }
-      },
-      "db_remain_time_l": {
-        "name": "Left Drum Remaining Time"
-      },
-      "db_remain_time_r": {
-        "name": "Right Drum Remaining Time"
-      },
-      "db_running_status_l": {
-        "name": "Left Drum Running Status"
-      },
-      "db_running_status_r": {
-        "name": "Right Drum Running Status"
       },
       "deep_filter_percent": {
         "name": "Filter Life Remaining"
