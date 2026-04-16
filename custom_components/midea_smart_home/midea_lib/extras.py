@@ -64,8 +64,8 @@ class DeviceLogicHandler:
     def _adjust_db_running_status_for_power_off(self, data: dict) -> None:
         db_power = data.get("db_power")
         if db_power == "off" or db_power == 0:
-            data["db_running_status_l"] = "standby"
-            data["db_running_status_r"] = "standby"
+            if "db_running_status" in data:
+                data["db_running_status"] = "standby"
 
     def _adjust_remain_time(self, data: dict) -> None:
         if "remain_time" not in data or "running_status" not in data:
