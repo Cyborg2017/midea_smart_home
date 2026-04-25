@@ -6,91 +6,17 @@ from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
-        "calculate": {
-            "get": [
-                {
-                    "lvalue": "[water_consumption_l]",
-                    "rvalue": "float([water_consumption] / 1000.0)"
-                }
-            ],
-        },
         "entities": {
             Platform.BINARY_SENSOR: {
                 "standby_status": {
                     "device_class": BinarySensorDeviceClass.RUNNING,
                     "rationale": [1, 0],
                     "translation_key": "water_output_switch"
-                },
-                "sleep": {
-                    "device_class": BinarySensorDeviceClass.OPENING,
-                    "rationale": ["on", "off"],
-                    "translation_key": "screen_status"
-                },
-                "lack_water": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM,
-                    "translation_key": "pure_water_status"
-                },
-                "out_water": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "out_ice": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "ice_status": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "ice_gall_status": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "filter": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SWITCH: {
                 "wash": {
                     "device_class": SwitchDeviceClass.SWITCH
-                },
-                "antifreeze": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "heat": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "germicidal": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "drainage": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "cool": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "human_sensing_switch": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "set_germicidal_countdown": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "ice": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "autoclean_remind": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "include_current": ["autoclean_remind_cycle"]
-                },
-                "drainage": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "autoclean_ctrl": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "sleep": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": ["on", "off"],
-                    "translation_key": "display_on_off"
                 }
             },
             Platform.SELECT: {
@@ -98,13 +24,6 @@ DEVICE_MAPPING = {
                     "options": {
                         "water_saving": {"no_obsolete_water": "off", "save_mode": "on"},
                         "water_quality": {"no_obsolete_water": "on", "save_mode": "off"}
-                    }
-                },
-                "hydration_setting": {
-                    "options": {
-                        "empty": {"hydration_setting": 1},
-                        "half": {"hydration_setting": 2},
-                        "full": {"hydration_setting": 3}
                     }
                 },
                 "cur_quantify": {
@@ -198,47 +117,12 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": PERCENTAGE,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "life_ro"
-                },
-                "maxlife_1": {
-                    "unit_of_measurement": "mths",
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "max_life_ro"
-                },
-                "maxlife_2": {
-                    "unit_of_measurement": "mths",
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "max_life_pcb"
-                },
-                "hot_pot_temperature": {
-                    "device_class": SensorDeviceClass.TEMPERATURE,
-                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "cur_temperature"
-                },
-                "water_consumption_l": {
-                    "device_class": SensorDeviceClass.WATER,
-                    "unit_of_measurement": UnitOfVolume.LITERS,
-                    "state_class": SensorStateClass.TOTAL
-                },
-                "current_temperature": {
-                    "device_class": SensorDeviceClass.TEMPERATURE,
-                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "cur_temperature"
                 }
             }
         }
     },
     "default_water_purifier": {
         "rationale": ["off", "on"],
-        "calculate": {
-            "get": [
-                {
-                    "lvalue": "[water_consumption_l]",
-                    "rvalue": "float([water_consumption] / 1000.0)"
-                }
-            ],
-        },
         "entities": {
             Platform.BINARY_SENSOR: {
                 "standby_status": {
@@ -250,12 +134,6 @@ DEVICE_MAPPING = {
             Platform.SWITCH: {
                 "wash": {
                     "device_class": SwitchDeviceClass.SWITCH
-                },
-                "antifreeze": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "heat": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 }
             },
             Platform.SELECT: {
@@ -263,13 +141,6 @@ DEVICE_MAPPING = {
                     "options": {
                         "water_saving": {"no_obsolete_water": "off", "save_mode": "on"},
                         "water_quality": {"no_obsolete_water": "on", "save_mode": "off"}
-                    }
-                },
-                "hydration_setting": {
-                    "options": {
-                        "empty": {"hydration_setting": 1},
-                        "half": {"hydration_setting": 2},
-                        "full": {"hydration_setting": 3}
                     }
                 },
                 "cur_quantify": {
@@ -363,27 +234,6 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": PERCENTAGE,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "life_ro"
-                },
-                "maxlife_1": {
-                    "unit_of_measurement": "mths",
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "max_life_ro"
-                },
-                "maxlife_2": {
-                    "unit_of_measurement": "mths",
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "max_life_pcb"
-                },
-                "hot_pot_temperature": {
-                    "device_class": SensorDeviceClass.TEMPERATURE,
-                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "cur_temperature"
-                },
-                "water_consumption_l": {
-                    "device_class": SensorDeviceClass.WATER,
-                    "unit_of_measurement": UnitOfVolume.LITERS,
-                    "state_class": SensorStateClass.TOTAL
                 }
             }
         }
@@ -468,6 +318,72 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "cur_temperature"
+                }
+            }
+        }
+    },
+    "632009C6": {
+        "rationale": ["off", "on"],
+        "calculate": {
+            "get": [
+                {
+                    "lvalue": "[water_consumption_l]",
+                    "rvalue": "float([water_consumption] / 1000.0)"
+                }
+            ],
+        },
+        "entities": {
+            Platform.BINARY_SENSOR: {
+                "standby_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING,
+                    "rationale": [1, 0],
+                    "translation_key": "water_output_switch"
+                }
+            },
+            Platform.SWITCH: {
+                "wash": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "heat": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                }
+            },
+            Platform.SELECT: {
+                "no_obsolete_water": {
+                    "options": {
+                        "water_saving": {"no_obsolete_water": "off", "save_mode": "on"},
+                        "water_quality": {"no_obsolete_water": "on", "save_mode": "off"}
+                    }
+                }
+            },
+            Platform.SENSOR: {
+                "in_tds": {
+                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "out_tds": {
+                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "life_1": {
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "life_fist"
+                },
+                "water_consumption_l": {
+                    "device_class": SensorDeviceClass.WATER,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.TOTAL
+                },
+                "hot_pot_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "cur_temperature"
+                },
+                "heat_status": {
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "heat_status"
                 }
             }
         }
