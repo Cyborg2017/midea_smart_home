@@ -501,7 +501,7 @@ DEVICE_MAPPING = {
             }
         }
     },
-    "22013201": {
+    ("22013201", "22013129"): {
         "rationale": ["off", "on"],
         "initial_query": [
             {},
