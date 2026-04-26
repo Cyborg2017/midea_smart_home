@@ -30,9 +30,6 @@ DEVICE_MAPPING = {
                 "uvswitch": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1]
-                },
-                "air_status": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.BINARY_SENSOR: {
@@ -50,6 +47,9 @@ DEVICE_MAPPING = {
                 },
                 "bright_lack": {
                     "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "air_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.NUMBER: {
@@ -160,9 +160,6 @@ DEVICE_MAPPING = {
                 "uvswitch": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1]
-                },
-                "air_status": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.BINARY_SENSOR: {
@@ -180,6 +177,9 @@ DEVICE_MAPPING = {
                 },
                 "bright_lack": {
                     "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "air_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.NUMBER: {
