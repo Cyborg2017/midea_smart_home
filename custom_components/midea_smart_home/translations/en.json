@@ -429,6 +429,14 @@
           "on": "Energy Saving Zero Cold Water"
         }
       },
+      "e3_mode": {
+        "name": "Mode",
+        "state": {
+          "shower": "Shower",
+          "kitchen": "Kitchen",
+          "high_temperature": "High Temperature"
+        }
+      },
       "cur_quantify": {
         "name": "Quantitative Water",
         "state": {
@@ -1477,6 +1485,9 @@
       },
       "buzzer": {
         "name": "Sound"
+      },
+      "change_litre_switch": {
+        "name": "Variable Liter"
       },
       "cold_water_dot": {
         "name": "Jog Zero Cold Water"

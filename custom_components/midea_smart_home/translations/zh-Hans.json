@@ -435,6 +435,14 @@
           "on": "节能零冷水"
         }
       },
+      "e3_mode": {
+        "name": "热水模式",
+        "state": {
+          "shower": "淋浴洗",
+          "kitchen": "厨房洗",
+          "high_temperature": "高温洗"
+        }
+      },
       "cur_quantify": {
         "name": "定量设置",
         "state": {
@@ -1489,6 +1497,9 @@
       },
       "buzzer": {
         "name": "声音"
+      },
+      "change_litre_switch": {
+        "name": "智能变频"
       },
       "cold_water_dot": {
         "name": "点动零冷水"
