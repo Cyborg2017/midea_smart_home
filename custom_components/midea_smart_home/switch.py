@@ -80,6 +80,9 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         except ValueError:
             if isinstance(status, int) or status in ['0', '1']:
                 return int(status) != 0
+            # Handle special states like 'delay_off' which should be treated as 'off'
+            if status == 'delay_off':
+                return False
             _LOGGER.warning(
                 "The value of attribute %s ('%s') is not in rationale %s",
                 attribute_key, status, self._rationale
