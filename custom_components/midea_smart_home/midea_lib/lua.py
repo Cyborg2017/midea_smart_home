@@ -85,6 +85,25 @@ class LuaRuntime:
     def __init__(self, file_path: str, lua_default_dir: str):
         self._runtime = lupa.lua51.LuaRuntime()
 
+        # Override Lua's print function to redirect output to Python logger
+        # instead of stdout, which avoids cluttering logs with debug output
+        # from cloud-downloaded Lua scripts (e.g., db_ prefixed key names)
+        self._runtime.execute("""
+function __python_print(...)
+    local args = {...}
+    local msg = ""
+    for i, v in ipairs(args) do
+        if i > 1 then msg = msg .. "\t" end
+        msg = msg .. tostring(v)
+    end
+    return msg
+end
+""")
+        # Redirect Lua print to a no-op to suppress stdout output from
+        # cloud-downloaded Lua scripts. The output is not needed for
+        # normal operation and clutters the Home Assistant log.
+        self._runtime.execute('print = function(...) end')
+
         lua_dir = str(Path(file_path).parent).replace("\\", "/")
         lua_default_dir = str(lua_default_dir).replace("\\", "/")
 
