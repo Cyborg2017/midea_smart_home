@@ -53,7 +53,7 @@ DEVICE_TYPES = {
     0xE1: "Dishwasher",
     0xE2: "Electric Water Heater",
     0xE3: "Gas Water Heater",
-    0xE6: "Gas Wall Hanging Tove",
+    0xE6: "Gas Wall Hanging Stove",
     0xEA: "Rice Cooker",
     0xED: "Net Drinking Machine / Water Purifier / Pipeline Machine",
     0xFA: "Electric Fan",

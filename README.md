@@ -15,6 +15,7 @@ Home Assistant custom integration for Midea smart devices via local network.
 - **Auto Protocol Download**: Automatically download Lua protocol scripts from cloud (first-time setup only)
 - **Flexible Configuration**: Support customizing entity attributes through device mapping files, easy to adapt new devices
 - **Multi-language Support**: Support Chinese and English interface
+- **Rich Entity Platforms**: Support climate, sensor, switch, select, button, number, vacuum, binary_sensor, fan, humidifier, light, cover, water_heater
 
 ## Workflow
 
@@ -26,13 +27,17 @@ Home Assistant custom integration for Midea smart devices via local network.
 1. Get device details from cloud (Device ID, Model, SN8, etc.)
 2. Auto-download Lua protocol file for the device
 3. Scan device IP address in local network
-4. Get device Token and Key (for local authentication)
+4. Get device Token and Key for V3 protocol devices (not required for V1/V2)
 
 **Runtime Phase**
 1. Connect to device via local network
 2. Parse device protocol using Lua script
-3. Poll device status periodically
+3. Most devices receive status updates via callback push; special devices (e.g. 0xD9 Twin Tub Washer) use periodic polling
 4. User commands sent directly to device (no cloud needed)
+
+## Requirements
+
+- **Home Assistant** >= 2025.12.4
 
 ## Installation
 
@@ -60,7 +65,7 @@ For detailed configuration guide, please see [Configuration Guide](GUIDE.md)
 
 | No. | Code | Device Type |
 |-----|------|-------------|
-| 1 | 0x17 | Laundry Machine |
+| 1 | 0x17 | Drying Rack |
 | 2 | 0x26 | Bath Heater |
 | 3 | 0xAC | Floor Air Conditioner / Wall Air Conditioner / Central Air Conditioner / Central Fresh Air / Central Miniaturized Fresh Air |
 | 4 | 0xB0 | Microwave Oven |
@@ -76,7 +81,7 @@ For detailed configuration guide, please see [Configuration Guide](GUIDE.md)
 | 14 | 0xE1 | Dishwasher |
 | 15 | 0xE2 | Electric Water Heater |
 | 16 | 0xE3 | Gas Water Heater |
-| 17 | 0xE6 | Gas Wall Hanging Tove |
+| 17 | 0xE6 | Gas Wall Hanging Stove |
 | 18 | 0xEA | Rice Cooker |
 | 19 | 0xED | Net Drinking Machine / Water Purifier / Pipeline Machine |
 | 20 | 0xFA | Electric Fan |
