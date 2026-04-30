@@ -547,6 +547,17 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
                                     'if (tb["db_error_code"] and tonumber(tb["db_error_code"], 16) ~= 0)'
                                 )
 
+                                # Fix Lua 5.1 # operator on 0-indexed tables.
+                                # bodyBytes is built as {[0]=b0, [1]=b1, ...} but Lua 5.1's #
+                                # only counts keys starting from 1, so # returns length-1,
+                                # causing binToModel to return nil for short messages.
+                                import re
+                                modified = re.sub(
+                                    r'if\s*\(\s*#binData\s*<\s*(\d+)\s*\)\s*then\b',
+                                    r'if ((function(t) local c=0; for _ in pairs(t) do c=c+1 end return c end)(binData) < \1) then',
+                                    modified,
+                                )
+
                                 modified = modified.replace("\r\n", "\n")
                                 return True, modified
                             else:
