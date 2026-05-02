@@ -589,6 +589,11 @@ DEVICE_MAPPING = {
                 },
                 "set_germicidal_countdown": {
                     "device_class": SwitchDeviceClass.SWITCH
+                },
+                "sleep": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["on", "off"],
+                    "translation_key": "display_on_off"
                 }
             },
             Platform.SELECT: {
@@ -638,6 +643,17 @@ DEVICE_MAPPING = {
                         "180": {"screenout_time": 180},
                         "300": {"screenout_time": 300}
                     }
+                },
+                "set_germicidal_countdown_days": {
+                    "options": {
+                        "7": {"set_germicidal_countdown_days": 7},
+                        "10": {"set_germicidal_countdown_days": 10},
+                        "15": {"set_germicidal_countdown_days": 15},
+                        "20": {"set_germicidal_countdown_days": 20},
+                        "25": {"set_germicidal_countdown_days": 25},
+                        "30": {"set_germicidal_countdown_days": 30}
+                    },
+                    "command": {"set_germicidal_countdown": "on"}
                 }
             },
             Platform.NUMBER: {
@@ -653,6 +669,12 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.OPENING,
                     "rationale": ["on", "off"],
                     "translation_key": "screen_status"
+                },
+                "out_water": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "heat_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -747,7 +769,7 @@ DEVICE_MAPPING = {
                     "max": 100,
                     "step": 1,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
-                    "translation_key": "boiling_water_temperture"
+                    "translation_key": "boiling_water_temperature"
                 }
             },
             Platform.BINARY_SENSOR: {
@@ -763,6 +785,136 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "cur_temperature"
+                }
+            }
+        }
+    },
+    "6320084C": {
+        "rationale": ["off", "on"],
+        "entities": {
+            Platform.SWITCH: {
+                "germicidal": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "lock": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "set_germicidal_countdown": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "sleep": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["on", "off"],
+                    "translation_key": "display_on_off"
+                }
+            },
+            Platform.SELECT: {
+                "quantify_1": {
+                    "options": {
+                        "50": {"quantify_1": 5},
+                        "100": {"quantify_1": 10},
+                        "150": {"quantify_1": 15},
+                        "200": {"quantify_1": 20},
+                        "250": {"quantify_1": 25},
+                        "300": {"quantify_1": 30}
+                    }
+                },
+                "quantify_2": {
+                    "options": {
+                        "150": {"quantify_2": 15},
+                        "200": {"quantify_2": 20},
+                        "250": {"quantify_2": 25},
+                        "300": {"quantify_2": 30},
+                        "400": {"quantify_2": 40},
+                        "500": {"quantify_2": 50}
+                    }
+                },
+                "quantify_3": {
+                    "options": {
+                        "300": {"quantify_3": 30},
+                        "400": {"quantify_3": 40},
+                        "500": {"quantify_3": 50},
+                        "600": {"quantify_3": 60},
+                        "700": {"quantify_3": 70}
+                    }
+                },
+                "custom_temperature_1": {
+                    "options": {
+                        "75": {"custom_temperature_1": 75},
+                        "80": {"custom_temperature_1": 80},
+                        "83": {"custom_temperature_1": 83},
+                        "90": {"custom_temperature_1": 90},
+                        "95": {"custom_temperature_1": 95}
+                    },
+                    "translation_key": "boiling_water_temperature"
+                },
+                "tea_temperature": {
+                    "options": {
+                        "75": {"tea_temperature": 75},
+                        "80": {"tea_temperature": 80},
+                        "83": {"tea_temperature": 83},
+                        "90": {"tea_temperature": 90},
+                        "95": {"tea_temperature": 95}
+                    }
+                },
+                "custom_temperature_2": {
+                    "options": {
+                        "30": {"custom_temperature_2": 30},
+                        "35": {"custom_temperature_2": 35},
+                        "40": {"custom_temperature_2": 40},
+                        "45": {"custom_temperature_2": 45},
+                        "50": {"custom_temperature_2": 50},
+                        "55": {"custom_temperature_2": 55},
+                        "60": {"custom_temperature_2": 60}
+                    },
+                    "translation_key": "warm_water_temperature"
+                },
+                "milk_temperature": {
+                    "options": {
+                        "30": {"milk_temperature": 30},
+                        "35": {"milk_temperature": 35},
+                        "40": {"milk_temperature": 40},
+                        "45": {"milk_temperature": 45},
+                        "50": {"milk_temperature": 50},
+                        "55": {"milk_temperature": 55},
+                        "60": {"milk_temperature": 60}
+                    }
+                },
+                "set_germicidal_countdown_days": {
+                    "options": {
+                        "7": {"set_germicidal_countdown_days": 7},
+                        "10": {"set_germicidal_countdown_days": 10},
+                        "15": {"set_germicidal_countdown_days": 15},
+                        "20": {"set_germicidal_countdown_days": 20},
+                        "25": {"set_germicidal_countdown_days": 25},
+                        "30": {"set_germicidal_countdown_days": 30}
+                    },
+                    "command": {"set_germicidal_countdown": "on"}
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "sleep": {
+                    "device_class": BinarySensorDeviceClass.OPENING,
+                    "rationale": ["on", "off"],
+                    "translation_key": "screen_status"
+                },
+                "out_water": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "heat_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                }
+            },
+            Platform.SENSOR: {
+                "germicidal_left_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "germicidal_countdown": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.DAYS,
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             }
         }
@@ -870,14 +1022,14 @@ DEVICE_MAPPING = {
                     "max": 98,
                     "step": 1,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
-                    "translation_key": "boiling_water_temperture"
+                    "translation_key": "boiling_water_temperature"
                 },
                 "milk_temperature": {
                     "min": 40,
                     "max": 85,
                     "step": 1,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
-                    "translation_key": "warm_water_temperture"
+                    "translation_key": "warm_water_temperature"
                 }
             },
             Platform.BINARY_SENSOR: {

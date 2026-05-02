@@ -19,6 +19,7 @@
             "freezer_door_open_overtime": { "default": "mdi:fridge-alert" },
             "freezer_door_state": { "default": "mdi:fridge-bottom" },
             "heating_work": { "default": "mdi:radiator" },
+            "heat_status": { "default": "mdi:radiator" },
             "ice_gall_status": { "default": "mdi:snowflake" },
             "ice_status": { "default": "mdi:ice-pop" },
             "lack_water": { "default": "mdi:water-off" },
@@ -62,7 +63,7 @@
         "number": {
             "air_set_hour": { "default": "mdi:air-filter" },
             "bath_temperature": { "default": "mdi:thermometer" },
-            "boiling_water_temperture": { "default": "mdi:thermometer-high" },
+            "boiling_water_temperature": { "default": "mdi:thermometer-high" },
             "custom_height": { "default": "mdi:arrow-up-down" },
             "custom_temperature_1": { "default": "mdi:thermometer" },
             "custom_timing": { "default": "mdi:timer" },
@@ -86,7 +87,7 @@
             "softener": { "default": "mdi:water" },
             "tea_temperature": { "default": "mdi:tea" },
             "temperature": { "default": "mdi:thermometer" },
-            "warm_water_temperture": { "default": "mdi:thermometer" },
+            "warm_water_temperature": { "default": "mdi:thermometer" },
             "wash_level": { "default": "mdi:arrow-up-down" },
             "wash_strength": { "default": "mdi:arrow-up-down" },
             "wash_time": { "default": "mdi:timer" },
@@ -172,7 +173,12 @@
             "wind_swing_lr_angle": { "default": "mdi:arrow-left-right" },
             "wind_swing_ud_angle": { "default": "mdi:arrow-up-down" },
             "work_mode": { "default": "mdi:tune" },
-            "work_status": { "default": "mdi:play-circle-outline" }
+            "work_status": { "default": "mdi:play-circle-outline" },
+            "boiling_water_temperature": { "default": "mdi:thermometer-high" },
+            "warm_water_temperature": { "default": "mdi:thermometer" },
+            "milk_temperature": { "default": "mdi:baby-bottle" },
+            "set_germicidal_countdown_days": { "default": "mdi:calendar-clock" },
+            "tea_temperature": { "default": "mdi:tea" }
         },
         "sensor": {
             "air_dry_left_time": { "default": "mdi:timer" },

@@ -113,6 +113,9 @@
       "heating_work": {
         "name": "采暖工作状态"
       },
+      "heat_status": {
+        "name": "加热状态"
+      },
       "ice_gall_status": {
         "name": "制冷状态"
       },
@@ -283,7 +286,7 @@
       "bath_temperature": {
         "name": "沐浴温度"
       },
-      "boiling_water_temperture": {
+      "boiling_water_temperature": {
         "name": "沸水设定温度"
       },
       "custom_height": {
@@ -355,7 +358,7 @@
       "temperature": {
         "name": "设定温度"
       },
-      "warm_water_temperture": {
+      "warm_water_temperature": {
         "name": "温水设定温度"
       },
       "wash_level": {
@@ -1276,6 +1279,61 @@
           "power_off": "关机",
           "power_on": "开机",
           "resume": "继续"
+        }
+      },
+      "set_germicidal_countdown_days": {
+        "name": "设定杀菌提醒周期",
+        "state": {
+          "7": "7天",
+          "10": "10天",
+          "15": "15天",
+          "20": "20天",
+          "25": "25天",
+          "30": "30天"
+        }
+      },
+      "boiling_water_temperature": {
+        "name": "沸水设定温度",
+        "state": {
+          "75": "75°C",
+          "80": "80°C",
+          "83": "83°C",
+          "90": "90°C",
+          "95": "95°C"
+        }
+      },
+      "warm_water_temperature": {
+        "name": "温水设定温度",
+        "state": {
+          "30": "30°C",
+          "35": "35°C",
+          "40": "40°C",
+          "45": "45°C",
+          "50": "50°C",
+          "55": "55°C",
+          "60": "60°C"
+        }
+      },
+      "milk_temperature": {
+        "name": "泡奶设定温度",
+        "state": {
+          "30": "30°C",
+          "35": "35°C",
+          "40": "40°C",
+          "45": "45°C",
+          "50": "50°C",
+          "55": "55°C",
+          "60": "60°C"
+        }
+      },
+      "tea_temperature": {
+        "name": "泡茶设定温度",
+        "state": {
+          "75": "75°C",
+          "80": "80°C",
+          "83": "83°C",
+          "90": "90°C",
+          "95": "95°C"
         }
       }
     },
