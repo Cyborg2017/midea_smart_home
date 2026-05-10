@@ -1,5 +1,6 @@
 """Midea Smart Home Cloud API client."""
 
+import base64
 import json
 import logging
 import time
@@ -11,7 +12,7 @@ from typing import Any, cast
 from aiohttp import ClientConnectionError, ClientSession, ClientTimeout
 
 from .exceptions import ElementMissing
-from .security import CloudSecurity, MeijuCloudSecurity, MideaAirSecurity
+from .security import CloudSecurity, MeijuCloudSecurity, MSmartCloudSecurity, MideaAirSecurity
 
 SN8_MIN_SERIAL_LENGTH = 17
 
@@ -31,11 +32,33 @@ SUPPORTED_CLOUDS = {
         ).decode(),
         "api_url": "https://mp-prod.smartmidea.net/mas/v5/app/proxy?alias=",
     },
+    "SmartHome": {
+        "class_name": "SmartHomeCloud",
+        "app_id": "1010",
+        "app_key": "ac21b9f9cbfe4ca5a88562ef25e2b768",
+        "iot_key": bytes.fromhex(format(7882822598523843940, "x")).decode(),
+        "hmac_key": bytes.fromhex(
+            format(117390035944627627450677220413733956185864939010425, "x"),
+        ).decode(),
+        "api_url": "https://mp-prod.appsmb.com/mas/v5/app/proxy?alias=",
+    },
+    "Midea Air": {
+        "class_name": "MideaAirCloud",
+        "app_id": "1117",
+        "app_key": "ff0cf6f5f0c3471de36341cab3f7a9af",
+        "api_url": "https://mapp.appsmb.com",
+    },
     "NetHome Plus": {
         "default": True,
         "class_name": "MideaAirCloud",
         "app_id": "1017",
         "app_key": "3742e9e5842d4ad59c2db887e12449f9",
+        "api_url": "https://mapp.appsmb.com",
+    },
+    "Ariston Clima": {
+        "class_name": "MideaAirCloud",
+        "app_id": "1005",
+        "app_key": "434a209a5ce141c3b726de067835d7f0",
         "api_url": "https://mapp.appsmb.com",
     },
 }
@@ -312,6 +335,154 @@ class MeijuCloud(MideaCloud):
         return None
 
 
+class SmartHomeCloud(MideaCloud):
+    """SmartHome Cloud (MSmart Home overseas)."""
+
+    def __init__(
+        self,
+        cloud_name: str,
+        session: ClientSession,
+        account: str,
+        password: str,
+    ) -> None:
+        cloud_data = cast(dict[str, Any], SUPPORTED_CLOUDS[cloud_name])
+        super().__init__(
+            session=session,
+            security=MSmartCloudSecurity(
+                login_key=cloud_data["app_key"],
+                iot_key=cloud_data["iot_key"],
+                hmac_key=cloud_data["hmac_key"],
+            ),
+            app_id=cloud_data["app_id"],
+            app_key=cloud_data["app_key"],
+            account=account,
+            password=password,
+            api_url=cloud_data["api_url"],
+        )
+        self._auth_base = base64.b64encode(
+            f"{self._app_key}:{cloud_data['iot_key']}".encode(
+                "ascii",
+            ),
+        ).decode("ascii")
+
+    def _make_general_data(self) -> dict[str, Any]:
+        return {
+            "src": self._app_id,
+            "format": "2",
+            "stamp": datetime.now(tz=UTC).strftime("%Y%m%d%H%M%S"),
+            "platformId": "1",
+            "deviceId": self._device_id,
+            "reqId": token_hex(16),
+            "uid": self._uid,
+            "clientType": "1",
+            "appId": self._app_id,
+            "language": "en_US",
+        }
+
+    async def _api_request(
+        self,
+        endpoint: str,
+        data: dict[str, Any],
+        header: dict[str, Any] | None = None,
+    ) -> dict[str, Any] | None:
+        header = header or {}
+        header.update(
+            {"x-recipe-app": self._app_id, "authorization": f"Basic {self._auth_base}"},
+        )
+        return await super()._api_request(endpoint, data, header)
+
+    async def _re_route(self) -> None:
+        data = self._make_general_data()
+        data.update({"userType": "0", "userName": f"{self._account}"})
+        if (
+            response := await self._api_request(
+                endpoint="/v1/multicloud/platform/user/route",
+                data=data,
+            )
+        ) and (api_url := response.get("masUrl")):
+            self._api_url = api_url
+
+    async def login(self) -> bool:
+        await self._re_route()
+        if login_id := await self._get_login_id():
+            self._login_id = login_id
+            iot_data = self._make_general_data()
+            iot_data.pop("uid")
+            stamp = datetime.now(tz=UTC).strftime("%Y%m%d%H%M%S")
+            iot_data.update(
+                {
+                    "iampwd": self._security.encrypt_iam_password(
+                        self._login_id,
+                        self._password,
+                    ),
+                    "loginAccount": self._account,
+                    "password": self._security.encrypt_password(
+                        self._login_id,
+                        self._password,
+                    ),
+                    "stamp": stamp,
+                },
+            )
+            data = {
+                "iotData": iot_data,
+                "data": {
+                    "appKey": self._app_key,
+                    "deviceId": self._device_id,
+                    "platform": "2",
+                },
+                "stamp": stamp,
+            }
+            if response := await self._api_request(
+                endpoint="/mj/user/login",
+                data=data,
+            ):
+                self._uid = response["uid"]
+                self._access_token = response["mdata"]["accessToken"]
+                self._security.set_aes_keys(
+                    response["accessToken"],
+                    response["randomData"],
+                )
+                return True
+        _LOGGER.warning("SmartHome Cloud login failed for device %s", self._device_id)
+        return False
+
+    async def list_appliances(
+        self,
+        home_id: str | None,
+    ) -> dict[int, dict[str, Any]] | None:
+        data = self._make_general_data()
+        if response := await self._api_request(
+            endpoint="/v1/appliance/user/list/get",
+            data=data,
+        ):
+            appliances = {}
+            for appliance in response["list"]:
+                try:
+                    model_number = int(appliance.get("modelNumber", 0))
+                except ValueError:
+                    model_number = 0
+                device_info = {
+                    "name": appliance.get("name"),
+                    "type": int(appliance.get("type"), 16),
+                    "sn": self._security.aes_decrypt(appliance.get("sn") or ""),
+                    "sn8": "",
+                    "model_number": model_number,
+                    "manufacturer_code": appliance.get("enterpriseCode", "0000"),
+                    "model": "",
+                    "online": appliance.get("onlineStatus") == "1",
+                }
+                serial_num = device_info.get("sn")
+                device_info["sn8"] = (
+                    serial_num[9:17]
+                    if (serial_num and len(serial_num) > SN8_MIN_SERIAL_LENGTH)
+                    else ""
+                )
+                device_info["model"] = device_info.get("sn8")
+                appliances[int(appliance["id"])] = device_info
+            return appliances
+        return None
+
+
 class MideaAirCloud(MideaCloud):
     """Midea Air Cloud."""
 
@@ -462,7 +633,15 @@ def get_midea_cloud(
         ),
     )
 
-async def download_lua_file(hass, access_token: str, sn: str, device_type: int, mf_code: str, model_number: str = "0") -> tuple[bool, str]:
+async def download_lua_file(
+    hass,
+    access_token: str,
+    sn: str,
+    device_type: int,
+    mf_code: str,
+    model_number: str = "0",
+    cloud_name: str = "Meiju Cloud",
+) -> tuple[bool, str]:
     """Download and process Lua file from cloud.
 
     Returns:
@@ -471,16 +650,28 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
     import hashlib
     import hmac
 
-    # Use the same hardcoded keys as in all_in_one_getter.py
-    iot_key = bytes.fromhex(format(9795516279659324117647275084689641883661667, 'x')).decode()
-    hmac_key = bytes.fromhex(format(117390035944627627450677220413733956185864939010425, 'x')).decode()
+    cloud_data = cast(dict[str, Any], SUPPORTED_CLOUDS.get(cloud_name, SUPPORTED_CLOUDS["Meiju Cloud"]))
+    is_overseas = cloud_data.get("class_name") in ("SmartHomeCloud",)
+
+    if is_overseas:
+        iot_key = cloud_data.get("iot_key", "")
+        hmac_key = cloud_data.get("hmac_key", "")
+        api_base = cloud_data["api_url"]
+        lua_endpoint = "/v2/luaEncryption/luaGet"
+        iot_app_id = cloud_data["app_id"]
+    else:
+        iot_key = bytes.fromhex(format(9795516279659324117647275084689641883661667, "x")).decode()
+        hmac_key = bytes.fromhex(format(117390035944627627450677220413733956185864939010425, "x")).decode()
+        api_base = cloud_data["api_url"]
+        lua_endpoint = "/v1/appliance/protocol/lua/luaGet"
+        iot_app_id = "900"
 
     lua_data = {
         "applianceSn": sn,
         "applianceType": f"0x{device_type:X}",
         "applianceMFCode": mf_code,
         "version": "0",
-        "iotAppId": "900",
+        "iotAppId": iot_app_id,
         "modelNumber": model_number or "0",
         "reqId": token_hex(16),
         "stamp": datetime.now().strftime("%Y%m%d%H%M%S"),
@@ -506,7 +697,7 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
     _LOGGER.info("Lua download request data: %s", lua_data)
 
     # Send request
-    api_url = "https://mp-prod.smartmidea.net/mas/v5/app/proxy?alias=/v1/appliance/protocol/lua/luaGet"
+    api_url = f"{api_base}{lua_endpoint}"
 
     try:
         async with ClientSession() as session:

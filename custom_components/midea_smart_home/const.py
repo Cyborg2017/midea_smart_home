@@ -27,6 +27,7 @@ CONF_MANUFACTURER_CODE = "manufacturer_code"
 CONF_DEVICE_NAME = "device_name"
 CONF_PROTOCOL = "protocol"
 CONF_CATEGORY = "category"
+CONF_SERVER = "server"
 
 DEFAULT_PORT = 6444
 
