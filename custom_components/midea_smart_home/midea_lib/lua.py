@@ -256,27 +256,50 @@ _G.cjson = cjson
 
     def _apply_lua_sandbox(self):
         """Apply security sandbox restrictions to the Lua runtime.
-        
+
         This prevents access to dangerous standard library functions:
-        - io: File I/O operations
-        - os: Operating system commands
+        - io: File I/O operations (fully blocked)
+        - os: Operating system commands (restricted subset allowed)
         - package: Dynamic code loading (except require for whitelisted modules)
-        - debug: Debugger access
-        - loadstring/load: Dynamic code compilation
+        - debug: Debugger access (fully blocked)
+        - loadstring/load: Dynamic code compilation (blocked)
+
+        SECURITY RATIONALE:
+        Some device protocol scripts legitimately need time functions (os.time, os.date).
+        Instead of fully blocking 'os', we provide a SAFE SUBSET that only includes
+        read-only time functions, blocking all dangerous operations like os.execute().
         """
         sandbox_code = """
 -- Save the original require function BEFORE disabling anything
-local original_require = require
+local original_require =require
 
--- Disable dangerous libraries
+-- Fully block dangerous libraries
 io = nil
-os = nil
 debug = nil
 
 -- Disable dynamic code loading
 loadstring = nil
 load = nil
 dofile = nil
+
+-- Create a RESTRICTED os table with only safe functions
+-- This allows legitimate protocol operations while blocking dangerous ones
+local safe_os = {
+    -- Safe time functions (read-only, no side effects)
+    time = os.time,
+    date = os.date,
+    clock = os.clock,
+    difftime = os.difftime,
+
+    -- BLOCKED dangerous functions (not included):
+    -- os.execute() - would allow arbitrary command execution
+    -- os.exit() - would terminate the process
+    -- os.remove() - would allow file deletion
+    -- os.rename() - would allow file modification
+    -- os.tmpname() - could leak temp file paths
+    -- os.getenv() - could expose environment variables
+}
+os = safe_os
 
 -- Whitelist safe modules only
 local safe_modules = {

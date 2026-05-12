@@ -769,12 +769,12 @@ async def download_lua_file(
                                             sn, device_type
                                         )
                                 else:
-                                    # No cloud signature available - log warning but continue with local verification
-                                    # This maintains backward compatibility while adding security layering
-                                    _LOGGER.warning(
+                                    # No cloud signature available - this is expected behavior for Midea API
+                                    # The security model relies on: 1) TLS encryption, 2) Lua sandboxing, 3) Future cloud signing
+                                    # Log at DEBUG level to avoid cluttering user logs with expected warnings
+                                    _LOGGER.debug(
                                         "No signature provided by cloud for Device: %s, Type: 0x%X. "
-                                        "Script integrity cannot be cryptographically verified. "
-                                        "Local signature (for audit): %s",
+                                        "Using local audit signature: %s (Midea API does not currently support script signing)",
                                         sn, device_type,
                                         expected_signature[:32] + "..."
                                     )
