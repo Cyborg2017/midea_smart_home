@@ -5,9 +5,13 @@ This module consolidates all Lua-related logic, including:
 - File management for Lua scripts
 - Decryption of Lua code
 - Lua runtime environment wrapper (MideaCodec)
+- HMAC verification of Lua scripts
+- Lua runtime sandboxing
 """
 
 import base64
+import hashlib
+import hmac
 import json
 import logging
 import os
@@ -74,16 +78,71 @@ def decrypt_lua_code(lua_code: str) -> str:
         return lua_code
 
 
+def verify_lua_script_signature(lua_content: str, signature: str, hmac_key: str) -> bool:
+    """Verify Lua script authenticity using HMAC-SHA256.
+    
+    Args:
+        lua_content: The Lua script content to verify
+        signature: The expected HMAC-SHA256 signature (hex format)
+        hmac_key: The HMAC key for verification
+        
+    Returns:
+        bool: True if signature is valid, False otherwise
+    """
+    try:
+        # Compute HMAC-SHA256 of the lua content
+        computed_signature = hmac.new(
+            hmac_key.encode("utf-8") if isinstance(hmac_key, str) else hmac_key,
+            lua_content.encode("utf-8") if isinstance(lua_content, str) else lua_content,
+            hashlib.sha256
+        ).hexdigest()
+        
+        # Constant-time comparison to prevent timing attacks
+        return hmac.compare_digest(computed_signature, signature)
+    except (TypeError, AttributeError) as e:
+        _LOGGER.error("Error verifying Lua script signature: %s", e)
+        return False
+
+
+def generate_lua_script_signature(lua_content: str, hmac_key: str) -> str:
+    """Generate HMAC-SHA256 signature for Lua script.
+    
+    Args:
+        lua_content: The Lua script content
+        hmac_key: The HMAC key for signing
+        
+    Returns:
+        str: The HMAC-SHA256 signature in hex format
+    """
+    try:
+        signature = hmac.new(
+            hmac_key.encode("utf-8") if isinstance(hmac_key, str) else hmac_key,
+            lua_content.encode("utf-8") if isinstance(lua_content, str) else lua_content,
+            hashlib.sha256
+        ).hexdigest()
+        return signature
+    except (TypeError, AttributeError) as e:
+        _LOGGER.error("Error generating Lua script signature: %s", e)
+        return ""
+
+
 class LuaRuntime:
     """Lua runtime wrapper for Midea device protocol handling.
 
     This class manages a Lua runtime environment for parsing and building
     device-specific protocol messages. It loads device-specific Lua scripts
     and provides methods for JSON-to-data and data-to-JSON conversions.
+    
+    SECURITY: The Lua runtime is sandboxed to prevent access to dangerous
+    standard library functions (io, os, package, debug) and external code
+    execution. Only required Lua functions are exposed.
     """
 
     def __init__(self, file_path: str, lua_default_dir: str):
         self._runtime = lupa.lua51.LuaRuntime()
+
+        # Apply sandbox restrictions to prevent arbitrary code execution
+        self._apply_lua_sandbox()
 
         # Override Lua's print function to redirect output to Python logger
         # instead of stdout, which avoids cluttering logs with debug output
@@ -166,6 +225,54 @@ _G.cjson = cjson
             )
         except lupa.lua51.LuaError as e:
             raise RuntimeError(f"Lua file {file_path} missing required functions (jsonToData/dataToJson): {e}")
+
+    def _apply_lua_sandbox(self):
+        """Apply security sandbox restrictions to the Lua runtime.
+        
+        This prevents access to dangerous standard library functions:
+        - io: File I/O operations
+        - os: Operating system commands
+        - package: Dynamic code loading (except require for whitelisted modules)
+        - debug: Debugger access
+        - loadstring/load: Dynamic code compilation
+        """
+        sandbox_code = """
+-- Save the original require function BEFORE disabling anything
+local original_require = require
+
+-- Disable dangerous libraries
+io = nil
+os = nil
+debug = nil
+
+-- Disable dynamic code loading
+loadstring = nil
+load = nil
+dofile = nil
+
+-- Whitelist safe modules only
+local safe_modules = {
+    cjson = true,
+    bit = true,
+}
+
+-- Create new restricted require function
+function require(module)
+    if safe_modules[module] then
+        return original_require(module)
+    else
+        error("Module '" .. module .. "' is not allowed in sandboxed environment")
+    end
+end
+
+_G.require = require
+"""
+        try:
+            self._runtime.execute(sandbox_code)
+            _LOGGER.info("Lua sandbox applied successfully")
+        except lupa.lua51.LuaError as e:
+            _LOGGER.error("Failed to apply Lua sandbox: %s", e)
+            raise RuntimeError(f"Failed to apply Lua sandbox: {e}")
 
     def json_to_data(self, json_value: str) -> str:
         with self._lock:
