@@ -67,14 +67,42 @@ def ensure_lua_files(lua_path: str) -> tuple:
     return cjson, bit, cjson_lua, bit_lua
 
 def decrypt_lua_code(lua_code: str) -> str:
-    """Decrypt Lua code downloaded from cloud."""
+    """Decrypt Lua code downloaded from cloud using legacy hardcoded key.
+
+    DEPRECATED: Use decrypt_lua_code_with_key() for enhanced security.
+    This function is retained for backward compatibility.
+
+    Args:
+        lua_code: Encrypted Lua code (hex string)
+
+    Returns:
+        str: Decrypted Lua code
+    """
+    LEGACY_KEY = format(10864842703515613082, 'x')
+    return decrypt_lua_code_with_key(lua_code, LEGACY_KEY)
+
+
+def decrypt_lua_code_with_key(lua_code: str, aes_key: str) -> str:
+    """Decrypt Lua code downloaded from cloud using specified AES key.
+
+    This function provides flexibility to use per-instance unique keys
+    instead of a hardcoded key, enhancing security through defense-in-depth.
+
+    Args:
+        lua_code: Encrypted Lua code (hex string)
+        aes_key: AES decryption key (hex-encoded string)
+
+    Returns:
+        str: Decrypted Lua code
+    """
     try:
-        fixed_key = format(10864842703515613082, 'x').encode("ascii")
+        fixed_key = aes_key.encode("ascii") if isinstance(aes_key, str) else aes_key
         encrypted_bytes = bytes.fromhex(lua_code.strip())
         cipher = AES.new(fixed_key, AES.MODE_ECB)
         decrypted = unpad(cipher.decrypt(encrypted_bytes), len(fixed_key))
         return decrypted.decode("utf-8", errors="ignore")
-    except (ValueError, OSError):
+    except (ValueError, OSError) as e:
+        _LOGGER.warning("Failed to decrypt Lua code with provided key (%s), returning original", e)
         return lua_code
 
 
