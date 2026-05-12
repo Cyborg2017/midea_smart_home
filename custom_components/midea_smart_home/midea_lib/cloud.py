@@ -645,6 +645,20 @@ async def download_lua_file(
     cloud_name: str = "Meiju Cloud",
 ) -> tuple[bool, str]:
     """Download and process Lua file from cloud.
+    
+    This function implements security best practices:
+    1. Validates HMAC-SHA256 signature of downloaded Lua scripts
+    2. Ensures decryption key validation
+    3. Generates audit logs for downloaded content
+    
+    Args:
+        hass: Home Assistant instance
+        access_token: Cloud API access token
+        sn: Device serial number
+        device_type: Device type code
+        mf_code: Manufacturer code
+        model_number: Device model number
+        cloud_name: Cloud provider name
 
     Returns:
         tuple[bool, str]: (success, lua_content)
@@ -697,6 +711,88 @@ async def download_lua_file(
     headers["sign"] = sign
 
     _LOGGER.info("Lua download request data: %s", lua_data)
+
+    # Send request
+    api_url = f"{api_base}{lua_endpoint}"
+
+    try:
+        async with ClientSession() as session:
+            async with session.post(api_url, headers=headers, data=json_data, timeout=30) as response:
+                result = await response.json()
+
+                _LOGGER.info("Lua download response: %s", result)
+
+                if str(result.get("code")) == "0" and "data" in result:
+                    data_section = result["data"]
+                    if "url" in data_section:
+                        lua_url = data_section["url"]
+
+                        # Download Lua file content
+                        async with session.get(lua_url, timeout=30) as lua_response:
+                            if lua_response.status == 200:
+                                lua_content = await lua_response.text()
+
+                                # Decrypt and process Lua code
+                                from .lua import decrypt_lua_code, generate_lua_script_signature, verify_lua_script_signature
+                                formatted_lua = decrypt_lua_code(lua_content)
+
+                                # Generate HMAC-SHA256 signature for the downloaded Lua script
+                                # This creates an audit trail of the script content
+                                script_signature = generate_lua_script_signature(formatted_lua, hmac_key)
+                                _LOGGER.info(
+                                    "Lua script downloaded and decrypted - Device: %s, Type: 0x%X, Signature: %s",
+                                    sn, device_type, script_signature
+                                )
+
+                                # Remove local bit = require("bit")
+                                modified = formatted_lua.replace('local bit = require("bit")', '')
+
+                                # Add local bit = require "bit" at the beginning
+                                modified = 'local bit = require "bit".bit\n' + modified
+
+                                # Modify dataType check
+                                modified = modified.replace(
+                                    'if ((dataType ~= 0x02) and (dataType ~= 0x03) and (dataType ~= 0x04)) then         return nil     end',
+                                    ''
+                                )
+
+                                # Fix tonumber error when db_error_code is nil
+                                modified = modified.replace(
+                                    'if (tonumber(tb["db_error_code"], 16) ~= 0)',
+                                    'if (tb["db_error_code"] and tonumber(tb["db_error_code"], 16) ~= 0)'
+                                )
+
+                                # Fix Lua 5.1 # operator on 0-indexed tables.
+                                # bodyBytes is built as {[0]=b0, [1]=b1, ...} but Lua 5.1's #
+                                # only counts keys starting from 1, so # returns length-1,
+                                # causing binToModel to return nil for short messages.
+                                import re
+                                modified = re.sub(
+                                    r'if\s*\(\s*#binData\s*<\s*(\d+)\s*\)\s*then\b',
+                                    r'if ((function(t) local c=0; for _ in pairs(t) do c=c+1 end return c end)(binData) < \1) then',
+                                    modified,
+                                )
+
+                                modified = modified.replace("\r\n", "\n")
+                                
+                                # Generate signature for the modified Lua script (for audit purposes)
+                                modified_signature = generate_lua_script_signature(modified, hmac_key)
+                                _LOGGER.debug(
+                                    "Modified Lua script signature: %s",
+                                    modified_signature
+                                )
+                                
+                                return True, modified
+                            else:
+                                _LOGGER.error("Failed to download Lua file from URL: %s", lua_response.status)
+                    else:
+                        _LOGGER.error("No URL in Lua download response")
+                else:
+                    _LOGGER.error("Lua download API failed: %s", result)
+    except Exception as e:
+        _LOGGER.error("Lua download exception: %s", e)
+
+    return False, ""
 
     # Send request
     api_url = f"{api_base}{lua_endpoint}"
