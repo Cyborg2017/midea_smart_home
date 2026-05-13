@@ -11,6 +11,7 @@ class DeviceLogicHandler:
         self.device_type = device_type
         self.device_name = device_name
         self._last_standby_status: Any = None
+        self._last_high_float_type: Any = None
 
     def adjust_control_status(self, data: dict, running_status: str) -> None:
         control_status = "start" if running_status == "start" else "pause"
@@ -63,6 +64,7 @@ class DeviceLogicHandler:
 
         elif self.device_type == 0xED:
             self.adjust_standby_status_for_wash(data)
+            self.adjust_high_float_type_when_filter_on(data)
 
     def apply_special_handling_for_poll(self, data: dict, suffix: str, raw_status: dict = None) -> bool:
         """Apply special handling for poll data with suffix (_l or _r).
@@ -279,3 +281,24 @@ class DeviceLogicHandler:
                 data["standby_status"] = self._last_standby_status
         else:
             self._last_standby_status = data.get("standby_status")
+
+    def adjust_high_float_type_when_filter_on(self, data: dict) -> None:
+        """For T0xED devices, adjust high_float_type when filter is on.
+
+        When the device reports both high_float_type and filter attributes,
+        and filter is 'on', keep the previous high_float_type value instead
+        of updating it with the new (possibly invalid) device value.
+        Other attributes are not affected.
+        """
+        if self.device_type != 0xED:
+            return
+
+        if "high_float_type" not in data or "filter" not in data:
+            return
+
+        filter_value = data.get("filter")
+        if filter_value == "on" or filter_value == 1:
+            if self._last_high_float_type is not None:
+                data["high_float_type"] = self._last_high_float_type
+        else:
+            self._last_high_float_type = data.get("high_float_type")
