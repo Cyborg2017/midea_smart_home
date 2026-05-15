@@ -1521,11 +1521,11 @@
       "db_remain_time_l": {
         "name": "Left Bucket Remaining Time"
       },
-      "db_remain_time_r": {
-        "name": "Right Bucket Remaining Time"
-      },
       "db_remain_time_long": {
         "name": "Longest Remaining Time"
+      },
+      "db_remain_time_r": {
+        "name": "Right Bucket Remaining Time"
       },
       "db_running_status_l": {
         "name": "Left Bucket Running Status"

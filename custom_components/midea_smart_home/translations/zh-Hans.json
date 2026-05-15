@@ -1521,11 +1521,11 @@
       "db_remain_time_l": {
         "name": "剩余时间(左筒)"
       },
-      "db_remain_time_r": {
-        "name": "剩余时间(右筒)"
-      },
       "db_remain_time_long": {
         "name": "双筒最长剩余时间"
+      },
+      "db_remain_time_r": {
+        "name": "剩余时间(右筒)"
       },
       "db_running_status_l": {
         "name": "运行状态(左筒)"
