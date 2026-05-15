@@ -162,6 +162,12 @@
       },
       "water_output_switch": {
         "name": "龙头出水"
+      },
+      "on_seat": {
+        "name": "坐圈有人"
+      },
+      "flip_status": {
+        "name": "马桶盖状态"
       }
     },
     "button": {
@@ -170,6 +176,9 @@
       },
       "right_stove_off": {
         "name": "关闭右灶"
+      },
+      "stop": {
+        "name": "停止"
       }
     },
     "climate": {
@@ -1346,6 +1355,98 @@
           "power_on": "开机",
           "resume": "继续"
         }
+      },
+      "clean_mode": {
+        "name": "清洗模式",
+        "state": {
+          "off": "关闭",
+          "rear_wash": "臀洗",
+          "feminine_wash": "妇洗",
+          "nozzle_clean": "喷杆清洁"
+        }
+      },
+      "dry_gear": {
+        "name": "风温档位",
+        "state": {
+          "off": "空档",
+          "low": "低档",
+          "medium": "中档",
+          "high": "高档"
+        }
+      },
+      "water_gear": {
+        "name": "水温档位",
+        "state": {
+          "off": "空档",
+          "low": "低档",
+          "medium_low": "中低档",
+          "medium": "中档",
+          "medium_high": "中高档",
+          "high": "高档"
+        }
+      },
+      "seat_gear": {
+        "name": "坐圈温度",
+        "state": {
+          "off": "空档",
+          "low": "低档",
+          "medium_low": "中低档",
+          "medium": "中档",
+          "medium_high": "中高档",
+          "high": "高档"
+        }
+      },
+      "rinse_volume": {
+        "name": "冲水模式",
+        "state": {
+          "full": "大冲",
+          "half": "小冲",
+          "off": "关闭"
+        }
+      },
+      "injector_position_normal": {
+        "name": "臀洗喷嘴位置",
+        "state": {
+          "off": "空档",
+          "rear": "后档",
+          "mid_rear": "中后档",
+          "middle": "中档",
+          "mid_front": "中前档",
+          "front": "前档"
+        }
+      },
+      "injector_position_woman": {
+        "name": "妇洗喷嘴位置",
+        "state": {
+          "off": "空档",
+          "rear": "后档",
+          "mid_rear": "中后档",
+          "middle": "中档",
+          "mid_front": "中前档",
+          "front": "前档"
+        }
+      },
+      "water_pressure_normal": {
+        "name": "臀洗冲洗强度",
+        "state": {
+          "off": "空档",
+          "low": "低档",
+          "medium_low": "中低档",
+          "medium": "中档",
+          "medium_high": "中高档",
+          "high": "高档"
+        }
+      },
+      "water_pressure_woman": {
+        "name": "妇洗冲洗强度",
+        "state": {
+          "off": "空档",
+          "low": "低档",
+          "medium_low": "中低档",
+          "medium": "中档",
+          "medium_high": "中高档",
+          "high": "高档"
+        }
       }
     },
     "sensor": {
@@ -1740,6 +1841,9 @@
       },
       "work_time": {
         "name": "工作时间"
+      },
+      "filter_use_per": {
+        "name": "滤芯使用率"
       }
     },
     "switch": {
@@ -1991,6 +2095,24 @@
       },
       "wind_dispel": {
         "name": "忘取无忧"
+      },
+      "auto_rinse": {
+        "name": "自动冲水"
+      },
+      "auto_deodorization": {
+        "name": "自动除臭"
+      },
+      "light_sensor": {
+        "name": "光感照明"
+      },
+      "auto_eco": {
+        "name": "自动节能"
+      },
+      "sedentary_remind": {
+        "name": "久坐提醒"
+      },
+      "foam_shield": {
+        "name": "泡沫盾"
       }
     },
     "vacuum": {

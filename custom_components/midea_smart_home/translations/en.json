@@ -162,6 +162,12 @@
       },
       "water_output_switch": {
         "name": "Tap Water"
+      },
+      "on_seat": {
+        "name": "Seat Occupied"
+      },
+      "flip_status": {
+        "name": "Lid Status"
       }
     },
     "button": {
@@ -170,6 +176,9 @@
       },
       "right_stove_off": {
         "name": "Turn Off Right Stove"
+      },
+      "stop": {
+        "name": "Stop"
       }
     },
     "climate": {
@@ -1346,6 +1355,98 @@
           "power_on": "Power On",
           "resume": "Resume"
         }
+      },
+      "clean_mode": {
+        "name": "Clean Mode",
+        "state": {
+          "off": "Off",
+          "rear_wash": "Rear Wash",
+          "feminine_wash": "Feminine Wash",
+          "nozzle_clean": "Nozzle Clean"
+        }
+      },
+      "dry_gear": {
+        "name": "Dry Temperature",
+        "state": {
+          "off": "Off",
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        }
+      },
+      "water_gear": {
+        "name": "Water Temperature",
+        "state": {
+          "off": "Off",
+          "low": "Low",
+          "medium_low": "Medium-Low",
+          "medium": "Medium",
+          "medium_high": "Medium-High",
+          "high": "High"
+        }
+      },
+      "seat_gear": {
+        "name": "Seat Temperature",
+        "state": {
+          "off": "Off",
+          "low": "Low",
+          "medium_low": "Medium-Low",
+          "medium": "Medium",
+          "medium_high": "Medium-High",
+          "high": "High"
+        }
+      },
+      "rinse_volume": {
+        "name": "Rinse Volume",
+        "state": {
+          "full": "Full Flush",
+          "half": "Half Flush",
+          "off": "Off"
+        }
+      },
+      "injector_position_normal": {
+        "name": "Rear Wash Nozzle Position",
+        "state": {
+          "off": "Off",
+          "rear": "Rear",
+          "mid_rear": "Mid-Rear",
+          "middle": "Middle",
+          "mid_front": "Mid-Front",
+          "front": "Front"
+        }
+      },
+      "injector_position_woman": {
+        "name": "Feminine Wash Nozzle Position",
+        "state": {
+          "off": "Off",
+          "rear": "Rear",
+          "mid_rear": "Mid-Rear",
+          "middle": "Middle",
+          "mid_front": "Mid-Front",
+          "front": "Front"
+        }
+      },
+      "water_pressure_normal": {
+        "name": "Rear Wash Pressure",
+        "state": {
+          "off": "Off",
+          "low": "Low",
+          "medium_low": "Medium-Low",
+          "medium": "Medium",
+          "medium_high": "Medium-High",
+          "high": "High"
+        }
+      },
+      "water_pressure_woman": {
+        "name": "Feminine Wash Pressure",
+        "state": {
+          "off": "Off",
+          "low": "Low",
+          "medium_low": "Medium-Low",
+          "medium": "Medium",
+          "medium_high": "Medium-High",
+          "high": "High"
+        }
       }
     },
     "sensor": {
@@ -1740,6 +1841,9 @@
       },
       "work_time": {
         "name": "Work Time"
+      },
+      "filter_use_per": {
+        "name": "Filter Usage"
       }
     },
     "switch": {
@@ -1991,6 +2095,24 @@
       },
       "wind_dispel": {
         "name": "Wind Dispel"
+      },
+      "auto_rinse": {
+        "name": "Auto Rinse"
+      },
+      "auto_deodorization": {
+        "name": "Auto Deodorization"
+      },
+      "light_sensor": {
+        "name": "Light Sensor"
+      },
+      "auto_eco": {
+        "name": "Auto Eco"
+      },
+      "sedentary_remind": {
+        "name": "Sedentary Remind"
+      },
+      "foam_shield": {
+        "name": "Foam Shield"
       }
     },
     "vacuum": {

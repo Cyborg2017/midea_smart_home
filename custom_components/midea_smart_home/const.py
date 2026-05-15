@@ -48,6 +48,7 @@ DEVICE_TYPES = {
     0x9C: "Integrated Stove",
     0xB8: "Smart Robot Vacuum",
     0xBF: "Microwave Steam Oven",
+    0xC2: "Smart Toilet",
     0xCA: "Multi-Door Fridge",
     0xD9: "Twin Tub Washing Machine",
     0xDA: "Top Load Washing Machine",
