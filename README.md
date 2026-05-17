@@ -79,13 +79,13 @@ For detailed configuration guide, please see [Configuration Guide](GUIDE.md)
 |-----|------|-------------|
 | 1 | 0x17 | Drying Rack |
 | 2 | 0x26 | Bath Heater |
-| 3 | 0xAC | Floor Air Conditioner / Wall Air Conditioner / Central Air Conditioner / Central Fresh Air / Central Miniaturized Fresh Air |
-| 4 | 0xB0 | Microwave Oven |
-| 5 | 0xB6 | Range Hood |
-| 6 | 0x9C | Integrated Stove |
+| 3 | 0x9C | Integrated Stove |
+| 4 | 0xAC | Floor Air Conditioner / Wall Air Conditioner / Central Air Conditioner / Central Fresh Air / Central Miniaturized Fresh Air |
+| 5 | 0xB0 | Microwave Oven |
+| 6 | 0xB6 | Range Hood |
 | 7 | 0xB8 | Smart Robot Vacuum |
-| 8  | 0xBF | Microwave Steam Oven |
-| 9  | 0xC2 | Smart Toilet |
+| 8 | 0xBF | Microwave Steam Oven |
+| 9 | 0xC2 | Smart Toilet |
 | 10 | 0xCA | Multi-Door Fridge |
 | 11 | 0xD9 | Twin Tub Washing Machine |
 | 12 | 0xDA | Top Load Washing Machine |
