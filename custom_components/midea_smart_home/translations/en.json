@@ -282,11 +282,28 @@
             "state": {
               "auto": "Auto",
               "heat_exchange": "Heat Exchange",
+              "high": "High",
               "innercycle": "Internal Circulation",
+              "low": "Low",
+              "mid": "Medium",
               "rough_in": "Boost Intake",
               "rough_out": "Boost Exhaust",
               "smooth_in": "Gentle Intake",
-              "smooth_out": "Gentle Exhaust"
+              "smooth_out": "Gentle Exhaust",
+              "strong": "Strong"
+            }
+          }
+        }
+      },
+      "inner_purifier": {
+        "name": "Inner Purifier",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "high": "High",
+              "low": "Low",
+              "mid": "Medium",
+              "strong": "Strong"
             }
           }
         }
@@ -759,6 +776,13 @@
           "heat_exchange": "Heat Exchange",
           "strong": "Strong",
           "vacation": "Vacation"
+        }
+      },
+      "fresh_air_mode_two": {
+        "name": "Fresh Air Mode",
+        "state": {
+          "inside": "Auto Circulation",
+          "outside": "External Circulation"
         }
       },
       "fresh_air_time": {
@@ -1691,6 +1715,9 @@
       },
       "fresh_filter_time": {
         "name": "Fresh Air Filter Usage Rate"
+      },
+      "fresh_filter_time_use": {
+        "name": "Fresh Filter Time Used"
       },
       "germicidal_countdown": {
         "name": "Sterilization Countdown"

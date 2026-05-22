@@ -282,11 +282,28 @@
             "state": {
               "auto": "自动",
               "heat_exchange": "热交换",
+              "high": "高速",
               "innercycle": "内循环",
+              "low": "低速",
+              "mid": "中速",
               "rough_in": "快速进风",
               "rough_out": "快速排风",
               "smooth_in": "舒缓进风",
-              "smooth_out": "舒缓排风"
+              "smooth_out": "舒缓排风",
+              "strong": "强劲"
+            }
+          }
+        }
+      },
+      "inner_purifier": {
+        "name": "净化",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "high": "高速",
+              "low": "低速",
+              "mid": "中速",
+              "strong": "强劲"
             }
           }
         }
@@ -759,6 +776,13 @@
           "heat_exchange": "热交换",
           "strong": "强劲",
           "vacation": "度假"
+        }
+      },
+      "fresh_air_mode_two": {
+        "name": "新风模式",
+        "state": {
+          "Inside": "内外循环",
+          "Outside": "外循环"
         }
       },
       "fresh_air_time": {
@@ -1691,6 +1715,9 @@
       },
       "fresh_filter_time": {
         "name": "新风滤网使用率"
+      },
+      "fresh_filter_time_use": {
+        "name": "新风滤网已用时长"
       },
       "germicidal_countdown": {
         "name": "杀菌提醒周期"

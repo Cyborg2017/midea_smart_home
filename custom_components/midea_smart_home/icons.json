@@ -60,7 +60,8 @@
             "updown": { "default": "mdi:arrow-up-down" }
         },
         "fan": {
-            "fan": { "default": "mdi:fan" }
+            "fan": { "default": "mdi:fan" },
+            "fresh_air_fan": { "default": "mdi:air-filter" }
         },
         "humidifier": {
             "humidifier": { "default": "mdi:air-humidifier" }
@@ -142,6 +143,7 @@
             "flexzone_function": { "default": "mdi:tune-vertical" },
             "follow_body_sense": { "default": "mdi:account" },
             "fresh_air_mode": { "default": "mdi:fan-chevron-down" },
+            "fresh_air_mode_two": { "default": "mdi:air-filter" },
             "fresh_air_time": { "default": "mdi:air-filter" },
             "gear": { "default": "mdi:tune" },
             "gesture_sensitivity_value": { "default": "mdi:tune" },
@@ -253,6 +255,7 @@
             "freezing_real_temperature": { "default": "mdi:thermometer" },
             "freezing_temperature": { "default": "mdi:thermometer" },
             "fresh_filter_time": { "default": "mdi:air-filter" },
+            "fresh_filter_time_use": { "default": "mdi:air-filter" },
             "germicidal_countdown": { "default": "mdi:calendar-clock" },
             "germicidal_left_time": { "default": "mdi:timer-sand" },
             "hcho": { "default": "mdi:molecule" },
