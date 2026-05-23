@@ -53,6 +53,9 @@ DEVICE_MAPPING = {
                     }
                 }
             },
+            Platform.TEXT: {
+                "external_humidity_sensor": {}
+            },
             Platform.SELECT: {
                 "wind_speed": {
                     "options": {

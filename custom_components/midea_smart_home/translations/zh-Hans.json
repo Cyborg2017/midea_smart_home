@@ -1991,6 +1991,11 @@
         "name": "工作时间"
       }
     },
+    "text": {
+      "external_humidity_sensor": {
+        "name": "外部湿度传感器"
+      }
+    },
     "switch": {
       "ac_dry": {
         "name": "内机防霉（干燥）"
