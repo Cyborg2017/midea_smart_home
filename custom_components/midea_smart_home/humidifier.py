@@ -5,6 +5,7 @@ from homeassistant.components.humidifier import (
     HumidifierDeviceClass,
     HumidifierEntity,
     HumidifierEntityFeature,
+    HumidifierAction,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
@@ -86,6 +87,21 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
     @property
     def target_humidity_step(self) -> int:
         return self._target_humidity_step
+
+    @property
+    def action(self) -> HumidifierAction:
+        if not self.is_on:
+            return HumidifierAction.OFF
+        current = self.current_humidity
+        target = self.target_humidity
+        if current is None or target is None:
+            return HumidifierAction.IDLE
+        dc = self.device_class
+        if dc == HumidifierDeviceClass.DEHUMIDIFIER and current > target:
+            return HumidifierAction.DRYING
+        if dc == HumidifierDeviceClass.HUMIDIFIER and current < target:
+            return HumidifierAction.HUMIDIFYING
+        return HumidifierAction.IDLE
 
     @property
     def is_on(self):
