@@ -4,30 +4,45 @@ Sort translation and icon files alphabetically by key.
 """
 
 import json
+import re
 from pathlib import Path
 
 
 PRESERVE_ORDER_KEYS = {"data", "data_description"}
+
+def natural_sort_key(key: str) -> tuple:
+    """Generate a sort key that sorts numbers numerically, not lexicographically.
+
+    Splits the string into numeric and non-numeric parts, converting numeric parts
+    to integers for proper numerical ordering.
+    """
+    def try_convert(part):
+        try:
+            return (0, int(part), "")
+        except ValueError:
+            return (1, 0, part.lower())
+
+    return tuple(try_convert(part) for part in re.split(r'(\d+)', str(key)))
 
 
 def sort_dict_recursive(d: dict, parent_key: str = "") -> dict:
     """Sort dictionary recursively, preserving order for value mappings."""
     if not isinstance(d, dict):
         return d
-    
+
     if parent_key in PRESERVE_ORDER_KEYS:
         return d
-    
-    sorted_keys = sorted(d.keys(), key=lambda x: str(x).lower())
+
+    sorted_keys = sorted(d.keys(), key=natural_sort_key)
     result = {}
-    
+
     for key in sorted_keys:
         value = d[key]
         if isinstance(value, dict):
             result[key] = sort_dict_recursive(value, key)
         else:
             result[key] = value
-    
+
     return result
 
 
