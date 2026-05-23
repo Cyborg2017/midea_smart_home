@@ -313,6 +313,19 @@
       }
     },
     "humidifier": {
+      "dehumidifier": {
+        "name": "Dehumidifier",
+        "state_attributes": {
+          "mode": {
+            "state": {
+              "continuity": "Continuous",
+              "dry_clothes": "Dry Clothes",
+              "eco": "Eco",
+              "set": "Set"
+            }
+          }
+        }
+      },
       "humidifier": {
         "name": "Humidifier"
       }
@@ -1023,6 +1036,86 @@
           "100": "100°C"
         }
       },
+      "power_off_time": {
+        "name": "Power Off Timer",
+        "state": {
+          "30": "0.5 hours",
+          "60": "1 hour",
+          "90": "1.5 hours",
+          "120": "2 hours",
+          "150": "2.5 hours",
+          "180": "3 hours",
+          "210": "3.5 hours",
+          "240": "4 hours",
+          "270": "4.5 hours",
+          "300": "5 hours",
+          "330": "5.5 hours",
+          "360": "6 hours",
+          "390": "6.5 hours",
+          "420": "7 hours",
+          "450": "7.5 hours",
+          "480": "8 hours",
+          "510": "8.5 hours",
+          "540": "9 hours",
+          "570": "9.5 hours",
+          "600": "10 hours",
+          "660": "11 hours",
+          "720": "12 hours",
+          "780": "13 hours",
+          "840": "14 hours",
+          "900": "15 hours",
+          "960": "16 hours",
+          "1020": "17 hours",
+          "1080": "18 hours",
+          "1140": "19 hours",
+          "1200": "20 hours",
+          "1260": "21 hours",
+          "1320": "22 hours",
+          "1380": "23 hours",
+          "1440": "24 hours",
+          "off": "Off Timer"
+        }
+      },
+      "power_on_time": {
+        "name": "Power On Timer",
+        "state": {
+          "30": "0.5 hours",
+          "60": "1 hour",
+          "90": "1.5 hours",
+          "120": "2 hours",
+          "150": "2.5 hours",
+          "180": "3 hours",
+          "210": "3.5 hours",
+          "240": "4 hours",
+          "270": "4.5 hours",
+          "300": "5 hours",
+          "330": "5.5 hours",
+          "360": "6 hours",
+          "390": "6.5 hours",
+          "420": "7 hours",
+          "450": "7.5 hours",
+          "480": "8 hours",
+          "510": "8.5 hours",
+          "540": "9 hours",
+          "570": "9.5 hours",
+          "600": "10 hours",
+          "660": "11 hours",
+          "720": "12 hours",
+          "780": "13 hours",
+          "840": "14 hours",
+          "900": "15 hours",
+          "960": "16 hours",
+          "1020": "17 hours",
+          "1080": "18 hours",
+          "1140": "19 hours",
+          "1200": "20 hours",
+          "1260": "21 hours",
+          "1320": "22 hours",
+          "1380": "23 hours",
+          "1440": "24 hours",
+          "off": "Off Timer"
+        }
+      },
       "pre_heat": {
         "name": "Preheat",
         "state": {
@@ -1415,9 +1508,12 @@
       "wind_speed": {
         "name": "Wind Speed",
         "state": {
+          "comfort": "Comfort",
           "high": "High",
           "low": "Low",
-          "middle": "Medium"
+          "middle": "Medium",
+          "silent": "Silent",
+          "strong": "Strong"
         }
       },
       "wind_swing_lr_angle": {
@@ -1876,6 +1972,9 @@
       "water_feedback": {
         "name": "Water Level Feedback"
       },
+      "water_full_level": {
+        "name": "Water Full Level"
+      },
       "water_gage_bar": {
         "name": "Water Pressure"
       },
@@ -1904,6 +2003,9 @@
       },
       "airswitch": {
         "name": "Antibacterial Storage Switch"
+      },
+      "anion": {
+        "name": "Anion"
       },
       "antifreeze": {
         "name": "Antifreeze"
@@ -2106,6 +2208,9 @@
       "ptc": {
         "name": "PTC Heater"
       },
+      "purifier": {
+        "name": "Purifier"
+      },
       "radar_induction_enable": {
         "name": "Motion Night Light"
       },
@@ -2114,6 +2219,9 @@
       },
       "sedentary_remind": {
         "name": "Sedentary Remind"
+      },
+      "self_clean": {
+        "name": "Self Clean"
       },
       "set_germicidal_countdown": {
         "name": "Sterilization Reminder"
@@ -2165,6 +2273,9 @@
       },
       "wind_dispel": {
         "name": "Wind Dispel"
+      },
+      "wind_swing_ud": {
+        "name": "Vertical Swing"
       }
     },
     "vacuum": {

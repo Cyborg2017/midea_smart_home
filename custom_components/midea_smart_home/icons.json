@@ -65,6 +65,7 @@
             "inner_purifier_fan": { "default": "mdi:air-filter" }
         },
         "humidifier": {
+            "dehumidifier": { "default": "mdi:tumble-dryer" },
             "humidifier": { "default": "mdi:air-humidifier" }
         },
         "light": {
@@ -164,6 +165,8 @@
             "no_wind_sense": { "default": "mdi:air-filter" },
             "open_door_warning_time": { "default": "mdi:timer-alert" },
             "plateau_boiling_point": { "default": "mdi:thermometer-high" },
+            "power_off_time": { "default": "mdi:timer-off" },
+            "power_on_time": { "default": "mdi:timer" },
             "pre_heat": { "default": "mdi:thermometer-chevron-up" },
             "prevent_straight_wind": { "default": "mdi:fan-off" },
             "program": { "default": "mdi:washing-machine" },
@@ -301,6 +304,7 @@
             "water_consumption_l": { "default": "mdi:water" },
             "water_consumption_once": { "default": "mdi:water" },
             "water_feedback": { "default": "mdi:water" },
+            "water_full_level": { "default": "mdi:water-percent" },
             "water_gage_bar": { "default": "mdi:gauge" },
             "wind_pressure": { "default": "mdi:weather-windy" },
             "work_mode": { "default": "mdi:tune" },
@@ -312,6 +316,7 @@
             "aidry": { "default": "mdi:tshirt-crew" },
             "airdry_on_off": { "default": "mdi:wind-turbine" },
             "airswitch": { "default": "mdi:air-filter" },
+            "anion": { "default": "mdi:air-purifier" },
             "antifreeze": { "default": "mdi:snowflake-thermometer" },
             "auto_deodorization": { "default": "mdi:air-filter" },
             "auto_eco": { "default": "mdi:leaf" },
@@ -375,9 +380,11 @@
             "prevent_wrinkle_switch": { "default": "mdi:tshirt-crew" },
             "protect": { "default": "mdi:shield" },
             "ptc": { "default": "mdi:fire" },
+            "purifier": { "default": "mdi:air-purifier" },
             "radar_induction_enable": { "default": "mdi:radar" },
             "remind_sound": { "default": "mdi:volume-high" },
             "sedentary_remind": { "default": "mdi:account-clock" },
+            "self_clean": { "default": "mdi:washing-machine" },
             "set_germicidal_countdown": { "default": "mdi:calendar-alert" },
             "smart_sterilize": { "default": "mdi:shield-check" },
             "steam": { "default": "mdi:steam" },
@@ -394,7 +401,8 @@
             "water_box": { "default": "mdi:water" },
             "waterions": { "default": "mdi:water-check" },
             "wifi_led_enable": { "default": "mdi:wifi" },
-            "wind_dispel": { "default": "mdi:weather-windy" }
+            "wind_dispel": { "default": "mdi:weather-windy" },
+            "wind_swing_ud": { "default": "mdi:arrow-up-down" }
         },
         "vacuum": {
             "vacuum": { "default": "mdi:robot-vacuum" }

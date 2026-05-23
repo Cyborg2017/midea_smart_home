@@ -80,27 +80,28 @@ For detailed configuration guide, please see [Configuration Guide](GUIDE.md)
 | 1 | 0x17 | Drying Rack |
 | 2 | 0x26 | Bath Heater |
 | 3 | 0x9C | Integrated Stove |
-| 4 | 0xAC | Floor Air Conditioner / Wall Air Conditioner / Central Air Conditioner / Central Fresh Air / Central Miniaturized Fresh Air |
-| 5 | 0xB0 | Microwave Oven |
-| 6 | 0xB6 | Range Hood |
-| 7 | 0xB8 | Smart Robot Vacuum |
-| 8 | 0xBF | Microwave Steam Oven |
-| 9 | 0xC2 | Smart Toilet |
-| 10 | 0xCA | Multi-Door Fridge |
-| 11 | 0xD9 | Twin Tub Washing Machine |
-| 12 | 0xDA | Top Load Washing Machine |
-| 13 | 0xDB | Cylinder Washing Machine |
-| 14 | 0xDC | Clothes Dryer |
-| 15 | 0xE1 | Dishwasher |
-| 16 | 0xE2 | Electric Water Heater |
-| 17 | 0xE3 | Gas Water Heater |
-| 18 | 0xE6 | Gas Wall Hanging Stove |
-| 19 | 0xEA | Rice Cooker |
-| 20 | 0xED | Net Drinking Machine / Water Purifier / Pipeline Machine |
-| 21 | 0xFA | Electric Fan |
-| 22 | 0xFB | Electric Heater |
-| 23 | 0xFC | Air Purifier |
-| 24 | 0xFD | Humidifier |
+| 4 | 0xA1 | Dehumidifier |
+| 5 | 0xAC | Floor Air Conditioner / Wall Air Conditioner / Central Air Conditioner / Central Fresh Air / Central Miniaturized Fresh Air |
+| 6 | 0xB0 | Microwave Oven |
+| 7 | 0xB6 | Range Hood |
+| 8 | 0xB8 | Smart Robot Vacuum |
+| 9 | 0xBF | Microwave Steam Oven |
+| 10 | 0xC2 | Smart Toilet |
+| 11 | 0xCA | Multi-Door Fridge |
+| 12 | 0xD9 | Twin Tub Washing Machine |
+| 13 | 0xDA | Top Load Washing Machine |
+| 14 | 0xDB | Cylinder Washing Machine |
+| 15 | 0xDC | Clothes Dryer |
+| 16 | 0xE1 | Dishwasher |
+| 17 | 0xE2 | Electric Water Heater |
+| 18 | 0xE3 | Gas Water Heater |
+| 19 | 0xE6 | Gas Wall Hanging Stove |
+| 20 | 0xEA | Rice Cooker |
+| 21 | 0xED | Net Drinking Machine / Water Purifier / Pipeline Machine |
+| 22 | 0xFA | Electric Fan |
+| 23 | 0xFB | Electric Heater |
+| 24 | 0xFC | Air Purifier |
+| 25 | 0xFD | Humidifier |
 
 > More device types are being adapted. Contributions are welcome!
 

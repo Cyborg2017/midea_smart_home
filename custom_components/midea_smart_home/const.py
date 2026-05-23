@@ -43,6 +43,7 @@ DEVICE_TYPES = {
     0x17: "Laundry Machine",
     0x26: "Bath Heater",
     0x9C: "Integrated Stove",
+    0xA1: "Dehumidifier",
     0xAC: "Floor Air Conditioner / Wall Air Conditioner / Central Air Conditioner / Central Fresh Air / Central Miniaturized Fresh Air",
     0xB0: "Microwave Oven",
     0xB6: "Range Hood",
