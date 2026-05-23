@@ -66,6 +66,7 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
         self._key_modes = self._config.get("modes", {})
         self._min_humidity = self._config.get("min_humidity", 30)
         self._max_humidity = self._config.get("max_humidity", 80)
+        self._target_humidity_step = self._config.get("target_humidity_step", 1)
 
         if self._key_modes:
             self._attr_supported_features = HumidifierEntityFeature.MODES
@@ -81,6 +82,10 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
     @property
     def max_humidity(self) -> int:
         return self._max_humidity
+
+    @property
+    def target_humidity_step(self) -> int:
+        return self._target_humidity_step
 
     @property
     def is_on(self):
