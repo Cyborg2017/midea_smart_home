@@ -63,6 +63,7 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
         self._key_power = self._config.get("power")
         self._key_target_humidity = self._config.get("target_humidity")
         self._key_current_humidity = self._config.get("current_humidity")
+        self._key_external_humidity = "external_humidity_sensor"
         self._key_mode = self._config.get("mode")
         self._key_modes = self._config.get("modes", {})
         self._min_humidity = self._config.get("min_humidity", 30)
@@ -123,6 +124,15 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
 
     @property
     def current_humidity(self):
+        external_entity_id = self._get_nested_value(self._key_external_humidity)
+        if external_entity_id and isinstance(external_entity_id, str) and external_entity_id.strip():
+            state = self.hass.states.get(external_entity_id.strip())
+            if state and state.state not in ("unknown", "unavailable", None):
+                try:
+                    return int(float(state.state))
+                except (ValueError, TypeError):
+                    pass
+            return None
         if not self._key_current_humidity:
             return None
         value = self._get_nested_value(self._key_current_humidity)
