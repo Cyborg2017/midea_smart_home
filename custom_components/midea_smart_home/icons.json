@@ -311,9 +311,6 @@
             "work_status": { "default": "mdi:play-circle-outline" },
             "work_time": { "default": "mdi:clock-outline" }
         },
-        "text": {
-            "external_humidity_sensor": { "default": "mdi:link-variant" }
-        },
         "switch": {
             "ac_dry": { "default": "mdi:water-off" },
             "aidry": { "default": "mdi:tshirt-crew" },
@@ -407,6 +404,9 @@
             "wifi_led_enable": { "default": "mdi:wifi" },
             "wind_dispel": { "default": "mdi:weather-windy" },
             "wind_swing_ud": { "default": "mdi:arrow-up-down" }
+        },
+        "text": {
+            "external_humidity_sensor": { "default": "mdi:link-variant" }
         },
         "vacuum": {
             "vacuum": { "default": "mdi:robot-vacuum" }

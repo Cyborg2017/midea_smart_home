@@ -1991,11 +1991,6 @@
         "name": "Work Time"
       }
     },
-    "text": {
-      "external_humidity_sensor": {
-        "name": "External Humidity Sensor"
-      }
-    },
     "switch": {
       "ac_dry": {
         "name": "Indoor Unit Anti-mold (Drying)"
@@ -2284,6 +2279,11 @@
       },
       "wind_swing_ud": {
         "name": "Vertical Swing"
+      }
+    },
+    "text": {
+      "external_humidity_sensor": {
+        "name": "External Humidity Sensor"
       }
     },
     "vacuum": {
