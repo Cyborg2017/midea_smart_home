@@ -2057,6 +2057,9 @@
       "change_litre_switch": {
         "name": "Variable Liter"
       },
+      "cold_water": {
+        "name": "Zero Cold Water Single Cycle"
+      },
       "cold_water_dot": {
         "name": "Jog Zero Cold Water"
       },

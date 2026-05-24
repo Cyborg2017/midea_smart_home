@@ -2057,6 +2057,9 @@
       "change_litre_switch": {
         "name": "智能变频"
       },
+      "cold_water": {
+        "name": "零冷水单次循环"
+      },
       "cold_water_dot": {
         "name": "点动零冷水"
       },

@@ -32,6 +32,9 @@ DEVICE_MAPPING = {
                 "cold_water_dot": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
+                "cold_water": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
                 "cold_water_pressure": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 }
@@ -97,6 +100,9 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "cold_water_master": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "cold_water": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "cold_water_dot": {
