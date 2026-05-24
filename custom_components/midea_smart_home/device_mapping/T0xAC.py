@@ -1,4 +1,4 @@
-from homeassistant.const import Platform, PERCENTAGE, UnitOfTemperature, PRECISION_HALVES, PRECISION_WHOLE, UnitOfTime 
+from homeassistant.const import Platform, PERCENTAGE, UnitOfTemperature, PRECISION_HALVES, PRECISION_WHOLE, UnitOfTime
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
 
@@ -405,7 +405,7 @@ DEVICE_MAPPING = {
                 }
             }
         }
-    },    
+    },
     "22011719": {
         "rationale": ["off", "on"],
         "initial_query": [

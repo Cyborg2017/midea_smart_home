@@ -23,7 +23,7 @@ DEVICE_MAPPING = {
                 },
                 "light": {
                     "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1],                    
+                    "rationale": [0, 1],
                     "translation_key": "display_on_off"
                 },
                 "self_clean": {

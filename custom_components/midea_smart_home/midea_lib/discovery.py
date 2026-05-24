@@ -122,7 +122,6 @@ def _parse_v2_v3_response(data: bytes, addr: tuple, security: LocalSecurity) -> 
         CONF_PROTOCOL: protocol,
     }
 
-
 def _parse_0110_response(data: bytes, addr: tuple) -> dict | None:
     if len(data) < 120:
         return None
