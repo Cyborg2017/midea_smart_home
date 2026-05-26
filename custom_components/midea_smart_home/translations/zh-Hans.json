@@ -1517,7 +1517,7 @@
         }
       },
       "wind_swing_lr_angle": {
-        "name": "左右摆风角度",
+        "name": "左右出风方向",
         "state": {
           "auto": "自动",
           "left": "偏左",
@@ -1529,7 +1529,7 @@
         }
       },
       "wind_swing_ud_angle": {
-        "name": "上下摆风角度",
+        "name": "上下出风方向",
         "state": {
           "auto": "自动",
           "bottom": "最下",

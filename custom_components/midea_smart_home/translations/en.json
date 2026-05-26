@@ -1517,7 +1517,7 @@
         }
       },
       "wind_swing_lr_angle": {
-        "name": "Left-Right Swing Angle",
+        "name": "Left-Right Wind Direction",
         "state": {
           "auto": "Auto",
           "left": "Left",
@@ -1529,7 +1529,7 @@
         }
       },
       "wind_swing_ud_angle": {
-        "name": "Up-Down Swing Angle",
+        "name": "Up-Down Wind Direction",
         "state": {
           "auto": "Auto",
           "bottom": "Bottom",
