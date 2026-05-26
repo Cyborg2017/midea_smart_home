@@ -339,6 +339,7 @@
             "daily": { "default": "mdi:calendar" },
             "damp_dry_signal": { "default": "mdi:water-percent" },
             "deep_cold_mode": { "default": "mdi:snowflake-alert" },
+            "digit_display_switch": { "default": "mdi:monitor" },
             "display_on_off": { "default": "mdi:monitor" },
             "door_auto_open": { "default": "mdi:door-open" },
             "drainage": { "default": "mdi:water-pump" },

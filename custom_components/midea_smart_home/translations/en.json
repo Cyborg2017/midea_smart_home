@@ -207,7 +207,11 @@
               "60": "60%",
               "80": "80%",
               "100": "100%",
-              "102": "Auto"
+              "102": "Auto",
+              "auto": "Auto",
+              "middle": "Medium",
+              "power": "High",
+              "sleep": "Sleep"
             }
           },
           "swing_mode": {
@@ -215,6 +219,12 @@
               "both": "Both",
               "horizontal": "Horizontal",
               "off": "Off",
+              "swing_ud_no_site": "No Position Swing",
+              "swing_ud_site_1": "Position 1",
+              "swing_ud_site_2": "Position 2",
+              "swing_ud_site_3": "Position 3",
+              "swing_ud_site_4": "Position 4",
+              "swing_ud_site_5": "Position 5",
               "vertical": "Vertical"
             }
           }
@@ -2093,6 +2103,9 @@
       },
       "dry": {
         "name": "Dry Mode"
+      },
+      "digit_display_switch": {
+        "name": "Digit Display"
       },
       "dryswitch": {
         "name": "Dry & Sterilize"

@@ -88,20 +88,21 @@ For detailed configuration guide, please see [Configuration Guide](GUIDE.md)
 | 9 | 0xBF | Microwave Steam Oven |
 | 10 | 0xC2 | Smart Toilet |
 | 11 | 0xCA | Multi-Door Fridge |
-| 12 | 0xD9 | Twin Tub Washing Machine |
-| 13 | 0xDA | Top Load Washing Machine |
-| 14 | 0xDB | Cylinder Washing Machine |
-| 15 | 0xDC | Clothes Dryer |
-| 16 | 0xE1 | Dishwasher |
-| 17 | 0xE2 | Electric Water Heater |
-| 18 | 0xE3 | Gas Water Heater |
-| 19 | 0xE6 | Gas Wall Hanging Stove |
-| 20 | 0xEA | Rice Cooker |
-| 21 | 0xED | Net Drinking Machine / Water Purifier / Pipeline Machine |
-| 22 | 0xFA | Electric Fan |
-| 23 | 0xFB | Electric Heater |
-| 24 | 0xFC | Air Purifier |
-| 25 | 0xFD | Humidifier |
+| 12 | 0xCC | WiFi Remote Control Device (Central Air Conditioner) |
+| 13 | 0xD9 | Twin Tub Washing Machine |
+| 14 | 0xDA | Top Load Washing Machine |
+| 15 | 0xDB | Cylinder Washing Machine |
+| 16 | 0xDC | Clothes Dryer |
+| 17 | 0xE1 | Dishwasher |
+| 18 | 0xE2 | Electric Water Heater |
+| 19 | 0xE3 | Gas Water Heater |
+| 20 | 0xE6 | Gas Wall Hanging Stove |
+| 21 | 0xEA | Rice Cooker |
+| 22 | 0xED | Net Drinking Machine / Water Purifier / Pipeline Machine |
+| 23 | 0xFA | Electric Fan |
+| 24 | 0xFB | Electric Heater |
+| 25 | 0xFC | Air Purifier |
+| 26 | 0xFD | Humidifier |
 
 > More device types are being adapted. Contributions are welcome!
 

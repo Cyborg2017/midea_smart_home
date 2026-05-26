@@ -51,6 +51,7 @@ DEVICE_TYPES = {
     0xBF: "Microwave Steam Oven",
     0xC2: "Smart Toilet",
     0xCA: "Multi-Door Fridge",
+    0xCC: "WiFi Remote Control Device (Central Air Conditioner)",
     0xD9: "Twin Tub Washing Machine",
     0xDA: "Top Load Washing Machine",
     0xDB: "Cylinder Washing Machine",

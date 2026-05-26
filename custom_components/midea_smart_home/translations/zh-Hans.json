@@ -207,7 +207,11 @@
               "60": "60%",
               "80": "80%",
               "100": "100%",
-              "102": "自动"
+              "102": "自动",
+              "auto": "自动",
+              "middle": "中速",
+              "low": "低速",
+              "high": "高速"
             }
           },
           "swing_mode": {
@@ -215,6 +219,12 @@
               "both": "双向",
               "horizontal": "水平",
               "off": "关闭",
+              "swing_ud_no_site": "自动",
+              "swing_ud_site_1": "角度1",
+              "swing_ud_site_2": "角度2",
+              "swing_ud_site_3": "角度3",
+              "swing_ud_site_4": "角度4",
+              "swing_ud_site_5": "角度5",
               "vertical": "垂直"
             }
           }
@@ -2093,6 +2103,9 @@
       },
       "dry": {
         "name": "干燥模式"
+      },
+      "digit_display_switch": {
+        "name": "灯光显示"
       },
       "dryswitch": {
         "name": "消毒烘干"
