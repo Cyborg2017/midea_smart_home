@@ -331,6 +331,7 @@
               "continuity": "连续",
               "dry_clothes": "干衣",
               "eco": "节能",
+              "auto": "智能",
               "set": "设定"
             }
           }
@@ -2280,6 +2281,9 @@
       },
       "water_box": {
         "name": "水箱"
+      },
+      "water_pump": {
+        "name": "水泵开关"
       },
       "waterions": {
         "name": "空气杀菌"

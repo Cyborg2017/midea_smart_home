@@ -331,6 +331,7 @@
               "continuity": "Continuous",
               "dry_clothes": "Dry Clothes",
               "eco": "Eco",
+              "auto": "Intelligent",
               "set": "Set"
             }
           }
@@ -2280,6 +2281,9 @@
       },
       "water_box": {
         "name": "Water Box"
+      },
+      "water_pump": {
+        "name": "Water Pump"
       },
       "waterions": {
         "name": "Air Sterilization"

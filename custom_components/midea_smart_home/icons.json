@@ -401,6 +401,7 @@
             "uvswitch": { "default": "mdi:sun-wireless" },
             "wash": { "default": "mdi:water-pump" },
             "water_box": { "default": "mdi:water" },
+            "water_pump": { "default": "mdi:water-pump" },
             "waterions": { "default": "mdi:water-check" },
             "wifi_led_enable": { "default": "mdi:wifi" },
             "wind_dispel": { "default": "mdi:weather-windy" },
