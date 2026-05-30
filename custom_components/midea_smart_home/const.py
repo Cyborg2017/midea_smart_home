@@ -40,6 +40,7 @@ class ProtocolVersion:
     V3 = 3
 
 DEVICE_TYPES = {
+    0x13: "Smart Light",
     0x17: "Laundry Machine",
     0x26: "Bath Heater",
     0x9C: "Integrated Stove",

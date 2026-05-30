@@ -346,7 +346,19 @@
         "name": "Light"
       },
       "light": {
-        "name": "Smart Light"
+        "name": "Smart Light",
+        "state_attributes": {
+          "effect": {
+            "state": {
+              "moon": "Night",
+              "read": "Reading",
+              "mild": "Soft",
+              "life": "Daily Life",
+              "film": "Cinema",
+              "manual": "Manual"
+            }
+          }
+        }
       },
       "main_light": {
         "name": "Main Light"
@@ -379,6 +391,9 @@
       },
       "detergent": {
         "name": "Detergent"
+      },
+      "delay_light_off": {
+        "name": "Delay Light Off"
       },
       "heating_temperature": {
         "name": "Heating Temperature"
@@ -931,6 +946,14 @@
           "close_all": "Off",
           "main_light": "Main Light",
           "night_light": "Night Light"
+        }
+      },
+      "link_age_model": {
+        "name": "Light Effect",
+        "state": {
+          "breath": "Breathing",
+          "blink": "Blink",
+          "discolor": "Color Change"
         }
       },
       "milk_temperature": {

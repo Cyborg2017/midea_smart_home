@@ -346,7 +346,19 @@
         "name": "照明"
       },
       "light": {
-        "name": "智能灯"
+        "name": "智能灯",
+        "state_attributes": {
+          "effect": {
+            "state": {
+              "moon": "夜晚",
+              "read": "阅读",
+              "mild": "柔和",
+              "life": "生活",
+              "film": "影院",
+              "manual": "自定义"
+            }
+          }
+        }
       },
       "main_light": {
         "name": "主灯"
@@ -379,6 +391,9 @@
       },
       "detergent": {
         "name": "洗衣液"
+      },
+      "delay_light_off": {
+        "name": "延时关灯"
       },
       "heating_temperature": {
         "name": "取暖温度"
@@ -931,6 +946,14 @@
           "close_all": "关闭",
           "main_light": "主灯",
           "night_light": "夜灯"
+        }
+      },
+      "link_age_model": {
+        "name": "灯光效果",
+        "state": {
+          "breath": "呼吸",
+          "blink": "闪动",
+          "discolor": "渐变"
         }
       },
       "milk_temperature": {

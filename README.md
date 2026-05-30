@@ -77,32 +77,33 @@ For detailed configuration guide, please see [Configuration Guide](GUIDE.md)
 
 | No. | Code | Device Type |
 |-----|------|-------------|
-| 1 | 0x17 | Drying Rack |
-| 2 | 0x26 | Bath Heater |
-| 3 | 0x9C | Integrated Stove |
-| 4 | 0xA1 | Dehumidifier |
-| 5 | 0xAC | Floor Air Conditioner / Wall Air Conditioner / Central Air Conditioner / Central Fresh Air / Central Miniaturized Fresh Air |
-| 6 | 0xB0 | Microwave Oven |
-| 7 | 0xB6 | Range Hood |
-| 8 | 0xB8 | Smart Robot Vacuum |
-| 9 | 0xBF | Microwave Steam Oven |
-| 10 | 0xC2 | Smart Toilet |
-| 11 | 0xCA | Multi-Door Fridge |
-| 12 | 0xCC | WiFi Remote Control Device (Central Air Conditioner) |
-| 13 | 0xD9 | Twin Tub Washing Machine |
-| 14 | 0xDA | Top Load Washing Machine |
-| 15 | 0xDB | Cylinder Washing Machine |
-| 16 | 0xDC | Clothes Dryer |
-| 17 | 0xE1 | Dishwasher |
-| 18 | 0xE2 | Electric Water Heater |
-| 19 | 0xE3 | Gas Water Heater |
-| 20 | 0xE6 | Gas Wall Hanging Stove |
-| 21 | 0xEA | Rice Cooker |
-| 22 | 0xED | Net Drinking Machine / Water Purifier / Pipeline Machine |
-| 23 | 0xFA | Electric Fan |
-| 24 | 0xFB | Electric Heater |
-| 25 | 0xFC | Air Purifier |
-| 26 | 0xFD | Humidifier |
+| 1 | 0x13 | Smart Light |
+| 2 | 0x17 | Drying Rack |
+| 3 | 0x26 | Bath Heater |
+| 4 | 0x9C | Integrated Stove |
+| 5 | 0xA1 | Dehumidifier |
+| 6 | 0xAC | Floor Air Conditioner / Wall Air Conditioner / Central Air Conditioner / Central Fresh Air / Central Miniaturized Fresh Air |
+| 7 | 0xB0 | Microwave Oven |
+| 8 | 0xB6 | Range Hood |
+| 9 | 0xB8 | Smart Robot Vacuum |
+| 10 | 0xBF | Microwave Steam Oven |
+| 11 | 0xC2 | Smart Toilet |
+| 12 | 0xCA | Multi-Door Fridge |
+| 13 | 0xCC | WiFi Remote Control Device (Central Air Conditioner) |
+| 14 | 0xD9 | Twin Tub Washing Machine |
+| 15 | 0xDA | Top Load Washing Machine |
+| 16 | 0xDB | Cylinder Washing Machine |
+| 17 | 0xDC | Clothes Dryer |
+| 18 | 0xE1 | Dishwasher |
+| 19 | 0xE2 | Electric Water Heater |
+| 20 | 0xE3 | Gas Water Heater |
+| 21 | 0xE6 | Gas Wall Hanging Stove |
+| 22 | 0xEA | Rice Cooker |
+| 23 | 0xED | Net Drinking Machine / Water Purifier / Pipeline Machine |
+| 24 | 0xFA | Electric Fan |
+| 25 | 0xFB | Electric Heater |
+| 26 | 0xFC | Air Purifier |
+| 27 | 0xFD | Humidifier |
 
 > More device types are being adapted. Contributions are welcome!
 
