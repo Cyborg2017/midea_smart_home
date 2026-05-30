@@ -54,7 +54,8 @@
             "electric_heater": { "default": "mdi:thermostat" },
             "freezing_zone": { "default": "mdi:fridge-bottom" },
             "heating": { "default": "mdi:radiator" },
-            "storage_zone": { "default": "mdi:fridge-top" }
+            "storage_zone": { "default": "mdi:fridge-top" },
+            "bath_heater": { "default": "mdi:shower-head" }
         },
         "cover": {
             "updown": { "default": "mdi:arrow-up-down" }
@@ -76,7 +77,6 @@
         },
         "number": {
             "air_set_hour": { "default": "mdi:air-filter" },
-            "bath_temperature": { "default": "mdi:thermometer" },
             "boiling_water_temperature": { "default": "mdi:thermometer-high" },
             "custom_height": { "default": "mdi:arrow-up-down" },
             "custom_temperature_1": { "default": "mdi:thermometer" },
@@ -84,7 +84,6 @@
             "dehydration_time": { "default": "mdi:timer" },
             "detergent": { "default": "mdi:water" },
             "delay_light_off": { "default": "mdi:timer-off" },
-            "heating_temperature": { "default": "mdi:thermometer" },
             "honey_temperature": { "default": "mdi:cup-water" },
             "hosting_lower": { "default": "mdi:arrow-down" },
             "hosting_upper": { "default": "mdi:arrow-up" },
@@ -118,9 +117,7 @@
             "b6_delay_gear_linkage_gear": { "default": "mdi:link-variant" },
             "b6_delay_time_value": { "default": "mdi:timer" },
             "b6_smoke_stove_linkage_gear": { "default": "mdi:link-variant" },
-            "bath_direction": { "default": "mdi:air-filter" },
             "bias_gear": { "default": "mdi:tune" },
-            "blowing_direction": { "default": "mdi:air-filter" },
             "boiling_water_temperature": { "default": "mdi:thermometer-high" },
             "bright": { "default": "mdi:brightness-6" },
             "bright_led": { "default": "mdi:led-on" },
@@ -137,7 +134,6 @@
             "detergent": { "default": "mdi:water" },
             "dry_gear": { "default": "mdi:air-humidifier" },
             "dryer": { "default": "mdi:tumble-dryer" },
-            "drying_direction": { "default": "mdi:air-filter" },
             "dsp_sterilization_mode": { "default": "mdi:shield-bacteria" },
             "e3_mode": { "default": "mdi:water-boiler" },
             "fire_power": { "default": "mdi:microwave" },
@@ -151,7 +147,6 @@
             "gear": { "default": "mdi:tune" },
             "gesture_sensitivity_value": { "default": "mdi:tune" },
             "gesture_value": { "default": "mdi:hand-wave" },
-            "heating_direction": { "default": "mdi:air-filter" },
             "humidity_mode": { "default": "mdi:air-humidifier" },
             "hydration_setting": { "default": "mdi:water-plus" },
             "ice_making_function": { "default": "mdi:ice-pop" },
