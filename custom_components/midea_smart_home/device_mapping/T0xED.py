@@ -199,16 +199,6 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "life_ro"
                 },
-                "maxlife_1": {
-                    "unit_of_measurement": "mths",
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "max_life_ro"
-                },
-                "maxlife_2": {
-                    "unit_of_measurement": "mths",
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "max_life_pcb"
-                },
                 "hot_pot_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
@@ -364,16 +354,6 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "life_ro"
                 },
-                "maxlife_1": {
-                    "unit_of_measurement": "mths",
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "max_life_ro"
-                },
-                "maxlife_2": {
-                    "unit_of_measurement": "mths",
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "max_life_pcb"
-                },
                 "hot_pot_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
@@ -472,7 +452,7 @@ DEVICE_MAPPING = {
             }
         }
     },
-    "632009G9": {
+    ("632009FT", "632009G9"): {
         "rationale": ["off", "on"],
         "calculate": {
             "get": [
@@ -549,16 +529,6 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": PERCENTAGE,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "life_pcb"
-                },
-                "maxlife_1": {
-                    "unit_of_measurement": "mths",
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "max_life_ro"
-                },
-                "maxlife_2": {
-                    "unit_of_measurement": "mths",
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "max_life_pcb"
                 },
                 "water_consumption_l": {
                     "device_class": SensorDeviceClass.WATER,
