@@ -230,6 +230,33 @@
           }
         }
       },
+      "bath_heater": {
+        "name": "Thermostat (Bath Heater)",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "bath": "Bath",
+              "blowing": "Blowing",
+              "close": "Close",
+              "drying": "Drying",
+              "heating": "Heating",
+              "ventilation": "Ventilation"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "60": "60°",
+              "70": "70°",
+              "80": "80°",
+              "90": "90°",
+              "100": "100°",
+              "110": "110°",
+              "120": "120°",
+              "swing": "Swing"
+            }
+          }
+        }
+      },
       "electric_heater": {
         "name": "Thermostat (Heater)",
         "state_attributes": {
@@ -260,33 +287,6 @@
       },
       "storage_zone": {
         "name": "Thermostat (Refrigerator)"
-      },
-      "bath_heater": {
-        "name": "Thermostat (Bath Heater)",
-        "state_attributes": {
-          "swing_mode": {
-            "state": {
-              "60": "60°",
-              "70": "70°",
-              "80": "80°",
-              "90": "90°",
-              "100": "100°",
-              "110": "110°",
-              "120": "120°",
-              "swing": "Swing"
-            }
-          },
-          "preset_mode": {
-            "state": {
-              "close": "Close",
-              "heating": "Heating",
-              "bath": "Bath",
-              "ventilation": "Ventilation",
-              "drying": "Drying",
-              "blowing": "Blowing"
-            }
-          }
-        }
       }
     },
     "cover": {
@@ -355,10 +355,10 @@
         "state_attributes": {
           "mode": {
             "state": {
+              "auto": "Intelligent",
               "continuity": "Continuous",
               "dry_clothes": "Dry Clothes",
               "eco": "Eco",
-              "auto": "Intelligent",
               "set": "Set"
             }
           }
@@ -377,12 +377,12 @@
         "state_attributes": {
           "effect": {
             "state": {
-              "moon": "Night",
-              "read": "Reading",
-              "mild": "Soft",
-              "life": "Daily Life",
               "film": "Cinema",
-              "manual": "Manual"
+              "life": "Daily Life",
+              "manual": "Manual",
+              "mild": "Soft",
+              "moon": "Night",
+              "read": "Reading"
             }
           }
         }
@@ -413,11 +413,11 @@
       "dehydration_time": {
         "name": "Dehydration Time"
       },
-      "detergent": {
-        "name": "Detergent"
-      },
       "delay_light_off": {
         "name": "Delay Light Off"
+      },
+      "detergent": {
+        "name": "Detergent"
       },
       "honey_temperature": {
         "name": "Honey Water Temperature"
@@ -920,8 +920,8 @@
       "link_age_model": {
         "name": "Light Effect",
         "state": {
-          "breath": "Breathing",
           "blink": "Blink",
+          "breath": "Breathing",
           "discolor": "Color Change"
         }
       },
@@ -2080,6 +2080,9 @@
       "deep_cold_mode": {
         "name": "-30°C Deep Freeze (Deep Freeze Lock Fresh)"
       },
+      "digit_display_switch": {
+        "name": "Digit Display"
+      },
       "display_on_off": {
         "name": "Screen Display"
       },
@@ -2091,9 +2094,6 @@
       },
       "dry": {
         "name": "Dry Mode"
-      },
-      "digit_display_switch": {
-        "name": "Digit Display"
       },
       "dryswitch": {
         "name": "Dry & Sterilize"

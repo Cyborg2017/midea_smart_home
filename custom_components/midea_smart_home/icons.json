@@ -51,11 +51,11 @@
         },
         "climate": {
             "air_conditioner": { "default": "mdi:air-conditioner" },
+            "bath_heater": { "default": "mdi:shower-head" },
             "electric_heater": { "default": "mdi:thermostat" },
             "freezing_zone": { "default": "mdi:fridge-bottom" },
             "heating": { "default": "mdi:radiator" },
-            "storage_zone": { "default": "mdi:fridge-top" },
-            "bath_heater": { "default": "mdi:shower-head" }
+            "storage_zone": { "default": "mdi:fridge-top" }
         },
         "cover": {
             "updown": { "default": "mdi:arrow-up-down" }
@@ -82,8 +82,8 @@
             "custom_temperature_1": { "default": "mdi:thermometer" },
             "custom_timing": { "default": "mdi:timer" },
             "dehydration_time": { "default": "mdi:timer" },
-            "detergent": { "default": "mdi:water" },
             "delay_light_off": { "default": "mdi:timer-off" },
+            "detergent": { "default": "mdi:water" },
             "honey_temperature": { "default": "mdi:cup-water" },
             "hosting_lower": { "default": "mdi:arrow-down" },
             "hosting_upper": { "default": "mdi:arrow-up" },

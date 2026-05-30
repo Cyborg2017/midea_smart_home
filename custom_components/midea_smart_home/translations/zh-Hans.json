@@ -209,9 +209,9 @@
               "100": "100%",
               "102": "自动",
               "auto": "自动",
-              "middle": "中速",
+              "high": "高速",
               "low": "低速",
-              "high": "高速"
+              "middle": "中速"
             }
           },
           "swing_mode": {
@@ -226,6 +226,33 @@
               "swing_ud_site_4": "角度4",
               "swing_ud_site_5": "角度5",
               "vertical": "垂直"
+            }
+          }
+        }
+      },
+      "bath_heater": {
+        "name": "温控器(浴霸)",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "bath": "沐浴",
+              "blowing": "吹风",
+              "close": "关闭",
+              "drying": "干燥",
+              "heating": "取暖",
+              "ventilation": "换气"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "60": "60°",
+              "70": "70°",
+              "80": "80°",
+              "90": "90°",
+              "100": "100°",
+              "110": "110°",
+              "120": "120°",
+              "swing": "摆动"
             }
           }
         }
@@ -260,33 +287,6 @@
       },
       "storage_zone": {
         "name": "温控器(冷藏)"
-      },
-      "bath_heater": {
-        "name": "温控器(浴霸)",
-        "state_attributes": {
-          "swing_mode": {
-            "state": {
-              "60": "60°",
-              "70": "70°",
-              "80": "80°",
-              "90": "90°",
-              "100": "100°",
-              "110": "110°",
-              "120": "120°",
-              "swing": "摆动"
-            }
-          },
-          "preset_mode": {
-            "state": {
-              "close": "关闭",
-              "heating": "取暖",
-              "bath": "沐浴",
-              "ventilation": "换气",
-              "drying": "干燥",
-              "blowing": "吹风"
-            }
-          }
-        }
       }
     },
     "cover": {
@@ -355,10 +355,10 @@
         "state_attributes": {
           "mode": {
             "state": {
+              "auto": "智能",
               "continuity": "连续",
               "dry_clothes": "干衣",
               "eco": "节能",
-              "auto": "智能",
               "set": "设定"
             }
           }
@@ -377,12 +377,12 @@
         "state_attributes": {
           "effect": {
             "state": {
-              "moon": "夜晚",
-              "read": "阅读",
-              "mild": "柔和",
-              "life": "生活",
               "film": "影院",
-              "manual": "自定义"
+              "life": "生活",
+              "manual": "自定义",
+              "mild": "柔和",
+              "moon": "夜晚",
+              "read": "阅读"
             }
           }
         }
@@ -413,11 +413,11 @@
       "dehydration_time": {
         "name": "脱水时间"
       },
-      "detergent": {
-        "name": "洗衣液"
-      },
       "delay_light_off": {
         "name": "延时关灯"
+      },
+      "detergent": {
+        "name": "洗衣液"
       },
       "honey_temperature": {
         "name": "蜂蜜水设定温度"
@@ -920,8 +920,8 @@
       "link_age_model": {
         "name": "灯光效果",
         "state": {
-          "breath": "呼吸",
           "blink": "闪动",
+          "breath": "呼吸",
           "discolor": "渐变"
         }
       },
@@ -2080,6 +2080,9 @@
       "deep_cold_mode": {
         "name": "-30℃深冻(深冻锁鲜)"
       },
+      "digit_display_switch": {
+        "name": "灯光显示"
+      },
       "display_on_off": {
         "name": "屏幕显示"
       },
@@ -2091,9 +2094,6 @@
       },
       "dry": {
         "name": "干燥模式"
-      },
-      "digit_display_switch": {
-        "name": "灯光显示"
       },
       "dryswitch": {
         "name": "消毒烘干"
