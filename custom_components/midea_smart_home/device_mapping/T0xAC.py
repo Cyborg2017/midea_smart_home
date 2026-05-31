@@ -13,6 +13,9 @@ DEVICE_MAPPING = {
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"}
         ],
+        "polling_query": [
+            {"indoor_temperature"}
+        ],
         "centralized": ["buzzer"],
         "calculate":{
             "get": [
@@ -145,6 +148,9 @@ DEVICE_MAPPING = {
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"}
         ],
+        "polling_query": [
+            {"indoor_temperature"}
+        ],
         "centralized": ["buzzer"],
         "calculate":{
             "get": [
@@ -268,6 +274,9 @@ DEVICE_MAPPING = {
             {"fresh_air_mode_two"},
             {"inner_purifier"},
             {"inner_purifier_fan_speed"}
+        ],
+        "polling_query": [
+            {"indoor_temperature"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -413,6 +422,9 @@ DEVICE_MAPPING = {
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"}
         ],
+        "polling_query": [
+            {"indoor_temperature"}
+        ],
         "centralized": ["buzzer"],
         "calculate":{
             "get": [
@@ -523,6 +535,9 @@ DEVICE_MAPPING = {
             {"prevent_super_cool"},
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"}
+        ],
+        "polling_query": [
+            {"indoor_temperature"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -660,6 +675,9 @@ DEVICE_MAPPING = {
             {"fresh_air"},
             {"fresh_filter_time_use"},
             {"fresh_air_fan_speed"}
+        ],
+        "polling_query": [
+            {"indoor_temperature"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -805,6 +823,9 @@ DEVICE_MAPPING = {
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"}
         ],
+        "polling_query": [
+            {"indoor_temperature"}
+        ],
         "centralized": ["buzzer"],
         "entities": {
             Platform.CLIMATE: {
@@ -942,6 +963,9 @@ DEVICE_MAPPING = {
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"}
         ],
+        "polling_query": [
+            {"indoor_temperature"}
+        ],
         "centralized": ["buzzer"],
         "calculate":{
             "get": [
@@ -1066,6 +1090,9 @@ DEVICE_MAPPING = {
             {"prevent_super_cool"},
             {"run_status"}
         ],
+        "polling_query": [
+            {"indoor_temperature"}
+        ],
         "calculate": {
             "get": [
                 {
@@ -1162,6 +1189,9 @@ DEVICE_MAPPING = {
             {"prevent_super_cool"},
             {"run_status"}
         ],
+        "polling_query": [
+            {"indoor_temperature"}
+        ],
         "entities": {
             Platform.CLIMATE: {
                 "air_conditioner": {
@@ -1249,6 +1279,9 @@ DEVICE_MAPPING = {
             {"no_wind_sense"},
             {"prevent_super_cool"},
             {"run_status"}
+        ],
+        "polling_query": [
+            {"indoor_temperature"}
         ],
         "entities": {
             Platform.CLIMATE: {
@@ -1359,6 +1392,9 @@ DEVICE_MAPPING = {
             {},
             {"indoor_temperature"}
         ],
+        "polling_query": [
+            {"indoor_temperature"}
+        ],
         "entities": {
             Platform.CLIMATE: {
                 "air_conditioner": {
@@ -1415,6 +1451,9 @@ DEVICE_MAPPING = {
             {},
             {"indoor_temperature"},
             {"run_status"}
+        ],
+        "polling_query": [
+            {"indoor_temperature"}
         ],
         "calculate": {
             "get": [
@@ -1509,6 +1548,9 @@ DEVICE_MAPPING = {
             {"prevent_super_cool"},
             {"run_status"}
         ],
+        "polling_query": [
+            {"indoor_temperature"}
+        ],
         "entities": {
             Platform.CLIMATE: {
                 "air_conditioner": {
@@ -1598,6 +1640,9 @@ DEVICE_MAPPING = {
             {"run_status"},
             {"wind_strength"}
         ],
+        "polling_query": [
+            {"indoor_temperature"}
+        ],
         "entities": {
             Platform.FAN: {
                 "fan": {
@@ -1675,6 +1720,9 @@ DEVICE_MAPPING = {
             {"fresh_filter_time"},
             {"indoor_temperature"},
             {"run_status"}
+        ],
+        "polling_query": [
+            {"indoor_temperature"}
         ],
         "entities": {
             Platform.SWITCH: {

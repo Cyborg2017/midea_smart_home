@@ -8,9 +8,11 @@ DEVICE_MAPPING = {
         "rationale": ["off", "on"],
         "initial_query": [
             {},
-            {"light"},
-            {"self_clean"},
-            {"sound"}
+            {"light, self_clean, sound"}
+        ],
+        "polling_query": [
+            {},
+            {"light, self_clean, sound"}
         ],
         "entities": {
             Platform.SWITCH: {
@@ -178,9 +180,11 @@ DEVICE_MAPPING = {
         "rationale": ["off", "on"],
         "initial_query": [
             {},
-            {"light"},
-            {"self_clean"},
-            {"sound"}
+            {"light, self_clean, sound"}
+        ],
+        "polling_query": [
+            {},
+            {"light, self_clean, sound"}
         ],
         "entities": {
             Platform.SWITCH: {
@@ -348,9 +352,10 @@ DEVICE_MAPPING = {
         "rationale": ["off", "on"],
         "initial_query": [
             {},
-            {"light"},
-            {"self_clean"},
-            {"sound"}
+            {"light, self_clean, sound"}
+        ],
+        "polling_query": [
+            {}
         ],
         "entities": {
             Platform.SWITCH: {
@@ -512,8 +517,11 @@ DEVICE_MAPPING = {
         "rationale": ["off", "on"],
         "initial_query": [
             {},
-            {"light"},
-            {"sound"}
+            {"light, sound"}
+        ],
+        "polling_query": [
+            {},
+            {"light, sound"}
         ],
         "entities": {
             Platform.SWITCH: {
