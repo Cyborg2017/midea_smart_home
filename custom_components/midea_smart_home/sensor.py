@@ -2,6 +2,7 @@ import logging
 from typing import Any, Optional
 
 from homeassistant.components.sensor import (
+    EntityCategory,
     SensorDeviceClass,
     SensorEntity,
     SensorStateClass,
@@ -156,6 +157,7 @@ class MideaLanIPEntity(MideaBaseEntity, SensorEntity):
         self._attr_device_class = None
         self._attr_native_unit_of_measurement = None
         self._attr_state_class = None
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     @property
     def native_value(self) -> Optional[str]:
