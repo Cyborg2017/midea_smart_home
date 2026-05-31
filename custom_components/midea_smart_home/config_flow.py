@@ -623,7 +623,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     ) -> FlowResult:
         return self.async_show_menu(
             step_id="init",
-            menu_options=["add_device", "update_account", "sync_cloud", "clear_cache"],
+            menu_options=["add_device", "update_account", "sync_cloud", "clear_cache", "configure_polling"],
         )
 
     async def async_step_add_device(
@@ -1202,3 +1202,195 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 device.update(cloud_device_info[device_id])
 
         return devices, home_name
+
+    async def async_step_configure_polling(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Configure polling interval for devices with polling_attributes."""
+        from homeassistant.helpers import translation as ha_translation
+
+        devices = self._devices_data
+
+        # Get translations for current language
+        current_language = self.hass.config.language or "en"
+        translations = await ha_translation.async_get_translations(
+            self.hass, current_language, "options", {DOMAIN}
+        )
+
+        def _translate(key: str, default: str) -> str:
+            """Get translated string from translations dict."""
+            full_key = f"options.step.configure_polling.data.{key}"
+            for k in [full_key, f"component.{DOMAIN}.{full_key}"]:
+                if k in translations:
+                    return translations[k]
+            return default
+
+        # Find devices that have polling_attributes configured in their device_mapping
+        from .device_mapping import get_device_mapping
+        configurable_devices = []
+
+        # Define polling options: disabled and intervals in seconds
+        polling_options = {
+            "disabled": _translate("option_disabled", "off"),
+            "1": _translate("option_1s", "1s"),
+            "2": _translate("option_2s", "2s"),
+            "3": _translate("option_3s", "3s"),
+            "4": _translate("option_4s", "4s"),
+            "5": _translate("option_5s", "5s"),
+            "10": _translate("option_10s", "10s"),
+            "15": _translate("option_15s", "15s"),
+            "20": _translate("option_20s", "20s"),
+            "25": _translate("option_25s", "25s"),
+            "30": _translate("option_30s", "30s"),
+        }
+
+        for device in devices:
+            device_id = device.get(CONF_DEVICE_ID)
+            device_type_str = device.get(CONF_DEVICE_TYPE, "0")
+            model = device.get(CONF_PRODUCT_MODEL, "")
+            sn8 = device.get(CONF_SN8, "")
+            category = device.get(CONF_CATEGORY, "")
+            
+            try:
+                device_type_int = int(device_type_str, 16) if isinstance(device_type_str, str) else 0
+            except ValueError:
+                device_type_int = 0
+            
+            device_mapping = get_device_mapping(device_type_int, model, sn8, category)
+            polling_query = device_mapping.get("polling_query")
+            # Check if device supports polling (based on existence of polling_query)
+            enable_polling = polling_query is not None and isinstance(polling_query, list) and len(polling_query) > 0
+
+            if enable_polling:
+                device_name = device.get(CONF_DEVICE_NAME, f"Device {device_id}")
+                current_interval = device.get("polling_interval", 1)
+                polling_enabled = device.get("polling_enabled", True)
+
+                # Determine current selection based on enabled status and interval
+                if not polling_enabled:
+                    current_selection = "disabled"
+                else:
+                    current_selection = str(current_interval)
+
+                configurable_devices.append({
+                    "device_id": device_id,
+                    "device_name": device_name,
+                    "current_selection": current_selection,
+                })
+        
+        if not configurable_devices:
+            return self.async_show_form(
+                step_id="configure_polling",
+                errors={"base": "no_configurable_devices"},
+                description_placeholders={"note": "No devices with polling attributes found"}
+            )
+
+        # Build form schema with Select dropdown for each device
+        schema_dict = {}
+        device_name_count = {}
+        device_info_lines = []
+
+        polling_status_label = _translate("polling_status_label", "Polling: {status}")
+
+        for i, device_info in enumerate(configurable_devices, 1):
+            device_id = device_info["device_id"]
+            device_name = device_info["device_name"]
+            current_selection = device_info["current_selection"]
+
+            if device_name in device_name_count:
+                device_name_count[device_name] += 1
+                base_key = f"{device_name}_{device_name_count[device_name]}"
+            else:
+                device_name_count[device_name] = 1
+                base_key = device_name
+
+            # Create a single Select dropdown instead of boolean + slider
+            schema_dict[vol.Optional(base_key, default=current_selection)] = vol.In(polling_options)
+
+            if not hasattr(self, '_polling_device_mapping'):
+                self._polling_device_mapping = {}
+            self._polling_device_mapping[base_key] = {
+                'device_id': device_id,
+                'device_name': device_name,
+            }
+
+            # Get display text for current selection
+            selection_text = polling_options.get(current_selection, current_selection)
+            device_info_lines.append(f"{i}. {device_name} ({device_id}) - {selection_text}")
+
+        device_info_text = "\n".join(device_info_lines)
+        placeholders = {
+            "device_count": str(len(configurable_devices)),
+            "device_info": device_info_text
+        }
+        
+        if user_input is not None:
+            # Update polling settings for selected devices
+            import copy
+            new_data = copy.deepcopy(dict(self._config_entry.data))
+            updated = False
+            
+            devices_list = new_data.get("devices", [])
+            
+            # Use the mapping to find which device corresponds to each field
+            for base_key, device_info in getattr(self, '_polling_device_mapping', {}).items():
+                device_id = device_info['device_id']
+
+                # Find the device in devices list
+                for device in devices_list:
+                    if device.get(CONF_DEVICE_ID) == device_id:
+                        # Get selected value from dropdown
+                        if base_key in user_input:
+                            selected_value = user_input[base_key]
+
+                            if selected_value == "disabled":
+                                # Polling disabled
+                                device["polling_enabled"] = False
+                                _LOGGER.debug(
+                                    "Disabled polling for device %s (%s)",
+                                    device_info['device_name'],
+                                    device_id
+                                )
+                            else:
+                                # Polling enabled with specific interval
+                                try:
+                                    interval = int(selected_value)
+                                    device["polling_enabled"] = True
+                                    device["polling_interval"] = interval
+                                    _LOGGER.debug(
+                                        "Set polling interval for device %s (%s) to %d seconds",
+                                        device_info['device_name'],
+                                        device_id,
+                                        interval
+                                    )
+                                except (ValueError, TypeError):
+                                    _LOGGER.warning(
+                                        "Invalid polling value '%s' for device %s (%s)",
+                                        selected_value,
+                                        device_info['device_name'],
+                                        device_id
+                                    )
+
+                            updated = True
+                        break
+            
+            # Always update the entry to ensure changes are saved
+            self.hass.config_entries.async_update_entry(
+                self._config_entry,
+                data=new_data,
+            )
+            
+            _LOGGER.info("Polling configuration saved, updated=%s", updated)
+            
+            if updated:
+                # Reload to apply changes
+                await self.hass.config_entries.async_reload(self._config_entry.entry_id)
+            
+            return self.async_create_entry(title="", data={})
+        
+        return self.async_show_form(
+            step_id="configure_polling",
+            data_schema=vol.Schema(schema_dict),
+            description_placeholders=placeholders,
+            last_step=False,
+        )
