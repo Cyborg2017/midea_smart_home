@@ -400,11 +400,22 @@ class MideaDevice:
         centralized: Optional[list[str]] = None,
         default_values: Optional[dict] = None,
         category: str = "",
+        enable_polling: bool = False,
+        polling_interval: int = 1,
+        initial_query: Optional[list] = None,
+        polling_query: Optional[list] = None,
     ):
         self._device_id = device_id
         self._device_type = device_type
         self._default_values = default_values or {}
         self._centralized = list(centralized) if isinstance(centralized, (list, tuple, set)) else []
+        self._enable_polling = enable_polling
+        # Ensure polling_interval is between 1 and 30 seconds
+        self._polling_interval = max(1, min(30, int(polling_interval)))
+        # Store initial_query for initial status queries
+        self._initial_query = initial_query or []
+        # Store polling_query for periodic polling
+        self._polling_query = polling_query or []
 
         # Initialize Logic Handler
         self._logic_handler = DeviceLogicHandler(device_type, device_name)
@@ -446,6 +457,8 @@ class MideaDevice:
         self._callbacks = []
         self._poll_thread: Optional[threading.Thread] = None
         self._poll_run = False
+        self._attribute_poll_thread: Optional[threading.Thread] = None
+        self._attribute_poll_run = False
 
         # Register controller update callback
         self._controller.register_update(self._on_device_update)
@@ -453,6 +466,8 @@ class MideaDevice:
         if device_type == 0xD9:
             self._controller.set_skip_initial_refresh(True)
             self._start_poll_thread()
+        elif self._enable_polling:
+            self._start_attribute_poll_thread()
 
     @property
     def device_id(self):
@@ -487,6 +502,7 @@ class MideaDevice:
             self._unavailable_timer.cancel()
             self._unavailable_timer = None
         self._stop_poll_thread()
+        self._stop_attribute_poll_thread()
         self._controller.close()
 
     def _start_poll_thread(self):
@@ -515,6 +531,96 @@ class MideaDevice:
                     time.sleep(interval)
                 except Exception as e:
                     _LOGGER.debug("[%s] Poll query error: %s", self._device_id, e)
+            else:
+                time.sleep(1.0)
+
+    def _start_attribute_poll_thread(self):
+        """Start polling thread for specific attributes."""
+        if self._attribute_poll_thread is not None:
+            return
+        self._attribute_poll_run = True
+        _LOGGER.info(
+            "[%s] Starting attribute poll thread: polling enabled, interval=%ds",
+            self._device_id,
+            self._polling_interval
+        )
+        self._attribute_poll_thread = threading.Thread(target=self._attribute_poll_loop, daemon=True)
+        self._attribute_poll_thread.start()
+
+    def _stop_attribute_poll_thread(self):
+        """Stop attribute polling thread."""
+        self._attribute_poll_run = False
+        if self._attribute_poll_thread is not None:
+            self._attribute_poll_thread.join(timeout=2.0)
+            self._attribute_poll_thread = None
+
+    def _attribute_poll_loop(self):
+        """Poll loop for enabled polling devices."""
+        import time as time_module
+        poll_count = 0
+        query_index = 0  # Track which query to execute next
+        
+        while self._attribute_poll_run:
+            if self._controller.connected:
+                try:
+                    # Log every 10 polls
+                    if poll_count % 10 == 0:
+                        _LOGGER.info(
+                            "[%s] Polling device status (interval=%ds, poll_count=%d)",
+                            self._device_id,
+                            self._polling_interval,
+                            poll_count
+                        )
+                    
+                    # Execute queries from polling_query in sequence
+                    if self._polling_query:
+                        # Get current query configuration
+                        query_config = self._polling_query[query_index % len(self._polling_query)]
+
+                        # Build query parameters based on config
+                        query_params = {}
+                        if isinstance(query_config, dict):
+                            if len(query_config) == 0:
+                                # Empty dict means full status query
+                                query_params = {}
+                            elif len(query_config) == 1:
+                                # Single key means query_type (may contain comma-separated values)
+                                key = list(query_config.keys())[0]
+                                # Remove spaces around commas for compatibility: "light, sound" → "light,sound"
+                                key = ",".join([k.strip() for k in key.split(",")]) if "," in key else key
+                                query_params = {"query_type": key}
+                        elif isinstance(query_config, set) and len(query_config) == 1:
+                            # Set with single element means query_type (may contain comma-separated values)
+                            key = list(query_config)[0]
+                            # Remove spaces around commas for compatibility
+                            key = ",".join([k.strip() for k in key.split(",")]) if "," in key else key
+                            query_params = {"query_type": key}
+                        
+                        # Execute the query
+                        self.refresh_status(query_params)
+                        
+                        # Move to next query in sequence
+                        query_index += 1
+                        
+                        # Wait 0.5 seconds between queries within the same cycle
+                        if query_index % len(self._polling_query) != 0:
+                            time.sleep(0.5)
+                        else:
+                            # After completing a full cycle, wait for the remaining interval
+                            cycle_time = len(self._polling_query) * 0.5
+                            remaining_time = max(0, self._polling_interval - cycle_time)
+                            if remaining_time > 0:
+                                time.sleep(remaining_time)
+                    else:
+                        # Fallback to full status query if no polling_query defined
+                        self.refresh_status()
+                        time.sleep(self._polling_interval)
+                    
+                    poll_count += 1
+                    
+                except Exception as e:
+                    _LOGGER.debug("[%s] Attribute poll error: %s", self._device_id, e)
+                    time.sleep(5.0)
             else:
                 time.sleep(1.0)
 

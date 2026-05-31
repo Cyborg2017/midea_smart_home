@@ -102,6 +102,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         centralized = list(device_mapping.get("centralized", []))
         default_values = dict(device_mapping.get("default_values", {}))
         initial_query = device_mapping.get("initial_query")
+        polling_query = device_mapping.get("polling_query")
+        # Check if polling is supported (based on existence of polling_query)
+        enable_polling = polling_query is not None and isinstance(polling_query, list) and len(polling_query) > 0
+        # Get polling settings from device data (user configurable via Options)
+        polling_enabled = device_data.get("polling_enabled", True)  # Default to enabled
+        polling_interval = device_data.get("polling_interval", 1)
+        # Only enable polling if both device_mapping supports it AND user has enabled it
+        effective_polling = enable_polling and polling_enabled
+        _LOGGER.debug(
+            "Device %s: polling_supported=%s, polling_interval=%d, polling_query=%s",
+            device_id,
+            enable_polling,
+            polling_interval,
+            polling_query
+        )
 
         entities_cfg = (device_mapping.get("entities") or {})
         for platform_cfg in entities_cfg.values():
@@ -134,6 +149,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 centralized=centralized,
                 default_values=default_values,
                 category=category,
+                enable_polling=effective_polling,
+                polling_interval=polling_interval,
+                initial_query=initial_query,
+                polling_query=polling_query,
             )
             device.open()
             import time
