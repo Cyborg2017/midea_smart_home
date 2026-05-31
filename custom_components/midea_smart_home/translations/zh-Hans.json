@@ -2327,6 +2327,7 @@
       "all_devices_added": "所有发现的设备都已添加过了",
       "no_account_password": "请先配置账号密码",
       "no_cache_found": "未发现本地缓存文件，无需清理",
+      "no_configurable_devices": "没有找到需要轮询的设备",
       "no_devices_found": "局域网中未发现新设备"
     },
     "step": {
@@ -2343,6 +2344,17 @@
       "clear_cache": {
         "description": "清理本地缓存文件：\n\n    📁 当前缓存将备份到：.storage/midea_smart_home-backup\n\n    ⚠️ 点击提交执行清理",
         "title": "清理本地缓存"
+      },
+      "configure_polling": {
+        "data": {
+          "polling_status_enabled": "已开启",
+          "polling_status_disabled": "已关闭",
+          "polling_interval_label": "间隔 {interval}秒",
+          "polling_device_switch": "{name} - 轮询开关",
+          "polling_device_interval": "{name} - 轮询间隔时间"
+        },
+        "description": "⚠️ 以下设备个别属性状态推送有延迟，请配置辅助轮询以获取实时状态更新数据：\n\n{device_info}\n\n💡 提示：选择「off」将完全禁用该设备的轮询（不影响设备主动上报）",
+        "title": "配置轮询间隔时间"
       },
       "get_token_option": {
         "data": {
@@ -2362,6 +2374,7 @@
         "menu_options": {
           "add_device": "➕ 继续添加其他设备",
           "clear_cache": "🗑️ 清理本地缓存文件",
+          "configure_polling": "⏱️ 配置轮询间隔时间",
           "sync_cloud": "☁️ 同步云端设备名称",
           "update_account": "🔑 更新美的账号密码"
         },

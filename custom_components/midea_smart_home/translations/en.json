@@ -2327,6 +2327,7 @@
       "all_devices_added": "All discovered devices have already been added",
       "no_account_password": "Please configure account and password first",
       "no_cache_found": "No local cache files found, no need to clean",
+      "no_configurable_devices": "No devices with polling attributes found",
       "no_devices_found": "No new devices found on local network"
     },
     "step": {
@@ -2343,6 +2344,17 @@
       "clear_cache": {
         "description": "Clear local cache files:\n\n    📁 Current cache will be backed up to: .storage/midea_smart_home-backup\n\n    ⚠️ Click Submit to proceed",
         "title": "Clear Local Cache"
+      },
+      "configure_polling": {
+        "data": {
+          "polling_status_enabled": "enabled",
+          "polling_status_disabled": "disabled",
+          "polling_interval_label": "Interval {interval}s",
+          "polling_device_switch": "{name} - Polling",
+          "polling_device_interval": "{name} - Polling Interval"
+        },
+        "description": "⚠️ The following devices have delayed status updates for some attributes. Configure auxiliary polling for real-time status updates:\n\n{device_info}\n\n💡 Tip: Select \"off\" to completely disable polling (won't affect device-initiated status updates)",
+        "title": "Configure Polling Interval"
       },
       "get_token_option": {
         "data": {
@@ -2362,6 +2374,7 @@
         "menu_options": {
           "add_device": "➕ Add New Device",
           "clear_cache": "🗑️ Clear local cache files",
+          "configure_polling": "⏱️ Configure Polling Interval",
           "sync_cloud": "☁️ Sync device info from cloud",
           "update_account": "🔑 Update Midea Account/Password"
         },
