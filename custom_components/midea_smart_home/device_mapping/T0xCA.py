@@ -35,6 +35,12 @@ DEVICE_MAPPING = {
                 },
                 "freezing_light_open_chose": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "telstar_saving_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "silent_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
                 }
             },
             Platform.BINARY_SENSOR: {
@@ -131,6 +137,22 @@ DEVICE_MAPPING = {
                         "280": {"open_door_warning_time": "28"},
                         "290": {"open_door_warning_time": "29"},
                         "300": {"open_door_warning_time": "30"}
+                    }
+                },
+                "cooling_time_start_hour": {
+                    "options": {
+                        "20": {"cooling_time_start_hour": "20"},
+                        "21": {"cooling_time_start_hour": "21"},
+                        "22": {"cooling_time_start_hour": "22"},
+                        "23": {"cooling_time_start_hour": "23"}
+                    }
+                },
+                "rise_time_start_hour": {
+                    "options": {
+                        "5": {"rise_time_start_hour": "5"},
+                        "6": {"rise_time_start_hour": "6"},
+                        "7": {"rise_time_start_hour": "7"},
+                        "8": {"rise_time_start_hour": "8"}
                     }
                 }
             },
@@ -201,6 +223,12 @@ DEVICE_MAPPING = {
                 },
                 "freezing_light_open_chose": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "telstar_saving_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "silent_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
                 }
             },
             Platform.BINARY_SENSOR: {
@@ -297,6 +325,22 @@ DEVICE_MAPPING = {
                         "280": {"open_door_warning_time": "28"},
                         "290": {"open_door_warning_time": "29"},
                         "300": {"open_door_warning_time": "30"}
+                    }
+                },
+                "cooling_time_start_hour": {
+                    "options": {
+                        "20": {"cooling_time_start_hour": "20"},
+                        "21": {"cooling_time_start_hour": "21"},
+                        "22": {"cooling_time_start_hour": "22"},
+                        "23": {"cooling_time_start_hour": "23"}
+                    }
+                },
+                "rise_time_start_hour": {
+                    "options": {
+                        "5": {"rise_time_start_hour": "5"},
+                        "6": {"rise_time_start_hour": "6"},
+                        "7": {"rise_time_start_hour": "7"},
+                        "8": {"rise_time_start_hour": "8"}
                     }
                 }
             },
@@ -616,6 +660,129 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
+    },
+    "310A1696": {
+        "rationale": ["off", "on"],
+        "entities": {
+            Platform.SWITCH: {
+                "storage_power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "storage_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "freezing_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "open_door_tips_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "intelligent_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "daily"
+                },
+                "telstar_saving_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "silent_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "storage_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR,
+                },
+                "storage_door_open_overtime": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                }
+            },
+            Platform.CLIMATE: {
+                "storage_zone": {
+                    "power": "storage_power",
+                    "hvac_modes": {
+                        "off": {"storage_power": "off"},
+                        "cool": {"storage_power": "on"}
+                    },
+                    "target_temperature": "storage_temperature",
+                    "current_temperature": "refrigeration_real_temperature",
+                    "pre_mode": "mode",
+                    "min_temp": 2,
+                    "max_temp": 8,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE
+                },
+                "freezing_zone": {
+                    "hvac_modes": {
+                        "cool": {}
+                    },
+                    "target_temperature": "freezing_temperature",
+                    "current_temperature": "freezing_real_temperature",
+                    "min_temp": -24,
+                    "max_temp": -16,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE
+                }
+            },
+            Platform.SELECT: {
+                "flexzone_function": {
+                    "options": {
+                        "zero_degree": {"left_flexzone_temperature": "0"},
+                        "treasure": {"left_flexzone_temperature": "2"},
+                        "mother_baby": {"left_flexzone_temperature": "6"}
+                    }
+                },
+                "cooling_time_start_hour": {
+                    "options": {
+                        "20": {"cooling_time_start_hour": "20"},
+                        "21": {"cooling_time_start_hour": "21"},
+                        "22": {"cooling_time_start_hour": "22"},
+                        "23": {"cooling_time_start_hour": "23"}
+                    }
+                },
+                "rise_time_start_hour": {
+                    "options": {
+                        "5": {"rise_time_start_hour": "5"},
+                        "6": {"rise_time_start_hour": "6"},
+                        "7": {"rise_time_start_hour": "7"},
+                        "8": {"rise_time_start_hour": "8"}
+                    }
+                }
+            },
+            Platform.SENSOR: {
+                "storage_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "freezing_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "refrigeration_real_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "freezing_real_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "left_flexzone_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "flexzone_temperature"
+                },
+                "left_variable_real_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "flexzone_real_temperature"
                 }
             }
         }

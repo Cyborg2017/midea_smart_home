@@ -605,6 +605,15 @@
           "on": "节能零冷水"
         }
       },
+      "cooling_time_start_hour": {
+        "name": "超智能省电开始时间",
+        "state": {
+          "20": "20:00",
+          "21": "21:00",
+          "22": "22:00",
+          "23": "23:00"
+        }
+      },
       "cur_quantify": {
         "name": "定量设置",
         "state": {
@@ -1299,6 +1308,15 @@
           "full": "大冲",
           "half": "小冲",
           "off": "关闭"
+        }
+      },
+      "rise_time_start_hour": {
+        "name": "超智能省电结束时间",
+        "state": {
+          "5": "05:00",
+          "6": "06:00",
+          "7": "07:00",
+          "8": "08:00"
         }
       },
       "screenout_time": {
@@ -2230,6 +2248,9 @@
       "self_clean": {
         "name": "自清洁"
       },
+      "silent_mode": {
+        "name": "超智能降噪"
+      },
       "set_germicidal_countdown": {
         "name": "高温杀菌提醒"
       },
@@ -2256,6 +2277,9 @@
       },
       "strength_clean": {
         "name": "强力清洗"
+      },
+      "telstar_saving_mode": {
+        "name": "超智能省电"
       },
       "total_power": {
         "name": "总电源"

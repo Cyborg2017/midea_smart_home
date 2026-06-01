@@ -605,6 +605,15 @@
           "on": "Energy Saving Zero Cold Water"
         }
       },
+      "cooling_time_start_hour": {
+        "name": "Cooling Start Hour",
+        "state": {
+          "20": "20:00",
+          "21": "21:00",
+          "22": "22:00",
+          "23": "23:00"
+        }
+      },
       "cur_quantify": {
         "name": "Quantitative Water",
         "state": {
@@ -1299,6 +1308,15 @@
           "full": "Full Flush",
           "half": "Half Flush",
           "off": "Off"
+        }
+      },
+      "rise_time_start_hour": {
+        "name": "Rise Start Hour",
+        "state": {
+          "5": "05:00",
+          "6": "06:00",
+          "7": "07:00",
+          "8": "08:00"
         }
       },
       "screenout_time": {
@@ -2230,6 +2248,9 @@
       "self_clean": {
         "name": "Self Clean"
       },
+      "silent_mode": {
+        "name": "Silent Mode"
+      },
       "set_germicidal_countdown": {
         "name": "Sterilization Reminder"
       },
@@ -2256,6 +2277,9 @@
       },
       "strength_clean": {
         "name": "Strength Clean"
+      },
+      "telstar_saving_mode": {
+        "name": "Telstar Saving Mode"
       },
       "total_power": {
         "name": "Total Power"
