@@ -303,6 +303,7 @@
             "water_feedback": { "default": "mdi:water" },
             "water_full_level": { "default": "mdi:water-percent" },
             "water_gage_bar": { "default": "mdi:gauge" },
+            "water_volume": { "default": "mdi:water-pump" },
             "wind_pressure": { "default": "mdi:weather-windy" },
             "work_mode": { "default": "mdi:tune" },
             "work_status": { "default": "mdi:play-circle-outline" },

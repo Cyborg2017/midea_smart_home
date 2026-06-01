@@ -1976,6 +1976,9 @@
       "water_gage_bar": {
         "name": "水压"
       },
+      "water_volume": {
+        "name": "出水流量"
+      },
       "wind_pressure": {
         "name": "风压"
       },

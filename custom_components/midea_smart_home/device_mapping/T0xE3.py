@@ -1,4 +1,4 @@
-from homeassistant.const import Platform, UnitOfTemperature, PRECISION_WHOLE
+from homeassistant.const import Platform, UnitOfTemperature, UnitOfVolumeFlowRate, PRECISION_WHOLE
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
@@ -68,6 +68,11 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "temp_set"
+                },
+                "water_volume": {
+                    "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
+                    "unit_of_measurement": UnitOfVolumeFlowRate.LITERS_PER_HOUR,
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             },
             Platform.BINARY_SENSOR: {
@@ -141,6 +146,11 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "temp_set"
+                },
+                "water_volume": {
+                    "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
+                    "unit_of_measurement": UnitOfVolumeFlowRate.LITERS_PER_HOUR,
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             },
             Platform.BINARY_SENSOR: {
@@ -222,6 +232,11 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "temp_set"
+                },
+                "water_volume": {
+                    "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
+                    "unit_of_measurement": UnitOfVolumeFlowRate.LITERS_PER_HOUR,
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             },
             Platform.BINARY_SENSOR: {
