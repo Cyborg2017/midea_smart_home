@@ -559,7 +559,7 @@ class MideaDevice:
         import time as time_module
         poll_count = 0
         query_index = 0  # Track which query to execute next
-        
+
         while self._attribute_poll_run:
             if self._controller.connected:
                 try:
@@ -571,7 +571,7 @@ class MideaDevice:
                             self._polling_interval,
                             poll_count
                         )
-                    
+
                     # Execute queries from polling_query in sequence
                     if self._polling_query:
                         # Get current query configuration
@@ -595,13 +595,13 @@ class MideaDevice:
                             # Remove spaces around commas for compatibility
                             key = ",".join([k.strip() for k in key.split(",")]) if "," in key else key
                             query_params = {"query_type": key}
-                        
+
                         # Execute the query
                         self.refresh_status(query_params)
-                        
+
                         # Move to next query in sequence
                         query_index += 1
-                        
+
                         # Wait 0.5 seconds between queries within the same cycle
                         if query_index % len(self._polling_query) != 0:
                             time.sleep(0.5)
@@ -615,9 +615,9 @@ class MideaDevice:
                         # Fallback to full status query if no polling_query defined
                         self.refresh_status()
                         time.sleep(self._polling_interval)
-                    
+
                     poll_count += 1
-                    
+
                 except Exception as e:
                     _LOGGER.debug("[%s] Attribute poll error: %s", self._device_id, e)
                     time.sleep(5.0)

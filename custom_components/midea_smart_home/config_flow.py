@@ -1250,12 +1250,12 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             model = device.get(CONF_PRODUCT_MODEL, "")
             sn8 = device.get(CONF_SN8, "")
             category = device.get(CONF_CATEGORY, "")
-            
+
             try:
                 device_type_int = int(device_type_str, 16) if isinstance(device_type_str, str) else 0
             except ValueError:
                 device_type_int = 0
-            
+
             device_mapping = get_device_mapping(device_type_int, model, sn8, category)
             polling_query = device_mapping.get("polling_query")
             # Check if device supports polling (based on existence of polling_query)
@@ -1277,7 +1277,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                     "device_name": device_name,
                     "current_selection": current_selection,
                 })
-        
+
         if not configurable_devices:
             return self.async_show_form(
                 step_id="configure_polling",
@@ -1323,15 +1323,15 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             "device_count": str(len(configurable_devices)),
             "device_info": device_info_text
         }
-        
+
         if user_input is not None:
             # Update polling settings for selected devices
             import copy
             new_data = copy.deepcopy(dict(self._config_entry.data))
             updated = False
-            
+
             devices_list = new_data.get("devices", [])
-            
+
             # Use the mapping to find which device corresponds to each field
             for base_key, device_info in getattr(self, '_polling_device_mapping', {}).items():
                 device_id = device_info['device_id']
@@ -1373,21 +1373,21 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
 
                             updated = True
                         break
-            
+
             # Always update the entry to ensure changes are saved
             self.hass.config_entries.async_update_entry(
                 self._config_entry,
                 data=new_data,
             )
-            
+
             _LOGGER.info("Polling configuration saved, updated=%s", updated)
-            
+
             if updated:
                 # Reload to apply changes
                 await self.hass.config_entries.async_reload(self._config_entry.entry_id)
-            
+
             return self.async_create_entry(title="", data={})
-        
+
         return self.async_show_form(
             step_id="configure_polling",
             data_schema=vol.Schema(schema_dict),
