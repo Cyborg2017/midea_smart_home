@@ -70,6 +70,18 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_HALVES,
                 }
             },
+            Platform.FAN: {
+                "fresh_air_fan": {
+                    "power": "fresh_air",
+                    "speeds": list({"fresh_air": "on", "fresh_air_fan_speed": value + 1} for value in range(0, 100)),
+                    "preset_modes": {
+                        "low": {"fresh_air": "on", "fresh_air_fan_speed": 40},
+                        "mid": {"fresh_air": "on", "fresh_air_fan_speed": 60},
+                        "high": {"fresh_air": "on", "fresh_air_fan_speed": 80},
+                        "strong": {"fresh_air": "on", "fresh_air_fan_speed": 100}
+                    }
+                }
+            },
             Platform.SELECT: {
                 "wind_swing_ud_angle": {
                     "options": {
@@ -98,9 +110,33 @@ DEVICE_MAPPING = {
                         "up_no_wind": {"no_wind_sense": 2},
                         "down_no_wind": {"no_wind_sense": 3},
                     }
+                },
+                "wind_around": {
+                    "options": {
+                        "off": {"wind_around": "off"},
+                        "up": {"wind_around": "on", "wind_around_ud": 1},
+                        "down": {"wind_around": "on", "wind_around_ud": 2}
+                    }
+                },
+                "prevent_straight_wind": {
+                    "options": {
+                        "off": {"prevent_straight_wind": 1},
+                        "up": {"prevent_straight_wind": 2, "prevent_straight_wind_lr": 2},
+                        "down": {"prevent_straight_wind": 2, "prevent_straight_wind_lr": 3}
+                    }
+                },
+                "ptc": {
+                    "options": {
+                        "off": {"ptc": "off"},
+                        "mode_1": {"ptc": "on", "ptc_default_rule": 1},
+                        "mode_2": {"ptc": "on", "ptc_default_rule": 0}
+                    }
                 }
             },
             Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
                 "buzzer": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "default_value": "on",
@@ -121,6 +157,13 @@ DEVICE_MAPPING = {
                 },
                 "ptc": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "light_sensitive": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 3]
+                },
+                "power_saving": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -223,9 +266,41 @@ DEVICE_MAPPING = {
                         "right": {"wind_swing_lr_angle": 75},
                         "rightmost": {"wind_swing_lr_angle": 100}
                     }
+                },
+                "no_wind_sense": {
+                    "options": {
+                        "off": {"no_wind_sense": 0},
+                        "up_down_no_wind": {"no_wind_sense": 1},
+                        "up_no_wind": {"no_wind_sense": 2},
+                        "down_no_wind": {"no_wind_sense": 3},
+                    }
+                },
+                "wind_around": {
+                    "options": {
+                        "off": {"wind_around": "off"},
+                        "up": {"wind_around": "on", "wind_around_ud": 1},
+                        "down": {"wind_around": "on", "wind_around_ud": 2}
+                    }
+                },
+                "prevent_straight_wind": {
+                    "options": {
+                        "off": {"prevent_straight_wind": 1},
+                        "up": {"prevent_straight_wind": 2, "prevent_straight_wind_lr": 2},
+                        "down": {"prevent_straight_wind": 2, "prevent_straight_wind_lr": 3}
+                    }
+                },
+                "ptc": {
+                    "options": {
+                        "off": {"ptc": "off"},
+                        "mode_1": {"ptc": "on", "ptc_default_rule": 1},
+                        "mode_2": {"ptc": "on", "ptc_default_rule": 0}
+                    }
                 }
             },
             Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
                 "buzzer": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "default_value": "on",
@@ -233,6 +308,10 @@ DEVICE_MAPPING = {
                 "screen_display": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "translation_key": "display_on_off"
+                },
+                "prevent_straight_wind": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [1, 2]
                 },
                 "prevent_super_cool": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -242,6 +321,13 @@ DEVICE_MAPPING = {
                 },
                 "ptc": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "light_sensitive": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 3]
+                },
+                "power_saving": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -593,6 +679,18 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_HALVES,
                 }
             },
+            Platform.FAN: {
+                "fresh_air_fan": {
+                    "power": "fresh_air",
+                    "speeds": list({"fresh_air": "on", "fresh_air_fan_speed": value + 1} for value in range(0, 100)),
+                    "preset_modes": {
+                        "low": {"fresh_air": "on", "fresh_air_fan_speed": 40},
+                        "mid": {"fresh_air": "on", "fresh_air_fan_speed": 60},
+                        "high": {"fresh_air": "on", "fresh_air_fan_speed": 80},
+                        "strong": {"fresh_air": "on", "fresh_air_fan_speed": 100}
+                    }
+                }
+            },
             Platform.SELECT: {
                 "wind_swing_ud_angle": {
                     "options": {
@@ -621,9 +719,33 @@ DEVICE_MAPPING = {
                         "up_no_wind": {"no_wind_sense": 2},
                         "down_no_wind": {"no_wind_sense": 3},
                     }
+                },
+                "wind_around": {
+                    "options": {
+                        "off": {"wind_around": "off"},
+                        "up": {"wind_around": "on", "wind_around_ud": 1},
+                        "down": {"wind_around": "on", "wind_around_ud": 2}
+                    }
+                },
+                "prevent_straight_wind": {
+                    "options": {
+                        "off": {"prevent_straight_wind": 1},
+                        "up": {"prevent_straight_wind": 2, "prevent_straight_wind_lr": 2},
+                        "down": {"prevent_straight_wind": 2, "prevent_straight_wind_lr": 3}
+                    }
+                },
+                "ptc": {
+                    "options": {
+                        "off": {"ptc": "off"},
+                        "mode_1": {"ptc": "on", "ptc_default_rule": 1},
+                        "mode_2": {"ptc": "on", "ptc_default_rule": 0}
+                    }
                 }
             },
             Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
                 "buzzer": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "default_value": "on",
@@ -644,6 +766,13 @@ DEVICE_MAPPING = {
                 },
                 "ptc": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "light_sensitive": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 3]
+                },
+                "power_saving": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
