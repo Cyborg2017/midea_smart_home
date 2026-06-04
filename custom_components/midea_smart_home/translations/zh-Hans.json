@@ -307,6 +307,7 @@
               "comfort": "舒适风",
               "normal": "正常风",
               "sleep": "睡眠风",
+              "storm": "循环风",
               "strong": "强劲风"
             }
           }
@@ -1598,6 +1599,15 @@
           "power_off": "关机",
           "power_on": "开机",
           "resume": "继续"
+        }
+      },
+      "ud_swing": {
+        "name": "上下摇头",
+        "state": {
+          "off": "关闭",
+          "angle_30": "30°",
+          "angle_60": "60°",
+          "angle_135": "135°"
         }
       }
     },

@@ -191,6 +191,7 @@
             "sweep_mop_mode": { "default": "mdi:robot-vacuum" },
             "tea_temperature": { "default": "mdi:tea" },
             "temperature": { "default": "mdi:thermometer" },
+            "ud_swing": { "default": "mdi:arrow-up-down" },
             "updown": { "default": "mdi:arrow-up-down" },
             "warm_water_temperature": { "default": "mdi:thermometer" },
             "wash_mode": { "default": "mdi:dishwasher" },

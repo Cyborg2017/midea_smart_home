@@ -307,6 +307,7 @@
               "comfort": "Comfort",
               "normal": "Normal",
               "sleep": "Sleep",
+              "storm": "Storm",
               "strong": "Strong"
             }
           }
@@ -1598,6 +1599,15 @@
           "power_off": "Power Off",
           "power_on": "Power On",
           "resume": "Resume"
+        }
+      },
+      "ud_swing": {
+        "name": "Vertical Swing",
+        "state": {
+          "off": "Off",
+          "angle_30": "30°",
+          "angle_60": "60°",
+          "angle_135": "135°"
         }
       }
     },
