@@ -1433,6 +1433,15 @@
           "cold_water": "冷水"
         }
       },
+      "ud_swing": {
+        "name": "上下摇头",
+        "state": {
+          "angle_30": "30°",
+          "angle_60": "60°",
+          "angle_135": "135°",
+          "off": "关闭"
+        }
+      },
       "updown": {
         "name": "运行状态",
         "state": {
@@ -1599,15 +1608,6 @@
           "power_off": "关机",
           "power_on": "开机",
           "resume": "继续"
-        }
-      },
-      "ud_swing": {
-        "name": "上下摇头",
-        "state": {
-          "off": "关闭",
-          "angle_30": "30°",
-          "angle_60": "60°",
-          "angle_135": "135°"
         }
       }
     },
@@ -2258,11 +2258,11 @@
       "self_clean": {
         "name": "自清洁"
       },
-      "silent_mode": {
-        "name": "超智能降噪"
-      },
       "set_germicidal_countdown": {
         "name": "高温杀菌提醒"
+      },
+      "silent_mode": {
+        "name": "超智能降噪"
       },
       "smart_sterilize": {
         "name": "智能杀菌"

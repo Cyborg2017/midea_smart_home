@@ -1433,6 +1433,15 @@
           "cold_water": "Cold Water"
         }
       },
+      "ud_swing": {
+        "name": "Vertical Swing",
+        "state": {
+          "angle_30": "30°",
+          "angle_60": "60°",
+          "angle_135": "135°",
+          "off": "Off"
+        }
+      },
       "updown": {
         "name": "Running Status",
         "state": {
@@ -1599,15 +1608,6 @@
           "power_off": "Power Off",
           "power_on": "Power On",
           "resume": "Resume"
-        }
-      },
-      "ud_swing": {
-        "name": "Vertical Swing",
-        "state": {
-          "off": "Off",
-          "angle_30": "30°",
-          "angle_60": "60°",
-          "angle_135": "135°"
         }
       }
     },
@@ -2258,11 +2258,11 @@
       "self_clean": {
         "name": "Self Clean"
       },
-      "silent_mode": {
-        "name": "Silent Mode"
-      },
       "set_germicidal_countdown": {
         "name": "Sterilization Reminder"
+      },
+      "silent_mode": {
+        "name": "Silent Mode"
       },
       "smart_sterilize": {
         "name": "Smart Sterilization"
