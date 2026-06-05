@@ -1,4 +1,4 @@
-from homeassistant.const import Platform, PERCENTAGE, UnitOfTemperature, PRECISION_HALVES, PRECISION_WHOLE, UnitOfTime
+from homeassistant.const import Platform, PERCENTAGE, UnitOfTemperature, PRECISION_HALVES, PRECISION_WHOLE, UnitOfTime, UnitOfPower, UnitOfEnergy
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
 
@@ -950,10 +950,17 @@ DEVICE_MAPPING = {
             {"prevent_straight_wind"},
             {"prevent_super_cool"},
             {"wind_swing_lr_angle"},
-            {"wind_swing_ud_angle"}
+            {"wind_swing_ud_angle"},
+            {"temperature"},
+            {"group_data_one"},
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "polling_query": [
-            {"indoor_temperature"}
+            {"temperature"},
+            {"group_data_one"},
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "centralized": ["buzzer"],
         "entities": {
@@ -1079,6 +1086,24 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_humidity": {
+                    "device_class": SensorDeviceClass.HUMIDITY,
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "current_time_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.KILO_WATT,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "suggested_display_precision": 1
+                },
+                "total_power_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "suggested_display_precision": 1,
+                    "translation_key": "total_elec_value"
                 }
             }
         }
