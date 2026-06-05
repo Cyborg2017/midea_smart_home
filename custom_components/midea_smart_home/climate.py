@@ -71,6 +71,7 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
         self._key_swing_modes = self._config.get("swing_modes")
         self._key_target_temperature = self._config.get("target_temperature")
         self._key_current_temperature = self._config.get("current_temperature")
+        self._key_current_humidity = self._config.get("current_humidity")
         self._key_min_temp = self._config.get("min_temp", 16)
         self._key_max_temp = self._config.get("max_temp", 30)
         self._aux_heat = self._config.get("aux_heat")
@@ -175,6 +176,14 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
 
         return self._safe_convert_to_float(
             self._get_nested_value(self._key_current_temperature)
+        )
+
+    @property
+    def current_humidity(self) -> Optional[float]:
+        if self._key_current_humidity is None:
+            return None
+        return self._safe_convert_to_float(
+            self._get_nested_value(self._key_current_humidity)
         )
 
     @property
