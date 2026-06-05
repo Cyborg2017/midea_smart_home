@@ -146,7 +146,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         enable_polling = polling_query is not None and isinstance(polling_query, list) and len(polling_query) > 0
         # Get polling settings from device data (user configurable via Options)
         polling_enabled = device_data.get("polling_enabled", True)  # Default to enabled
-        polling_interval = device_data.get("polling_interval", 1)
+        polling_interval = device_data.get("polling_interval", 30)
         # Only enable polling if both device_mapping supports it AND user has enabled it
         effective_polling = enable_polling and polling_enabled
         _LOGGER.debug(

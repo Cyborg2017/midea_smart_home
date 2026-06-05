@@ -401,7 +401,7 @@ class MideaDevice:
         default_values: Optional[dict] = None,
         category: str = "",
         enable_polling: bool = False,
-        polling_interval: int = 1,
+        polling_interval: int = 30,
         initial_query: Optional[list] = None,
         polling_query: Optional[list] = None,
     ):

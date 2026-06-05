@@ -1274,7 +1274,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
 
             if enable_polling:
                 device_name = device.get(CONF_DEVICE_NAME, f"Device {device_id}")
-                current_interval = device.get("polling_interval", 1)
+                current_interval = device.get("polling_interval", 30)
                 polling_enabled = device.get("polling_enabled", True)
 
                 # Determine current selection based on enabled status and interval
