@@ -995,6 +995,7 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature", "small_temperature"],
                     "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
