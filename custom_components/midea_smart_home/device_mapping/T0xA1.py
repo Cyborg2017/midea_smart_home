@@ -1,5 +1,5 @@
 from homeassistant.components.humidifier import HumidifierDeviceClass
-from homeassistant.const import Platform, PERCENTAGE
+from homeassistant.const import Platform, PERCENTAGE, UnitOfTemperature
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
 
@@ -505,6 +505,11 @@ DEVICE_MAPPING = {
                 "cur_humidity": {
                     "device_class": SensorDeviceClass.HUMIDITY,
                     "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "cur_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "tank_status": {
