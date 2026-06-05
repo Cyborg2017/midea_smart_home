@@ -38,6 +38,7 @@ from .const import (
     DOMAIN,
     JSON_FILES_PATH,
     LUA_COMMON_PATH,
+    LUA_CUSTOM_PATH,
     LUA_DEVICE_PATH,
     ProtocolVersion,
 )
@@ -78,18 +79,28 @@ def get_lua_storage_path(hass_config_dir: str) -> Path:
 def get_lua_common_path(hass_config_dir: str) -> Path:
     return Path(hass_config_dir) / LUA_COMMON_PATH
 
-def get_lua_file_path(hass_config_dir: str, device_id: int, device_type: int, sn8: str = "") -> Path:
+def get_lua_custom_path(component_dir: str, device_type: int, sn8: str = "") -> Path:
+    """Get path for custom Lua file in integration's lua folder.
+
+    Custom Lua files are named T0x{device_type}_{sn8}.lua (without device_id).
+    """
     if sn8:
-        return get_lua_storage_path(hass_config_dir) / f"{device_id}_T0x{hex(device_type)[2:].upper()}_{sn8}.lua"
-    return get_lua_storage_path(hass_config_dir) / f"{device_id}_T0x{hex(device_type)[2:]}.lua"
+        return Path(component_dir) / LUA_CUSTOM_PATH / f"T0x{hex(device_type)[2:].upper()}_{sn8}.lua"
+    return Path(component_dir) / LUA_CUSTOM_PATH / f"T0x{hex(device_type)[2:].upper()}.lua"
+
+def get_lua_file_path(hass_config_dir: str, device_id: int, device_type: int, sn8: str = "") -> Path:
+    """Get path for cloud-downloaded Lua file in .storage directory."""
+    if sn8:
+        return get_lua_storage_path(hass_config_dir) / f"T0x{hex(device_type)[2:].upper()}_{sn8}.lua"
+    return get_lua_storage_path(hass_config_dir) / f"T0x{hex(device_type)[2:].upper()}.lua"
 
 def get_json_files_path(hass_config_dir: str) -> Path:
     return Path(hass_config_dir) / JSON_FILES_PATH
 
 def get_device_json_path(hass_config_dir: str, device_id: int, device_type: int, sn8: str = "") -> Path:
     if sn8:
-        return get_json_files_path(hass_config_dir) / f"{device_id}_T0x{hex(device_type)[2:].upper()}_{sn8}.json"
-    return get_json_files_path(hass_config_dir) / f"{device_id}_T0x{hex(device_type)[2:]}.json"
+        return get_json_files_path(hass_config_dir) / f"T0x{hex(device_type)[2:].upper()}_{sn8}.json"
+    return get_json_files_path(hass_config_dir) / f"T0x{hex(device_type)[2:].upper()}.json"
 
 
 class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -491,9 +502,9 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 if success:
                     if sn8:
-                        lua_file_path = lua_storage_dir / f"{device_id}_T0x{hex(device_type)[2:].upper()}_{sn8}.lua"
+                        lua_file_path = lua_storage_dir / f"T0x{hex(device_type)[2:].upper()}_{sn8}.lua"
                     else:
-                        lua_file_path = lua_storage_dir / f"{device_id}_T0x{hex(device_type)[2:]}.lua"
+                        lua_file_path = lua_storage_dir / f"T0x{hex(device_type)[2:].upper()}.lua"
 
                     await self.hass.async_add_executor_job(write_file, lua_file_path, downloaded_lua)
                     lua_file = str(lua_file_path)
@@ -916,9 +927,9 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
 
                 if success:
                     if sn8:
-                        lua_file_path = lua_storage_dir / f"{device_id}_T0x{hex(device_type)[2:].upper()}_{sn8}.lua"
+                        lua_file_path = lua_storage_dir / f"T0x{hex(device_type)[2:].upper()}_{sn8}.lua"
                     else:
-                        lua_file_path = lua_storage_dir / f"{device_id}_T0x{hex(device_type)[2:]}.lua"
+                        lua_file_path = lua_storage_dir / f"T0x{hex(device_type)[2:].upper()}.lua"
 
                     await self.hass.async_add_executor_job(write_file, lua_file_path, downloaded_lua)
                     lua_file = str(lua_file_path)

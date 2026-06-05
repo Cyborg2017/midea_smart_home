@@ -29,8 +29,10 @@ from .const import (
     DOMAIN,
     PLATFORMS,
     LUA_COMMON_PATH,
+    LUA_CUSTOM_PATH,
     ProtocolVersion,
 )
+from .config_flow import get_lua_custom_path, get_lua_file_path
 from .coordinator import MideaCoordinator
 from .midea_lib.device import MideaDevice
 from .midea_lib.lua import write_file, ensure_lua_files
@@ -84,6 +86,43 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         model = device_data.get(CONF_PRODUCT_MODEL, "")
         device_type = device_data.get(CONF_DEVICE_TYPE)
         device_type_int = int(device_type, 16) if isinstance(device_type, str) else 0
+
+        # Priority: use custom Lua file from integration's lua folder if it exists,
+        # otherwise fall back to the cloud-downloaded file (new name, then old name for compatibility)
+        component_dir = str(Path(__file__).parent)
+        custom_lua_path = get_lua_custom_path(component_dir, device_type_int, sn8)
+        storage_lua_path_new = get_lua_file_path(hass.config.config_dir, device_id, device_type_int, sn8)
+        # Legacy naming with device_id prefix (for backward compatibility)
+        legacy_storage_dir = Path(hass.config.config_dir) / ".storage" / DOMAIN / "lua_devices"
+        if sn8:
+            legacy_storage_path = legacy_storage_dir / f"{device_id}_T0x{hex(device_type_int)[2:].upper()}_{sn8}.lua"
+        else:
+            legacy_storage_path = legacy_storage_dir / f"{device_id}_T0x{hex(device_type_int)[2:].upper()}.lua"
+
+        lua_file = ""
+        for path, source in [
+            (custom_lua_path, "custom"),
+            (storage_lua_path_new, "storage (new)"),
+            (legacy_storage_path, "storage (legacy)"),
+        ]:
+            if path.exists():
+                lua_file = str(path)
+                _LOGGER.info("Using Lua file from %s: %s", source, lua_file)
+                break
+
+        if not lua_file:
+            entry_lua = device_data.get(CONF_LUA_FILE, "")
+            if entry_lua and Path(entry_lua).exists():
+                lua_file = entry_lua
+                _LOGGER.info("Using Lua file from entry data: %s", lua_file)
+
+        if not lua_file:
+            _LOGGER.warning(
+                "No Lua file found for device %s (type=0x%s, sn8=%s), "
+                "checked: %s, %s, %s",
+                device_id, hex(device_type_int)[2:].upper(), sn8,
+                custom_lua_path, storage_lua_path_new, legacy_storage_path
+            )
 
         device_name = device_data.get(CONF_DEVICE_NAME, "")
         if not device_name:
