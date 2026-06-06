@@ -57,6 +57,8 @@ body:
         ```
         然后尝试添加设备，粘贴发现过程中的日志
       render: shell
+    validations:
+      required: true
 
   - type: dropdown
     attributes:

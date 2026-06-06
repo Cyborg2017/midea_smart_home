@@ -66,6 +66,13 @@ body:
 
   - type: input
     attributes:
+      label: 设备品牌
+      placeholder: "如：美的、小天鹅"
+    validations:
+      required: true
+
+  - type: input
+    attributes:
       label: 设备类型
       placeholder: "如：空调"
     validations:
@@ -85,19 +92,21 @@ body:
 
   - type: textarea
     attributes:
-      label: 日志信息
+      label: 设备发现日志
       description: |
         请将日志级别设置为 `debug` 并尝试复现问题。
-        
+
         在 `configuration.yaml` 中添加：
         ```yaml
         logger:
           logs:
             custom_components.midea_smart_home: debug
         ```
-        
+
         [设置 > 系统 > 日志 > 下载完整日志](https://my.home-assistant.io/redirect/logs) > 筛选 `midea_smart_home`
       render: shell
+    validations:
+      required: true
 
   - type: checkboxes
     attributes:

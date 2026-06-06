@@ -34,13 +34,39 @@ body:
 
   - type: input
     attributes:
+      label: 设备品牌
+      placeholder: "如：美的、小天鹅"
+    validations:
+      required: true
+
+  - type: input
+    attributes:
       label: 设备类型
       placeholder: "如：空调"
+    validations:
+      required: true
 
   - type: input
     attributes:
       label: 设备型号
       placeholder: "如：KFR-35GW/N8MJA3"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 设备发现日志
+      description: |
+        在 `configuration.yaml` 中添加：
+        ```yaml
+        logger:
+          logs:
+            custom_components.midea_smart_home: debug
+        ```
+        然后尝试添加设备或复现功能相关操作，粘贴日志
+      render: shell
+    validations:
+      required: true
 
   - type: checkboxes
     attributes:
