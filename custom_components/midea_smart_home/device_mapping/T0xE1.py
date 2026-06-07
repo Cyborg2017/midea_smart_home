@@ -7,10 +7,12 @@ DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
         "entities": {
-            Platform.SWITCH: {
+            Platform.LOCK: {
                 "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
+                    "translation_key": "child_lock"
+                }
+            },
+            Platform.SWITCH: {
                 "dryswitch": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1]
@@ -137,10 +139,12 @@ DEVICE_MAPPING = {
     "default_dishwasher": {
         "rationale": ["off", "on"],
         "entities": {
-            Platform.SWITCH: {
+            Platform.LOCK: {
                 "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
+                    "translation_key": "child_lock"
+                }
+            },
+            Platform.SWITCH: {
                 "dryswitch": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1]
@@ -267,10 +271,12 @@ DEVICE_MAPPING = {
     "760Y0026": {
         "rationale": ["off", "on"],
         "entities": {
-            Platform.SWITCH: {
+            Platform.LOCK: {
                 "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
+                    "translation_key": "child_lock"
+                }
+            },
+            Platform.SWITCH: {
                 "airswitch": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1]

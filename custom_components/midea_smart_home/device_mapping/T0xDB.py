@@ -33,6 +33,11 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.OPENING
                 }
             },
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -40,9 +45,6 @@ DEVICE_MAPPING = {
                 "control_status": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["pause", "start"],
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "nightly": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -249,6 +251,11 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.OPENING
                 }
             },
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -256,9 +263,6 @@ DEVICE_MAPPING = {
                 "control_status": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["pause", "start"],
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "nightly": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -465,6 +469,11 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.OPENING
                 }
             },
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -472,9 +481,6 @@ DEVICE_MAPPING = {
                 "control_status": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["pause", "start"],
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "nightly": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -681,6 +687,11 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.OPENING
                 }
             },
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -688,9 +699,6 @@ DEVICE_MAPPING = {
                 "control_status": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["pause", "start"],
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "nightly": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -883,6 +891,11 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.OPENING
                 }
             },
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -890,9 +903,6 @@ DEVICE_MAPPING = {
                 "control_status": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["pause", "start"],
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "nightly": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -1096,6 +1106,11 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.OPENING
                 }
             },
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -1103,9 +1118,6 @@ DEVICE_MAPPING = {
                 "control_status": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["pause", "start"],
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "ultraviolet_lamp": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -1277,6 +1289,11 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.OPENING
                 }
             },
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -1284,9 +1301,6 @@ DEVICE_MAPPING = {
                 "control_status": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["pause", "start"],
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "nightly": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -1489,6 +1503,11 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.OPENING
                 }
             },
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -1496,9 +1515,6 @@ DEVICE_MAPPING = {
                 "control_status": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["pause", "start"],
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "ultraviolet_lamp": {
                     "device_class": SwitchDeviceClass.SWITCH,

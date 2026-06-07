@@ -78,15 +78,17 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.PROBLEM
                 }
             },
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH
                 },
                 "control_status": {
                     "rationale": ["pause", "start"]
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SELECT: {

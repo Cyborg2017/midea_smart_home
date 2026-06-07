@@ -46,6 +46,11 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "wash": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -63,9 +68,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 },
                 "cool": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "lock": {
                     "device_class": SwitchDeviceClass.SWITCH
                 },
                 "human_sensing_switch": {
@@ -578,6 +580,11 @@ DEVICE_MAPPING = {
     "default_pipeline_machine": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "germicidal": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -586,9 +593,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 },
                 "cool": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "lock": {
                     "device_class": SwitchDeviceClass.SWITCH
                 },
                 "human_sensing_switch": {
@@ -707,9 +711,9 @@ DEVICE_MAPPING = {
     "632009HD": {
         "rationale": ["off", "on"],
         "entities": {
-            Platform.SWITCH: {
+            Platform.LOCK: {
                 "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH
+                    "translation_key": "child_lock"
                 }
             },
             Platform.SELECT: {
@@ -799,11 +803,13 @@ DEVICE_MAPPING = {
     "6320084C": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "germicidal": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "lock": {
                     "device_class": SwitchDeviceClass.SWITCH
                 },
                 "set_germicidal_countdown": {

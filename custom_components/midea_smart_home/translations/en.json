@@ -395,6 +395,11 @@
         "name": "Night Light"
       }
     },
+    "lock": {
+      "child_lock": {
+        "name": "Child Lock"
+      }
+    },
     "number": {
       "air_set_hour": {
         "name": "Antibacterial Storage Time"
@@ -2069,9 +2074,6 @@
       "b6_smoke_stove_linkage": {
         "name": "Smoke-Stove Linkage"
       },
-      "baby_lock": {
-        "name": "Baby Lock"
-      },
       "bucket_clean_switch": {
         "name": "Bucket Clean"
       },
@@ -2203,9 +2205,6 @@
       },
       "light_sensor": {
         "name": "Light Sensor"
-      },
-      "lock": {
-        "name": "Child Lock"
       },
       "microbubble": {
         "name": "Microbubble Soak"

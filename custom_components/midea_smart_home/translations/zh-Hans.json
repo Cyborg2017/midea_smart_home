@@ -395,6 +395,11 @@
         "name": "夜灯"
       }
     },
+    "lock": {
+      "child_lock": {
+        "name": "童锁"
+      }
+    },
     "number": {
       "air_set_hour": {
         "name": "抑菌存储时间"
@@ -2069,9 +2074,6 @@
       "b6_smoke_stove_linkage": {
         "name": "烟灶联动"
       },
-      "baby_lock": {
-        "name": "婴儿锁"
-      },
       "bucket_clean_switch": {
         "name": "桶清洁"
       },
@@ -2203,9 +2205,6 @@
       },
       "light_sensor": {
         "name": "光感照明"
-      },
-      "lock": {
-        "name": "童锁"
       },
       "microbubble": {
         "name": "超微净泡"

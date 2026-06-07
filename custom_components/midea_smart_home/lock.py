@@ -1,0 +1,94 @@
+import logging
+from typing import Any
+
+from homeassistant.components.lock import LockEntity
+from homeassistant.const import Platform
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
+from .const import DOMAIN
+from .coordinator import MideaCoordinator
+from .entity import MideaBaseEntity, iter_midea_device_configs
+
+_LOGGER = logging.getLogger(__name__)
+
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    entities = []
+
+    for coordinator, device_id, device_type, sn, sn8, device_name, model, device_mapping in iter_midea_device_configs(hass, entry):
+        entities_config = device_mapping.get("entities", {})
+        rationale = device_mapping.get("rationale", ["off", "on"])
+        lock_config = entities_config.get(Platform.LOCK, {})
+
+        if lock_config:
+            for lock_id, config in lock_config.items():
+                translation_key = config.get("translation_key")
+                lock_rationale = config.get("rationale", rationale)
+                condition = config.get("condition")
+                command = config.get("command")
+                include_current = config.get("include_current")
+                entities.append(
+                    MideaLockEntity(
+                        coordinator, device_id, device_type, sn, sn8, device_name,
+                        lock_id, translation_key, lock_rationale, condition, command, include_current, model
+                    )
+                )
+
+    async_add_entities(entities)
+
+
+class MideaLockEntity(MideaBaseEntity, LockEntity):
+
+    def __init__(
+        self,
+        coordinator: MideaCoordinator,
+        device_id: int,
+        device_type: str,
+        sn: str,
+        sn8: str,
+        device_name: str,
+        lock_id: str,
+        translation_key: str = None,
+        rationale: list = None,
+        condition: dict = None,
+        command: dict = None,
+        include_current: list = None,
+        model: str = None,
+    ):
+        config = {"translation_key": translation_key} if translation_key else {}
+        super().__init__(
+            coordinator, device_id, device_type, sn, sn8, device_name, lock_id, model,
+            platform_name="lock", config=config, rationale=rationale, condition=condition
+        )
+        self._lock_id = lock_id
+        self._command = command
+        self._include_current = include_current or []
+
+    @property
+    def is_locked(self) -> bool:
+        return self._get_status_on_off(self._lock_id)
+
+    async def _async_set_status_locked(self, locked: bool) -> None:
+        value = self._rationale[int(locked)]
+        merged_command = {}
+        if isinstance(self._command, dict):
+            merged_command.update(self._command)
+        merged_command[self._lock_id] = value
+
+        for attr in self._include_current:
+            current_value = self._get_nested_value(attr)
+            if current_value is not None:
+                merged_command[attr] = current_value
+
+        await self.coordinator.async_set_control(merged_command)
+
+    async def async_lock(self, **kwargs: Any) -> None:
+        await self._async_set_status_locked(True)
+
+    async def async_unlock(self, **kwargs: Any) -> None:
+        await self._async_set_status_locked(False)

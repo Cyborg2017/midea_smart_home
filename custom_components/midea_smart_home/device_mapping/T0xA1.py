@@ -15,13 +15,12 @@ DEVICE_MAPPING = {
             {"light, self_clean, sound"}
         ],
         "entities": {
+            Platform.LOCK: {
+                "child_lock": {}
+            },
             Platform.SWITCH: {
                 "anion": {
                     "device_class": SwitchDeviceClass.SWITCH
-                },
-                "child_lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "lock"
                 },
                 "wind_swing_ud": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -187,13 +186,12 @@ DEVICE_MAPPING = {
             {"light, self_clean, sound"}
         ],
         "entities": {
+            Platform.LOCK: {
+                "child_lock": {}
+            },
             Platform.SWITCH: {
                 "anion": {
                     "device_class": SwitchDeviceClass.SWITCH
-                },
-                "child_lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "lock"
                 },
                 "wind_swing_ud": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -358,13 +356,12 @@ DEVICE_MAPPING = {
             {}
         ],
         "entities": {
+            Platform.LOCK: {
+                "child_lock": {}
+            },
             Platform.SWITCH: {
                 "anion": {
                     "device_class": SwitchDeviceClass.SWITCH
-                },
-                "child_lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "lock"
                 },
                 "wind_swing_ud": {
                     "device_class": SwitchDeviceClass.SWITCH

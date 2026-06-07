@@ -6,6 +6,11 @@ DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "auto_power_off": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -13,9 +18,6 @@ DEVICE_MAPPING = {
                 "humidification": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ['off', 'no_change'],
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "screen_close": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -66,6 +68,11 @@ DEVICE_MAPPING = {
     "default_heater": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.SWITCH: {
                 "auto_power_off": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -73,9 +80,6 @@ DEVICE_MAPPING = {
                 "humidification": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ['off', 'no_change'],
-                },
-                "lock": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "screen_close": {
                     "device_class": SwitchDeviceClass.SWITCH,
