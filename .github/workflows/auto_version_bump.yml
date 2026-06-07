@@ -232,3 +232,49 @@ jobs:
           body: ${{ steps.read_changelog.outputs.content }}
           draft: false
           prerelease: false
+
+      - name: Delete all prereleases
+        if: steps.check_commits.outputs.has_new_commits == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          import subprocess
+          import json
+          import os
+          
+          token = os.environ['GH_TOKEN']
+          
+          # Get all prerelease releases
+          result = subprocess.run(
+              ['gh', 'api', '/repos/Cyborg2017/midea_smart_home/releases',
+               '--jq', '.[] | select(.prerelease == true) | {id, tag_name}'],
+              capture_output=True,
+              text=True,
+              env={'GITHUB_TOKEN': token}
+          )
+          
+          if result.stdout.strip():
+              releases = []
+              for line in result.stdout.strip().split('\n'):
+                  if line.strip():
+                      releases.append(json.loads(line))
+              for rel in releases:
+                  print(f"Deleting prerelease: {rel['tag_name']}")
+                  # Delete release
+                  subprocess.run(
+                      ['gh', 'api', '-X', 'DELETE',
+                       f'/repos/Cyborg2017/midea_smart_home/releases/{rel["id"]}'],
+                      env={'GITHUB_TOKEN': token}
+                  )
+                  # Delete tag locally and remote
+                  subprocess.run(['git', 'tag', '-d', rel['tag_name']],
+                                 capture_output=True)
+                  subprocess.run(
+                      ['git', 'push', 'origin', '--delete', rel['tag_name']],
+                      env={'GITHUB_TOKEN': token},
+                      capture_output=True
+                  )
+              print(f"Deleted {len(releases)} prerelease(s)")
+          else:
+              print("No prereleases found")
+        shell: python
