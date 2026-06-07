@@ -1,0 +1,226 @@
+name: Auto Prerelease
+
+on:
+  schedule:
+    - cron: "59 23 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prerelease:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Git hooks for Gerrit compliance
+        run: |
+          cat > .git/hooks/commit-msg << 'EOF'
+          #!/bin/bash
+          COMMIT_MSG_FILE="$1"
+          if [ -z "$COMMIT_MSG_FILE" ]; then
+              COMMIT_MSG_FILE=".git/COMMIT_EDITMSG"
+          fi
+
+          # Add Change-Id if not exists
+          if ! grep -q '^Change-Id:' "$COMMIT_MSG_FILE"; then
+              ID=$(git var GIT_AUTHOR_IDENT | git hash-object --stdin)
+              CHANGE_ID="I$(echo "$ID" | cut -c1-40)"
+              echo "" >> "$COMMIT_MSG_FILE"
+              echo "Change-Id: $CHANGE_ID" >> "$COMMIT_MSG_FILE"
+          fi
+          EOF
+          chmod +x .git/hooks/commit-msg
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Check if there are new commits since last release
+        id: check_commits
+        run: |
+          latest_release_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$latest_release_tag" ]; then
+              echo "No existing release found, checking for any commits"
+              commit_count=$(git rev-list --count HEAD)
+          else
+              commit_count=$(git rev-list --count ${latest_release_tag}..HEAD)
+          fi
+          
+          echo "Latest release tag: $latest_release_tag"
+          echo "New commits since last release: $commit_count"
+          
+          if [ "$commit_count" -gt 0 ]; then
+              echo "Found new commits since last release"
+              echo "::set-output name=has_new_commits::true"
+              echo "::set-output name=commit_count::$commit_count"
+          else
+              echo "No new commits since last release, skipping prerelease"
+              echo "::set-output name=has_new_commits::false"
+          fi
+
+      - name: Generate prerelease version and changelog
+        if: steps.check_commits.outputs.has_new_commits == 'true'
+        id: prerelease_info
+        env:
+          COMMIT_COUNT: ${{ steps.check_commits.outputs.commit_count }}
+        run: |
+          import json
+          import os
+          import subprocess
+          import re
+          from datetime import datetime, timedelta, timezone
+          
+          # Read current version from manifest (not modifying it)
+          with open('custom_components/midea_smart_home/manifest.json', 'r') as f:
+              manifest = json.load(f)
+          
+          current_version = manifest['version']
+
+          # Increment patch version for prerelease (e.g., 26.6.0 -> 26.6.1)
+          ver_parts = current_version.split('.')
+          ver_parts[2] = str(int(ver_parts[2]) + 1)
+          base_version = '.'.join(ver_parts)
+
+          # Get latest prerelease tag to determine next beta number
+          tags_result = subprocess.run(
+              ['git', 'tag', '-l', '--sort=-v:refname', f'v{base_version}-b*'],
+              capture_output=True,
+              text=True
+          )
+          prerelease_tags = [t for t in tags_result.stdout.strip().split('\n') if t]
+
+          # Extract beta number or start from 0
+          if prerelease_tags:
+              last_prerelease = prerelease_tags[0]
+              match = re.search(r'-b(\d+)$', last_prerelease)
+              if match:
+                  next_b = int(match.group(1)) + 1
+              else:
+                  next_b = 0
+          else:
+              next_b = 0
+
+          prerelease_version = f"{base_version}-b{next_b}"
+
+          now = datetime.now(timezone(timedelta(hours=8)))
+
+          print(f"::set-output name=prerelease_version::{prerelease_version}")
+          print(f"::set-output name=current_version::{current_version}")
+          
+          # Generate changelog
+          latest_release_tag_result = subprocess.run(
+              ['git', 'describe', '--tags', '--abbrev=0'],
+              capture_output=True,
+              text=True
+          )
+          latest_tag = latest_release_tag_result.stdout.strip() if latest_release_tag_result.returncode == 0 else None
+          
+          log_range = f"{latest_tag}..HEAD" if latest_tag else "-50"
+          result = subprocess.run(
+              ['git', 'log', '--oneline', '--format=%s', log_range],
+              capture_output=True,
+              text=True
+          )
+          
+          commits = result.stdout.strip().split('\n')
+          
+          categorized = {
+              'feat': [],
+              'fix': [],
+              'style': [],
+              'chore': [],
+              'docs': [],
+              'refactor': [],
+              'test': [],
+              'other': []
+          }
+          
+          for commit in commits:
+              if not commit.strip():
+                  continue
+              
+              match = re.match(r'^(\w+)(?:\([^)]+\))?:\s*(.*)', commit)
+              if match:
+                  category = match.group(1)
+                  message = match.group(2)
+                  if category in categorized:
+                      categorized[category].append(message)
+                  else:
+                      categorized['other'].append(commit)
+              else:
+                  categorized['other'].append(commit)
+          
+          changelog = f""
+          changelog += f"**Base Version**: {current_version}\n"
+          changelog += f"**Date**: {now.strftime('%Y-%m-%d %H:%M:%S UTC+8')}\n"
+          changelog += f"**Commits included**: {os.environ['COMMIT_COUNT']}\n\n"
+          
+          category_labels = {
+              'feat': '✨ New Features',
+              'fix': '🔧 Bug Fixes',
+              'style': '🎨 Code Style',
+              'chore': '📦 Chores',
+              'docs': '📝 Documentation',
+              'refactor': '🔄 Refactor',
+              'test': '🧪 Tests',
+              'other': '📋 Other'
+          }
+          
+          for cat, label in category_labels.items():
+              if categorized[cat]:
+                  changelog += f"{label}\n"
+                  for item in categorized[cat]:
+                      changelog += f"- {item}\n"
+                  changelog += "\n"
+          
+          if latest_tag:
+              changelog += f"**Changes since**: [{latest_tag}](https://github.com/Cyborg2017/midea_smart_home/compare/{latest_tag}...HEAD)\n\n"
+          
+          changelog += "---\n"
+          changelog += "> **Note**: This is a prerelease version for testing purposes.\n"
+          changelog += "> Use at your own risk. Report any issues found.\n"
+          changelog += "\n🤖 Auto-generated by GitHub Actions"
+          
+          with open('PRERELEASE_CHANGELOG.md', 'w') as f:
+              f.write(changelog)
+          
+          print(f"::set-output name=changelog::{changelog}")
+        shell: python
+
+      - name: Create prerelease tag
+        if: steps.check_commits.outputs.has_new_commits == 'true'
+        run: |
+          git config user.name "Cyborg2017"
+          git config user.email "cyborg2017@users.noreply.github.com"
+          git tag v${{ steps.prerelease_info.outputs.prerelease_version }}
+          git push origin v${{ steps.prerelease_info.outputs.prerelease_version }}
+
+      - name: Read changelog file
+        if: steps.check_commits.outputs.has_new_commits == 'true'
+        id: read_changelog
+        run: |
+          changelog=$(cat PRERELEASE_CHANGELOG.md)
+          changelog="${changelog//'%'/'%25'}"
+          changelog="${changelog//$'\n'/'%0A'}"
+          changelog="${changelog//$'\r'/'%0D'}"
+          echo "::set-output name=content::$changelog"
+
+      - name: Create prerelease
+        if: steps.check_commits.outputs.has_new_commits == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.prerelease_info.outputs.prerelease_version }}
+          release_name: v${{ steps.prerelease_info.outputs.prerelease_version }}
+          body: ${{ steps.read_changelog.outputs.content }}
+          draft: false
+          prerelease: true
