@@ -48,7 +48,8 @@ jobs:
           latest_commit_message=$(git log --oneline -1 --format=%B)
           echo "Latest commit message: $latest_commit_message"
           
-          if echo "$latest_commit_message" | grep -q "^chore: bump version to"; then
+          # Skip only for formal version bumps (not prerelease)
+          if echo "$latest_commit_message" | grep -q "^chore: bump version to" && ! echo "$latest_commit_message" | grep -q "(prerelease)"; then
               echo "Latest commit is a version bump, skipping release"
               echo "::set-output name=has_new_commits::false"
           else
@@ -87,19 +88,27 @@ jobs:
         id: bump
         run: |
           import json
+          import re
           from datetime import datetime
           
           with open('custom_components/midea_smart_home/manifest.json', 'r') as f:
               manifest = json.load(f)
           
           current_version = manifest['version']
+          # Check if current version is a prerelease (e.g., 26.6.2-b0)
+          is_prerelease = bool(re.match(r'.*-b\d+$', current_version))
+          # Strip prerelease suffix (e.g., 26.6.2-b0 -> 26.6.2)
+          current_version = re.sub(r'-b\d+$', '', current_version)
           current_year, current_month, current_patch = map(int, current_version.split('.'))
           
           now = datetime.now()
           current_year_in_version = now.year % 100
           current_month_in_version = now.month
           
-          if current_year == current_year_in_version and current_month == current_month_in_version:
+          if is_prerelease:
+              # Prerelease already incremented the version, use it as-is
+              new_version = current_version
+          elif current_year == current_year_in_version and current_month == current_month_in_version:
               new_patch = current_patch + 1
               new_version = f"{current_year}.{current_month}.{new_patch}"
           else:

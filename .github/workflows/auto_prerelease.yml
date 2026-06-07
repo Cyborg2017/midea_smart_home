@@ -112,6 +112,12 @@ jobs:
 
           now = datetime.now(timezone(timedelta(hours=8)))
 
+          # Update manifest.json with prerelease version so HA can display it
+          manifest['version'] = prerelease_version
+          with open('custom_components/midea_smart_home/manifest.json', 'w') as f:
+              json.dump(manifest, f, indent=2)
+              f.write('\n')
+
           print(f"::set-output name=prerelease_version::{prerelease_version}")
           print(f"::set-output name=current_version::{current_version}")
           
@@ -200,6 +206,9 @@ jobs:
         run: |
           git config user.name "Cyborg2017"
           git config user.email "cyborg2017@users.noreply.github.com"
+          git add custom_components/midea_smart_home/manifest.json
+          git commit -m "chore: bump version to ${{ steps.prerelease_info.outputs.prerelease_version }} (prerelease)"
+          git push
           git tag v${{ steps.prerelease_info.outputs.prerelease_version }}
           git push origin v${{ steps.prerelease_info.outputs.prerelease_version }}
 
