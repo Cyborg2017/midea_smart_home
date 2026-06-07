@@ -2,7 +2,7 @@ name: Auto Prerelease
 
 on:
   schedule:
-    - cron: "59 23 * * *"
+    - cron: "0 0 * * 2,5"
   workflow_dispatch:
 
 permissions:
