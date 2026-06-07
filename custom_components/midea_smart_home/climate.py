@@ -171,7 +171,11 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             temp_int = self._get_nested_value(self._key_current_temperature[0])
             tem_dec = self._get_nested_value(self._key_current_temperature[1])
             if temp_int is not None and tem_dec is not None:
-                return self._safe_convert_to_float(temp_int + tem_dec)
+                t_int = self._safe_convert_to_float(temp_int)
+                t_dec = self._safe_convert_to_float(tem_dec)
+                if t_int is not None and t_dec is not None:
+                    return t_int + t_dec
+                return None
             return None
 
         return self._safe_convert_to_float(
@@ -229,7 +233,11 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             return None
 
         if temp_int is not None and tem_dec is not None:
-            return self._safe_convert_to_float(temp_int + tem_dec)
+            t_int = self._safe_convert_to_float(temp_int)
+            t_dec = self._safe_convert_to_float(tem_dec)
+            if t_int is not None and t_dec is not None:
+                return t_int + t_dec
+            return None
         return None
 
     @property
