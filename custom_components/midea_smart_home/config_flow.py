@@ -324,6 +324,101 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         except (json.JSONEncodeError, OSError) as e:
             _LOGGER.error("Failed to save device data to JSON file: %s", e)
 
+    async def _validate_token_key(
+        self,
+        device_id: int,
+        ip_address: str,
+        port: int,
+        token: str,
+        key: str,
+    ) -> bool:
+        """Validate token/key by attempting V3 authentication handshake.
+
+        Returns True if authentication succeeds.
+        """
+        if not token or not key:
+            return False
+
+        def _try_auth():
+            try:
+                from .midea_lib.security import LocalSecurity
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(5)
+                sock.connect((ip_address, port))
+                security = LocalSecurity()
+                handshake = security.encode_8370(bytes.fromhex(token), 0x0)
+                sock.send(handshake)
+                response = sock.recv(256)
+                sock.close()
+                if len(response) < 72:
+                    _LOGGER.debug(
+                        "[%s] Token/key validation failed: response too short (%d bytes): %s",
+                        device_id, len(response), response.hex(),
+                    )
+                    return False
+                auth_data = response[8:72]
+                security.tcp_key(auth_data, bytes.fromhex(key))
+                _LOGGER.debug("[%s] Token/key validation passed", device_id)
+                return True
+            except Exception as e:
+                _LOGGER.debug("[%s] Token/key validation error: %s", device_id, e)
+                return False
+
+        return await self.hass.async_add_executor_job(_try_auth)
+
+    async def _acquire_validated_token_key(
+        self,
+        device_id: int,
+        ip_address: str,
+        port: int,
+        protocol: int,
+    ) -> tuple:
+        """Get validated token/key with fallback chain.
+
+        Tries preset cloud first, validates, falls back to user cloud.
+        Returns (token, key, source) tuple.
+        """
+        is_v3 = protocol == ProtocolVersion.V3
+        if not is_v3:
+            return "", "", "not_needed"
+
+        # Step 1: Try preset cloud
+        if self._preset_cloud:
+            try:
+                keys = await self._preset_cloud.get_cloud_keys(device_id)
+                if keys:
+                    method = list(keys.keys())[0]
+                    token = keys[method]["token"]
+                    key = keys[method]["key"]
+                    _LOGGER.info("Got token/key from preset cloud for device %s", device_id)
+                    if await self._validate_token_key(device_id, ip_address, port, token, key):
+                        return token, key, "preset_cloud"
+                    _LOGGER.warning(
+                        "Preset cloud token/key invalid for device %s, will try user cloud",
+                        device_id,
+                    )
+            except Exception as e:
+                _LOGGER.warning("Preset cloud get_cloud_keys error for device %s: %s", device_id, e)
+
+        # Step 2: Fallback to user's own cloud account
+        if self._user_cloud:
+            try:
+                keys = await self._user_cloud.get_cloud_keys(device_id)
+                if keys:
+                    method = list(keys.keys())[0]
+                    token = keys[method]["token"]
+                    key = keys[method]["key"]
+                    _LOGGER.info("Got token/key from user cloud for device %s", device_id)
+                    if await self._validate_token_key(device_id, ip_address, port, token, key):
+                        return token, key, "user_cloud"
+                    _LOGGER.warning("User cloud token/key also invalid for device %s", device_id)
+            except Exception as e:
+                _LOGGER.warning("User cloud get_cloud_keys error for device %s: %s", device_id, e)
+
+        # Step 3: All failed, return empty for manual input
+        _LOGGER.warning("No valid token/key found for device %s, manual input required", device_id)
+        return "", "", "manual"
+
     async def async_step_get_token(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
@@ -459,13 +554,12 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         lua_file = None
 
         try:
-            if is_v3 and self._preset_cloud:
-                keys = await self._preset_cloud.get_cloud_keys(device_id)
-                if keys:
-                    method = list(keys.keys())[0]
-                    token = keys[method]["token"]
-                    key = keys[method]["key"]
-                    _LOGGER.info("Got token/key for device %s", device_id)
+            ip_address = current_device[CONF_IP]
+            token, key, key_source = await self._acquire_validated_token_key(
+                device_id, ip_address, DEFAULT_PORT, protocol,
+            )
+            if token and key:
+                _LOGGER.info("Using token/key from %s for device %s", key_source, device_id)
 
             if self._user_cloud:
                 cloud_device = self._cloud_devices.get(device_id, {})
@@ -628,6 +722,101 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         self._preset_cloud = None
         self._user_cloud = None
         self._cloud_devices: dict = {}
+
+    async def _validate_token_key(
+        self,
+        device_id: int,
+        ip_address: str,
+        port: int,
+        token: str,
+        key: str,
+    ) -> bool:
+        """Validate token/key by attempting V3 authentication handshake.
+
+        Returns True if authentication succeeds.
+        """
+        if not token or not key:
+            return False
+
+        def _try_auth():
+            try:
+                from .midea_lib.security import LocalSecurity
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(5)
+                sock.connect((ip_address, port))
+                security = LocalSecurity()
+                handshake = security.encode_8370(bytes.fromhex(token), 0x0)
+                sock.send(handshake)
+                response = sock.recv(256)
+                sock.close()
+                if len(response) < 72:
+                    _LOGGER.debug(
+                        "[%s] Token/key validation failed: response too short (%d bytes): %s",
+                        device_id, len(response), response.hex(),
+                    )
+                    return False
+                auth_data = response[8:72]
+                security.tcp_key(auth_data, bytes.fromhex(key))
+                _LOGGER.debug("[%s] Token/key validation passed", device_id)
+                return True
+            except Exception as e:
+                _LOGGER.debug("[%s] Token/key validation error: %s", device_id, e)
+                return False
+
+        return await self.hass.async_add_executor_job(_try_auth)
+
+    async def _acquire_validated_token_key(
+        self,
+        device_id: int,
+        ip_address: str,
+        port: int,
+        protocol: int,
+    ) -> tuple:
+        """Get validated token/key with fallback chain.
+
+        Tries preset cloud first, validates, falls back to user cloud.
+        Returns (token, key, source) tuple.
+        """
+        is_v3 = protocol == ProtocolVersion.V3
+        if not is_v3:
+            return "", "", "not_needed"
+
+        # Step 1: Try preset cloud
+        if self._preset_cloud:
+            try:
+                keys = await self._preset_cloud.get_cloud_keys(device_id)
+                if keys:
+                    method = list(keys.keys())[0]
+                    token = keys[method]["token"]
+                    key = keys[method]["key"]
+                    _LOGGER.info("Got token/key from preset cloud for device %s", device_id)
+                    if await self._validate_token_key(device_id, ip_address, port, token, key):
+                        return token, key, "preset_cloud"
+                    _LOGGER.warning(
+                        "Preset cloud token/key invalid for device %s, will try user cloud",
+                        device_id,
+                    )
+            except Exception as e:
+                _LOGGER.warning("Preset cloud get_cloud_keys error for device %s: %s", device_id, e)
+
+        # Step 2: Fallback to user's own cloud account
+        if self._user_cloud:
+            try:
+                keys = await self._user_cloud.get_cloud_keys(device_id)
+                if keys:
+                    method = list(keys.keys())[0]
+                    token = keys[method]["token"]
+                    key = keys[method]["key"]
+                    _LOGGER.info("Got token/key from user cloud for device %s", device_id)
+                    if await self._validate_token_key(device_id, ip_address, port, token, key):
+                        return token, key, "user_cloud"
+                    _LOGGER.warning("User cloud token/key also invalid for device %s", device_id)
+            except Exception as e:
+                _LOGGER.warning("User cloud get_cloud_keys error for device %s: %s", device_id, e)
+
+        # Step 3: All failed, return empty for manual input
+        _LOGGER.warning("No valid token/key found for device %s, manual input required", device_id)
+        return "", "", "manual"
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
@@ -886,13 +1075,12 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         lua_file = None
 
         try:
-            if is_v3 and self._preset_cloud:
-                keys = await self._preset_cloud.get_cloud_keys(device_id)
-                if keys:
-                    method = list(keys.keys())[0]
-                    token = keys[method]["token"]
-                    key = keys[method]["key"]
-                    _LOGGER.info("Got token/key for device %s", device_id)
+            ip_address = current_device[CONF_IP]
+            token, key, key_source = await self._acquire_validated_token_key(
+                device_id, ip_address, DEFAULT_PORT, protocol,
+            )
+            if token and key:
+                _LOGGER.info("Using token/key from %s for device %s", key_source, device_id)
 
             if self._user_cloud:
                 cloud_device = self._cloud_devices.get(device_id, {})
