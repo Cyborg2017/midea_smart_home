@@ -223,6 +223,7 @@ jobs:
           echo "::set-output name=content::$changelog"
 
       - name: Create prerelease
+        id: create_release
         if: steps.check_commits.outputs.has_new_commits == 'true'
         uses: actions/create-release@v1
         env:
@@ -233,3 +234,22 @@ jobs:
           body: ${{ steps.read_changelog.outputs.content }}
           draft: false
           prerelease: true
+
+      - name: Package custom_component and upload to release
+        if: steps.check_commits.outputs.has_new_commits == 'true'
+        run: |
+          cd custom_components
+          zip -r ../midea_smart_home.zip midea_smart_home
+          cd ..
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload release asset
+        if: steps.check_commits.outputs.has_new_commits == 'true'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./midea_smart_home.zip
+          asset_name: midea_smart_home.zip
+          asset_content_type: application/zip
