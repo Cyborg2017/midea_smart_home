@@ -137,6 +137,8 @@ jobs:
               text=True
           )
           tags = [t for t in tags_result.stdout.strip().split('\n') if t]
+          # Exclude prerelease tags (e.g., v26.6.2-b0) for formal release changelog
+          tags = [t for t in tags if not re.match(r'^v.*-b\d+$', t)]
           prev_version = tags[0] if tags else None
           
           result = subprocess.run(
