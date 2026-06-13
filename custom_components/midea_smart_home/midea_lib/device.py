@@ -150,6 +150,7 @@ class DeviceController(threading.Thread):
                 response = self._sock.recv(256)
 
                 if len(response) < 72:
+                    _LOGGER.debug("[%s] Raw response hex (%d bytes): %s", self._device_id, len(response), response.hex())
                     raise DataUnexpectedLength(f"Response too short: {len(response)}")
 
                 auth_data = response[8:72]
