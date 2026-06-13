@@ -2104,9 +2104,6 @@
       "current_time_power": {
         "name": "Real-time Power"
       },
-      "indoor_humidity": {
-        "name": "Indoor Humidity"
-      },
       "cycle_memory": {
         "name": "Cycle Memory"
       },
@@ -2184,6 +2181,9 @@
       },
       "ice": {
         "name": "Ice Making"
+      },
+      "indoor_humidity": {
+        "name": "Indoor Humidity"
       },
       "intelligent_mode": {
         "name": "Intelligent Mode"

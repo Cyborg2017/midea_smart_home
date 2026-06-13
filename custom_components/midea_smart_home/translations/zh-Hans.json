@@ -2104,9 +2104,6 @@
       "current_time_power": {
         "name": "实时功率"
       },
-      "indoor_humidity": {
-        "name": "室内湿度"
-      },
       "cycle_memory": {
         "name": "程序记忆"
       },
@@ -2184,6 +2181,9 @@
       },
       "ice": {
         "name": "制冰"
+      },
+      "indoor_humidity": {
+        "name": "室内湿度"
       },
       "intelligent_mode": {
         "name": "智能"
