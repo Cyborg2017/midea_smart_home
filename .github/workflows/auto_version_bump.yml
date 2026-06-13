@@ -142,7 +142,8 @@ jobs:
           prev_version = tags[0] if tags else None
           
           result = subprocess.run(
-              ['git', 'log', '--oneline', '--format=%s', '-50'],
+              ['git', 'log', '--oneline', '--format=%s',
+               f'{prev_version}..HEAD' if prev_version else '-100'],
               capture_output=True,
               text=True
           )
@@ -164,8 +165,8 @@ jobs:
               if not commit.strip():
                   continue
               if commit.startswith('chore: bump version'):
-                  break
-              
+                  continue
+
               match = re.match(r'^(\w+)(?:\([^)]+\))?:\s*(.*)', commit)
               if match:
                   category = match.group(1)
