@@ -158,6 +158,7 @@ def _parse_0110_response(data: bytes, addr: tuple) -> dict | None:
             CONF_SN: ssid,
             CONF_SN8: sn8,
             CONF_PROTOCOL: ProtocolVersion.V2,
+            "unsupported_protocol": True,
         }
     except Exception:
         return None

@@ -660,10 +660,11 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         error: str = ""
     ) -> FlowResult:
         is_v3 = protocol == ProtocolVersion.V3
+        unsupported = current_device.get("unsupported_protocol", False)
         device_type = current_device.get(CONF_DEVICE_TYPE)
         sn8 = current_device.get(CONF_SN8, "")
 
-        protocol_name = f"V{protocol}"
+        protocol_name = f"V{protocol} 0x0110 (New Protocol)" if unsupported else f"V{protocol}"
         device_name = current_device.get(CONF_DEVICE_NAME, "")
         if not device_name:
             device_name = DEVICE_TYPES.get(device_type, f"Device {device_type}")
@@ -697,6 +698,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "progress": f"({self._current_device_index + 1}/{len(self._selected_devices)})",
                 "token_required": "Required" if is_v3 else "Optional (Not needed for V1/V2)",
                 "key_required": "Required" if is_v3 else "Optional (Not needed for V1/V2)",
+                "unsupported_protocol": "\n\n[Warning] This device uses a protocol variant (0x0110) that is not yet supported. TCP communication will fail. You may skip this device." if unsupported else "",
             },
         )
 
@@ -1209,10 +1211,11 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         error: str = ""
     ) -> FlowResult:
         is_v3 = protocol == ProtocolVersion.V3
+        unsupported = current_device.get("unsupported_protocol", False)
         device_type = current_device.get(CONF_DEVICE_TYPE)
         sn8 = current_device.get(CONF_SN8, "")
 
-        protocol_name = f"V{protocol}"
+        protocol_name = f"V{protocol} 0x0110 (New Protocol)" if unsupported else f"V{protocol}"
         device_name = current_device.get(CONF_DEVICE_NAME, "")
         if not device_name:
             device_name = DEVICE_TYPES.get(device_type, f"Device {device_type}")
@@ -1246,6 +1249,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 "progress": f"({self._current_device_index + 1}/{len(self._selected_devices)})",
                 "token_required": "Required" if is_v3 else "Optional (Not needed for V1/V2)",
                 "key_required": "Required" if is_v3 else "Optional (Not needed for V1/V2)",
+                "unsupported_protocol": "\n\n[Warning] This device uses a protocol variant (0x0110) that is not yet supported. TCP communication will fail. You may skip this device." if unsupported else "",
             },
         )
 

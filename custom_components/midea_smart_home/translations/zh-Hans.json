@@ -28,7 +28,7 @@
           "lua_file": "设备协议文件路径",
           "token": "{token_required}"
         },
-        "description": "设备名称: {device_name}\n设备型号: {device_model}\n设备 ID: {device_id}\nIP 地址: {ip_address}\nSN8: {sn8}\n协议版本: {protocol_version}\n{error}",
+        "description": "设备名称: {device_name}\n设备型号: {device_model}\n设备 ID: {device_id}\nIP 地址: {ip_address}\nSN8: {sn8}\n协议版本: {protocol_version}\n{error}{unsupported_protocol}",
         "title": "设备认证 {progress}"
       },
       "select_device": {
@@ -2409,7 +2409,7 @@
           "lua_file": "设备协议文件路径",
           "token": "{token_required}"
         },
-        "description": "设备名称: {device_name}\n设备型号: {device_model}\n设备 ID: {device_id}\nIP 地址: {ip_address}\nSN8: {sn8}\n协议版本: {protocol_version}\n{error}",
+        "description": "设备名称: {device_name}\n设备型号: {device_model}\n设备 ID: {device_id}\nIP 地址: {ip_address}\nSN8: {sn8}\n协议版本: {protocol_version}\n{error}{unsupported_protocol}",
         "title": "设备认证 {progress}"
       },
       "init": {
