@@ -28,7 +28,6 @@ from .const import (
     CONF_PORT,
     CONF_PROTOCOL,
     CONF_ROOM_NAME,
-    CONF_SERVER,
     CONF_SN,
     CONF_SN8,
     CONF_PRODUCT_MODEL,
@@ -47,30 +46,13 @@ from .midea_lib.packet_builder import PacketBuilder
 from .midea_lib.discovery import discover_devices, DISCOVERY_TIMEOUT
 from .midea_lib.lua import write_file, decrypt_lua_code, ensure_lua_files
 from .midea_lib.setup import validate_device
-from .midea_lib.cloud import download_lua_file, SUPPORTED_CLOUDS
+from .midea_lib.cloud import download_lua_file
 
 _LOGGER = logging.getLogger(__name__)
-
-CLOUD_SERVERS = {
-    1: "美的美居",
-    2: "MSmart Home",
-    3: "Midea Air",
-    4: "NetHome Plus",
-    5: "Ariston Clima",
-}
-
-CLOUD_KEY_TO_NAME = {
-    1: "Meiju Cloud",
-    2: "SmartHome",
-    3: "Midea Air",
-    4: "NetHome Plus",
-    5: "Ariston Clima",
-}
 
 STEP_USER_DATA_SCHEMA = vol.Schema({
     vol.Required(CONF_ACCOUNT): str,
     vol.Required(CONF_PASSWORD): str,
-    vol.Required(CONF_SERVER, default=1): vol.In(CLOUD_SERVERS),
     vol.Optional("scan_address", default="auto"): str,
 })
 
@@ -114,7 +96,6 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._devices_data: list = []
         self._account: str = None
         self._password: str = None
-        self._cloud_name: str = "Meiju Cloud"
         self._scan_address: str = "auto"
         self._session: ClientSession = None
         self._preset_cloud = None
@@ -137,8 +118,6 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._account = user_input.get(CONF_ACCOUNT)
             self._password = user_input.get(CONF_PASSWORD)
             self._scan_address = user_input.get("scan_address", "auto")
-            cloud_server_key = user_input.get(CONF_SERVER, 1)
-            self._cloud_name = CLOUD_KEY_TO_NAME.get(cloud_server_key, "Meiju Cloud")
 
             existing_entries = self.hass.config_entries.async_entries(DOMAIN)
             for entry in existing_entries:
@@ -204,7 +183,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     _LOGGER.warning("Preset cloud login failed")
 
                 self._user_cloud = get_midea_cloud(
-                    cloud_name=self._cloud_name,
+                    cloud_name="Meiju Cloud",
                     session=self._session,
                     account=self._account,
                     password=self._password,
@@ -215,7 +194,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     await self._cleanup_session()
                     return self.async_abort(reason="auth_failed")
 
-                _LOGGER.info("Cloud login success with %s", self._cloud_name)
+                _LOGGER.info("Cloud login success")
 
                 self._cloud_devices = await self._user_cloud.list_appliances(home_id=None) or {}
                 _LOGGER.info("Cloud devices list: %s", self._cloud_devices)
@@ -494,7 +473,6 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         "devices": self._devices_data,
                         CONF_ACCOUNT: self._account,
                         CONF_PASSWORD: self._password,
-                        CONF_SERVER: self._cloud_name,
                     },
                 )
             return self.async_abort(reason="no_devices")
@@ -621,8 +599,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     sn,
                     device_type,
                     manufacturer_code,
-                    model_number,
-                    self._cloud_name,
+                    model_number
                 )
 
                 if success:
@@ -746,7 +723,6 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         self._config_entry = config_entry
         self._account = config_entry.data.get(CONF_ACCOUNT, "")
         self._password = config_entry.data.get(CONF_PASSWORD, "")
-        self._cloud_name = config_entry.data.get(CONF_SERVER, "Meiju Cloud")
         self._discovered_devices: dict = {}
         self._selected_devices: list = []
         self._current_device_index: int = 0
@@ -947,7 +923,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
 
                 if self._account and self._password:
                     self._user_cloud = get_midea_cloud(
-                        cloud_name=self._cloud_name,
+                        cloud_name="Meiju Cloud",
                         session=self._session,
                         account=self._account,
                         password=self._password,
@@ -1172,8 +1148,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                     sn,
                     device_type,
                     manufacturer_code,
-                    model_number,
-                    self._cloud_name,
+                    model_number
                 )
 
                 if success:
@@ -1335,20 +1310,12 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 new_data[CONF_ACCOUNT] = user_input[CONF_ACCOUNT]
             if user_input.get(CONF_PASSWORD):
                 new_data[CONF_PASSWORD] = user_input[CONF_PASSWORD]
-            cloud_server_key = user_input.get(CONF_SERVER, None)
-            if cloud_server_key is not None:
-                new_data[CONF_SERVER] = CLOUD_KEY_TO_NAME.get(cloud_server_key, self._cloud_name)
 
             self.hass.config_entries.async_update_entry(
                 self._config_entry,
                 data=new_data,
             )
             return self.async_create_entry(title="", data={})
-
-        current_cloud_key = next(
-            (k for k, v in CLOUD_KEY_TO_NAME.items() if v == self._cloud_name),
-            1,
-        )
 
         return self.async_show_form(
             step_id="update_account",
@@ -1361,10 +1328,6 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                     CONF_PASSWORD,
                     default=self._password,
                 ): str,
-                vol.Optional(
-                    CONF_SERVER,
-                    default=current_cloud_key,
-                ): vol.In(CLOUD_SERVERS),
             }),
         )
 
@@ -1431,7 +1394,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         session = ClientSession()
         try:
             cloud = get_midea_cloud(
-                cloud_name=self._cloud_name,
+                cloud_name="Meiju Cloud",
                 session=session,
                 account=self._account,
                 password=self._password,

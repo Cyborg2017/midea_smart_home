@@ -136,40 +136,6 @@ class MeijuCloudSecurity(CloudSecurity):
         return md_second.hexdigest()
 
 
-class MSmartCloudSecurity(CloudSecurity):
-    """MSmart Cloud Security."""
-
-    def __init__(self, login_key: str, iot_key: str, hmac_key: str) -> None:
-        super().__init__(
-            login_key,
-            iot_key,
-            hmac_key,
-            13101328926877700970,
-            16429062708050928556,
-        )
-
-    def encrypt_iam_password(self, login_id: str, data: str) -> str:
-        md = md5()
-        md.update(data.encode("ascii"))
-        md_second = md5()
-        md_second.update(md.hexdigest().encode("ascii"))
-        login_hash = login_id + md_second.hexdigest() + self._login_key
-        sha = sha256()
-        sha.update(login_hash.encode("ascii"))
-        return sha.hexdigest()
-
-    def set_aes_keys(
-        self,
-        encrypted_key: str | bytes,
-        encrypted_iv: str | bytes,
-    ) -> None:
-        key_digest = sha256(self._login_key.encode("ascii")).hexdigest()
-        tmp_key = key_digest[:16].encode("ascii")
-        tmp_iv = key_digest[16:32].encode("ascii")
-        self._aes_key = self.aes_decrypt(encrypted_key, tmp_key, tmp_iv).encode("ascii")
-        self._aes_iv = self.aes_decrypt(encrypted_iv, tmp_key, tmp_iv).encode("ascii")
-
-
 class MideaAirSecurity(CloudSecurity):
     """Midea Air Security."""
 

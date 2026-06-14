@@ -50,14 +50,12 @@
         "data": {
           "account": "Account",
           "password": "Password",
-          "scan_address": "Scan Address",
-          "server": "Cloud Server"
+          "scan_address": "Scan Address"
         },
         "data_description": {
-          "scan_address": "Enter router address (e.g., 192.168.1.1) to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
-          "server": "Select the cloud server corresponding to your app and region"
+          "scan_address": "Enter router address (e.g., 192.168.1.1) to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection"
         },
-        "description": "Enter your Midea account credentials to download necessary resource files",
+        "description": "Enter your Midea Meiju account credentials to download necessary resource files",
         "title": "Midea Smart Home Setup"
       }
     }
@@ -2444,13 +2442,11 @@
       "update_account": {
         "data": {
           "account": "Account",
-          "password": "Password",
-          "server": "Cloud Server"
+          "password": "Password"
         },
         "data_description": {
-          "account": "Midea account (usually phone number for Meiju, email for overseas apps)",
-          "password": "Midea password",
-          "server": "Select the cloud server corresponding to your app and region"
+          "account": "Midea Meiju account (usually phone number)",
+          "password": "Midea Meiju password"
         },
         "title": "Update Account/Password"
       }

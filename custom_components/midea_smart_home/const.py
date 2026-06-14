@@ -30,7 +30,6 @@ CONF_HOME_NAME = "home_name"
 CONF_ROOM_NAME = "room_name"
 CONF_PROTOCOL = "protocol"
 CONF_CATEGORY = "category"
-CONF_SERVER = "server"
 
 DEFAULT_PORT = 6444
 

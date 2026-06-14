@@ -50,14 +50,12 @@
         "data": {
           "account": "账号",
           "password": "密码",
-          "scan_address": "扫描地址",
-          "server": "云服务器"
+          "scan_address": "扫描地址"
         },
         "data_description": {
-          "scan_address": "[1] 输入路由器地址（如 192.168.1.1）扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）",
-          "server": "选择与您使用的 App 和地区对应的云服务器"
+          "scan_address": "[1] 输入路由器地址（如 192.168.1.1）扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）"
         },
-        "description": "输入美的账号密码，下载必要的资源文件",
+        "description": "输入美的美居账号密码，下载必要的资源文件",
         "title": "Midea Smart Home 设置"
       }
     }
@@ -2444,13 +2442,11 @@
       "update_account": {
         "data": {
           "account": "账号",
-          "password": "密码",
-          "server": "云服务器"
+          "password": "密码"
         },
         "data_description": {
-          "account": "美的账号（美居一般为手机号，海外 App 一般为邮箱）",
-          "password": "美的密码",
-          "server": "选择与您使用的 App 和地区对应的云服务器"
+          "account": "美的美居账号（一般为手机号）",
+          "password": "美的美居密码"
         },
         "title": "更新账号密码"
       }
