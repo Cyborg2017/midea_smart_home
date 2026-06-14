@@ -67,7 +67,16 @@ SUPPORTED_CLOUDS = {
 # All credentials are XOR-encoded (3-element format: key, key^username, key^password).
 # All accounts share the same base key. Each account will be tried in order; if one fails, the next is used.
 PRESET_ACCOUNTS: list[dict[str, Any]] = [
-    # Account 1: nethome+us@mailinator.com / password1 -> NetHome Plus
+    # Account 1: midea_smart_home@yeah.net / mideasmarthome26 -> NetHome Plus
+    {
+        "data": [
+            39182118275972017797890111985649342047468653967530949796945843010512,
+            39182118961190965041038356452242204560213308172028239508034309545636,
+            39182118275972017797890111985698725417270634364159392795375039678950,
+        ],
+        "cloud_name": "NetHome Plus"
+    },
+    # Account 2: nethome+us@mailinator.com / password1 -> NetHome Plus
     {
         "data": [
             39182118275972017797890111985649342047468653967530949796945843010512,
@@ -76,7 +85,7 @@ PRESET_ACCOUNTS: list[dict[str, Any]] = [
         ],
         "cloud_name": "NetHome Plus"
     },
-    # Account 2: midea_cloud@outlook.com / a0d6e30c94b15 -> NetHome Plus
+    # Account 3: midea_cloud@outlook.com / a0d6e30c94b15 -> NetHome Plus
     {
         "data": [
             39182118275972017797890111985649342047468653967530949796945843010512,
