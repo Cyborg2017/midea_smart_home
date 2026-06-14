@@ -353,7 +353,8 @@ DEVICE_MAPPING = {
             {"light, self_clean, sound"}
         ],
         "polling_query": [
-            {}
+            {},
+            {"light, self_clean, sound"}
         ],
         "entities": {
             Platform.LOCK: {
