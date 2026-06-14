@@ -12,21 +12,16 @@ Home Assistant custom integration for Midea smart devices via local network.
 ## Features
 
 - **Local Control**: Devices are controlled directly via local network, no cloud connection required
-- **Multi-Cloud Platform Support**: Support Midea MSmart Home, Midea Air, NetHome Plus, Ariston Clima and more cloud platforms
 - **Auto Protocol Download**: Automatically download Lua protocol scripts from cloud (first-time setup only)
 - **Flexible Configuration**: Support customizing entity attributes through device mapping files, easy to adapt new devices
 - **Multi-language Support**: Support Chinese and English interface
 - **Rich Entity Platforms**: Support climate, sensor, switch, select, button, number, vacuum, binary_sensor, fan, humidifier, light, cover, water_heater
-- **Device Status Notifications**: Display device online/offline status notifications in Home Assistant sidebar
 
 ## Workflow
 
 **Configuration Phase**
-1. User enters account credentials (supports multiple cloud platforms)
-2. Select the appropriate cloud server based on your app and region
-3. Login to Cloud API
-
-![Setup](docs/images/en/1.png)
+1. User enters Midea account credentials
+2. Login to Midea Cloud API
 
 **Discovery Phase**
 1. Get device details from cloud (Device ID, Model, SN8, etc.)
