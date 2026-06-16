@@ -16,5 +16,5 @@
     "aiohttp>=3.8.0",
     "pycryptodome>=3.15.0"
   ],
-  "version": "26.6.3-b0"
+  "version": "26.6.3-b1"
 }
