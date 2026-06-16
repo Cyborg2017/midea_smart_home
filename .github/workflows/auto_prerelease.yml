@@ -84,28 +84,30 @@ jobs:
           
           current_version = manifest['version']
 
-          # Increment patch version for prerelease (e.g., 26.6.0 -> 26.6.1)
-          ver_parts = current_version.split('.')
-          ver_parts[2] = str(int(ver_parts[2]) + 1)
-          base_version = '.'.join(ver_parts)
+          # 判断当前版本是否已是 prerelease
+          is_current_prerelease = bool(re.match(r'.*-b\d+$', current_version))
 
-          # Get latest prerelease tag to determine next beta number
-          tags_result = subprocess.run(
-              ['git', 'tag', '-l', '--sort=-v:refname', f'v{base_version}-b*'],
-              capture_output=True,
-              text=True
-          )
-          prerelease_tags = [t for t in tags_result.stdout.strip().split('\n') if t]
-
-          # Extract beta number or start from 0
-          if prerelease_tags:
-              last_prerelease = prerelease_tags[0]
-              match = re.search(r'-b(\d+)$', last_prerelease)
-              if match:
-                  next_b = int(match.group(1)) + 1
+          if is_current_prerelease:
+              # 已是prerelease，保持base版本不变，只递增beta号（如 26.6.3-b0 -> 26.6.3-b1）
+              base_version = re.sub(r'-b\d+$', '', current_version)
+              # 查找当前base版本已有的beta标签
+              tags_result = subprocess.run(
+                  ['git', 'tag', '-l', '--sort=-v:refname', f'v{base_version}-b*'],
+                  capture_output=True,
+                  text=True
+              )
+              prerelease_tags = [t for t in tags_result.stdout.strip().split('\n') if t]
+              if prerelease_tags:
+                  last_prerelease = prerelease_tags[0]
+                  match = re.search(r'-b(\d+)$', last_prerelease)
+                  next_b = int(match.group(1)) + 1 if match else 0
               else:
                   next_b = 0
           else:
+              # 正式版，先bump patch再从b0开始（如 26.6.3 -> 26.6.4-b0）
+              ver_parts = current_version.split('.')
+              ver_parts[2] = str(int(ver_parts[2]) + 1)
+              base_version = '.'.join(ver_parts)
               next_b = 0
 
           prerelease_version = f"{base_version}-b{next_b}"
