@@ -801,13 +801,6 @@
           "zero_degree": "Zero Degree"
         }
       },
-      "follow_body_sense": {
-        "name": "Body Sense",
-        "state": {
-          "off": "Off",
-          "on": "On"
-        }
-      },
       "fresh_air_mode": {
         "name": "Fresh Air Mode",
         "state": {
@@ -2029,6 +2022,9 @@
       }
     },
     "switch": {
+      "follow_body_sense": {
+        "name": "Body Sense"
+      },
       "ac_dry": {
         "name": "Indoor Unit Anti-mold (Drying)"
       },

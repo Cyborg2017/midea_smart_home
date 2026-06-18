@@ -801,13 +801,6 @@
           "zero_degree": "零度"
         }
       },
-      "follow_body_sense": {
-        "name": "随身感",
-        "state": {
-          "off": "关闭",
-          "on": "开启"
-        }
-      },
       "fresh_air_mode": {
         "name": "新风模式",
         "state": {
@@ -2029,6 +2022,9 @@
       }
     },
     "switch": {
+      "follow_body_sense": {
+        "name": "随身感"
+      },
       "ac_dry": {
         "name": "内机防霉（干燥）"
       },
