@@ -382,7 +382,6 @@
             "power_saving": { "default": "mdi:power-sleep" },
             "preservation_mode": { "default": "mdi:leaf" },
             "prevent_straight_wind": { "default": "mdi:fan-off" },
-            "prevent_super_cool": { "default": "mdi:snowflake-off" },
             "prevent_wrinkle_switch": { "default": "mdi:tshirt-crew" },
             "protect": { "default": "mdi:shield" },
             "ptc": { "default": "mdi:fire" },

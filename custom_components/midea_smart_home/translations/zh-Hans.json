@@ -225,6 +225,11 @@
               "swing_ud_site_5": "角度5",
               "vertical": "垂直"
             }
+          },
+          "preset_mode": {
+            "state": {
+              "prevent_super_cool": "智控温"
+            }
           }
         }
       },
@@ -2233,9 +2238,6 @@
       },
       "prevent_straight_wind": {
         "name": "防直吹"
-      },
-      "prevent_super_cool": {
-        "name": "智控温"
       },
       "prevent_wrinkle_switch": {
         "name": "智能防皱"

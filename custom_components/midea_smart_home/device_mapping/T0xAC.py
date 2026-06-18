@@ -41,10 +41,12 @@ DEVICE_MAPPING = {
                     "preset_modes": {
                         "none": {
                             "eco": "off",
-                            "comfort_power_save": "off"
+                            "comfort_power_save": "off",
+                            "prevent_super_cool": "off"
                         },
                         "eco": {"eco": "on"},
-                        "comfort": {"comfort_power_save": "on"}
+                        "comfort": {"comfort_power_save": "on"},
+                        "prevent_super_cool": {"prevent_super_cool": "on"}
                     },
                     "swing_modes": {
                         "off": {"wind_swing_lr": "off", "wind_swing_ud": "off"},
@@ -149,9 +151,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [1, 2]
                 },
-                "prevent_super_cool": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
@@ -218,9 +217,11 @@ DEVICE_MAPPING = {
                     },
                     "preset_modes": {
                         "none": {
-                            "eco": "off"
+                            "eco": "off",
+                            "prevent_super_cool": "off"
                         },
-                        "eco": {"eco": "on"}
+                        "eco": {"eco": "on"},
+                        "prevent_super_cool": {"prevent_super_cool": "on"}
                     },
                     "swing_modes": {
                         "off": {"wind_swing_lr": "off", "wind_swing_ud": "off"},
@@ -313,9 +314,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [1, 2]
                 },
-                "prevent_super_cool": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
@@ -388,9 +386,11 @@ DEVICE_MAPPING = {
                     },
                     "preset_modes": {
                         "none": {
-                            "eco": "off"
+                            "eco": "off",
+                            "prevent_super_cool": "off"
                         },
-                        "eco": {"eco": "on"}
+                        "eco": {"eco": "on"},
+                        "prevent_super_cool": {"prevent_super_cool": "on"}
                     },
                     "swing_modes": {
                         "off": {"wind_swing_lr": "off", "wind_swing_ud": "off"},
@@ -474,9 +474,6 @@ DEVICE_MAPPING = {
                 "screen_display": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "translation_key": "display_on_off"
-                },
-                "prevent_super_cool": {
-                    "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -650,10 +647,12 @@ DEVICE_MAPPING = {
                     "preset_modes": {
                         "none": {
                             "eco": "off",
-                            "comfort_power_save": "off"
+                            "comfort_power_save": "off",
+                            "prevent_super_cool": "off"
                         },
                         "eco": {"eco": "on"},
-                        "comfort": {"comfort_power_save": "on"}
+                        "comfort": {"comfort_power_save": "on"},
+                        "prevent_super_cool": {"prevent_super_cool": "on"}
                     },
                     "swing_modes": {
                         "off": {"wind_swing_lr": "off", "wind_swing_ud": "off"},
@@ -758,9 +757,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [1, 2]
                 },
-                "prevent_super_cool": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
@@ -833,10 +829,12 @@ DEVICE_MAPPING = {
                     "preset_modes": {
                         "none": {
                             "eco": "off",
-                            "comfort_power_save": "off"
+                            "comfort_power_save": "off",
+                            "prevent_super_cool": "off"
                         },
                         "eco": {"eco": "on"},
-                        "comfort": {"comfort_power_save": "on"}
+                        "comfort": {"comfort_power_save": "on"},
+                        "prevent_super_cool": {"prevent_super_cool": "on"}
                     },
                     "swing_modes": {
                         "off": {"wind_swing_lr": "off", "wind_swing_ud": "off"},
@@ -917,9 +915,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [1, 2]
                 },
-                "prevent_super_cool": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
@@ -976,8 +971,12 @@ DEVICE_MAPPING = {
                         "fan_only": {"power": "on", "mode": "fan"}
                     },
                     "preset_modes": {
-                        "none": {"cool_power_saving": 0},
-                        "eco": {"cool_power_saving": 1}
+                        "none": {
+                            "cool_power_saving": 0,
+                            "prevent_super_cool": "off"
+                        },
+                        "eco": {"cool_power_saving": 1},
+                        "prevent_super_cool": {"prevent_super_cool": "on"}
                     },
                     "swing_modes": {
                         "off": {"wind_swing_lr": "off", "wind_swing_ud": "off"},
@@ -1059,9 +1058,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 100],
                     "translation_key": "display_on_off"
-                },
-                "prevent_super_cool": {
-                    "device_class": SwitchDeviceClass.SWITCH
                 },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -1146,10 +1142,12 @@ DEVICE_MAPPING = {
                     "preset_modes": {
                         "none": {
                             "eco": "off",
-                            "comfort_power_save": "off"
+                            "comfort_power_save": "off",
+                            "prevent_super_cool": "off"
                         },
                         "eco": {"eco": "on"},
-                        "comfort": {"comfort_power_save": "on"}
+                        "comfort": {"comfort_power_save": "on"},
+                        "prevent_super_cool": {"prevent_super_cool": "on"}
                     },
                     "swing_modes": {
                         "off": {"wind_swing_lr": "off", "wind_swing_ud": "off"},
@@ -1210,9 +1208,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [1, 2]
                 },
-                "prevent_super_cool": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
@@ -1272,10 +1267,18 @@ DEVICE_MAPPING = {
                         "none": {
                             "eco": "off",
                             "cool_power_saving": 0,
-                            "strong_wind": "off"
+                            "strong_wind": "off",
+                            "prevent_super_cool": "off"
                         },
-                        "eco": {"eco": "on", "cool_power_saving": 1},
-                        "boost": {"strong_wind": "on"}
+                        "eco": {
+                            "eco": "on",
+                            "cool_power_saving": 1
+                        },
+                        "boost": {
+                            "strong_wind": "on",
+                            "prevent_super_cool": "off"
+                        },
+                        "prevent_super_cool": {"prevent_super_cool": "on"}
                     },
                     "fan_modes": {
                         "20": {"wind_speed": 20},
@@ -1301,9 +1304,6 @@ DEVICE_MAPPING = {
                     "rationale": ["on", "off"],
                 },
                 "power": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "prevent_super_cool": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "ptc": {
@@ -1360,8 +1360,15 @@ DEVICE_MAPPING = {
                         "fan_only": {"power": "on", "mode": "fan"}
                     },
                     "preset_modes": {
-                        "none": {"strong_wind": "off"},
-                        "boost": {"strong_wind": "on"}
+                        "none": {
+                            "strong_wind": "off",
+                            "prevent_super_cool": 0
+                        },
+                        "boost": {
+                            "strong_wind": "on",
+                            "prevent_super_cool": 0
+                        },
+                        "prevent_super_cool": {"prevent_super_cool": 1}
                     },
                     "fan_modes": {
                         "20": {"wind_speed": 20},
@@ -1384,10 +1391,6 @@ DEVICE_MAPPING = {
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "prevent_super_cool": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
                 },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -1451,8 +1454,15 @@ DEVICE_MAPPING = {
                         "fan_only": {"power": "on", "mode": "fan"}
                     },
                     "preset_modes": {
-                        "none": {"strong_wind": "off"},
-                        "boost": {"strong_wind": "on"}
+                        "none": {
+                            "strong_wind": "off",
+                            "prevent_super_cool": 0
+                        },
+                        "boost": {
+                            "strong_wind": "on",
+                            "prevent_super_cool": 0
+                        },
+                        "prevent_super_cool": {"prevent_super_cool": 1}
                     },
                     "fan_modes": {
                         "20": {"wind_speed": 20},
@@ -1475,10 +1485,6 @@ DEVICE_MAPPING = {
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "prevent_super_cool": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
                 },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -1636,7 +1642,10 @@ DEVICE_MAPPING = {
                             "cool_power_saving": 0,
                             "strong_wind": "off"
                         },
-                        "eco": {"eco": "on", "cool_power_saving": 1},
+                        "eco": {
+                            "eco": "on",
+                            "cool_power_saving": 1
+                        },
                         "boost": {"strong_wind": "on"}
                     },
                     "fan_modes": {
@@ -1720,9 +1729,14 @@ DEVICE_MAPPING = {
                     },
                     "preset_modes": {
                         "none": {
-                            "strong_wind": "off"
+                            "strong_wind": "off",
+                            "prevent_super_cool": 0
                         },
-                        "boost": {"strong_wind": "on"}
+                        "boost": {
+                            "strong_wind": "on",
+                            "prevent_super_cool": 0
+                        },
+                        "prevent_super_cool": {"prevent_super_cool": 1}
                     },
                     "fan_modes": {
                         "20": {"wind_speed": 20},
@@ -1745,10 +1759,6 @@ DEVICE_MAPPING = {
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH
-                },
-                "prevent_super_cool": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
                 },
                 "ptc": {
                     "device_class": SwitchDeviceClass.SWITCH

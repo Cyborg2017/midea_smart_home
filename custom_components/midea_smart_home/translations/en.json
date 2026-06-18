@@ -225,6 +225,11 @@
               "swing_ud_site_5": "Position 5",
               "vertical": "Vertical"
             }
+          },
+          "preset_mode": {
+            "state": {
+              "prevent_super_cool": "Anti-Super Cool"
+            }
           }
         }
       },
@@ -2233,9 +2238,6 @@
       },
       "prevent_straight_wind": {
         "name": "Prevent Direct Wind"
-      },
-      "prevent_super_cool": {
-        "name": "Smart Temp Control"
       },
       "prevent_wrinkle_switch": {
         "name": "Anti-Wrinkle Function"
