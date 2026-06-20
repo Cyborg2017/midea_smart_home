@@ -813,8 +813,8 @@
       "fresh_air_mode_two": {
         "name": "新风模式",
         "state": {
-          "Inside": "内外循环",
-          "Outside": "外循环"
+          "inside": "内循环",
+          "outside": "外循环"
         }
       },
       "fresh_air_time": {
@@ -1613,6 +1613,9 @@
       }
     },
     "sensor": {
+      "current_time_power": {
+        "name": "实时功率"
+      },
       "air_dry_left_time": {
         "name": "风干剩余时间"
       },
@@ -2099,9 +2102,6 @@
       },
       "cool": {
         "name": "制冷"
-      },
-      "current_time_power": {
-        "name": "实时功率"
       },
       "cycle_memory": {
         "name": "程序记忆"

@@ -207,9 +207,9 @@
               "100": "100%",
               "102": "Auto",
               "auto": "Auto",
-              "middle": "Medium",
-              "power": "High",
-              "sleep": "Sleep"
+              "high": "High",
+              "low": "Low",
+              "middle": "Medium"
             }
           },
           "swing_mode": {
@@ -1613,6 +1613,9 @@
       }
     },
     "sensor": {
+      "current_time_power": {
+        "name": "Real-time Power"
+      },
       "air_dry_left_time": {
         "name": "Air Dry Remaining Time"
       },
@@ -2099,9 +2102,6 @@
       },
       "cool": {
         "name": "Cooling"
-      },
-      "current_time_power": {
-        "name": "Real-time Power"
       },
       "cycle_memory": {
         "name": "Cycle Memory"
