@@ -228,7 +228,8 @@
           },
           "preset_mode": {
             "state": {
-              "prevent_super_cool": "智控温"
+              "prevent_super_cool": "智控温",
+              "quick_cool_heat": "速冷热"
             }
           }
         }
@@ -370,6 +371,29 @@
       },
       "humidifier": {
         "name": "加湿器"
+      },
+      "smart_dehumidifier": {
+        "name": "智控抽湿",
+        "state_attributes": {
+          "mode": {
+            "state": {
+              "auto": "自动",
+              "30": "30%",
+              "35": "35%",
+              "40": "40%",
+              "45": "45%",
+              "50": "50%",
+              "55": "55%",
+              "60": "60%",
+              "65": "65%",
+              "70": "70%",
+              "75": "75%",
+              "80": "80%",
+              "85": "85%",
+              "90": "90%"
+            }
+          }
+        }
       }
     },
     "light": {
@@ -978,11 +1002,67 @@
           "water_saving": "省水优先"
         }
       },
+      "degerming": {
+        "name": "空气除菌",
+        "state": {
+          "off": "关闭",
+          "standard": "标准",
+          "strong": "强劲"
+        }
+      },
+      "fresh_air": {
+        "name": "新风",
+        "state": {
+          "off": "关闭",
+          "gear_1": "1档",
+          "gear_2": "2档",
+          "gear_3": "3档",
+          "gear_4": "4档",
+          "strong": "强劲",
+          "auto": "自动"
+        }
+      },
+      "humidification": {
+        "name": "加湿",
+        "state": {
+          "off": "关闭",
+          "gear_1": "1档",
+          "gear_2": "2档",
+          "gear_3": "3档",
+          "gear_4": "4档",
+          "strong": "强劲",
+          "auto": "自动"
+        }
+      },
+      "inner_purifier": {
+        "name": "净化",
+        "state": {
+          "off": "关闭",
+          "gear_1": "1档",
+          "gear_2": "2档",
+          "gear_3": "3档",
+          "gear_4": "4档",
+          "strong": "强劲"
+        }
+      },
+      "moisturizing": {
+        "name": "保湿",
+        "state": {
+          "off": "关闭",
+          "gear_1": "1档",
+          "gear_2": "2档",
+          "gear_3": "3档",
+          "gear_4": "4档"
+        }
+      },
       "no_wind_sense": {
         "name": "无风感",
         "state": {
           "down_no_wind": "下无风感",
+          "left_no_wind": "左无风感",
+          "left_right_no_wind": "左+右无风感",
           "off": "关闭",
+          "right_no_wind": "右无风感",
           "up_down_no_wind": "上+下无风感",
           "up_no_wind": "上无风感"
         }
@@ -1543,6 +1623,46 @@
           "strong": "强劲"
         }
       },
+      "wind_speed_left": {
+        "name": "左侧风速",
+        "state": {
+          "20": "20%",
+          "40": "40%",
+          "60": "60%",
+          "80": "80%",
+          "100": "100%",
+          "auto": "自动"
+        }
+      },
+      "wind_speed_right": {
+        "name": "右侧风速",
+        "state": {
+          "20": "20%",
+          "40": "40%",
+          "60": "60%",
+          "80": "80%",
+          "100": "100%",
+          "auto": "自动"
+        }
+      },
+      "wind_swing_left": {
+        "name": "左侧摆风",
+        "state": {
+          "off": "关闭",
+          "horizontal": "左右摆风",
+          "vertical": "上下摆风",
+          "both": "双向摆风"
+        }
+      },
+      "wind_swing_right": {
+        "name": "右侧摆风",
+        "state": {
+          "off": "关闭",
+          "horizontal": "左右摆风",
+          "vertical": "上下摆风",
+          "both": "双向摆风"
+        }
+      },
       "wind_swing_lr_angle": {
         "name": "左右出风方向",
         "state": {
@@ -1869,6 +1989,12 @@
       "indoor_temperature": {
         "name": "室内温度"
       },
+      "indoor_co2": {
+        "name": "CO2浓度"
+      },
+      "indoor_humidity": {
+        "name": "室内湿度"
+      },
       "lan_ip": {
         "name": "局域网IP"
       },
@@ -1973,6 +2099,9 @@
       "total_elec_value": {
         "name": "总耗电量"
       },
+      "tvoc_density": {
+        "name": "TVOC浓度"
+      },
       "total_working_time": {
         "name": "总工作时间"
       },
@@ -2030,6 +2159,9 @@
       },
       "ac_dry": {
         "name": "内机防霉（干燥）"
+      },
+      "air_remove_odor": {
+        "name": "空调除菌"
       },
       "aidry": {
         "name": "智感干洗"
@@ -2127,6 +2259,9 @@
       "drainage": {
         "name": "一键排水"
       },
+      "degerming": {
+        "name": "空气除菌"
+      },
       "dry": {
         "name": "干燥模式"
       },
@@ -2194,13 +2329,16 @@
         "name": "一键晾衣"
       },
       "light": {
-        "name": "照明开关"
+        "name": "灯光"
       },
       "light_color": {
         "name": "夜灯开关"
       },
       "light_sensitive": {
         "name": "智能光感"
+      },
+      "linkage_2": {
+        "name": "一键好空气"
       },
       "light_sensor": {
         "name": "光感照明"
@@ -2216,6 +2354,9 @@
       },
       "no_wind_sense": {
         "name": "无风感"
+      },
+      "no_wind_sense_judge_param": {
+        "name": "自动无风感"
       },
       "offline_voice_function": {
         "name": "离线语音"
@@ -2243,6 +2384,9 @@
       },
       "ptc": {
         "name": "电辅热"
+      },
+      "rewarming_dry": {
+        "name": "回温除湿"
       },
       "purifier": {
         "name": "净化"

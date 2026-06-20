@@ -1,6 +1,8 @@
-from homeassistant.const import Platform, PERCENTAGE, UnitOfTemperature, PRECISION_HALVES, PRECISION_WHOLE, UnitOfTime, UnitOfPower, UnitOfEnergy
+from homeassistant.const import Platform, PERCENTAGE, UnitOfTemperature, PRECISION_HALVES, PRECISION_WHOLE, UnitOfTime,\
+     UnitOfPower, UnitOfEnergy, CONCENTRATION_PARTS_PER_MILLION, CONCENTRATION_MICROGRAMS_PER_CUBIC_METER
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
+from homeassistant.components.humidifier import HumidifierDeviceClass
 
 DEVICE_MAPPING = {
     "default": {
@@ -340,6 +342,362 @@ DEVICE_MAPPING = {
                 "outdoor_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
+    },
+    "22251693": {
+        "rationale": ["off", "on"],
+        "initial_query": [
+            {},
+            {"e0_query"},
+            {"screen_display"}
+        ],
+        "entities": {
+            Platform.CLIMATE: {
+                "air_conditioner": {
+                    "power": "power",
+                    "hvac_modes": {
+                        "off": {"power": "off"},
+                        "heat": {"power": "on", "mode": "heat"},
+                        "cool": {"power": "on", "mode": "cool"},
+                        "dry": {"power": "on", "mode": "dry"},
+                        "fan_only": {"power": "on", "mode": "fan"}
+                    },
+                    "preset_modes": {
+                        "none": {
+                            "cool_power_saving": 0,
+                            "quick_cool_heat": 0
+                        },
+                        "eco": {"cool_power_saving": 1, "quick_cool_heat": 0},
+                        "quick_cool_heat": {"quick_cool_heat": 1, "cool_power_saving": 0}
+                    },
+                    "swing_modes": {
+                        "off": {
+                            "wind_swing_lr": "off",
+                            "wind_swing_lr_left": "off",
+                            "wind_swing_lr_right": "off",
+                            "wind_swing_ud": "off",
+                            "wind_swing_ud_left": "off",
+                            "wind_swing_ud_right": "off"
+                        },
+                        "both": {
+                            "wind_swing_lr": "on",
+                            "wind_swing_lr_left": "on",
+                            "wind_swing_lr_right": "on",
+                            "wind_swing_ud": "on",
+                            "wind_swing_ud_left": "on",
+                            "wind_swing_ud_right": "on"
+                        },
+                        "horizontal": {
+                            "wind_swing_lr": "on",
+                            "wind_swing_lr_left": "on",
+                            "wind_swing_lr_right": "on",
+                            "wind_swing_ud": "off",
+                            "wind_swing_ud_left": "off",
+                            "wind_swing_ud_right": "off"
+                        },
+                        "vertical": {
+                            "wind_swing_lr": "off",
+                            "wind_swing_lr_left": "off",
+                            "wind_swing_lr_right": "off",
+                            "wind_swing_ud": "on",
+                            "wind_swing_ud_left": "on",
+                            "wind_swing_ud_right": "on"
+                        }
+                    },
+                    "fan_modes": {
+                        "20": {
+                            "wind_speed": 20,
+                            "wind_speed_right": 20
+                        },
+                        "40": {
+                            "wind_speed": 40,
+                            "wind_speed_right": 40
+                        },
+                        "60": {
+                            "wind_speed": 60,
+                            "wind_speed_right": 60
+                        },
+                        "80": {
+                            "wind_speed": 80,
+                            "wind_speed_right": 80
+                        },
+                        "100": {
+                            "wind_speed": 100,
+                            "wind_speed_right": 100
+                        },
+                        "102": {
+                            "wind_speed": 102,
+                            "wind_speed_right": 102
+                        }
+                    },
+                    "target_temperature": ["temperature", "small_temperature"],
+                    "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
+                    "pre_mode": "mode",
+                    "aux_heat": "ptc",
+                    "min_temp": 16,
+                    "max_temp": 30,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_HALVES,
+                }
+            },
+            Platform.SELECT: {
+                "no_wind_sense": {
+                    "options": {
+                        "off": {
+                            "no_wind_sense_left": "off",
+                            "no_wind_sense_right": "off"
+                        },
+                        "left_right_no_wind": {
+                            "no_wind_sense_left": "on",
+                            "no_wind_sense_right": "on"
+                        },
+                        "left_no_wind": {
+                            "no_wind_sense_left": "on",
+                            "no_wind_sense_right": "off"
+                        },
+                        "right_no_wind": {
+                            "no_wind_sense_left": "off",
+                            "no_wind_sense_right": "on"
+                        }
+                    }
+                },
+                "fresh_air": {
+                    "options": {
+                        "off": {"fresh_air": "off"},
+                        "gear_1": {
+                            "fresh_air": "on",
+                            "fresh_air_mode": 0,
+                            "fresh_air_fan_speed": 40
+                        },
+                        "gear_2": {
+                            "fresh_air": "on",
+                            "fresh_air_mode": 0,
+                            "fresh_air_fan_speed": 60
+                        },
+                        "gear_3": {
+                            "fresh_air": "on",
+                            "fresh_air_mode": 0,
+                            "fresh_air_fan_speed": 80
+                        },
+                        "gear_4": {
+                            "fresh_air": "on",
+                            "fresh_air_mode": 0,
+                            "fresh_air_fan_speed": 100
+                        },
+                        "strong": {
+                            "fresh_air": "on",
+                            "fresh_air_mode": 0,
+                            "fresh_air_fan_speed": 120
+                        },
+                        "auto": {
+                            "fresh_air": "on",
+                            "fresh_air_mode": 1
+                        }
+                    }
+                },
+                "inner_purifier": {
+                    "options": {
+                        "off": {"inner_purifier": "off"},
+                        "gear_1": {
+                            "inner_purifier": "on",
+                            "inner_purifier_fan_speed": 40
+                        },
+                        "gear_2": {
+                            "inner_purifier": "on",
+                            "inner_purifier_fan_speed": 60
+                        },
+                        "gear_3": {
+                            "inner_purifier": "on",
+                            "inner_purifier_fan_speed": 80
+                        },
+                        "gear_4": {
+                            "inner_purifier": "on",
+                            "inner_purifier_fan_speed": 100
+                        },
+                        "strong": {
+                            "inner_purifier": "on",
+                            "inner_purifier_fan_speed": 120
+                        }
+                    }
+                },
+                "humidification": {
+                    "options": {
+                        "off": {"humidification": 0},
+                        "gear_1": {
+                            "humidification": 1,
+                            "humidification_mode": 0,
+                            "humidification_fan_speed": 40
+                        },
+                        "gear_2": {
+                            "humidification": 1,
+                            "humidification_mode": 0,
+                            "humidification_fan_speed": 60
+                        },
+                        "gear_3": {
+                            "humidification": 1,
+                            "humidification_mode": 0,
+                            "humidification_fan_speed": 80
+                        },
+                        "gear_4": {
+                            "humidification": 1,
+                            "humidification_mode": 0,
+                            "humidification_fan_speed": 100
+                        },
+                        "strong": {
+                            "humidification": 1,
+                            "humidification_mode": 0,
+                            "humidification_fan_speed": 120
+                        },
+                        "auto": {
+                            "humidification": 1,
+                            "humidification_mode": 1
+                        }
+                    }
+                },
+                "degerming": {
+                    "options": {
+                        "off": {"degerming": "off", "remove_odor": "off"},
+                        "standard": {
+                            "degerming": "on",
+                            "remove_odor": "on",
+                            "remove_odor_fan_speed": 40
+                        },
+                        "strong": {
+                            "degerming": "on",
+                            "remove_odor": "on",
+                            "remove_odor_fan_speed": 100
+                        }
+                    }
+                },
+                "wind_speed_left": {
+                    "options": {
+                        "20": {"wind_speed": 20},
+                        "40": {"wind_speed": 40},
+                        "60": {"wind_speed": 60},
+                        "80": {"wind_speed": 80},
+                        "100": {"wind_speed": 100},
+                        "auto": {"wind_speed": 102}
+                    }
+                },
+                "wind_speed_right": {
+                    "options": {
+                        "20": {"wind_speed_right": 20},
+                        "40": {"wind_speed_right": 40},
+                        "60": {"wind_speed_right": 60},
+                        "80": {"wind_speed_right": 80},
+                        "100": {"wind_speed_right": 100},
+                        "auto": {"wind_speed_right": 102}
+                    }
+                },
+                "wind_swing_left": {
+                    "options": {
+                        "off": {
+                            "wind_swing_lr_left": "off",
+                            "wind_swing_ud_left": "off"
+                        },
+                        "horizontal": {
+                            "wind_swing_lr_left": "on",
+                            "wind_swing_ud_left": "off"
+                        },
+                        "vertical": {
+                            "wind_swing_lr_left": "off",
+                            "wind_swing_ud_left": "on"
+                        },
+                        "both": {
+                            "wind_swing_lr_left": "on",
+                            "wind_swing_ud_left": "on"
+                        }
+                    }
+                },
+                "wind_swing_right": {
+                    "options": {
+                        "off": {
+                            "wind_swing_lr_right": "off",
+                            "wind_swing_ud_right": "off"
+                        },
+                        "horizontal": {
+                            "wind_swing_lr_right": "on",
+                            "wind_swing_ud_right": "off"
+                        },
+                        "vertical": {
+                            "wind_swing_lr_right": "off",
+                            "wind_swing_ud_right": "on"
+                        },
+                        "both": {
+                            "wind_swing_lr_right": "on",
+                            "wind_swing_ud_right": "on"
+                        }
+                    }
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "screen_display": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 100],
+                    "translation_key": "display_on_off"
+                },
+                "light": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 100]
+                },
+                "buzzer_all": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "buzzer"
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "air_remove_odor": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "rewarming_dry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "linkage_2": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                }
+            },
+            Platform.SENSOR: {
+                "mode": {
+                    "device_class": SensorDeviceClass.ENUM,
+                },
+                "indoor_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_humidity": {
+                    "device_class": SensorDeviceClass.HUMIDITY,
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_co2": {
+                    "device_class": SensorDeviceClass.CO2,
+                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "tvoc_density": {
+                    "device_class": SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
+                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             }
@@ -784,6 +1142,264 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
+    },
+    "22013249": {
+        "rationale": ["off", "on"],
+        "initial_query": [
+            {},
+            {"e0_query"},
+            {"screen_display"},
+            {"smart_dry_value"}
+        ],
+        "polling_query": [
+            {"e0_query"},
+            {"smart_dry_value"},
+            {"group_data_four"}
+        ],
+        "entities": {
+            Platform.CLIMATE: {
+                "air_conditioner": {
+                    "power": "power",
+                    "hvac_modes": {
+                        "off": {"power": "off"},
+                        "heat": {"power": "on", "mode": "heat"},
+                        "cool": {"power": "on", "mode": "cool"},
+                        "dry": {"power": "on", "mode": "dry"},
+                        "fan_only": {"power": "on", "mode": "fan"}
+                    },
+                    "preset_modes": {
+                        "none": {"cool_power_saving": 0},
+                        "eco": {"cool_power_saving": 1}
+                    },
+                    "swing_modes": {
+                        "off": {
+                            "wind_swing_lr": "off",
+                            "wind_swing_lr_left": "off",
+                            "wind_swing_lr_right": "off",
+                            "wind_swing_ud": "off",
+                            "wind_swing_ud_left": "off",
+                            "wind_swing_ud_right": "off"
+                        },
+                        "both": {
+                            "wind_swing_lr": "on",
+                            "wind_swing_lr_left": "on",
+                            "wind_swing_lr_right": "on",
+                            "wind_swing_ud": "on",
+                            "wind_swing_ud_left": "on",
+                            "wind_swing_ud_right": "on"
+                        },
+                        "horizontal": {
+                            "wind_swing_lr": "on",
+                            "wind_swing_lr_left": "on",
+                            "wind_swing_lr_right": "on",
+                            "wind_swing_ud": "off",
+                            "wind_swing_ud_left": "off",
+                            "wind_swing_ud_right": "off"
+                        },
+                        "vertical": {
+                            "wind_swing_lr": "off",
+                            "wind_swing_lr_left": "off",
+                            "wind_swing_lr_right": "off",
+                            "wind_swing_ud": "on",
+                            "wind_swing_ud_left": "on",
+                            "wind_swing_ud_right": "on"
+                        }
+                    },
+                    "fan_modes": {
+                        "20": {"wind_speed": 20},
+                        "40": {"wind_speed": 40},
+                        "60": {"wind_speed": 60},
+                        "80": {"wind_speed": 80},
+                        "100": {"wind_speed": 100},
+                        "102": {"wind_speed": 102}
+                    },
+                    "target_temperature": ["temperature", "small_temperature"],
+                    "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
+                    "pre_mode": "mode",
+                    "aux_heat": "ptc",
+                    "min_temp": 16,
+                    "max_temp": 30,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_HALVES,
+                }
+            },
+            Platform.HUMIDIFIER: {
+                "smart_dehumidifier": {
+                    "device_class": HumidifierDeviceClass.DEHUMIDIFIER,
+                    "power": "mode",
+                    "rationale": ["dry", "smart_dry"],
+                    "target_humidity": "smart_dry_value",
+                    "current_humidity": "indoor_humidity",
+                    "min_humidity": 30,
+                    "max_humidity": 90,
+                    "target_humidity_step": 1,
+                    "mode": "mode",
+                    "modes": {
+                        "auto": {"mode": "smart_dry", "smart_dry_value": 101},
+                        "30": {"mode": "smart_dry", "smart_dry_value": 30},
+                        "35": {"mode": "smart_dry", "smart_dry_value": 40},
+                        "40": {"mode": "smart_dry", "smart_dry_value": 40},
+                        "45": {"mode": "smart_dry", "smart_dry_value": 45},
+                        "50": {"mode": "smart_dry", "smart_dry_value": 50},
+                        "55": {"mode": "smart_dry", "smart_dry_value": 55},
+                        "60": {"mode": "smart_dry", "smart_dry_value": 60},
+                        "65": {"mode": "smart_dry", "smart_dry_value": 65},
+                        "70": {"mode": "smart_dry", "smart_dry_value": 70},
+                        "75": {"mode": "smart_dry", "smart_dry_value": 75},
+                        "80": {"mode": "smart_dry", "smart_dry_value": 80},
+                        "85": {"mode": "smart_dry", "smart_dry_value": 85},
+                        "90": {"mode": "smart_dry", "smart_dry_value": 90}
+                    }
+                }
+            },
+            Platform.SELECT: {
+                "fresh_air": {
+                    "options": {
+                        "off": {"fresh_air": "off"},
+                        "gear_1": {
+                            "fresh_air": "on",
+                            "fresh_air_fan_speed": 40
+                        },
+                        "gear_2": {
+                            "fresh_air": "on",
+                            "fresh_air_fan_speed": 60
+                        },
+                        "gear_3": {
+                            "fresh_air": "on",
+                            "fresh_air_fan_speed": 80
+                        },
+                        "gear_4": {
+                            "fresh_air": "on",
+                            "fresh_air_fan_speed": 100
+                        }
+                    }
+                },
+                "inner_purifier": {
+                    "options": {
+                        "off": {"inner_purifier": "off"},
+                        "gear_1": {
+                            "inner_purifier": "on",
+                            "inner_purifier_fan_speed": 40
+                        },
+                        "gear_2": {
+                            "inner_purifier": "on",
+                            "inner_purifier_fan_speed": 60
+                        },
+                        "gear_3": {
+                            "inner_purifier": "on",
+                            "inner_purifier_fan_speed": 80
+                        },
+                        "gear_4": {
+                            "inner_purifier": "on",
+                            "inner_purifier_fan_speed": 100
+                        }
+                    }
+                },
+                "moisturizing": {
+                    "options": {
+                        "off": {"moisturizing": 0},
+                        "gear_1": {
+                            "moisturizing": 1,
+                            "moisturizing_fan_speed": 40
+                        },
+                        "gear_2": {
+                            "moisturizing": 1,
+                            "moisturizing_fan_speed": 60
+                        },
+                        "gear_3": {
+                            "moisturizing": 1,
+                            "moisturizing_fan_speed": 80
+                        },
+                        "gear_4": {
+                            "moisturizing": 1,
+                            "moisturizing_fan_speed": 100
+                        }
+                    }
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "screen_display": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 100],
+                    "translation_key": "display_on_off"
+                },
+                "buzzer_all": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "buzzer"
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "air_remove_odor": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "linkage_2": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "no_wind_sense": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "no_wind_sense_judge_param": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "degerming": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "light_sensitive": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 3]
+                },
+                "prevent_straight_wind": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [1, 2]
+                }
+            },
+            Platform.SENSOR: {
+                "mode": {
+                    "device_class": SensorDeviceClass.ENUM,
+                },
+                "indoor_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_humidity": {
+                    "device_class": SensorDeviceClass.HUMIDITY,
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "current_time_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.KILO_WATT,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "suggested_display_precision": 1
+                },
+                "total_power_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "suggested_display_precision": 2,
+                    "translation_key": "total_elec_value"
                 }
             }
         }
