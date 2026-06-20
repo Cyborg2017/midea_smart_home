@@ -154,10 +154,21 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
 
     @property
     def mode(self):
-        if not self._key_mode:
+        if not self._key_mode or not self._key_modes:
             return None
         data = self.coordinator.data or {}
-        return data.get(self._key_mode)
+        for mode_key, mode_config in self._key_modes.items():
+            if not isinstance(mode_config, dict):
+                continue
+            match = True
+            for attr, expected in mode_config.items():
+                actual = data.get(attr)
+                if actual != expected:
+                    match = False
+                    break
+            if match:
+                return mode_key
+        return None
 
     @property
     def available_modes(self):
