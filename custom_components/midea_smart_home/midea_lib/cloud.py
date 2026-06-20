@@ -73,13 +73,11 @@ PRESET_ACCOUNTS: list[dict[str, Any]] = [
     }
 ]
 
-
 def get_default_cloud() -> str:
     for key, value in SUPPORTED_CLOUDS.items():
         if cast(dict, value).get("default"):
             return key
     raise ElementMissing
-
 
 def get_preset_account_cloud() -> dict[str, str]:
     """Return the first preset account (backward compat for discover step)."""
@@ -95,7 +93,6 @@ def get_preset_account_cloud() -> dict[str, str]:
         "password": password,
         "cloud_name": PRESET_ACCOUNTS[0]["cloud_name"],
     }
-
 
 def get_all_preset_accounts() -> list[dict[str, str]]:
     """Return all preset accounts as [{username, password, cloud_name}, ...].
