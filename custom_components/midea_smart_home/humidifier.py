@@ -108,7 +108,13 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
     def is_on(self):
         if not self._key_power:
             return False
-        return self._get_status_on_off(self._key_power)
+        value = self._get_nested_value(self._key_power)
+        rationale = self._config.get("rationale")
+        if isinstance(rationale, list) and len(rationale) > 1:
+            return value == rationale[1]
+        if isinstance(rationale, list) and rationale:
+            return value in rationale
+        return self._is_on(value)
 
     @property
     def target_humidity(self):
@@ -158,11 +164,19 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         if self._key_power:
-            await self.coordinator.async_set_control(self._key_power, "on")
+            rationale = self._config.get("rationale")
+            if isinstance(rationale, list) and len(rationale) > 1:
+                await self.coordinator.async_set_control(self._key_power, rationale[1])
+            else:
+                await self.coordinator.async_set_control(self._key_power, "on")
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         if self._key_power:
-            await self.coordinator.async_set_control(self._key_power, "off")
+            rationale = self._config.get("rationale")
+            if isinstance(rationale, list) and len(rationale) > 0:
+                await self.coordinator.async_set_control(self._key_power, rationale[0])
+            else:
+                await self.coordinator.async_set_control(self._key_power, "off")
 
     async def async_set_humidity(self, humidity: int) -> None:
         if self._key_target_humidity:
