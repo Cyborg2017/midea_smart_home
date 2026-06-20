@@ -121,12 +121,15 @@ class MideaHumidifierEntity(MideaBaseEntity, HumidifierEntity):
         if not self._key_target_humidity:
             return None
         value = self._get_nested_value(self._key_target_humidity)
-        if value is not None:
-            try:
-                return int(value)
-            except (ValueError, TypeError):
-                return None
-        return None
+        if value is None:
+            return None
+        try:
+            int_value = int(value)
+        except (ValueError, TypeError):
+            return None
+        if int_value < self._min_humidity or int_value > self._max_humidity:
+            return None
+        return int_value
 
     @property
     def current_humidity(self):
