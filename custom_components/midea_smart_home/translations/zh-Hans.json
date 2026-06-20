@@ -212,6 +212,12 @@
               "middle": "中速"
             }
           },
+          "preset_mode": {
+            "state": {
+              "prevent_super_cool": "智控温",
+              "quick_cool_heat": "速冷热"
+            }
+          },
           "swing_mode": {
             "state": {
               "both": "双向",
@@ -224,12 +230,6 @@
               "swing_ud_site_4": "角度4",
               "swing_ud_site_5": "角度5",
               "vertical": "垂直"
-            }
-          },
-          "preset_mode": {
-            "state": {
-              "prevent_super_cool": "智控温",
-              "quick_cool_heat": "速冷热"
             }
           }
         }
@@ -377,7 +377,6 @@
         "state_attributes": {
           "mode": {
             "state": {
-              "auto": "自动",
               "30": "30%",
               "35": "35%",
               "40": "40%",
@@ -390,7 +389,8 @@
               "75": "75%",
               "80": "80%",
               "85": "85%",
-              "90": "90%"
+              "90": "90%",
+              "auto": "自动"
             }
           }
         }
@@ -700,6 +700,14 @@
           "water_ssp": "深度洁筒"
         }
       },
+      "degerming": {
+        "name": "空气除菌",
+        "state": {
+          "off": "关闭",
+          "standard": "标准",
+          "strong": "强劲"
+        }
+      },
       "dehydration_speed": {
         "name": "脱水转速",
         "state": {
@@ -825,6 +833,18 @@
           "zero_degree": "零度"
         }
       },
+      "fresh_air": {
+        "name": "新风",
+        "state": {
+          "auto": "自动",
+          "gear_1": "1档",
+          "gear_2": "2档",
+          "gear_3": "3档",
+          "gear_4": "4档",
+          "off": "关闭",
+          "strong": "强劲"
+        }
+      },
       "fresh_air_mode": {
         "name": "新风模式",
         "state": {
@@ -884,6 +904,18 @@
           "stop": "停止"
         }
       },
+      "humidification": {
+        "name": "加湿",
+        "state": {
+          "auto": "自动",
+          "gear_1": "1档",
+          "gear_2": "2档",
+          "gear_3": "3档",
+          "gear_4": "4档",
+          "off": "关闭",
+          "strong": "强劲"
+        }
+      },
       "humidity_mode": {
         "name": "加湿模式",
         "state": {
@@ -929,6 +961,17 @@
           "middle": "中档",
           "off": "空档",
           "rear": "后档"
+        }
+      },
+      "inner_purifier": {
+        "name": "净化",
+        "state": {
+          "gear_1": "1档",
+          "gear_2": "2档",
+          "gear_3": "3档",
+          "gear_4": "4档",
+          "off": "关闭",
+          "strong": "强劲"
         }
       },
       "intensity": {
@@ -995,64 +1038,21 @@
           "warm_porridge": "适温粥"
         }
       },
+      "moisturizing": {
+        "name": "保湿",
+        "state": {
+          "gear_1": "1档",
+          "gear_2": "2档",
+          "gear_3": "3档",
+          "gear_4": "4档",
+          "off": "关闭"
+        }
+      },
       "no_obsolete_water": {
         "name": "智慧零冷水",
         "state": {
           "water_quality": "水质优先",
           "water_saving": "省水优先"
-        }
-      },
-      "degerming": {
-        "name": "空气除菌",
-        "state": {
-          "off": "关闭",
-          "standard": "标准",
-          "strong": "强劲"
-        }
-      },
-      "fresh_air": {
-        "name": "新风",
-        "state": {
-          "off": "关闭",
-          "gear_1": "1档",
-          "gear_2": "2档",
-          "gear_3": "3档",
-          "gear_4": "4档",
-          "strong": "强劲",
-          "auto": "自动"
-        }
-      },
-      "humidification": {
-        "name": "加湿",
-        "state": {
-          "off": "关闭",
-          "gear_1": "1档",
-          "gear_2": "2档",
-          "gear_3": "3档",
-          "gear_4": "4档",
-          "strong": "强劲",
-          "auto": "自动"
-        }
-      },
-      "inner_purifier": {
-        "name": "净化",
-        "state": {
-          "off": "关闭",
-          "gear_1": "1档",
-          "gear_2": "2档",
-          "gear_3": "3档",
-          "gear_4": "4档",
-          "strong": "强劲"
-        }
-      },
-      "moisturizing": {
-        "name": "保湿",
-        "state": {
-          "off": "关闭",
-          "gear_1": "1档",
-          "gear_2": "2档",
-          "gear_3": "3档",
-          "gear_4": "4档"
         }
       },
       "no_wind_sense": {
@@ -1648,19 +1648,10 @@
       "wind_swing_left": {
         "name": "左侧摆风",
         "state": {
-          "off": "关闭",
+          "both": "双向摆风",
           "horizontal": "左右摆风",
-          "vertical": "上下摆风",
-          "both": "双向摆风"
-        }
-      },
-      "wind_swing_right": {
-        "name": "右侧摆风",
-        "state": {
           "off": "关闭",
-          "horizontal": "左右摆风",
-          "vertical": "上下摆风",
-          "both": "双向摆风"
+          "vertical": "上下摆风"
         }
       },
       "wind_swing_lr_angle": {
@@ -1673,6 +1664,15 @@
           "off": "关闭",
           "right": "偏右",
           "rightmost": "最右"
+        }
+      },
+      "wind_swing_right": {
+        "name": "右侧摆风",
+        "state": {
+          "both": "双向摆风",
+          "horizontal": "左右摆风",
+          "off": "关闭",
+          "vertical": "上下摆风"
         }
       },
       "wind_swing_ud_angle": {
@@ -1733,9 +1733,6 @@
       }
     },
     "sensor": {
-      "current_time_power": {
-        "name": "实时功率"
-      },
       "air_dry_left_time": {
         "name": "风干剩余时间"
       },
@@ -1865,6 +1862,9 @@
       "current_heat_set_temperature": {
         "name": "采暖设定温度"
       },
+      "current_time_power": {
+        "name": "实时功率"
+      },
       "db_error_code_l": {
         "name": "错误代码(左筒)"
       },
@@ -1986,14 +1986,14 @@
       "in_water_tem": {
         "name": "进水温度"
       },
-      "indoor_temperature": {
-        "name": "室内温度"
-      },
       "indoor_co2": {
         "name": "CO2浓度"
       },
       "indoor_humidity": {
         "name": "室内湿度"
+      },
+      "indoor_temperature": {
+        "name": "室内温度"
       },
       "lan_ip": {
         "name": "局域网IP"
@@ -2099,11 +2099,11 @@
       "total_elec_value": {
         "name": "总耗电量"
       },
-      "tvoc_density": {
-        "name": "TVOC浓度"
-      },
       "total_working_time": {
         "name": "总工作时间"
+      },
+      "tvoc_density": {
+        "name": "TVOC浓度"
       },
       "warming_time": {
         "name": "保温时间"
@@ -2154,17 +2154,14 @@
       }
     },
     "switch": {
-      "follow_body_sense": {
-        "name": "随身感"
-      },
       "ac_dry": {
         "name": "内机防霉（干燥）"
       },
-      "air_remove_odor": {
-        "name": "空调除菌"
-      },
       "aidry": {
         "name": "智感干洗"
+      },
+      "air_remove_odor": {
+        "name": "空调除菌"
       },
       "airdry_on_off": {
         "name": "湿帘风干"
@@ -2247,6 +2244,9 @@
       "deep_cold_mode": {
         "name": "-30℃深冻(深冻锁鲜)"
       },
+      "degerming": {
+        "name": "空气除菌"
+      },
       "digit_display_switch": {
         "name": "灯光显示"
       },
@@ -2258,9 +2258,6 @@
       },
       "drainage": {
         "name": "一键排水"
-      },
-      "degerming": {
-        "name": "空气除菌"
       },
       "dry": {
         "name": "干燥模式"
@@ -2279,6 +2276,9 @@
       },
       "foam_shield": {
         "name": "泡沫盾"
+      },
+      "follow_body_sense": {
+        "name": "随身感"
       },
       "freezing_light_open_chose": {
         "name": "氛围灯功能"
@@ -2337,11 +2337,11 @@
       "light_sensitive": {
         "name": "智能光感"
       },
-      "linkage_2": {
-        "name": "一键好空气"
-      },
       "light_sensor": {
         "name": "光感照明"
+      },
+      "linkage_2": {
+        "name": "一键好空气"
       },
       "microbubble": {
         "name": "超微净泡"
@@ -2385,9 +2385,6 @@
       "ptc": {
         "name": "电辅热"
       },
-      "rewarming_dry": {
-        "name": "回温除湿"
-      },
       "purifier": {
         "name": "净化"
       },
@@ -2396,6 +2393,9 @@
       },
       "remind_sound": {
         "name": "提醒声音"
+      },
+      "rewarming_dry": {
+        "name": "回温除湿"
       },
       "sedentary_remind": {
         "name": "久坐提醒"

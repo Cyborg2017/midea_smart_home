@@ -212,6 +212,12 @@
               "middle": "Medium"
             }
           },
+          "preset_mode": {
+            "state": {
+              "prevent_super_cool": "Anti-Super Cool",
+              "quick_cool_heat": "Quick Cool Or Heat"
+            }
+          },
           "swing_mode": {
             "state": {
               "both": "Both",
@@ -224,12 +230,6 @@
               "swing_ud_site_4": "Position 4",
               "swing_ud_site_5": "Position 5",
               "vertical": "Vertical"
-            }
-          },
-          "preset_mode": {
-            "state": {
-              "prevent_super_cool": "Anti-Super Cool",
-              "quick_cool_heat": "Quick Cool Or Heat"
             }
           }
         }
@@ -377,7 +377,6 @@
         "state_attributes": {
           "mode": {
             "state": {
-              "auto": "Auto",
               "30": "30%",
               "35": "35%",
               "40": "40%",
@@ -390,7 +389,8 @@
               "75": "75%",
               "80": "80%",
               "85": "85%",
-              "90": "90%"
+              "90": "90%",
+              "auto": "Auto"
             }
           }
         }
@@ -700,6 +700,14 @@
           "water_ssp": "Deep Clean"
         }
       },
+      "degerming": {
+        "name": "Air Sterilization",
+        "state": {
+          "off": "Off",
+          "standard": "Standard",
+          "strong": "Strong"
+        }
+      },
       "dehydration_speed": {
         "name": "Dehydration Speed",
         "state": {
@@ -825,6 +833,18 @@
           "zero_degree": "Zero Degree"
         }
       },
+      "fresh_air": {
+        "name": "Fresh Air",
+        "state": {
+          "auto": "Auto",
+          "gear_1": "Gear 1",
+          "gear_2": "Gear 2",
+          "gear_3": "Gear 3",
+          "gear_4": "Gear 4",
+          "off": "Off",
+          "strong": "Strong"
+        }
+      },
       "fresh_air_mode": {
         "name": "Fresh Air Mode",
         "state": {
@@ -884,6 +904,18 @@
           "stop": "Stop"
         }
       },
+      "humidification": {
+        "name": "Humidification",
+        "state": {
+          "auto": "Auto",
+          "gear_1": "Gear 1",
+          "gear_2": "Gear 2",
+          "gear_3": "Gear 3",
+          "gear_4": "Gear 4",
+          "off": "Off",
+          "strong": "Strong"
+        }
+      },
       "humidity_mode": {
         "name": "Humidity Mode",
         "state": {
@@ -929,6 +961,17 @@
           "middle": "Middle",
           "off": "Off",
           "rear": "Rear"
+        }
+      },
+      "inner_purifier": {
+        "name": "Purification",
+        "state": {
+          "gear_1": "Gear 1",
+          "gear_2": "Gear 2",
+          "gear_3": "Gear 3",
+          "gear_4": "Gear 4",
+          "off": "Off",
+          "strong": "Strong"
         }
       },
       "intensity": {
@@ -995,64 +1038,21 @@
           "warm_porridge": "Warm Porridge"
         }
       },
+      "moisturizing": {
+        "name": "Moisturizing",
+        "state": {
+          "gear_1": "Gear 1",
+          "gear_2": "Gear 2",
+          "gear_3": "Gear 3",
+          "gear_4": "Gear 4",
+          "off": "Off"
+        }
+      },
       "no_obsolete_water": {
         "name": "Water Mode",
         "state": {
           "water_quality": "Water Quality Priority",
           "water_saving": "Water Saving Priority"
-        }
-      },
-      "degerming": {
-        "name": "Air Sterilization",
-        "state": {
-          "off": "Off",
-          "standard": "Standard",
-          "strong": "Strong"
-        }
-      },
-      "fresh_air": {
-        "name": "Fresh Air",
-        "state": {
-          "off": "Off",
-          "gear_1": "Gear 1",
-          "gear_2": "Gear 2",
-          "gear_3": "Gear 3",
-          "gear_4": "Gear 4",
-          "strong": "Strong",
-          "auto": "Auto"
-        }
-      },
-      "humidification": {
-        "name": "Humidification",
-        "state": {
-          "off": "Off",
-          "gear_1": "Gear 1",
-          "gear_2": "Gear 2",
-          "gear_3": "Gear 3",
-          "gear_4": "Gear 4",
-          "strong": "Strong",
-          "auto": "Auto"
-        }
-      },
-      "inner_purifier": {
-        "name": "Purification",
-        "state": {
-          "off": "Off",
-          "gear_1": "Gear 1",
-          "gear_2": "Gear 2",
-          "gear_3": "Gear 3",
-          "gear_4": "Gear 4",
-          "strong": "Strong"
-        }
-      },
-      "moisturizing": {
-        "name": "Moisturizing",
-        "state": {
-          "off": "Off",
-          "gear_1": "Gear 1",
-          "gear_2": "Gear 2",
-          "gear_3": "Gear 3",
-          "gear_4": "Gear 4"
         }
       },
       "no_wind_sense": {
@@ -1648,19 +1648,10 @@
       "wind_swing_left": {
         "name": "Left Wind Swing",
         "state": {
-          "off": "Off",
+          "both": "Both",
           "horizontal": "Horizontal",
-          "vertical": "Vertical",
-          "both": "Both"
-        }
-      },
-      "wind_swing_right": {
-        "name": "Right Wind Swing",
-        "state": {
           "off": "Off",
-          "horizontal": "Horizontal",
-          "vertical": "Vertical",
-          "both": "Both"
+          "vertical": "Vertical"
         }
       },
       "wind_swing_lr_angle": {
@@ -1673,6 +1664,15 @@
           "off": "Off",
           "right": "Right",
           "rightmost": "Rightmost"
+        }
+      },
+      "wind_swing_right": {
+        "name": "Right Wind Swing",
+        "state": {
+          "both": "Both",
+          "horizontal": "Horizontal",
+          "off": "Off",
+          "vertical": "Vertical"
         }
       },
       "wind_swing_ud_angle": {
@@ -1733,9 +1733,6 @@
       }
     },
     "sensor": {
-      "current_time_power": {
-        "name": "Real-time Power"
-      },
       "air_dry_left_time": {
         "name": "Air Dry Remaining Time"
       },
@@ -1865,6 +1862,9 @@
       "current_heat_set_temperature": {
         "name": "Heating Set Temperature"
       },
+      "current_time_power": {
+        "name": "Real-time Power"
+      },
       "db_error_code_l": {
         "name": "Left Bucket Error Code"
       },
@@ -1986,14 +1986,14 @@
       "in_water_tem": {
         "name": "Inlet Water Temperature"
       },
-      "indoor_temperature": {
-        "name": "Indoor Temperature"
-      },
       "indoor_co2": {
         "name": "Indoor CO2"
       },
       "indoor_humidity": {
         "name": "Indoor Humidity"
+      },
+      "indoor_temperature": {
+        "name": "Indoor Temperature"
       },
       "lan_ip": {
         "name": "LAN IP"
@@ -2099,11 +2099,11 @@
       "total_elec_value": {
         "name": "Total Energy Consumption"
       },
-      "tvoc_density": {
-        "name": "TVOC Density"
-      },
       "total_working_time": {
         "name": "Total Working Time"
+      },
+      "tvoc_density": {
+        "name": "TVOC Density"
       },
       "warming_time": {
         "name": "Warming Time"
@@ -2154,17 +2154,14 @@
       }
     },
     "switch": {
-      "follow_body_sense": {
-        "name": "Body Sense"
-      },
       "ac_dry": {
         "name": "Indoor Unit Anti-mold (Drying)"
       },
-      "air_remove_odor": {
-        "name": "Air Sterilization"
-      },
       "aidry": {
         "name": "AI Dry"
+      },
+      "air_remove_odor": {
+        "name": "Air Sterilization"
       },
       "airdry_on_off": {
         "name": "Curtain Air Dry"
@@ -2247,6 +2244,9 @@
       "deep_cold_mode": {
         "name": "-30°C Deep Freeze (Deep Freeze Lock Fresh)"
       },
+      "degerming": {
+        "name": "Air Sterilization"
+      },
       "digit_display_switch": {
         "name": "Digit Display"
       },
@@ -2258,9 +2258,6 @@
       },
       "drainage": {
         "name": "One-Key Drainage"
-      },
-      "degerming": {
-        "name": "Air Sterilization"
       },
       "dry": {
         "name": "Dry Mode"
@@ -2279,6 +2276,9 @@
       },
       "foam_shield": {
         "name": "Foam Shield"
+      },
+      "follow_body_sense": {
+        "name": "Body Sense"
       },
       "freezing_light_open_chose": {
         "name": "Ambient Light Function"
@@ -2337,11 +2337,11 @@
       "light_sensitive": {
         "name": "Light Sensitive"
       },
-      "linkage_2": {
-        "name": "One-Key Good Air"
-      },
       "light_sensor": {
         "name": "Light Sensor"
+      },
+      "linkage_2": {
+        "name": "One-Key Good Air"
       },
       "microbubble": {
         "name": "Microbubble Soak"
@@ -2385,9 +2385,6 @@
       "ptc": {
         "name": "PTC Heater"
       },
-      "rewarming_dry": {
-        "name": "Rewarming Dehumidification"
-      },
       "purifier": {
         "name": "Purifier"
       },
@@ -2396,6 +2393,9 @@
       },
       "remind_sound": {
         "name": "Reminder Sound"
+      },
+      "rewarming_dry": {
+        "name": "Rewarming Dehumidification"
       },
       "sedentary_remind": {
         "name": "Sedentary Remind"
