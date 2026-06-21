@@ -2247,14 +2247,10 @@ DEVICE_MAPPING = {
                     },
                     "preset_modes": {
                         "none": {
-                            "eco": "off",
-                            "cool_power_saving": 0,
+                            "eco": 0,
                             "strong_wind": "off"
                         },
-                        "eco": {
-                            "eco": "on",
-                            "cool_power_saving": 1
-                        },
+                        "eco": {"eco": 1},
                         "boost": {"strong_wind": "on"}
                     },
                     "fan_modes": {
