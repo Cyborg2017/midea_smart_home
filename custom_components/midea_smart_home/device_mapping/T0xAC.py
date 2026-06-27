@@ -1853,11 +1853,13 @@ DEVICE_MAPPING = {
         "initial_query": [
             {},
             {"indoor_temperature"},
+            {"out_run_status"},
             {"prevent_super_cool"},
             {"run_status"}
         ],
         "polling_query": [
-            {"indoor_temperature"}
+            {"indoor_temperature"},
+            {"out_run_status"}
         ],
         "calculate": {
             "get": [
@@ -1936,6 +1938,11 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.ENUM,
                 },
                 "indoor_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
@@ -2220,10 +2227,12 @@ DEVICE_MAPPING = {
         "initial_query": [
             {},
             {"indoor_temperature"},
+            {"out_run_status"},
             {"run_status"}
         ],
         "polling_query": [
-            {"indoor_temperature"}
+            {"indoor_temperature"},
+            {"out_run_status"}
         ],
         "calculate": {
             "get": [
@@ -2293,6 +2302,11 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.ENUM,
                 },
                 "indoor_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
