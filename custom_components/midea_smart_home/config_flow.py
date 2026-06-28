@@ -82,8 +82,8 @@ def get_json_files_path(hass_config_dir: str) -> Path:
 
 def get_device_json_path(hass_config_dir: str, device_id: int, device_type: int, sn8: str = "") -> Path:
     if sn8:
-        return get_json_files_path(hass_config_dir) / f"T0x{hex(device_type)[2:].upper()}_{sn8}.json"
-    return get_json_files_path(hass_config_dir) / f"T0x{hex(device_type)[2:].upper()}.json"
+        return get_json_files_path(hass_config_dir) / f"T0x{hex(device_type)[2:].upper()}_{device_id}_{sn8}.json"
+    return get_json_files_path(hass_config_dir) / f"T0x{hex(device_type)[2:].upper()}_{device_id}.json"
 
 
 class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
