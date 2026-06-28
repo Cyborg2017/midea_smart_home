@@ -598,7 +598,7 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
                                     'if (tonumber(tb["db_error_code"], 16) ~= 0)',
                                     'if (tb["db_error_code"] and tonumber(tb["db_error_code"], 16) ~= 0)'
                                 )
-                                
+
                                 # Replace group_data_four with group_data_one in conditional byte assignment
                                 modified = modified.replace(
                                     'if(queryType == "group_data_four") then 				bodyBytes[3] = 0x41 			end',
