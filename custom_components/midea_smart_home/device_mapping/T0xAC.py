@@ -165,6 +165,9 @@ DEVICE_MAPPING = {
                 },
                 "power_saving": {
                     "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -327,6 +330,9 @@ DEVICE_MAPPING = {
                     "rationale": [0, 3]
                 },
                 "power_saving": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
@@ -669,6 +675,9 @@ DEVICE_MAPPING = {
                 "linkage_2": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1]
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -837,7 +846,10 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH,
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -947,7 +959,10 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH,
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -1126,6 +1141,9 @@ DEVICE_MAPPING = {
                     "rationale": [0, 3]
                 },
                 "power_saving": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
@@ -1367,6 +1385,9 @@ DEVICE_MAPPING = {
                 "prevent_straight_wind": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [1, 2]
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -1535,7 +1556,10 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH,
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -1684,6 +1708,9 @@ DEVICE_MAPPING = {
                 },
                 "power_saving": {
                     "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -1828,7 +1855,10 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH,
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -1931,6 +1961,9 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["off", "on"],
                     "command": {"follow_body_sense_enable": 1}
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -2020,6 +2053,9 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["off", "on"],
                     "command": {"follow_body_sense_enable": 1}
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -2114,6 +2150,9 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["off", "on"],
                     "command": {"follow_body_sense_enable": 1}
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SELECT: {
@@ -2207,7 +2246,10 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH,
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -2295,6 +2337,9 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["off", "on"],
                     "command": {"follow_body_sense_enable": 1}
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -2387,6 +2432,9 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["off", "on"],
                     "command": {"follow_body_sense_enable": 1}
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
