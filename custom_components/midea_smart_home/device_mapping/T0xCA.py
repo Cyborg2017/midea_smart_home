@@ -461,7 +461,7 @@ DEVICE_MAPPING = {
             }
         }
     },
-    "310A1700": {
+    ("310A1700", "310A2245"): {
         "rationale": ["off", "on"],
         "entities": {
             Platform.SWITCH: {
