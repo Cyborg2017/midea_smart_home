@@ -308,16 +308,16 @@
           "preset_mode": {
             "state": {
               "baby": "Baby",
+              "baby_wind": "Baby Wind",
               "comfort": "Comfort",
+              "const_temperature": "Constant Temperature",
+              "fanmanual": "Manual",
+              "forest_wind": "Forest Wind",
               "normal": "Normal",
               "sleep": "Sleep",
-              "storm": "Storm",
-              "strong": "Strong",
-              "fanmanual": "Manual",
-              "const_temperature": "Constant Temperature",
-              "baby_wind": "Baby Wind",
               "sleep_wind": "Sleep Wind",
-              "forest_wind": "Forest Wind"
+              "storm": "Storm",
+              "strong": "Strong"
             }
           }
         }
@@ -410,16 +410,16 @@
         "state_attributes": {
           "effect": {
             "state": {
+              "eating": "Dining",
               "film": "Cinema",
+              "ledmanual": "Custom",
               "life": "Daily Life",
               "manual": "Manual",
               "mild": "Soft",
               "moon": "Night",
-              "read": "Reading",
-              "work": "Work",
-              "eating": "Dining",
               "night": "Night",
-              "ledmanual": "Custom"
+              "read": "Reading",
+              "work": "Work"
             }
           }
         }
