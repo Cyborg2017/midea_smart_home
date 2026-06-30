@@ -312,7 +312,12 @@
               "normal": "正常风",
               "sleep": "睡眠风",
               "storm": "循环风",
-              "strong": "强劲风"
+              "strong": "强劲风",
+              "fanmanual": "手动模式",
+              "const_temperature": "恒温模式",
+              "baby_wind": "婴儿风",
+              "sleep_wind": "睡眠风",
+              "forest_wind": "森林风"
             }
           }
         }
@@ -410,7 +415,11 @@
               "manual": "自定义",
               "mild": "柔和",
               "moon": "夜晚",
-              "read": "阅读"
+              "read": "阅读",
+              "work": "工作",
+              "eating": "聚餐",
+              "night": "夜灯",
+              "ledmanual": "自定义"
             }
           }
         }

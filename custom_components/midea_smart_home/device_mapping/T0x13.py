@@ -126,5 +126,91 @@ DEVICE_MAPPING = {
                 }
             }
         }
+    },
+    "default_fan_light": {
+        "rationale": ["off", "on"],
+        "queries": [{}],
+        "centralized": [],
+        "entities": {
+            Platform.LIGHT: {
+                "light": {
+                    "power": "led_power",
+                    "brightness": {"brightness": [1, 100]},
+                    "color_temp": {
+                        "color_temperature": {
+                            "kelvin_range": [2700, 6500],
+                            "device_range": [0, 100]
+                        }
+                    },
+                    "preset_modes": {
+                        "work": {"led_scene_light": "work"},
+                        "eating": {"led_scene_light": "eating"},
+                        "film": {"led_scene_light": "film"},
+                        "night": {"led_scene_light": "night"},
+                        "ledmanual": {"led_scene_light": "ledmanual"}
+                    }
+                }
+            },
+            Platform.FAN: {
+                "fan": {
+                    "power": "fan_power",
+                    "speeds": list({"fan_speed": str(value)} for value in [1, 21, 41, 61, 81, 100]),
+                    "directions": {
+                        "forward": {"arround_dir": "1"},
+                        "reverse": {"arround_dir": "0"}
+                    },
+                    "preset_modes": {
+                        "fanmanual": {"fan_scene": "fanmanual"},
+                        "const_temperature": {"fan_scene": "const_temperature"},
+                        "baby_wind": {"fan_scene": "baby_wind"},
+                        "sleep_wind": {"fan_scene": "sleep_wind"},
+                        "forest_wind": {"fan_scene": "forest_wind"}
+                    }
+                }
+            }
+        }
+    },
+    "M0200015": {
+        "rationale": ["off", "on"],
+        "queries": [{}],
+        "centralized": [],
+        "entities": {
+            Platform.LIGHT: {
+                "light": {
+                    "power": "led_power",
+                    "brightness": {"brightness": [1, 100]},
+                    "color_temp": {
+                        "color_temperature": {
+                            "kelvin_range": [2700, 6500],
+                            "device_range": [0, 100]
+                        }
+                    },
+                    "preset_modes": {
+                        "work": {"led_scene_light": "work"},
+                        "eating": {"led_scene_light": "eating"},
+                        "film": {"led_scene_light": "film"},
+                        "night": {"led_scene_light": "night"},
+                        "ledmanual": {"led_scene_light": "ledmanual"}
+                    }
+                }
+            },
+            Platform.FAN: {
+                "fan": {
+                    "power": "fan_power",
+                    "speeds": list({"fan_speed": str(value)} for value in [1, 21, 41, 61, 81, 100]),
+                    "directions": {
+                        "forward": {"arround_dir": "1"},
+                        "reverse": {"arround_dir": "0"}
+                    },
+                    "preset_modes": {
+                        "fanmanual": {"fan_scene": "fanmanual"},
+                        "const_temperature": {"fan_scene": "const_temperature"},
+                        "baby_wind": {"fan_scene": "baby_wind"},
+                        "sleep_wind": {"fan_scene": "sleep_wind"},
+                        "forest_wind": {"fan_scene": "forest_wind"}
+                    }
+                }
+            }
+        }
     }
 }

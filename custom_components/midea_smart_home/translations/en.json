@@ -312,7 +312,12 @@
               "normal": "Normal",
               "sleep": "Sleep",
               "storm": "Storm",
-              "strong": "Strong"
+              "strong": "Strong",
+              "fanmanual": "Manual",
+              "const_temperature": "Constant Temperature",
+              "baby_wind": "Baby Wind",
+              "sleep_wind": "Sleep Wind",
+              "forest_wind": "Forest Wind"
             }
           }
         }
@@ -410,7 +415,11 @@
               "manual": "Manual",
               "mild": "Soft",
               "moon": "Night",
-              "read": "Reading"
+              "read": "Reading",
+              "work": "Work",
+              "eating": "Dining",
+              "night": "Night",
+              "ledmanual": "Custom"
             }
           }
         }
