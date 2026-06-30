@@ -299,16 +299,23 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
 
             new_status[self._color_temp_key] = str(device_value)
 
-        power_command = {self._key_power: self._rationale[1]} if self._key_power else {}
-        new_status.update(power_command)
+        # Split controls into individual commands to ensure each takes effect.
+        is_currently_on = self.is_on
 
-        if self._command and isinstance(self._command, dict):
-            merged = dict(self._command)
-            merged.update(new_status)
-            new_status = merged
+        # Step 1: If light is off, send power-on first as a separate command
+        if self._key_power and not is_currently_on:
+            power_cmd = {self._key_power: self._rationale[1]}
+            if self._command and isinstance(self._command, dict):
+                power_cmd = {**self._command, **power_cmd}
+            await self.coordinator.async_set_controls(power_cmd)
 
+        # Step 2: Send each remaining property as an individual command
         if new_status:
-            await self.coordinator.async_set_controls(new_status)
+            for key, value in new_status.items():
+                cmd = {key: value}
+                if self._command and isinstance(self._command, dict):
+                    cmd = {**self._command, **cmd}
+                await self.coordinator.async_set_controls(cmd)
 
     async def async_turn_off(self):
         if self._key_power:
