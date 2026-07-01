@@ -45,6 +45,7 @@
             "water_output_switch": { "default": "mdi:water-pump" }
         },
         "button": {
+            "cancel_power_on_off_timer": { "default": "mdi:timer-off" },
             "left_stove_off": { "default": "mdi:stove" },
             "right_stove_off": { "default": "mdi:stove" },
             "stop": { "default": "mdi:stop-circle-outline" }
@@ -431,6 +432,10 @@
         },
         "text": {
             "external_humidity_sensor": { "default": "mdi:link-variant" }
+        },
+        "time": {
+            "power_on_timer": { "default": "mdi:timer" },
+            "power_off_timer": { "default": "mdi:timer-off" }
         },
         "vacuum": {
             "vacuum": { "default": "mdi:robot-vacuum" }

@@ -184,6 +184,9 @@
       }
     },
     "button": {
+      "cancel_power_on_off_timer": {
+        "name": "取消定时"
+      },
       "left_stove_off": {
         "name": "关闭左灶"
       },
@@ -2479,6 +2482,14 @@
     "text": {
       "external_humidity_sensor": {
         "name": "外部湿度传感器"
+      }
+    },
+    "time": {
+      "power_on_timer": {
+        "name": "定时开机"
+      },
+      "power_off_timer": {
+        "name": "定时关机"
       }
     },
     "vacuum": {

@@ -172,6 +172,27 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.SENSOR: {
                 "mode": {
                     "device_class": SensorDeviceClass.ENUM,
@@ -351,6 +372,27 @@ DEVICE_MAPPING = {
                 },
                 "self_clean": {
                     "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
                 }
             },
             Platform.SENSOR: {
@@ -710,6 +752,27 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.SENSOR: {
                 "mode": {
                     "device_class": SensorDeviceClass.ENUM,
@@ -884,6 +947,27 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.SENSOR: {
                 "mode": {
                     "device_class": SensorDeviceClass.ENUM,
@@ -1010,6 +1094,27 @@ DEVICE_MAPPING = {
                 },
                 "self_clean": {
                     "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
                 }
             },
             Platform.SENSOR: {
@@ -1207,6 +1312,27 @@ DEVICE_MAPPING = {
                 },
                 "self_clean": {
                     "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
                 }
             },
             Platform.SENSOR: {
@@ -1466,6 +1592,27 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.SENSOR: {
                 "mode": {
                     "device_class": SensorDeviceClass.ENUM,
@@ -1640,6 +1787,27 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.SENSOR: {
                 "mode": {
                     "device_class": SensorDeviceClass.ENUM,
@@ -1775,6 +1943,27 @@ DEVICE_MAPPING = {
                         "mode_1": {"ptc": "on", "ptc_default_rule": 1},
                         "mode_2": {"ptc": "on", "ptc_default_rule": 0}
                     }
+                },
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
                 }
             },
             Platform.SWITCH: {
@@ -1954,6 +2143,27 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.SENSOR: {
                 "mode": {
                     "device_class": SensorDeviceClass.ENUM,
@@ -2072,6 +2282,27 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.SENSOR: {
                 "mode": {
                     "device_class": SensorDeviceClass.ENUM,
@@ -2162,6 +2393,27 @@ DEVICE_MAPPING = {
                 },
                 "self_clean": {
                     "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
                 }
             },
             Platform.SENSOR: {
@@ -2285,6 +2537,27 @@ DEVICE_MAPPING = {
                     "translation_key": "wind_swing_lr_angle"
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.SENSOR: {
                 "mode": {
                     "device_class": SensorDeviceClass.ENUM,
@@ -2358,6 +2631,27 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.SENSOR: {
                 "mode": {
                     "device_class": SensorDeviceClass.ENUM,
@@ -2426,6 +2720,27 @@ DEVICE_MAPPING = {
                     "max_temp": 30,
                     "temperature_unit": UnitOfTemperature.CELSIUS,
                     "precision": PRECISION_HALVES,
+                }
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
                 }
             },
             Platform.SWITCH: {
@@ -2541,6 +2856,27 @@ DEVICE_MAPPING = {
                 },
                 "self_clean": {
                     "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
                 }
             },
             Platform.SENSOR: {
