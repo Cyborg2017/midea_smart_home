@@ -13,10 +13,12 @@ DEVICE_MAPPING = {
             {"prevent_straight_wind"},
             {"prevent_super_cool"},
             {"wind_swing_lr_angle"},
-            {"wind_swing_ud_angle"}
+            {"wind_swing_ud_angle"},
+            {"group_data_four"}
         ],
         "polling_query": [
-            {"indoor_temperature"}
+            {"indoor_temperature"},
+            {"group_data_four"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -183,6 +185,19 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
+                },
+                "current_time_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.KILO_WATT,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "suggested_display_precision": 1
+                },
+                "total_power_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "suggested_display_precision": 2,
+                    "translation_key": "total_elec_value"
                 }
             }
         }
@@ -193,10 +208,12 @@ DEVICE_MAPPING = {
             {},
             {"prevent_super_cool"},
             {"wind_swing_lr_angle"},
-            {"wind_swing_ud_angle"}
+            {"wind_swing_ud_angle"},
+            {"group_data_four"}
         ],
         "polling_query": [
-            {"indoor_temperature"}
+            {"indoor_temperature"},
+            {"group_data_four"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -349,6 +366,19 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
+                },
+                "current_time_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.KILO_WATT,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "suggested_display_precision": 1
+                },
+                "total_power_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "suggested_display_precision": 2,
+                    "translation_key": "total_elec_value"
                 }
             }
         }
@@ -724,10 +754,12 @@ DEVICE_MAPPING = {
             {"fresh_air_fan_speed"},
             {"fresh_air_mode_two"},
             {"inner_purifier"},
-            {"inner_purifier_fan_speed"}
+            {"inner_purifier_fan_speed"},
+            {"group_data_four"}
         ],
         "polling_query": [
-            {"indoor_temperature"}
+            {"indoor_temperature"},
+            {"group_data_four"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -864,6 +896,19 @@ DEVICE_MAPPING = {
                 "fresh_filter_time_use": {
                     "state_class": SensorStateClass.MEASUREMENT,
                     "unit_of_measurement": UnitOfTime.HOURS
+                },
+                "current_time_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.KILO_WATT,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "suggested_display_precision": 1
+                },
+                "total_power_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "suggested_display_precision": 2,
+                    "translation_key": "total_elec_value"
                 }
             }
         }
@@ -873,10 +918,12 @@ DEVICE_MAPPING = {
         "initial_query": [
             {},
             {"wind_swing_lr_angle"},
-            {"wind_swing_ud_angle"}
+            {"wind_swing_ud_angle"},
+            {"group_data_four"}
         ],
         "polling_query": [
-            {"indoor_temperature"}
+            {"indoor_temperature"},
+            {"group_data_four"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -978,6 +1025,19 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
+                },
+                "current_time_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.KILO_WATT,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "suggested_display_precision": 1
+                },
+                "total_power_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "suggested_display_precision": 2,
+                    "translation_key": "total_elec_value"
                 }
             }
         }
@@ -990,10 +1050,12 @@ DEVICE_MAPPING = {
             {"prevent_straight_wind"},
             {"prevent_super_cool"},
             {"wind_swing_lr_angle"},
-            {"wind_swing_ud_angle"}
+            {"wind_swing_ud_angle"},
+            {"group_data_four"}
         ],
         "polling_query": [
-            {"indoor_temperature"}
+            {"indoor_temperature"},
+            {"group_data_four"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -1160,6 +1222,19 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
+                },
+                "current_time_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.KILO_WATT,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "suggested_display_precision": 1
+                },
+                "total_power_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "suggested_display_precision": 2,
+                    "translation_key": "total_elec_value"
                 }
             }
         }
@@ -1170,7 +1245,8 @@ DEVICE_MAPPING = {
             {},
             {"e0_query"},
             {"screen_display"},
-            {"smart_dry_value"}
+            {"smart_dry_value"},
+            {"group_data_four"}
         ],
         "polling_query": [
             {"e0_query"},
@@ -1436,10 +1512,12 @@ DEVICE_MAPPING = {
             {"wind_swing_ud_angle"},
             {"fresh_air"},
             {"fresh_filter_time_use"},
-            {"fresh_air_fan_speed"}
+            {"fresh_air_fan_speed"},
+            {"group_data_four"}
         ],
         "polling_query": [
-            {"indoor_temperature"}
+            {"indoor_temperature"},
+            {"group_data_four"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -1574,6 +1652,19 @@ DEVICE_MAPPING = {
                "fresh_filter_time_use": {
                     "state_class": SensorStateClass.MEASUREMENT,
                     "unit_of_measurement": UnitOfTime.HOURS
+                },
+                "current_time_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.KILO_WATT,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "suggested_display_precision": 1
+                },
+                "total_power_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "suggested_display_precision": 2,
+                    "translation_key": "total_elec_value"
                 }
             }
         }
@@ -1748,17 +1839,19 @@ DEVICE_MAPPING = {
             }
         }
     },
-    ("22040055", "22040023", "22040053"): {
+    ("22040055", "22040023", "22040053", "22040057"): {
         "rationale": ["off", "on"],
         "initial_query": [
             {},
             {"prevent_straight_wind"},
             {"prevent_super_cool"},
             {"wind_swing_lr_angle"},
-            {"wind_swing_ud_angle"}
+            {"wind_swing_ud_angle"},
+            {"group_data_four"}
         ],
         "polling_query": [
-            {"indoor_temperature"}
+            {"indoor_temperature"},
+            {"group_data_four"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -1874,6 +1967,19 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
+                },
+                "current_time_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.KILO_WATT,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "suggested_display_precision": 1
+                },
+                "total_power_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "suggested_display_precision": 2,
+                    "translation_key": "total_elec_value"
                 }
             }
         }
