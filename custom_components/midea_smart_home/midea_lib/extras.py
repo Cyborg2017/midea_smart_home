@@ -26,6 +26,21 @@ class DeviceLogicHandler:
             elif work_status in ("cooking", "keep_warm"):
                 data["work_switch"] = 2
 
+    def _adjust_invalid_order_time(self, data: dict) -> None:
+        """Treat invalid order_time values as None."""
+        if "order_time_hour" in data:
+            try:
+                if int(data["order_time_hour"]) > 24:
+                    data["order_time_hour"] = None
+            except (ValueError, TypeError):
+                pass
+        if "order_time_min" in data:
+            try:
+                if int(data["order_time_min"]) > 59:
+                    data["order_time_min"] = None
+            except (ValueError, TypeError):
+                pass
+
     def adjust_ac_mode(self, data: dict) -> None:
         if "mode" in data:
             power = data.get("power")
@@ -55,6 +70,7 @@ class DeviceLogicHandler:
 
         elif self.device_type == 0xEA:
             self.adjust_work_switch(data)
+            self._adjust_invalid_order_time(data)
 
         elif self.device_type == 0xAC:
             self.adjust_ac_mode(data)
