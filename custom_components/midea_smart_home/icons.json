@@ -168,9 +168,11 @@
             "milk_temperature": { "default": "mdi:baby-bottle" },
             "mode": { "default": "mdi:tune" },
             "moisturizing": { "default": "mdi:water-plus" },
+            "mouthfeel": { "default": "mdi:card-multiple-outline" },
             "no_obsolete_water": { "default": "mdi:water-check" },
             "no_wind_sense": { "default": "mdi:air-filter" },
             "open_door_warning_time": { "default": "mdi:timer-alert" },
+            "order_mode": { "default": "mdi:clock-edit-outline" },
             "plateau_boiling_point": { "default": "mdi:thermometer-high" },
             "power_off_time": { "default": "mdi:timer-off" },
             "power_on_time": { "default": "mdi:timer" },
@@ -292,8 +294,10 @@
             "max_life_pcb": { "default": "mdi:filter" },
             "max_life_ro": { "default": "mdi:filter" },
             "mode": { "default": "mdi:tune" },
+            "mouthfeel": { "default": "mdi:card-multiple-outline" },
             "new_wind_humidity": { "default": "mdi:water-percent" },
             "night_light_brightness": { "default": "mdi:brightness-5" },
+            "order_time": { "default": "mdi:timer" },
             "out_tds": { "default": "mdi:water-check" },
             "outdoor_temperature": { "default": "mdi:thermometer" },
             "pm1": { "default": "mdi:blur" },
@@ -304,6 +308,7 @@
             "progress": { "default": "mdi:progress-check" },
             "refrigeration_real_temperature": { "default": "mdi:thermometer" },
             "remain_time": { "default": "mdi:timer" },
+            "rice_type": { "default": "mdi:rice" },
             "running_status": { "default": "mdi:information" },
             "set_time": { "default": "mdi:timer" },
             "softwater": { "default": "mdi:shaker-outline" },
@@ -435,7 +440,8 @@
         },
         "time": {
             "power_on_timer": { "default": "mdi:timer" },
-            "power_off_timer": { "default": "mdi:timer-off" }
+            "power_off_timer": { "default": "mdi:timer-off" },
+            "work_time": { "default": "mdi:timer-outline" }
         },
         "vacuum": {
             "vacuum": { "default": "mdi:robot-vacuum" }
