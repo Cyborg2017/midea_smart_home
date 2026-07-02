@@ -33,6 +33,7 @@ async def async_setup_entry(
                 condition = config.get("condition")
                 status_key = config.get("status_key")
                 ignore_values = config.get("ignore_values")
+                include_current = config.get("include_current")
                 if isinstance(options, dict):
                     option_list = list(options.keys())
                 else:
@@ -40,7 +41,7 @@ async def async_setup_entry(
                 entities.append(
                     MideaSelectEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        select_id, option_list, options, command, translation_key, condition, status_key, ignore_values, model
+                        select_id, option_list, options, command, translation_key, condition, status_key, ignore_values, include_current, model
                     )
                 )
 
@@ -64,6 +65,7 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
         condition: dict = None,
         status_key: str = None,
         ignore_values: list = None,
+        include_current: list = None,
         model: str = None,
     ):
         config = {"translation_key": translation_key} if translation_key else {}
@@ -77,6 +79,7 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
         self._command = command
         self._status_key = status_key
         self._ignore_values = ignore_values or []
+        self._include_current = include_current or []
         self._attr_options = options
         self._last_option: str | None = None
 
@@ -190,6 +193,11 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
 
         if self._command and isinstance(self._command, dict):
             merged_command.update(self._command)
+
+        for attr in self._include_current:
+            current_value = self._get_nested_value(attr)
+            if current_value is not None:
+                merged_command[attr] = current_value
 
         if merged_command:
             await self.coordinator.async_set_control(merged_command)
