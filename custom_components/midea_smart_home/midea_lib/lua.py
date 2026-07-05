@@ -11,6 +11,7 @@ import base64
 import json
 import logging
 import os
+import re
 import threading
 import time
 from pathlib import Path
@@ -181,6 +182,13 @@ _G.cjson = cjson
             try:
                 result = self._data_to_json(data_value)
                 _LOGGER.debug("data_to_json input length: %d", len(data_value) if data_value else 0)
+
+                # Clean trailing commas in JSON string values
+                # Lua files often concatenate strings with ", " separator but use string.sub(str, 1, -2)
+                # which only removes 1 character, leaving a trailing comma in the JSON output
+                # Pattern: "value, " (comma + space before closing quote) -> "value"
+                result = re.sub(r'"([^"]*), "', r'\1"', result)
+
                 return result
             except lupa.lua51.LuaError as e:
                 error_msg = str(e)
