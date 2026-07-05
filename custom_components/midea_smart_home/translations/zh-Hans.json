@@ -541,14 +541,6 @@
       }
     },
     "select": {
-      "mouthfeel": {
-        "name": "口感",
-        "state": {
-          "soft": "软糯",
-          "middle": "适中",
-          "hard": "Q弹"
-        }
-      },
       "autoclean_remind_cycle": {
         "name": "自清洗提醒周期",
         "state": {
@@ -1040,13 +1032,13 @@
         "state": {
           "air_dry": "干燥",
           "auto": "自动",
+          "boiling_congee": "煮粥",
           "close_all": "关闭",
           "coarse_rice": "杂粮饭",
           "cook_soup": "煲汤",
           "double_layer_cook": "双层煮",
           "factory_test": "工厂测试",
           "firewood_rice": "柴火饭",
-          "boiling_congee": "煮粥",
           "heat_rice": "热饭",
           "hot_fast_rice": "热水快饭",
           "keep_warm": "保温",
@@ -1072,6 +1064,14 @@
           "off": "关闭"
         }
       },
+      "mouthfeel": {
+        "name": "口感",
+        "state": {
+          "hard": "Q弹",
+          "middle": "适中",
+          "soft": "软糯"
+        }
+      },
       "no_obsolete_water": {
         "name": "智慧零冷水",
         "state": {
@@ -1089,15 +1089,6 @@
           "right_no_wind": "右无风感",
           "up_down_no_wind": "上+下无风感",
           "up_no_wind": "上无风感"
-        }
-      },
-      "order_mode": {
-        "name": "预约模式",
-        "state": {
-          "stop": "停止",
-          "order_luscious_rice": "预约香甜饭",
-          "order_boiling_congee": "预约煮粥",
-          "order_stewing": "预约蒸煮"
         }
       },
       "open_door_warning_time": {
@@ -1131,6 +1122,15 @@
           "280": "4分钟40秒",
           "290": "4分钟50秒",
           "300": "5分钟"
+        }
+      },
+      "order_mode": {
+        "name": "预约模式",
+        "state": {
+          "order_boiling_congee": "预约煮粥",
+          "order_luscious_rice": "预约香甜饭",
+          "order_stewing": "预约蒸煮",
+          "stop": "停止"
         }
       },
       "plateau_boiling_point": {
@@ -2049,6 +2049,9 @@
       "mode": {
         "name": "运行模式"
       },
+      "mouthfeel": {
+        "name": "口感"
+      },
       "new_wind_humidity": {
         "name": "新风湿度"
       },
@@ -2108,14 +2111,11 @@
       "return_water_tem": {
         "name": "回水温度"
       },
-      "running_status": {
-        "name": "运行状态"
-      },
-      "mouthfeel": {
-        "name": "口感"
-      },
       "rice_type": {
         "name": "米种类"
+      },
+      "running_status": {
+        "name": "运行状态"
       },
       "set_time": {
         "name": "设定时间"
@@ -2515,11 +2515,11 @@
       }
     },
     "time": {
-      "power_on_timer": {
-        "name": "定时开机"
-      },
       "power_off_timer": {
         "name": "定时关机"
+      },
+      "power_on_timer": {
+        "name": "定时开机"
       },
       "work_time": {
         "name": "工作时间"

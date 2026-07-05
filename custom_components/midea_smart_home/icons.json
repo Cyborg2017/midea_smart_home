@@ -439,8 +439,8 @@
             "external_humidity_sensor": { "default": "mdi:link-variant" }
         },
         "time": {
-            "power_on_timer": { "default": "mdi:timer" },
             "power_off_timer": { "default": "mdi:timer-off" },
+            "power_on_timer": { "default": "mdi:timer" },
             "work_time": { "default": "mdi:timer-outline" }
         },
         "vacuum": {
