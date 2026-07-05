@@ -587,34 +587,36 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
                                 # Add local bit = require "bit" at the beginning
                                 modified = 'local bit = require "bit".bit\n' + modified
 
-                                # Modify dataType check
-                                modified = modified.replace(
-                                    'if ((dataType ~= 0x02) and (dataType ~= 0x03) and (dataType ~= 0x04)) then         return nil     end',
-                                    ''
-                                )
+                                # Replace group_data_four with group_data_one in conditional byte assignment for T0xAC
+                                if device_type == 0xAC:
+                                    modified = modified.replace(
+                                        'if(queryType == "group_data_four") then 				bodyBytes[3] = 0x41 			end',
+                                        'if(queryType == "group_data_one") then 				bodyBytes[3] = 0x41 			end'
+                                    )
 
-                                # Fix tonumber error when db_error_code is nil
-                                modified = modified.replace(
-                                    'if (tonumber(tb["db_error_code"], 16) ~= 0)',
-                                    'if (tb["db_error_code"] and tonumber(tb["db_error_code"], 16) ~= 0)'
-                                )
-
-                                # Replace group_data_four with group_data_one in conditional byte assignment
-                                modified = modified.replace(
-                                    'if(queryType == "group_data_four") then 				bodyBytes[3] = 0x41 			end',
-                                    'if(queryType == "group_data_one") then 				bodyBytes[3] = 0x41 			end'
-                                )
-
-                                # Fix Lua 5.1 # operator on 0-indexed tables.
+                                # Fix Lua 5.1 # operator on 0-indexed tables for T0xCA.
                                 # bodyBytes is built as {[0]=b0, [1]=b1, ...} but Lua 5.1's #
                                 # only counts keys starting from 1, so # returns length-1,
                                 # causing binToModel to return nil for short messages.
-                                import re
-                                modified = re.sub(
-                                    r'if\s*\(\s*#binData\s*<\s*(\d+)\s*\)\s*then\b',
-                                    r'if ((function(t) local c=0; for _ in pairs(t) do c=c+1 end return c end)(binData) < \1) then',
-                                    modified,
-                                )
+                                if device_type == 0xCA:
+                                    modified = modified.replace(
+                                        'if (#binData < ',
+                                        'if ((function(t) local c=0; for _ in pairs(t) do c=c+1 end return c end)(binData) < '
+                                    )
+
+                                # Fix tonumber error when db_error_code is nil for T0xD9
+                                if device_type == 0xD9:
+                                    modified = modified.replace(
+                                        'if (tonumber(tb["db_error_code"], 16) ~= 0)',
+                                        'if (tb["db_error_code"] and tonumber(tb["db_error_code"], 16) ~= 0)'
+                                    )
+
+                                # Modify dataType check for T0xFB
+                                if device_type == 0xFB:
+                                    modified = modified.replace(
+                                        'if ((dataType ~= 0x02) and (dataType ~= 0x03) and (dataType ~= 0x04)) then         return nil     end',
+                                        ''
+                                    )
 
                                 modified = modified.replace("\r\n", "\n")
                                 return True, modified
