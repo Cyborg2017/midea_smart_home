@@ -13,7 +13,6 @@ from .entity import MideaBaseEntity, iter_midea_device_configs
 
 _LOGGER = logging.getLogger(__name__)
 
-
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
@@ -76,17 +75,17 @@ class MideaTimeEntity(MideaBaseEntity, TimeEntity):
         if self._use_duration:
             # Single duration field mode
             duration_minutes = self.coordinator.data.get(self._target_keys.get("duration"))
-            
+
             if duration_minutes is None:
                 return None
-            
+
             try:
                 duration_minutes = int(duration_minutes)
-                
+
                 # Check if timer is not set (duration is 0)
                 if duration_minutes == 0:
                     return None
-                
+
                 if self._time_mode == "convert":
                     # Device uses relative time: convert duration to target time
                     now = datetime.now()
@@ -112,7 +111,7 @@ class MideaTimeEntity(MideaBaseEntity, TimeEntity):
             try:
                 hours = int(hours)
                 minutes = int(minutes)
-                
+
                 # Check if timer is not set (both hours and minutes are 0)
                 if hours == 0 and minutes == 0:
                     return None
@@ -136,7 +135,7 @@ class MideaTimeEntity(MideaBaseEntity, TimeEntity):
         """Set the time value."""
         try:
             now = datetime.now()
-            
+
             # Get command configuration if exists
             command_config = self._config.get("command", {})
 
@@ -145,7 +144,7 @@ class MideaTimeEntity(MideaBaseEntity, TimeEntity):
                 if "duration" not in self._target_keys:
                     _LOGGER.error("Missing 'duration' key in target_keys for entity %s", self._entity_key)
                     return
-                
+
                 if self._time_mode == "convert":
                     # Convert target time to duration
                     target_datetime = datetime.combine(now.date(), value)
@@ -165,7 +164,7 @@ class MideaTimeEntity(MideaBaseEntity, TimeEntity):
                 else:
                     # Direct mode: convert time to duration
                     total_minutes = value.hour * 60 + value.minute
- 
+
                     command = {
                         self._target_keys["duration"]: total_minutes,
                         **command_config
@@ -175,7 +174,7 @@ class MideaTimeEntity(MideaBaseEntity, TimeEntity):
                 if "hour" not in self._target_keys or "minute" not in self._target_keys:
                     _LOGGER.error("Missing 'hour' or 'minute' key in target_keys for entity %s", self._entity_key)
                     return
-                
+
                 if self._time_mode == "convert":
                     # Device uses relative time: convert user's target time to duration
                     # User inputs 15:30, calculate how long from now, send duration to device
@@ -205,7 +204,7 @@ class MideaTimeEntity(MideaBaseEntity, TimeEntity):
                 }
 
             await self.coordinator.async_set_control(command)
-            
+
         except Exception as e:
             _LOGGER.error("Failed to set time value for entity %s: %s", self._entity_key, str(e))
             raise
