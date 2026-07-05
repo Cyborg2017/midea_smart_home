@@ -54,7 +54,7 @@ DEVICE_MAPPING = {
                                 "swing": {"bath_direction": "253"}
                             }
                         },
-                        "ventilation": {
+                        "blowing": {
                             "key": "blowing_direction",
                             "options": {
                                 "60": {"blowing_direction": "60"},
@@ -188,7 +188,7 @@ DEVICE_MAPPING = {
                                 "swing": {"bath_direction": "253"}
                             }
                         },
-                        "ventilation": {
+                        "blowing": {
                             "key": "blowing_direction",
                             "options": {
                                 "60": {"blowing_direction": "60"},
