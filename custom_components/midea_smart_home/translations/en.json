@@ -2580,6 +2580,14 @@
         "description": "Clear local cache files:\n\n    📁 Current cache will be backed up to: .storage/midea_smart_home-backup\n\n    ⚠️ Click Submit to proceed",
         "title": "Clear Local Cache"
       },
+      "configure_notifications": {
+        "data": {
+          "notify_offline": "Send notification when device goes offline",
+          "notify_online": "Send notification when device comes online"
+        },
+        "description": "Configure whether to send persistent notifications in Home Assistant when devices go offline or come back online.",
+        "title": "Configure Online/Offline Notifications"
+      },
       "configure_polling": {
         "data": {
           "polling_status_enabled": "enabled",
@@ -2609,6 +2617,7 @@
         "menu_options": {
           "add_device": "➕ Add New Device",
           "clear_cache": "🗑️ Clear local cache files",
+          "configure_notifications": "🔔 Configure Device Notifications",
           "configure_polling": "⏱️ Configure Polling Interval",
           "sync_cloud": "☁️ Sync device info from cloud",
           "update_account": "🔑 Update Midea Account/Password"

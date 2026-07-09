@@ -862,7 +862,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     ) -> FlowResult:
         return self.async_show_menu(
             step_id="init",
-            menu_options=["add_device", "update_account", "sync_cloud", "clear_cache", "configure_polling"],
+            menu_options=["add_device", "update_account", "sync_cloud", "clear_cache", "configure_polling", "configure_notifications"],
         )
 
     async def async_step_add_device(
@@ -1509,7 +1509,11 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             return self.async_show_form(
                 step_id="configure_polling",
                 errors={"base": "no_configurable_devices"},
-                description_placeholders={"note": "No devices with polling attributes found"}
+                description_placeholders={
+                    "note": "No devices with polling attributes found",
+                    "device_count": "0",
+                    "device_info": "No devices with polling attributes found",
+                },
             )
 
         # Build form schema with Select dropdown for each device
@@ -1620,4 +1624,33 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             data_schema=vol.Schema(schema_dict),
             description_placeholders=placeholders,
             last_step=False,
+        )
+
+    async def async_step_configure_notifications(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Configure device online/offline notifications."""
+        import copy
+
+        current_data = dict(self._config_entry.data)
+        current_offline = current_data.get("notify_offline", True)
+        current_online = current_data.get("notify_online", True)
+
+        if user_input is not None:
+            new_data = copy.deepcopy(current_data)
+            new_data["notify_offline"] = user_input.get("notify_offline", True)
+            new_data["notify_online"] = user_input.get("notify_online", True)
+            self.hass.config_entries.async_update_entry(
+                self._config_entry,
+                data=new_data,
+            )
+            return self.async_create_entry(title="", data={})
+
+        return self.async_show_form(
+            step_id="configure_notifications",
+            data_schema=vol.Schema({
+                vol.Optional("notify_offline", default=current_offline): bool,
+                vol.Optional("notify_online", default=current_online): bool,
+            }),
+            last_step=True,
         )

@@ -192,9 +192,22 @@ _G.cjson = cjson
                 return result
             except lupa.lua51.LuaError as e:
                 error_msg = str(e)
-                if "attempt to perform arithmetic on a nil value" in error_msg or \
-                   "attempt to concatenate a nil value" in error_msg or \
-                   "index nil value" in error_msg:
+                # Match known "nil value" script issues. Lua reports these with
+                # variable-name variants such as:
+                #   "attempt to perform arithmetic on a nil value"
+                #   "attempt to perform arithmetic on local 'a' (a nil value)"
+                #   "attempt to concatenate field 'x' (a nil value)"
+                #   "attempt to index ... (a nil value)"
+                # so we match on the operation keyword + "nil value" instead of
+                # relying on the exact phrasing.
+                lowered = error_msg.lower()
+                is_nil_value_issue = "nil value" in lowered and (
+                    "attempt to perform arithmetic" in lowered
+                    or "attempt to concatenate" in lowered
+                    or "attempt to index" in lowered
+                    or "index nil value" in lowered
+                )
+                if is_nil_value_issue:
                     _LOGGER.debug(
                         "Lua data_to_json skipped (known script issue): %s. "
                         "Data length: %d, first 200 chars: %s",
