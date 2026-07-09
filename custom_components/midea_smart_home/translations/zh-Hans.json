@@ -2558,6 +2558,9 @@
     }
   },
   "options": {
+    "abort": {
+      "no_configurable_devices": "当前没有支持轮询的设备，无需配置"
+    },
     "error": {
       "all_devices_added": "所有发现的设备都已添加过了",
       "no_account_password": "请先配置账号密码",
