@@ -2,6 +2,7 @@ import logging
 from typing import Any, Union
 
 from homeassistant.components.persistent_notification import async_create, async_dismiss
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
@@ -118,11 +119,13 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         device: MideaDevice,
         device_name: str,
         area: str = "",
+        config_entry: ConfigEntry | None = None,
     ):
         self.device = device
         self.device_name = device_name
         self.area = area
         self.device_type = device.device_id
+        self.config_entry = config_entry
         self._was_available: bool | None = None
         self._initialized: bool = False
         self._active: bool = True
@@ -187,6 +190,17 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     @callback
     def _async_send_notification(self, is_online: bool) -> None:
         """Send notification for device availability change."""
+        # Check per-entry notification switches (default True for backward compatibility)
+        entry_data = self.config_entry.data if self.config_entry else {}
+        if is_online:
+            if not entry_data.get("notify_online", True):
+                _LOGGER.debug("Online notification suppressed for device %s (disabled by config)", self.device.device_id)
+                return
+        else:
+            if not entry_data.get("notify_offline", True):
+                _LOGGER.debug("Offline notification suppressed for device %s (disabled by config)", self.device.device_id)
+                return
+
         _LOGGER.info(">>> SENDING notification for device %s: is_online=%s <<<", self.device.device_id, is_online)
         async_update_device_status_notification(
             self.hass,

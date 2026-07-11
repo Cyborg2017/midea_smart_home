@@ -220,6 +220,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 device,
                 device_name,
                 area,
+                config_entry=entry,
             )
 
             import asyncio

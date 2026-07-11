@@ -2583,6 +2583,14 @@
         "description": "清理本地缓存文件：\n\n    📁 当前缓存将备份到：.storage/midea_smart_home-backup\n\n    ⚠️ 点击提交执行清理",
         "title": "清理本地缓存"
       },
+      "configure_notifications": {
+        "data": {
+          "notify_offline": "设备离线时发送通知",
+          "notify_online": "设备上线时发送通知"
+        },
+        "description": "配置设备上下线时是否在 Home Assistant 中发送持久通知。",
+        "title": "配置上下线通知"
+      },
       "configure_polling": {
         "data": {
           "polling_status_enabled": "已开启",
@@ -2612,6 +2620,7 @@
         "menu_options": {
           "add_device": "➕ 继续添加其他设备",
           "clear_cache": "🗑️ 清理本地缓存文件",
+          "configure_notifications": "🔔 配置设备上下线通知",
           "configure_polling": "⏱️ 配置轮询间隔时间",
           "sync_cloud": "☁️ 同步云端设备名称",
           "update_account": "🔑 更新美的账号密码"
