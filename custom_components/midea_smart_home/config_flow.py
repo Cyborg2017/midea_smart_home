@@ -1511,11 +1511,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 })
 
         if not configurable_devices:
-            return self.async_show_form(
-                step_id="configure_polling",
-                errors={"base": "no_configurable_devices"},
-                description_placeholders={"note": "No devices with polling attributes found"}
-            )
+            return self.async_abort(reason="no_configurable_devices")
 
         # Build form schema with Select dropdown for each device
         schema_dict = {}

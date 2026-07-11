@@ -2558,6 +2558,9 @@
     }
   },
   "options": {
+    "abort": {
+      "no_configurable_devices": "No devices with polling attributes found"
+    },
     "error": {
       "all_devices_added": "All discovered devices have already been added",
       "no_account_password": "Please configure account and password first",
