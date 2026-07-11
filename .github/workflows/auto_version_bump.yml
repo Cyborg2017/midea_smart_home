@@ -142,14 +142,18 @@ jobs:
           prev_version = tags[0] if tags else None
           
           result = subprocess.run(
-              ['git', 'log', '--oneline', '--format=%s',
+              ['git', 'log', '--format=%s%n%an',
                f'{prev_version}..HEAD' if prev_version else '-100'],
               capture_output=True,
               text=True
           )
-          
-          commits = result.stdout.strip().split('\n')
-          
+
+          lines = result.stdout.strip().split('\n')
+          commits = []
+          for i in range(0, len(lines), 2):
+              if i + 1 < len(lines):
+                  commits.append((lines[i], lines[i+1]))
+
           categorized = {
               'feat': [],
               'fix': [],
@@ -160,23 +164,25 @@ jobs:
               'test': [],
               'other': []
           }
-          
-          for commit in commits:
-              if not commit.strip():
+
+          for commit_msg, author in commits:
+              if not commit_msg.strip():
                   continue
-              if commit.startswith('chore: bump version'):
+              if commit_msg.startswith('chore: bump version'):
                   continue
 
-              match = re.match(r'^(\w+)(?:\([^)]+\))?:\s*(.*)', commit)
+              match = re.match(r'^(\w+)(?:\([^)]+\))?:\s*(.*)', commit_msg)
               if match:
                   category = match.group(1)
                   message = match.group(2)
+                  # Format: "prefix: message @author"
+                  formatted_message = f"{commit_msg} @{author}"
                   if category in categorized:
-                      categorized[category].append(message)
+                      categorized[category].append(formatted_message)
                   else:
-                      categorized['other'].append(commit)
+                      categorized['other'].append(formatted_message)
               else:
-                  categorized['other'].append(commit)
+                  categorized['other'].append(f"{commit_msg} @{author}")
           
           changelog = f"🎉 v${{steps.bump.outputs.new_version}}\n\n"
           
