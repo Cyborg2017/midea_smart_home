@@ -85,7 +85,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         sn8 = device_data.get(CONF_SN8, "")
         model = device_data.get(CONF_PRODUCT_MODEL, "")
         device_type = device_data.get(CONF_DEVICE_TYPE)
-        device_type_int = int(device_type, 16) if isinstance(device_type, str) else 0
+        if isinstance(device_type, int):
+            device_type_int = device_type
+        elif isinstance(device_type, str):
+            try:
+                device_type_int = int(device_type, 16)
+            except ValueError:
+                device_type_int = 0
+        else:
+            device_type_int = 0
 
         # Priority: use custom Lua file from integration's lua folder if it exists,
         # otherwise fall back to the cloud-downloaded file (new name, then old name for compatibility)

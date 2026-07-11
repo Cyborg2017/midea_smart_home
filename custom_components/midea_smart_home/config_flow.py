@@ -1479,7 +1479,12 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             category = device.get(CONF_CATEGORY, "")
 
             try:
-                device_type_int = int(device_type_str, 16) if isinstance(device_type_str, str) else 0
+                if isinstance(device_type_str, int):
+                    device_type_int = device_type_str
+                elif isinstance(device_type_str, str):
+                    device_type_int = int(device_type_str, 16)
+                else:
+                    device_type_int = 0
             except ValueError:
                 device_type_int = 0
 
