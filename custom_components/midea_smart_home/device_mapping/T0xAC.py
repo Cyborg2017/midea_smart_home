@@ -2982,6 +2982,56 @@ DEVICE_MAPPING = {
             }
         }
     },
+    "26093137": {
+        "rationale": ["off", "on"],
+        "initial_query": [
+            {},
+            {"degerming"}
+        ],
+        "polling_query": [
+            {"degerming"}
+        ],
+        "entities": {
+            Platform.FAN: {
+                "fresh_air_fan": {
+                    "power": "fresh_air",
+                    "rationale": [0, 3],
+                    "speeds": list({"fresh_air": 3, "fresh_air_fan_speed": value + 1} for value in range(0, 100)),
+                    "preset_modes": {
+                        "heat_exchange": {
+                            "fresh_air": 3,
+                            "fresh_air_mode": 1
+                        },
+                        "rough_in": {
+                            "fresh_air": 3,
+                            "fresh_air_mode": 2
+                        },
+                        "smooth_in": {
+                            "fresh_air": 3,
+                            "fresh_air_mode": 3
+                        },
+                        "rough_out": {
+                            "fresh_air": 3,
+                            "fresh_air_mode": 4
+                        },
+                        "smooth_out": {
+                            "fresh_air": 3,
+                            "fresh_air_mode": 5
+                        },
+                        "auto": {
+                            "fresh_air": 3,
+                            "fresh_air_mode": 7
+                        }
+                    }
+                }
+            },
+            Platform.SWITCH: {
+                "degerming": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            }
+        }
+    },
     "default_central_miniaturized_fresh_air": {
         "rationale": ["off", "on"],
         "initial_query": [
