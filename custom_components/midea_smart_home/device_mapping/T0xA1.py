@@ -323,9 +323,6 @@ DEVICE_MAPPING = {
                 }
             },
             Platform.SENSOR: {
-                "water_full_level": {
-                    "device_class": SensorDeviceClass.ENUM
-                },
                 "error_code": {
                     "device_class": SensorDeviceClass.ENUM
                 },
@@ -338,9 +335,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
-                },
-                "tank_status": {
-                    "device_class": SensorDeviceClass.ENUM
                 }
             }
         }
@@ -426,9 +420,6 @@ DEVICE_MAPPING = {
                 }
             },
             Platform.SENSOR: {
-                "water_full_level": {
-                    "device_class": SensorDeviceClass.ENUM
-                },
                 "error_code": {
                     "device_class": SensorDeviceClass.ENUM
                 },
@@ -436,9 +427,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.HUMIDITY,
                     "unit_of_measurement": PERCENTAGE,
                     "state_class": SensorStateClass.MEASUREMENT
-                },
-                "tank_status": {
-                    "device_class": SensorDeviceClass.ENUM
                 }
             }
         }

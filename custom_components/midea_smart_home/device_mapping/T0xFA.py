@@ -47,11 +47,6 @@ DEVICE_MAPPING = {
                         }
                     }
                 }
-            },
-            Platform.SENSOR: {
-                "water_feedback": {
-                    "device_class": SensorDeviceClass.ENUM
-                }
             }
         }
     },
@@ -90,11 +85,6 @@ DEVICE_MAPPING = {
                             "speeds": list({"gear": value + 1} for value in range(0, 1))
                         }
                     }
-                }
-            },
-            Platform.SENSOR: {
-                "water_feedback": {
-                    "device_class": SensorDeviceClass.ENUM
                 }
             }
         }
