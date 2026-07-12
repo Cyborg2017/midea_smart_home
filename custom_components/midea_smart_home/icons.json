@@ -42,7 +42,8 @@
             "storage_door_open_overtime": { "default": "mdi:fridge-alert" },
             "storage_door_state": { "default": "mdi:fridge-top" },
             "water_lack": { "default": "mdi:water-off" },
-            "water_output_switch": { "default": "mdi:water-pump" }
+            "water_output_switch": { "default": "mdi:water-pump" },
+			"smelly_trigger": { "default": "mdi:smoke-detector-alert" }
         },
         "button": {
             "cancel_power_on_off_timer": { "default": "mdi:timer-off" },
@@ -53,6 +54,7 @@
         "climate": {
             "air_conditioner": { "default": "mdi:air-conditioner" },
             "bath_heater": { "default": "mdi:shower-head" },
+            "cooling_fan": { "default": "mdi:fan" },
             "electric_heater": { "default": "mdi:thermostat" },
             "freezing_zone": { "default": "mdi:fridge-bottom" },
             "heating": { "default": "mdi:radiator" },
@@ -332,7 +334,9 @@
             "wind_pressure": { "default": "mdi:weather-windy" },
             "work_mode": { "default": "mdi:tune" },
             "work_status": { "default": "mdi:play-circle-outline" },
-            "work_time": { "default": "mdi:clock-outline" }
+            "work_time": { "default": "mdi:clock-outline" },
+			"smelly_level": { "default": "mdi:gauge" },
+			"smelly_threshold": { "default": "mdi:tune" }
         },
         "switch": {
             "ac_dry": { "default": "mdi:water-off" },
@@ -433,7 +437,8 @@
             "waterions": { "default": "mdi:water-check" },
             "wifi_led_enable": { "default": "mdi:wifi" },
             "wind_dispel": { "default": "mdi:weather-windy" },
-            "wind_swing_ud": { "default": "mdi:arrow-up-down" }
+            "wind_swing_ud": { "default": "mdi:arrow-up-down" },
+			"smelly_enable": { "default": "mdi:scent-off" }
         },
         "text": {
             "external_humidity_sensor": { "default": "mdi:link-variant" }
