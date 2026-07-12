@@ -268,11 +268,11 @@
           },
 		  "fan_mode": {
 		    "state": {
-		      "20": "Silent",
-			  "40": "Soft Wind",
-			  "60": "Standard",
-			  "80": "Strong",
-			  "100": "Storm"
+		      "silent": "Silent",
+			  "soft_wind": "Soft Wind",
+			  "standard": "Standard",
+			  "strong": "Strong",
+			  "storm": "Storm"
 			}
           }	
         }
@@ -301,8 +301,8 @@
           },
 		  "fan_mode": {
 		    "state": {
-		      "30": "Soft wind",
-			  "100": "Strong"
+		      "soft_wind": "Soft Wind",
+			  "strong": "Strong"
 			}
           }			
         }

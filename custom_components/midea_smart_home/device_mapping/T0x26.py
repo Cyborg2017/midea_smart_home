@@ -276,8 +276,7 @@ DEVICE_MAPPING = {
         "rationale": ["off", "on"],
         "entities": {
             Platform.CLIMATE: {
-                "bath_heater": {
-                    "translation_key": "cooling_fan",
+                "cooling_fan": {
 					"power": "mode",
 					"hvac_modes": {
                         "off": { "mode": "close_all" }
@@ -327,28 +326,21 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "cur_temperature"
                 },
-                "smelly_level": {
-                    "state": "smelly_level",  
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "smelly_level"
+                "smelly_level": {  
+                    "state_class": SensorStateClass.MEASUREMENT
                 },
                 "smelly_threshold": {
-                    "state": "smelly_threshold",
-                    "state_class": SensorStateClass.MEASUREMENT, 
-                    "translation_key": "smelly_threshold"
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             },
             Platform.SWITCH: {
                 "smelly_enable": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "power": "smelly_enable"
+                    "device_class": SwitchDeviceClass.SWITCH
                 }       
             },
             Platform.BINARY_SENSOR: {
                 "smelly_trigger": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM,
-                    "translation_key": "smelly_trigger",
-                    "state": "smelly_trigger"
+                    "device_class": BinarySensorDeviceClass.PROBLEM
                 }
             }
         }
@@ -358,7 +350,6 @@ DEVICE_MAPPING = {
         "entities": {
             Platform.CLIMATE: {
                 "bath_heater": {
-                    "translation_key": "bath_heater",
                     "power": "mode",
                     "hvac_modes": {
                         "off": {"mode": "close_all"}
@@ -467,8 +458,7 @@ DEVICE_MAPPING = {
             },
             Platform.SWITCH: {
                 "smelly_enable": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "power": "smelly_enable"
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -483,16 +473,12 @@ DEVICE_MAPPING = {
                     "translation_key": "cur_temperature"
                 },
 				"smelly_level": {
-                    "state": "smelly_level",  
-                    "state_class": SensorStateClass.MEASUREMENT,
-                    "translation_key": "smelly_level"
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             },
             Platform.BINARY_SENSOR: {
                 "smelly_trigger": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM,
-                    "translation_key": "smelly_trigger",
-                    "state": "smelly_trigger"
+                    "device_class": BinarySensorDeviceClass.PROBLEM
                 }
             }
         }
