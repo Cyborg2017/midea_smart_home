@@ -2583,14 +2583,15 @@ DEVICE_MAPPING = {
             }
         }
     },
-    "23096245": {
+    ("23096245", "22396337", "22396345", "22396335", "22396339", "22396341"): {
         "rationale": ["off", "on"],
         "initial_query": [
             {},
-            {"indoor_temperature"}
+            {"run_status"},
+            {"out_run_status"}
         ],
         "polling_query": [
-            {"indoor_temperature"}
+            {"out_run_status"}
         ],
         "entities": {
             Platform.CLIMATE: {
@@ -2614,6 +2615,7 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature"],
                     "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
@@ -2659,6 +2661,17 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.ENUM,
                 },
                 "indoor_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_humidity": {
+                    "device_class": SensorDeviceClass.HUMIDITY,
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "cur_humidity"
+                },
+                "outdoor_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
