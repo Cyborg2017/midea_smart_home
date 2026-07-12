@@ -1856,7 +1856,7 @@ DEVICE_MAPPING = {
             {"group_data_four"},
             {"group_data_five"}
         ],
-        "centralized": ["buzzer"],
+        "centralized": ["buzzer_all"],
         "entities": {
             Platform.CLIMATE: {
                 "air_conditioner": {
@@ -1970,9 +1970,11 @@ DEVICE_MAPPING = {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH
                 },
-                "buzzer": {
+                "buzzer_all": {
                     "device_class": SwitchDeviceClass.SWITCH,
-                    "default_value": "on"
+                    "rationale": [0, 1],
+                    "default_value": 1,
+                    "translation_key": "buzzer"
                 },
                 "screen_display": {
                     "device_class": SwitchDeviceClass.SWITCH,
