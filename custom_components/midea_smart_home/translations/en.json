@@ -1680,6 +1680,15 @@
           "off": "Off"
         }
       },
+      "whirl_wind": {
+        "name": "Whirl Wind",
+        "state": {
+          "left_right_whirl_wind": "Left & Right",
+          "left_whirl_wind": "Left",
+          "off": "Off",
+          "right_whirl_wind": "Right"
+        }
+      },
       "wind_around": {
         "name": "Wind Around",
         "state": {

@@ -212,6 +212,7 @@
             "water_level": { "default": "mdi:water" },
             "water_pressure_normal": { "default": "mdi:speedometer" },
             "water_pressure_woman": { "default": "mdi:wave" },
+            "whirl_wind": { "default": "mdi:fan" },
             "wind_around": { "default": "mdi:rotate-3d-variant" },
             "wind_speed": { "default": "mdi:weather-windy" },
             "wind_speed_left": { "default": "mdi:weather-windy" },

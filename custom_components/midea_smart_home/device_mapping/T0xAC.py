@@ -901,6 +901,26 @@ DEVICE_MAPPING = {
                 }
             },
             Platform.SELECT: {
+                "whirl_wind": {
+                    "options": {
+                        "off": {
+                            "whirl_wind_left": 1,
+                            "whirl_wind_right": 1
+                        },
+                        "left_right_whirl_wind": {
+                            "whirl_wind_left": 2,
+                            "whirl_wind_right": 2
+                        },
+                        "left_whirl_wind": {
+                            "whirl_wind_left": 2,
+                            "whirl_wind_right": 1
+                        },
+                        "right_whirl_wind": {
+                            "whirl_wind_left": 1,
+                            "whirl_wind_right": 2
+                        }
+                    }
+                },
                 "wind_swing_ud_angle": {
                     "options": {
                         "off": {"wind_swing_ud_angle": 0},

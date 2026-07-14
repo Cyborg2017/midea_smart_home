@@ -1680,6 +1680,15 @@
           "off": "空档"
         }
       },
+      "whirl_wind": {
+        "name": "旋流风",
+        "state": {
+          "left_right_whirl_wind": "左右旋流风",
+          "left_whirl_wind": "左旋流风",
+          "off": "关闭",
+          "right_whirl_wind": "右旋流风"
+        }
+      },
       "wind_around": {
         "name": "环绕风",
         "state": {
