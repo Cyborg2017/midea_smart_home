@@ -2233,7 +2233,7 @@ DEVICE_MAPPING = {
             "get": [
                 {
                     "lvalue": "[total_elec_value]",
-                    "rvalue": "float([total_elec]) / 1000"
+                    "rvalue": "float([total_elec]) / 100"
                 },
             ],
         },
@@ -2715,7 +2715,7 @@ DEVICE_MAPPING = {
             "get": [
                 {
                     "lvalue": "[total_elec_value]",
-                    "rvalue": "float([total_elec]) / 1000"
+                    "rvalue": "float([total_elec]) / 100"
                 },
             ],
         },
