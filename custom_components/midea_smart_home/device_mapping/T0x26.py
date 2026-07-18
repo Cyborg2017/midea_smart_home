@@ -290,23 +290,23 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": {
                         "heating": "heating_temperature",
-						"soft_wind": "soft_wind_temperature"
+                        "soft_wind": "soft_wind_temperature"
                     },
                     "current_temperature": "current_temperature",
-					"fan_modes": {
+                    "fan_modes": {
                         "ventilation": {
-						    "key": "ventilation_speed",
-							"options": {
+                            "key": "ventilation_speed",
+                            "options": {
                                 "silent": {"ventilation_speed": "20"},
                                 "soft_wind": {"ventilation_speed": "40"},
                                 "standard": {"ventilation_speed": "60"},
                                 "strong": {"ventilation_speed": "80"},
                                 "storm": {"ventilation_speed": "100"}
-							}
-						},
+                            }
+                        },
                         "blowing": {
-						    "key": "blowing_speed",
-							"options": {
+                            "key": "blowing_speed",
+                            "options": {
                                 "silent": {"blowing_speed": "20"},
                                 "soft_wind": {"blowing_speed": "40"},
                                 "standard": {"blowing_speed": "60"},
@@ -319,9 +319,9 @@ DEVICE_MAPPING = {
                         "heating": {
                             "key": "heating_direction",
                             "options": {
-							    "30": {"heating_direction": "60"},
-								"40": {"heating_direction": "60"},
-								"50": {"heating_direction": "60"},
+                                "30": {"heating_direction": "60"},
+                                "40": {"heating_direction": "60"},
+                                "50": {"heating_direction": "60"},
                                 "60": {"heating_direction": "60"},
                                 "70": {"heating_direction": "70"},
                                 "80": {"heating_direction": "80"},
@@ -335,9 +335,9 @@ DEVICE_MAPPING = {
                         "soft_wind": {
                             "key": "soft_wind_direction",
                             "options": {
-							    "30": {"soft_wind_direction": "60"},
-								"40": {"soft_wind_direction": "60"},
-								"50": {"soft_wind_direction": "60"},
+                                "30": {"soft_wind_direction": "60"},
+                                "40": {"soft_wind_direction": "60"},
+                                "50": {"soft_wind_direction": "60"},
                                 "60": {"soft_wind_direction": "60"},
                                 "70": {"soft_wind_direction": "70"},
                                 "80": {"soft_wind_direction": "80"},
@@ -351,9 +351,9 @@ DEVICE_MAPPING = {
                         "blowing": {
                             "key": "blowing_direction",
                             "options": {
-							    "30": {"blowing_direction": "60"},
-								"40": {"blowing_direction": "60"},
-								"50": {"blowing_direction": "60"},
+                                "30": {"blowing_direction": "60"},
+                                "40": {"blowing_direction": "60"},
+                                "50": {"blowing_direction": "60"},
                                 "60": {"blowing_direction": "60"},
                                 "70": {"blowing_direction": "70"},
                                 "80": {"blowing_direction": "80"},
@@ -399,7 +399,7 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "cur_temperature"
                 },
-				"smelly_level": {
+                "smelly_level": {
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             },
@@ -415,8 +415,8 @@ DEVICE_MAPPING = {
         "entities": {
             Platform.CLIMATE: {
                 "cooling_fan": {
-					"power": "mode",
-					"hvac_modes": {
+                    "power": "mode",
+                    "hvac_modes": {
                         "off": { "mode": "close_all" }
                     },
                     "preset_modes": {
@@ -424,16 +424,16 @@ DEVICE_MAPPING = {
                         "ventilation": { "mode": "ventilation" },
                         "blowing": { "mode": "blowing"}
                     },
-					"fan_modes": {
-					    "blowing": {
-						    "key": "blowing_speed",
-							"options": {
+                    "fan_modes": {
+                        "blowing": {
+                            "key": "blowing_speed",
+                            "options": {
                                 "soft_wind": {"blowing_speed": "30"},
                                 "strong": {"blowing_speed": "100"}
-							}
-						}
+                            }
+                        }
                     },
-					"swing_modes": {
+                    "swing_modes": {
                         "blowing": {
                             "key": "blowing_direction",
                             "options": {
@@ -464,7 +464,7 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "cur_temperature"
                 },
-                "smelly_level": {  
+                "smelly_level": {
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "smelly_threshold": {
@@ -474,7 +474,7 @@ DEVICE_MAPPING = {
             Platform.SWITCH: {
                 "smelly_enable": {
                     "device_class": SwitchDeviceClass.SWITCH
-                }       
+                }
             },
             Platform.BINARY_SENSOR: {
                 "smelly_trigger": {

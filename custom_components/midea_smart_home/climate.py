@@ -75,7 +75,7 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
         self._key_min_temp = self._config.get("min_temp", 16)
         self._key_max_temp = self._config.get("max_temp", 30)
         self._aux_heat = self._config.get("aux_heat")
-        
+
         self._fan_modes_grouped = False
         self._fan_modes_config = {}
 
