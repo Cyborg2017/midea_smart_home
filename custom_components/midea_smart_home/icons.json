@@ -36,14 +36,14 @@
             "out_water": { "default": "mdi:water" },
             "pure_water_status": { "default": "mdi:water-off" },
             "screen_status": { "default": "mdi:monitor" },
+            "smelly_trigger": { "default": "mdi:smoke-detector-alert" },
             "softener_lack": { "default": "mdi:water-alert" },
             "softwater_lack": { "default": "mdi:shaker-outline" },
             "steaming": { "default": "mdi:steam" },
             "storage_door_open_overtime": { "default": "mdi:fridge-alert" },
             "storage_door_state": { "default": "mdi:fridge-top" },
             "water_lack": { "default": "mdi:water-off" },
-            "water_output_switch": { "default": "mdi:water-pump" },
-			"smelly_trigger": { "default": "mdi:smoke-detector-alert" }
+            "water_output_switch": { "default": "mdi:water-pump" }
         },
         "button": {
             "cancel_power_on_off_timer": { "default": "mdi:timer-off" },
@@ -314,6 +314,8 @@
             "rice_type": { "default": "mdi:rice" },
             "running_status": { "default": "mdi:information" },
             "set_time": { "default": "mdi:timer" },
+            "smelly_level": { "default": "mdi:gauge" },
+            "smelly_threshold": { "default": "mdi:tune" },
             "softwater": { "default": "mdi:shaker-outline" },
             "storage_temperature": { "default": "mdi:thermometer" },
             "sub_work_status": { "default": "mdi:information" },
@@ -335,9 +337,7 @@
             "wind_pressure": { "default": "mdi:weather-windy" },
             "work_mode": { "default": "mdi:tune" },
             "work_status": { "default": "mdi:play-circle-outline" },
-            "work_time": { "default": "mdi:clock-outline" },
-			"smelly_level": { "default": "mdi:gauge" },
-			"smelly_threshold": { "default": "mdi:tune" }
+            "work_time": { "default": "mdi:clock-outline" }
         },
         "switch": {
             "ac_dry": { "default": "mdi:water-off" },
@@ -421,6 +421,7 @@
             "set_germicidal_countdown": { "default": "mdi:calendar-alert" },
             "silent_mode": { "default": "mdi:volume-off" },
             "smart_sterilize": { "default": "mdi:shield-check" },
+            "smelly_enable": { "default": "mdi:scent-off" },
             "steam": { "default": "mdi:steam" },
             "steam_switch": { "default": "mdi:steam" },
             "steam_wash": { "default": "mdi:steam" },
@@ -438,8 +439,7 @@
             "waterions": { "default": "mdi:water-check" },
             "wifi_led_enable": { "default": "mdi:wifi" },
             "wind_dispel": { "default": "mdi:weather-windy" },
-            "wind_swing_ud": { "default": "mdi:arrow-up-down" },
-			"smelly_enable": { "default": "mdi:scent-off" }
+            "wind_swing_ud": { "default": "mdi:arrow-up-down" }
         },
         "text": {
             "external_humidity_sensor": { "default": "mdi:link-variant" }

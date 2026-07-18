@@ -164,6 +164,9 @@
       "screen_status": {
         "name": "屏幕状态"
       },
+      "smelly_trigger": {
+        "name": "异味触发状态"
+      },
       "softener_lack": {
         "name": "柔顺剂状态"
       },
@@ -181,9 +184,6 @@
       },
       "water_output_switch": {
         "name": "龙头出水"
-      },
-      "smelly_trigger": {
-        "name":  "异味触发状态"
       }
     },
     "button": {
@@ -243,6 +243,15 @@
       "bath_heater": {
         "name": "温控器(浴霸)",
         "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "静音",
+              "soft_wind": "柔风",
+              "standard": "标准",
+              "storm": "暴风",
+              "strong": "强劲"
+            }
+          },
           "preset_mode": {
             "state": {
               "bath": "沐浴",
@@ -250,8 +259,8 @@
               "close": "关闭",
               "drying": "干燥",
               "heating": "取暖",
-              "ventilation": "换气",
-              "soft_wind": "柔风感"
+              "soft_wind": "柔风感",
+              "ventilation": "换气"
             }
           },
           "swing_mode": {
@@ -265,21 +274,18 @@
               "120": "120°",
               "swing": "摆动"
             }
-          },
-          "fan_mode": {
-            "state": {
-              "silent": "静音",
-              "soft_wind": "柔风",
-              "standard": "标准",
-              "strong": "强劲",
-              "storm": "暴风"
-            }
-          }			
+          }
         }
       },
-	  "cooling_fan": {
+      "cooling_fan": {
         "name": "温控器(凉霸)",
         "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "soft_wind": "弱风",
+              "strong": "强风"
+            }
+          },
           "preset_mode": {
             "state": {
               "blowing": "吹风",
@@ -298,13 +304,7 @@
               "120": "120°",
               "swing": "摆动"
             }
-          },
-          "fan_mode": {
-            "state": {
-              "soft_wind": "弱风",
-              "strong": "强风"
-            }
-          }			
+          }
         }
       },
       "electric_heater": {
@@ -2172,6 +2172,12 @@
       "set_time": {
         "name": "设定时间"
       },
+      "smelly_level": {
+        "name": "异味水平"
+      },
+      "smelly_threshold": {
+        "name": "异味触发阈值"
+      },
       "storage_temperature": {
         "name": "冷藏设定温度"
       },
@@ -2245,12 +2251,6 @@
       },
       "work_time": {
         "name": "工作时间"
-      },
-      "smelly_level": {
-        "name":  "异味水平"
-      },
-      "smelly_threshold": {
-        "name":  "异味触发阈值"
       }
     },
     "switch": {
@@ -2512,6 +2512,9 @@
       "smart_sterilize": {
         "name": "智能杀菌"
       },
+      "smelly_enable": {
+        "name": "异味感应"
+      },
       "steam": {
         "name": "蒸汽"
       },
@@ -2565,9 +2568,6 @@
       },
       "wind_swing_ud": {
         "name": "上下摆风"
-      },
-      "smelly_enable": {
-        "name": "异味感应"
       }
     },
     "text": {

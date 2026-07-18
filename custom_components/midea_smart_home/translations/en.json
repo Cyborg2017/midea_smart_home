@@ -164,6 +164,9 @@
       "screen_status": {
         "name": "Screen Status"
       },
+      "smelly_trigger": {
+        "name": "Smelly Trigger"
+      },
       "softener_lack": {
         "name": "Softener Status"
       },
@@ -181,9 +184,6 @@
       },
       "water_output_switch": {
         "name": "Tap Water"
-      },
-      "smelly_trigger": {
-        "name": "Smelly Trigger"
       }
     },
     "button": {
@@ -243,6 +243,15 @@
       "bath_heater": {
         "name": "Thermostat (Bath Heater)",
         "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "Silent",
+              "soft_wind": "Soft Wind",
+              "standard": "Standard",
+              "storm": "Storm",
+              "strong": "Strong"
+            }
+          },
           "preset_mode": {
             "state": {
               "bath": "Bath",
@@ -250,8 +259,8 @@
               "close": "Close",
               "drying": "Drying",
               "heating": "Heating",
-              "ventilation": "Ventilation",
-              "soft_wind": "Soft Wind"
+              "soft_wind": "Soft Wind",
+              "ventilation": "Ventilation"
             }
           },
           "swing_mode": {
@@ -265,21 +274,18 @@
               "120": "120°",
               "swing": "Swing"
             }
-          },
-          "fan_mode": {
-            "state": {
-              "silent": "Silent",
-              "soft_wind": "Soft Wind",
-              "standard": "Standard",
-              "strong": "Strong",
-              "storm": "Storm"
-            }
-          }	
+          }
         }
       },
-	  "cooling_fan": {
+      "cooling_fan": {
         "name": "Thermostat (Cooling Fan)",
         "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "soft_wind": "Soft Wind",
+              "strong": "Strong"
+            }
+          },
           "preset_mode": {
             "state": {
               "blowing": "Blowing",
@@ -298,13 +304,7 @@
               "120": "120°",
               "swing": "Swing"
             }
-          },
-          "fan_mode": {
-            "state": {
-              "soft_wind": "Soft Wind",
-              "strong": "Strong"
-            }
-          }			
+          }
         }
       },
       "electric_heater": {
@@ -2172,6 +2172,12 @@
       "set_time": {
         "name": "Set Time"
       },
+      "smelly_level": {
+        "name": "Smelly Level"
+      },
+      "smelly_threshold": {
+        "name": "Smelly Threshold"
+      },
       "storage_temperature": {
         "name": "Refrigerator Set Temperature"
       },
@@ -2245,12 +2251,6 @@
       },
       "work_time": {
         "name": "Work Time"
-      },
-      "smelly_threshold": {
-        "name": "Smelly Threshold"
-      },
-      "smelly_level": {
-        "name": "Smelly Level"
       }
     },
     "switch": {
@@ -2512,6 +2512,9 @@
       "smart_sterilize": {
         "name": "Smart Sterilization"
       },
+      "smelly_enable": {
+        "name": "Smelly Enable"
+      },
       "steam": {
         "name": "Steam"
       },
@@ -2565,9 +2568,6 @@
       },
       "wind_swing_ud": {
         "name": "Vertical Swing"
-      },
-      "smelly_enable": {
-        "name": "Smelly Enable"
       }
     },
     "text": {
