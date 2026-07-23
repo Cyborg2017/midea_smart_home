@@ -862,7 +862,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     ) -> FlowResult:
         return self.async_show_menu(
             step_id="init",
-            menu_options=["add_device", "update_account", "sync_cloud", "clear_cache", "configure_polling", "configure_notifications"],
+            menu_options=["add_device", "update_account", "sync_cloud", "clear_cache", "configure_polling", "configure_notifications", "configure_update_check"],
         )
 
     async def async_step_add_device(
@@ -1652,6 +1652,72 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             description_placeholders={
                 "current_offline_status": "enabled" if current_offline else "disabled",
                 "current_online_status": "enabled" if current_online else "disabled",
+            },
+            last_step=True,
+        )
+
+    async def async_step_configure_update_check(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Configure automatic update check interval."""
+        from homeassistant.helpers import translation as ha_translation
+        from .const import (
+            CONF_UPDATE_CHECK_INTERVAL,
+            UPDATE_CHECK_DEFAULT,
+            UPDATE_CHECK_OFF,
+            UPDATE_CHECK_12H,
+            UPDATE_CHECK_24H,
+        )
+
+        current_language = self.hass.config.language or "en"
+        translations = await ha_translation.async_get_translations(
+            self.hass, current_language, "options", {DOMAIN}
+        )
+
+        def _translate(key: str, default: str) -> str:
+            full_key = f"options.step.configure_update_check.data.{key}"
+            for k in [full_key, f"component.{DOMAIN}.{full_key}"]:
+                if k in translations:
+                    return translations[k]
+            return default
+
+        interval_options = {
+            UPDATE_CHECK_OFF: _translate("option_off", "off"),
+            UPDATE_CHECK_12H: _translate("option_12h", "12h"),
+            UPDATE_CHECK_24H: _translate("option_24h", "24h"),
+        }
+
+        current_data = dict(self._config_entry.data)
+        current_interval = current_data.get(CONF_UPDATE_CHECK_INTERVAL, UPDATE_CHECK_DEFAULT)
+
+        if user_input is not None:
+            new_data = {
+                **current_data,
+                CONF_UPDATE_CHECK_INTERVAL: user_input.get(CONF_UPDATE_CHECK_INTERVAL, UPDATE_CHECK_DEFAULT),
+            }
+            self.hass.config_entries.async_update_entry(
+                self._config_entry,
+                data=new_data,
+            )
+            # Update the periodic check schedule without reloading the whole
+            # integration (reloading disconnects and reconnects all devices).
+            update_entity = self.hass.data.get(DOMAIN, {}).get(
+                self._config_entry.entry_id, {}
+            ).get("update_entity")
+            if update_entity:
+                await update_entity.async_reschedule_check()
+            return self.async_create_entry(title="", data={})
+
+        return self.async_show_form(
+            step_id="configure_update_check",
+            data_schema=vol.Schema({
+                vol.Required(
+                    CONF_UPDATE_CHECK_INTERVAL,
+                    default=current_interval,
+                ): vol.In(interval_options),
+            }),
+            description_placeholders={
+                "current_interval": interval_options.get(current_interval, current_interval),
             },
             last_step=True,
         )

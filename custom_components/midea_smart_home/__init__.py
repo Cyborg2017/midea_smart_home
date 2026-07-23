@@ -291,6 +291,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         entry_data = hass.data[DOMAIN].pop(entry.entry_id, {})
         for device_id_str, data in entry_data.items():
+            # Only device entries are dicts; skip non-dict values like "update_entity"
+            if not isinstance(data, dict):
+                continue
             coordinator = data.get("coordinator")
             if coordinator:
                 coordinator.deactivate()

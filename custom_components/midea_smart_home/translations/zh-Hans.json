@@ -2586,6 +2586,11 @@
         "name": "工作时间"
       }
     },
+    "update": {
+      "check_for_updates": {
+        "name": "更新提示"
+      }
+    },
     "vacuum": {
       "vacuum": {
         "name": "扫地机器人",
@@ -2663,6 +2668,16 @@
         "description": "⚠️ 以下设备个别属性状态推送有延迟，请配置辅助轮询以获取实时状态更新数据：\n\n{device_info}\n\n💡 提示：选择「off」将完全禁用该设备的轮询（不影响设备主动上报）",
         "title": "配置轮询间隔时间"
       },
+      "configure_update_check": {
+        "data": {
+          "update_check_interval": "更新检查频率",
+          "option_off": "关闭",
+          "option_12h": "每 12 小时",
+          "option_24h": "每 24 小时"
+        },
+        "description": "配置是否定期检查集成是否有新版本。\n\n💡 每次重启 Home Assistant 时都会自动检查一次（无论此设置如何）。\n\n当前设置: {current_interval}",
+        "title": "配置集成更新检查"
+      },
       "get_token_option": {
         "data": {
           "key": "Key",
@@ -2683,6 +2698,7 @@
           "clear_cache": "🗑️ 清理本地缓存文件",
           "configure_notifications": "🔔 配置设备上下线通知",
           "configure_polling": "⏱️ 配置轮询间隔时间",
+          "configure_update_check": "🔄 配置集成更新检查",
           "sync_cloud": "☁️ 同步云端设备名称",
           "update_account": "🔑 更新美的账号密码"
         },

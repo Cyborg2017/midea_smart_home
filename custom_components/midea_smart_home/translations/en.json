@@ -2586,6 +2586,11 @@
         "name": "Work Time"
       }
     },
+    "update": {
+      "check_for_updates": {
+        "name": "Update Prompt"
+      }
+    },
     "vacuum": {
       "vacuum": {
         "name": "Robot Vacuum",
@@ -2663,6 +2668,16 @@
         "description": "⚠️ The following devices have delayed status updates for some attributes. Configure auxiliary polling for real-time status updates:\n\n{device_info}\n\n💡 Tip: Select \"off\" to completely disable polling (won't affect device-initiated status updates)",
         "title": "Configure Polling Interval"
       },
+      "configure_update_check": {
+        "data": {
+          "update_check_interval": "Update Check Interval",
+          "option_off": "Off",
+          "option_12h": "Every 12 hours",
+          "option_24h": "Every 24 hours"
+        },
+        "description": "Configure whether to periodically check for new integration versions.\n\n💡 An update check is always performed on Home Assistant startup (regardless of this setting).\n\nCurrent setting: {current_interval}",
+        "title": "Configure Integration Update Check"
+      },
       "get_token_option": {
         "data": {
           "key": "Key",
@@ -2683,6 +2698,7 @@
           "clear_cache": "🗑️ Clear local cache files",
           "configure_notifications": "🔔 Configure Device Notifications",
           "configure_polling": "⏱️ Configure Polling Interval",
+          "configure_update_check": "🔄 Configure Integration Update Check",
           "sync_cloud": "☁️ Sync device info from cloud",
           "update_account": "🔑 Update Midea Account/Password"
         },
