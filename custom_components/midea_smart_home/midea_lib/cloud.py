@@ -587,11 +587,25 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
                                 # Add local bit = require "bit" at the beginning
                                 modified = 'local bit = require "bit".bit\n' + modified
 
-                                # Replace group_data_four with group_data_one in conditional byte assignment for T0xAC
+                                # T0xAC (Air Conditioner) specific modifications
                                 if device_type == 0xAC:
+                                    # Add group_data_five support for querying indoor humidity via 0x45 message
+                                    modified = modified.replace(
+                                        'if (queryType =="group_data_zero" or queryType=="group_data_four" or queryType=="group_data_one")then',
+                                        'if (queryType =="group_data_zero" or queryType=="group_data_four" or queryType=="group_data_one" or queryType=="group_data_five")then'
+                                    )
+
+                                    # Fix group_data_one byte mapping (0x44 -> 0x41) to correctly query power and energy data
+                                    # Also add group_data_five (0x45) for humidity query support
                                     modified = modified.replace(
                                         'if(queryType == "group_data_four") then 				bodyBytes[3] = 0x41 			end',
-                                        'if(queryType == "group_data_one") then 				bodyBytes[3] = 0x41 			end'
+                                        'if(queryType == "group_data_one") then 				bodyBytes[3] = 0x41 			end 			if(queryType == "group_data_five") then 				bodyBytes[3] = 0x45 			end'
+                                    )
+
+                                    # Find the position after messageBytes[3] == 0x41 parsing and insert 0x45 handling
+                                    modified = modified.replace(
+                                        'if(messageBytes[3] == 0x41) then',
+                                        'if(messageBytes[3] == 0x45) then 			keyP["indoor_humidity"] = messageBytes[4] 			end 			if(messageBytes[3] == 0x41) then'
                                     )
 
                                 # Fix Lua 5.1 # operator on 0-indexed tables for T0xCA.
