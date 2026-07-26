@@ -14,11 +14,13 @@ DEVICE_MAPPING = {
             {"prevent_super_cool"},
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "polling_query": [
             {"indoor_temperature"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -68,6 +70,7 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature", "small_temperature"],
                     "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
@@ -207,6 +210,11 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
+                "indoor_humidity": {
+                    "device_class": SensorDeviceClass.HUMIDITY,
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
                 "current_time_power": {
                     "device_class": SensorDeviceClass.POWER,
                     "unit_of_measurement": UnitOfPower.KILO_WATT,
@@ -230,11 +238,13 @@ DEVICE_MAPPING = {
             {"prevent_super_cool"},
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "polling_query": [
             {"indoor_temperature"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -282,6 +292,7 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature", "small_temperature"],
                     "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
@@ -407,6 +418,11 @@ DEVICE_MAPPING = {
                 "outdoor_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_humidity": {
+                    "device_class": SensorDeviceClass.HUMIDITY,
+                    "unit_of_measurement": PERCENTAGE,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "current_time_power": {
@@ -818,11 +834,13 @@ DEVICE_MAPPING = {
             {"fresh_air_mode_two"},
             {"inner_purifier"},
             {"inner_purifier_fan_speed"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "polling_query": [
             {"indoor_temperature"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -870,6 +888,7 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature", "small_temperature"],
                     "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
@@ -997,6 +1016,11 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
+                "indoor_humidity": {
+                    "device_class": SensorDeviceClass.HUMIDITY,
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
                 "fresh_filter_time_use": {
                     "state_class": SensorStateClass.MEASUREMENT,
                     "unit_of_measurement": UnitOfTime.HOURS
@@ -1023,11 +1047,13 @@ DEVICE_MAPPING = {
             {},
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "polling_query": [
             {"indoor_temperature"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -1067,6 +1093,7 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature", "small_temperature"],
                     "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
@@ -1151,6 +1178,11 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
+                "indoor_humidity": {
+                    "device_class": SensorDeviceClass.HUMIDITY,
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
                 "current_time_power": {
                     "device_class": SensorDeviceClass.POWER,
                     "unit_of_measurement": UnitOfPower.KILO_WATT,
@@ -1176,11 +1208,13 @@ DEVICE_MAPPING = {
             {"prevent_super_cool"},
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "polling_query": [
             {"indoor_temperature"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -1230,6 +1264,7 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature", "small_temperature"],
                     "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
@@ -1367,6 +1402,11 @@ DEVICE_MAPPING = {
                 "outdoor_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_humidity": {
+                    "device_class": SensorDeviceClass.HUMIDITY,
+                    "unit_of_measurement": PERCENTAGE,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "current_time_power": {
@@ -1680,11 +1720,13 @@ DEVICE_MAPPING = {
             {"fresh_air"},
             {"fresh_filter_time_use"},
             {"fresh_air_fan_speed"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "polling_query": [
             {"indoor_temperature"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -1734,6 +1776,7 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature", "small_temperature"],
                     "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
@@ -1835,6 +1878,11 @@ DEVICE_MAPPING = {
                 "indoor_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_humidity": {
+                    "device_class": SensorDeviceClass.HUMIDITY,
+                    "unit_of_measurement": PERCENTAGE,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                "fresh_filter_time_use": {
@@ -2058,11 +2106,13 @@ DEVICE_MAPPING = {
             {"prevent_super_cool"},
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "polling_query": [
             {"indoor_temperature"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_five"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -2112,6 +2162,7 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature", "small_temperature"],
                     "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
@@ -2198,6 +2249,11 @@ DEVICE_MAPPING = {
                 "outdoor_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_humidity": {
+                    "device_class": SensorDeviceClass.HUMIDITY,
+                    "unit_of_measurement": PERCENTAGE,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "current_time_power": {
@@ -2392,6 +2448,7 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature", "small_temperature"],
                     "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
@@ -2507,6 +2564,7 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature", "small_temperature"],
                     "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
