@@ -12,6 +12,7 @@ class DeviceLogicHandler:
         self.device_name = device_name
         self._last_standby_status: Any = None
         self._last_high_float_type: Any = None
+        self._last_valid_humidity: Any = None
 
     def adjust_control_status(self, data: dict, running_status: str) -> None:
         control_status = "start" if running_status == "start" else "pause"
@@ -47,13 +48,32 @@ class DeviceLogicHandler:
             if power == "off" or power == 0:
                 data["mode"] = "idle"
 
+    def adjust_ac_humidity(self, data: dict, status: dict) -> None:
+        """For AC devices, only accept valid indoor_humidity values.
+
+        Filters out invalid humidity readings (0 or None) from non-0x45 messages,
+        preserving the last valid humidity value.
+        """
+        if "indoor_humidity" not in status:
+            return
+
+        humidity_value = status["indoor_humidity"]
+        # Only update if the new value is valid (not None and not 0)
+        if humidity_value is not None and humidity_value != 0:
+            data["indoor_humidity"] = humidity_value
+            self._last_valid_humidity = humidity_value
+        elif self._last_valid_humidity is not None:
+            # Keep the last valid humidity value if new value is invalid
+            data["indoor_humidity"] = self._last_valid_humidity
+
     def apply_special_handling(
         self,
         data: dict,
         recent_controls: dict,
         control_timeout: float,
         is_control: bool = False,
-        control_attrs: dict = None
+        control_attrs: dict = None,
+        status: dict = None
     ) -> None:
         if self.device_type == 0xD9:
             if "db_running_status" in data:
@@ -74,6 +94,8 @@ class DeviceLogicHandler:
 
         elif self.device_type == 0xAC:
             self.adjust_ac_mode(data)
+            if status:
+                self.adjust_ac_humidity(data, status)
 
         elif self.device_type == 0x9C:
             self.adjust_b3_function_control(data)

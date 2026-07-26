@@ -716,7 +716,8 @@ class MideaDevice:
         self._logic_handler.apply_special_handling(
             new_data,
             self._recent_controls,
-            self._control_timeout
+            self._control_timeout,
+            status=status
         )
 
         # Clean up expired recent controls
