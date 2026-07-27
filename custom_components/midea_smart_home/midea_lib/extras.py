@@ -104,6 +104,9 @@ class DeviceLogicHandler:
             self.adjust_standby_status_for_wash(data)
             self.adjust_high_float_type_when_filter_on(data)
 
+        elif self.device_type == 0x26:
+            self.adjust_bath_heater_direction(data)
+
     def apply_special_handling_for_poll(self, data: dict, suffix: str, raw_status: dict = None) -> bool:
         """Apply special handling for poll data with suffix (_l or _r).
 
@@ -340,3 +343,37 @@ class DeviceLogicHandler:
                 data["high_float_type"] = self._last_high_float_type
         else:
             self._last_high_float_type = data.get("high_float_type")
+
+    def adjust_bath_heater_direction(self, data: dict) -> None:
+        """For T0x26 devices, map direction values to nearest multiple of 10.
+
+        Bath heater direction values should be multiples of 10 between 60-120,
+        or 253 for swing mode. This method maps arbitrary integer values to
+        the nearest configured value (60, 70, 80, 90, 100, 110, 120).
+        """
+        direction_keys = [
+            "heating_direction",
+            "bath_direction",
+            "blowing_direction",
+            "drying_direction",
+            "soft_wind_direction"
+        ]
+
+        for key in direction_keys:
+            if key not in data:
+                continue
+
+            value = data[key]
+            # Keep swing mode (253) unchanged
+            try:
+                value_num = int(value) if isinstance(value, str) else value
+                if value_num == 253:
+                    continue
+
+                # Map to nearest multiple of 10 within valid range
+                mapped = round(value_num / 10) * 10
+                result = str(max(60, min(120, mapped)))
+                data[key] = result
+            except (ValueError, TypeError):
+                # If conversion fails, keep original value
+                pass
