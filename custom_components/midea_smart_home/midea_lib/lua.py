@@ -183,6 +183,10 @@ _G.cjson = cjson
                 result = self._data_to_json(data_value)
                 _LOGGER.debug("data_to_json input length: %d", len(data_value) if data_value else 0)
 
+                # Handle None or empty result from Lua function
+                if not result:
+                    return '{"status":{"version":0}}'
+
                 # Clean trailing commas in JSON string values
                 # Lua files often concatenate strings with ", " separator but use string.sub(str, 1, -2)
                 # which only removes 1 character, leaving a trailing comma in the JSON output
