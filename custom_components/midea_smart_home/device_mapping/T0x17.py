@@ -1,4 +1,5 @@
 from homeassistant.components.switch import SwitchDeviceClass
+from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.const import Platform, UnitOfTime
 
 DEVICE_MAPPING = {
@@ -38,6 +39,11 @@ DEVICE_MAPPING = {
                 "offline_voice_function": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 }
+            },
+            Platform.SENSOR: {
+                "location_status": {
+                    "device_class": SensorDeviceClass.ENUM
+                }
             }
         }
     },
@@ -76,6 +82,11 @@ DEVICE_MAPPING = {
                 },
                 "offline_voice_function": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                }
+            },
+            Platform.SENSOR: {
+                "location_status": {
+                    "device_class": SensorDeviceClass.ENUM
                 }
             }
         }

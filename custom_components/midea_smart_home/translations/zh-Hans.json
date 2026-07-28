@@ -2089,6 +2089,9 @@
       "life_ro": {
         "name": "RO滤芯剩余量"
       },
+      "location_status": {
+        "name": "当前位置"
+      },
       "main_light_brightness": {
         "name": "主灯亮度"
       },

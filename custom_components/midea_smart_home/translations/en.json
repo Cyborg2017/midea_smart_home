@@ -2089,6 +2089,9 @@
       "life_ro": {
         "name": "RO Filter Remaining Quantity"
       },
+      "location_status": {
+        "name": "Current Position"
+      },
       "main_light_brightness": {
         "name": "Main Light Brightness"
       },

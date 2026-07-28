@@ -293,6 +293,7 @@
             "left_time": { "default": "mdi:timer" },
             "life_pcb": { "default": "mdi:filter" },
             "life_ro": { "default": "mdi:filter" },
+            "location_status": { "default": "mdi:map-marker" },
             "main_light_brightness": { "default": "mdi:brightness-6" },
             "max_life_pcb": { "default": "mdi:filter" },
             "max_life_ro": { "default": "mdi:filter" },
