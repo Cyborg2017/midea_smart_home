@@ -14,9 +14,18 @@ class DeviceLogicHandler:
         self._last_high_float_type: Any = None
         self._last_valid_humidity: Any = None
 
-    def adjust_control_status(self, data: dict, running_status: str) -> None:
+    def adjust_control_status(
+        self,
+        data: dict,
+        running_status: str,
+        bucket: Optional[str] = None,
+    ) -> None:
         control_status = "start" if running_status == "start" else "pause"
-        control_status_key = "db_control_status" if self.device_type == 0xD9 else "control_status"
+        control_status_key = (
+            f"{bucket or 'db'}_control_status"
+            if self.device_type == 0xD9
+            else "control_status"
+        )
         data[control_status_key] = control_status
 
     def adjust_work_switch(self, data: dict) -> None:
@@ -76,8 +85,14 @@ class DeviceLogicHandler:
         status: dict = None
     ) -> None:
         if self.device_type == 0xD9:
-            if "db_running_status" in data:
-                self.adjust_control_status(data, data["db_running_status"])
+            for bucket in ("db", "dc", "da"):
+                running_status_key = f"{bucket}_running_status"
+                if running_status_key in data:
+                    self.adjust_control_status(
+                        data,
+                        data[running_status_key],
+                        bucket,
+                    )
             self.process_progress(data, "db_running_status", "db_progress")
             self._adjust_db_running_status_for_power_off(data)
             self._adjust_db_remain_time(data)
@@ -289,9 +304,18 @@ class DeviceLogicHandler:
     def prepare_control_data(self, control: dict, current_data: dict = None) -> dict:
         """Prepare control data with device-specific requirements."""
         if self.device_type == 0xD9:
-            control["bucket"] = "db"
-            if "db_location" not in control and current_data and "db_location" in current_data:
-                control["db_location"] = current_data["db_location"]
+            bucket = next(
+                (
+                    prefix
+                    for prefix in ("dc", "da", "db")
+                    if any(key.startswith(f"{prefix}_") for key in control)
+                ),
+                "db",
+            )
+            control["bucket"] = bucket
+            location_key = f"{bucket}_location"
+            if location_key not in control and current_data and location_key in current_data:
+                control[location_key] = current_data[location_key]
         return control
 
     def adjust_b3_function_control(self, data: dict) -> None:

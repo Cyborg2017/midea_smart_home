@@ -1,7 +1,51 @@
+from copy import deepcopy
+
 from homeassistant.const import Platform, UnitOfTime
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
+
+MGH20VE5PRO_PROGRAMS = {
+    "mixed_wash": {"db_program": "mixed_wash"},
+    "fast_wash": {"db_program": "fast_wash"},
+    "single_dehytration": {"db_program": "single_dehydration"},
+    "rinsing_dehydration": {"db_program": "rinsing_dehydration"},
+    "fast_wash_30": {"db_program": "fast_wash_30"},
+    "eco": {"db_program": "eco"},
+    "down_jacket": {"db_program": "down_jacket"},
+    "ssp": {"db_program": "ssp"},
+    "cotton": {"db_program": "cotton"},
+    "steep": {"db_program": "steep"},
+    "big": {"db_program": "big"},
+    "enzyme": {"db_program": "enzyme"},
+    "baby_clothes": {"db_program": "baby_clothes"},
+    "remove_mite_wash": {"db_program": "remove_mite_wash"},
+    "shirt": {"db_program": "shirt"},
+    "wool": {"db_program": "green_wool"},
+    "steam_sterilize_wash": {"db_program": "steam_sterilize_wash"},
+    "outdoor": {"db_program": "outdoor"},
+    "towel": {"db_program": "bath_towel"},
+    "jean": {"db_program": "jean"},
+}
+
+MGH20VE5PRO_DRYER_PROGRAMS = {
+    "mixed_dry": {"dc_program": "mixed_wash"},
+    "quick_dry": {"dc_program": "quick_dry"},
+    "big_dry": {"dc_program": "big"},
+    "sterilize_dry": {"dc_program": "degerm"},
+    "air_wash": {"dc_program": "air_wash"},
+    "fixed_time_dry": {"dc_program": "fixed_time_dry"},
+    "shirt": {"dc_program": "shirt"},
+    "wool_care": {"dc_program": "wool_care"},
+    "jean": {"dc_program": "jean"},
+    "baby_clothes": {"dc_program": "baby_clothes"},
+    "cotton": {"dc_program": "cotton"},
+    "outdoor": {"dc_program": "outdoor"},
+    "hot_wind_dry": {"dc_program": "hot_air_dry"},
+    "fresh_air": {"dc_program": "cold_air_fresh_air"},
+    "towel": {"dc_program": "towel"},
+    "down_jacket": {"dc_program": "down_jacket"},
+}
 
 DEVICE_MAPPING = {
     "default": {
@@ -314,4 +358,34 @@ DEVICE_MAPPING = {
             }
         }
     }
+}
+
+DEVICE_MAPPING["mgh20ve5pro"] = deepcopy(
+    DEVICE_MAPPING["default_compound_washer"]
+)
+DEVICE_MAPPING["mgh20ve5pro"]["initial_query"] = [
+    {"db"},
+    {"dc"},
+]
+DEVICE_MAPPING["mgh20ve5pro"]["entities"][Platform.SWITCH]["db_control_status"] = {
+    "device_class": SwitchDeviceClass.SWITCH,
+    "rationale": ["pause", "start"],
+    "command": {"db_location": 2},
+    "translation_key": "db_control_status",
+}
+DEVICE_MAPPING["mgh20ve5pro"]["entities"][Platform.SWITCH]["dc_control_status"] = {
+    "device_class": SwitchDeviceClass.SWITCH,
+    "rationale": ["pause", "start"],
+    "command": {"dc_location": 1},
+    "translation_key": "dc_control_status",
+}
+DEVICE_MAPPING["mgh20ve5pro"]["entities"][Platform.SELECT]["db_program"] = {
+    "options": MGH20VE5PRO_PROGRAMS,
+    "command": {"db_location": 2},
+    "translation_key": "program",
+}
+DEVICE_MAPPING["mgh20ve5pro"]["entities"][Platform.SELECT]["dc_program"] = {
+    "options": MGH20VE5PRO_DRYER_PROGRAMS,
+    "command": {"dc_location": 1},
+    "translation_key": "dc_program",
 }

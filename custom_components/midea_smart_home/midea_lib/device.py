@@ -235,8 +235,10 @@ class DeviceController(threading.Thread):
                             if status:
                                 device_type_hex = hex(self._codec._device_type) if hasattr(self._codec, '_device_type') else 'unknown'
                                 _LOGGER.debug("[DeviceType:%s] Received status at %.3f: %s", device_type_hex, receive_time, status)
-                                poll_location = self._pending_poll_location
-                                self._pending_poll_location = None
+                                poll_location = None
+                                if status.get("data_type") == "03db":
+                                    poll_location = self._pending_poll_location
+                                    self._pending_poll_location = None
                                 self.update_all(status, poll_location=poll_location)
             return True
         except Exception as e:
@@ -669,10 +671,7 @@ class MideaDevice:
                 self._unavailable_timer = None
             self._available = True
 
-        if self._device_type == 0xD9:
-            if poll_location is None:
-                return
-
+        if self._device_type == 0xD9 and poll_location is not None:
             data_type = status.get('data_type')
             if data_type != '03db':
                 return
@@ -707,6 +706,11 @@ class MideaDevice:
                 if updated_keys:
                     self._notify_update()
             return
+
+        if self._device_type == 0xD9:
+            data_type = status.get("data_type")
+            if data_type and not data_type.endswith("dc"):
+                return
 
         # Merge with existing data
         new_data = self._data.copy()

@@ -755,6 +755,27 @@
           "water_ssp": "Deep Clean"
         }
       },
+      "dc_program": {
+        "name": "Dry/Care Program",
+        "state": {
+          "air_wash": "Air Wash",
+          "baby_clothes": "Baby Clothes",
+          "big_dry": "Bulky Dry",
+          "cotton": "Cotton",
+          "down_jacket": "Down Jacket",
+          "fixed_time_dry": "Timed Dry",
+          "fresh_air": "Cold Air Refresh",
+          "hot_wind_dry": "Warm Clothes",
+          "jean": "Jeans",
+          "mixed_dry": "Mixed Dry",
+          "outdoor": "Outdoor",
+          "quick_dry": "Quick Dry",
+          "shirt": "Shirt",
+          "sterilize_dry": "Sterilize Dry",
+          "towel": "Towel/Bath Towel",
+          "wool_care": "Wool Care"
+        }
+      },
       "degerming": {
         "name": "Air Sterilization",
         "state": {
@@ -2343,6 +2364,12 @@
       },
       "damp_dry_signal": {
         "name": "Damp Dry Signal"
+      },
+      "db_control_status": {
+        "name": "Lower Drum Start/Stop"
+      },
+      "dc_control_status": {
+        "name": "Upper Drum Start/Stop"
       },
       "deep_cold_mode": {
         "name": "-30°C Deep Freeze (Deep Freeze Lock Fresh)"

@@ -755,6 +755,27 @@
           "water_ssp": "深度洁筒"
         }
       },
+      "dc_program": {
+        "name": "烘干/护理程序",
+        "state": {
+          "air_wash": "空气洗",
+          "baby_clothes": "婴儿服",
+          "big_dry": "大件烘",
+          "cotton": "棉麻",
+          "down_jacket": "羽绒服",
+          "fixed_time_dry": "定时烘",
+          "fresh_air": "冷风清新",
+          "hot_wind_dry": "热风暖衣",
+          "jean": "牛仔",
+          "mixed_dry": "混合烘",
+          "outdoor": "户外服",
+          "quick_dry": "快烘",
+          "shirt": "衬衫",
+          "sterilize_dry": "除菌烘",
+          "towel": "毛巾/浴巾",
+          "wool_care": "羊毛护理"
+        }
+      },
       "degerming": {
         "name": "空气除菌",
         "state": {
@@ -2343,6 +2364,12 @@
       },
       "damp_dry_signal": {
         "name": "潮湿干燥信号"
+      },
+      "db_control_status": {
+        "name": "下筒启停"
+      },
+      "dc_control_status": {
+        "name": "上筒启停"
       },
       "deep_cold_mode": {
         "name": "-30℃深冻(深冻锁鲜)"
