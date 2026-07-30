@@ -83,6 +83,9 @@
       "current_radar_status": {
         "name": "雷达感应有人"
       },
+      "db_detergent_needed_b": {
+        "name": "洗涤剂不足(下筒)"
+      },
       "db_detergent_needed_l": {
         "name": "洗涤剂状态(左筒)"
       },
@@ -513,6 +516,12 @@
     "lock": {
       "child_lock": {
         "name": "童锁"
+      },
+      "db_baby_lock_b": {
+        "name": "童锁(下筒)"
+      },
+      "dc_baby_lock_t": {
+        "name": "童锁(上筒)"
       }
     },
     "number": {
@@ -762,6 +771,24 @@
           "small_cup": "小杯"
         }
       },
+      "db_dehydration_speed_b": {
+        "name": "脱水转速(下筒)",
+        "state": {
+          "800rpm": "800转",
+          "1000rpm": "1000转",
+          "no_spin": "不脱水"
+        }
+      },
+      "db_detergent_b": {
+        "name": "洗衣液(下筒)",
+        "state": {
+          "l1": "1档",
+          "l2": "2档",
+          "l3": "3档",
+          "l4": "4档",
+          "off": "关闭"
+        }
+      },
       "db_dry": {
         "name": "烘干时间",
         "state": {
@@ -801,6 +828,80 @@
           "underpants": "内裤",
           "underwear": "文胸",
           "water_ssp": "深度洁筒"
+        }
+      },
+      "db_program_b": {
+        "name": "洗涤程序(下筒)",
+        "state": {
+          "baby_clothes": "婴儿服",
+          "big": "大件",
+          "cotton": "棉麻",
+          "down_jacket": "羽绒服",
+          "eco": "节能",
+          "enzyme": "加酶",
+          "fast_wash": "快洗",
+          "fast_wash_30": "快洗30",
+          "jean": "牛仔",
+          "mixed_wash": "混合洗",
+          "outdoor": "户外",
+          "remove_mite_wash": "除螨",
+          "rinsing_dehydration": "漂脱",
+          "shirt": "衬衫",
+          "single_dehytration": "单脱水",
+          "ssp": "深度洁筒",
+          "steam_sterilize_wash": "蒸汽除菌洗",
+          "steep": "浸泡洗",
+          "towel": "毛巾",
+          "wool": "羊毛"
+        }
+      },
+      "db_rinse_count_b": {
+        "name": "漂洗次数(下筒)",
+        "state": {
+          "1_time": "1次",
+          "2_times": "2次",
+          "3_times": "3次",
+          "4_times": "4次",
+          "5_times": "5次"
+        }
+      },
+      "db_temperature_b": {
+        "name": "洗涤温度(下筒)",
+        "state": {
+          "30c": "30°C",
+          "40c": "40°C",
+          "60c": "60°C",
+          "95c": "95°C",
+          "cold_water": "冷水"
+        }
+      },
+      "dc_intensity_t": {
+        "name": "干燥强度(上筒)",
+        "state": {
+          "iron_now": "即熨",
+          "store": "储存",
+          "wear_now": "即穿"
+        }
+      },
+      "dc_program_t": {
+        "name": "烘干程序(上筒)",
+        "state": {
+          "air_wash": "空气洗",
+          "baby_clothes": "婴儿服",
+          "big_dry": "大件烘",
+          "cotton": "棉麻",
+          "down_jacket": "羽绒服",
+          "fixed_time_dry": "定时烘",
+          "fresh_air": "清新空气",
+          "hot_wind_dry": "热风烘干",
+          "jean": "牛仔",
+          "mixed_dry": "混合烘",
+          "outdoor": "户外",
+          "quick_dry": "快烘",
+          "shirt": "衬衫",
+          "sterilize_dry": "除菌烘",
+          "towel": "毛巾",
+          "wool_care": "羊毛护理"
         }
       },
       "degerming": {
@@ -2004,11 +2105,31 @@
       "days_since_last_regeneration": {
         "name": "距上次再生天数"
       },
+      "db_error_code_b": {
+        "name": "错误代码(下筒)"
+      },
       "db_error_code_l": {
         "name": "错误代码(左筒)"
       },
       "db_error_code_r": {
         "name": "错误代码(右筒)"
+      },
+      "db_progress_b": {
+        "name": "当前进程(下筒)",
+        "state": {
+          "anti-wrinkle": "防皱中",
+          "cold_air": "吹冷风中",
+          "dry": "烘干中",
+          "idle": "待机中",
+          "pre-wash": "预洗中",
+          "rinse": "漂洗中",
+          "soak": "浸泡中",
+          "spin": "脱水中",
+          "spin_high": "高速脱水中",
+          "unknown": "未知",
+          "wash": "洗涤中",
+          "weight": "称重中"
+        }
       },
       "db_progress_l": {
         "name": "当前进程(左筒)",
@@ -2044,6 +2165,9 @@
           "weight": "称重中"
         }
       },
+      "db_remain_time_b": {
+        "name": "剩余时间(下筒)"
+      },
       "db_remain_time_l": {
         "name": "剩余时间(左筒)"
       },
@@ -2053,11 +2177,36 @@
       "db_remain_time_r": {
         "name": "剩余时间(右筒)"
       },
+      "db_running_status_b": {
+        "name": "运行状态(下筒)"
+      },
       "db_running_status_l": {
         "name": "运行状态(左筒)"
       },
       "db_running_status_r": {
         "name": "运行状态(右筒)"
+      },
+      "dc_dry_status_t": {
+        "name": "烘干状态(上筒)",
+        "state": {
+          "anti-wrinkle": "防皱中",
+          "cold_air": "吹冷风中",
+          "dry": "烘干中",
+          "idle": "待机中",
+          "unknown": "未知"
+        }
+      },
+      "dc_dry_time_t": {
+        "name": "烘干时间(上筒)"
+      },
+      "dc_error_code_t": {
+        "name": "错误代码(上筒)"
+      },
+      "dc_remain_time_t": {
+        "name": "剩余时间(上筒)"
+      },
+      "dc_running_status_t": {
+        "name": "运行状态(上筒)"
       },
       "deep_filter_percent": {
         "name": "滤芯剩余寿命"
@@ -2439,6 +2588,30 @@
       },
       "damp_dry_signal": {
         "name": "潮湿干燥信号"
+      },
+      "db_control_status_b": {
+        "name": "启停开关(下筒)"
+      },
+      "db_cycle_memory_b": {
+        "name": "记忆洗(下筒)"
+      },
+      "db_power_b": {
+        "name": "电源(下筒)"
+      },
+      "db_voice_not_disturb_switch_b": {
+        "name": "勿扰模式(下筒)"
+      },
+      "dc_control_status_t": {
+        "name": "启停开关(上筒)"
+      },
+      "dc_power_t": {
+        "name": "电源(上筒)"
+      },
+      "dc_prevent_wrinkle_t": {
+        "name": "防皱(上筒)"
+      },
+      "dc_sterilize_t": {
+        "name": "除菌(上筒)"
       },
       "deep_cold_mode": {
         "name": "-30℃深冻(深冻锁鲜)"
