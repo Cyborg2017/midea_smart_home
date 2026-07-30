@@ -41,10 +41,11 @@ async def async_setup_entry(
                 device_class = config.get("device_class")
                 translation_key = config.get("translation_key")
                 rationale = config.get("rationale", [])
+                attribute = config.get("attribute")
                 entities.append(
                     MideaBinarySensorEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        sensor_id, device_class, translation_key, rationale, model
+                        sensor_id, device_class, translation_key, rationale, model, attribute
                     )
                 )
 
@@ -134,6 +135,7 @@ class MideaBinarySensorEntity(MideaBaseEntity, BinarySensorEntity):
         translation_key: str = None,
         rationale: list = None,
         model: str = None,
+        attribute: str = None,
     ):
         config = {"translation_key": translation_key} if translation_key else {}
         super().__init__(
@@ -141,6 +143,7 @@ class MideaBinarySensorEntity(MideaBaseEntity, BinarySensorEntity):
             platform_name="binary_sensor", config=config
         )
         self._sensor_id = sensor_id
+        self._protocol_attribute = attribute or sensor_id
         self._rationale = rationale or []
         if device_class:
             try:
@@ -155,7 +158,7 @@ class MideaBinarySensorEntity(MideaBaseEntity, BinarySensorEntity):
             return False
 
         data = self.coordinator.data or {}
-        value = data.get(self._sensor_id)
+        value = data.get(self._protocol_attribute)
 
         if self._rationale and len(self._rationale) == 2:
             try:

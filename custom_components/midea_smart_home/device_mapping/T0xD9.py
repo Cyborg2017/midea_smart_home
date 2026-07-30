@@ -3,48 +3,6 @@ from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
 
-MGH20VE5PRO_PROGRAMS = {
-    "mixed_wash": {"db_program": "mixed_wash"},
-    "fast_wash": {"db_program": "fast_wash"},
-    "single_dehytration": {"db_program": "single_dehytration"},
-    "rinsing_dehydration": {"db_program": "rinsing_dehydration"},
-    "fast_wash_30": {"db_program": "fast_wash_30"},
-    "eco": {"db_program": "eco"},
-    "down_jacket": {"db_program": "down_jacket"},
-    "ssp": {"db_program": "ssp"},
-    "cotton": {"db_program": "cotton"},
-    "steep": {"db_program": "steep"},
-    "big": {"db_program": "big"},
-    "enzyme": {"db_program": "enzyme"},
-    "baby_clothes": {"db_program": "baby_clothes"},
-    "remove_mite_wash": {"db_program": "remove_mite_wash"},
-    "shirt": {"db_program": "shirt"},
-    "wool": {"db_program": "green_wool"},
-    "steam_sterilize_wash": {"db_program": "steam_sterilize_wash"},
-    "outdoor": {"db_program": "outdoor"},
-    "towel": {"db_program": "bath_towel"},
-    "jean": {"db_program": "jean"},
-}
-
-MGH20VE5PRO_DRYER_PROGRAMS = {
-    "mixed_dry": {"dc_program": "mixed_wash"},
-    "quick_dry": {"dc_program": "quick_dry"},
-    "big_dry": {"dc_program": "big"},
-    "sterilize_dry": {"dc_program": "degerm"},
-    "air_wash": {"dc_program": "air_wash"},
-    "fixed_time_dry": {"dc_program": "fixed_time_dry"},
-    "shirt": {"dc_program": "shirt"},
-    "wool_care": {"dc_program": "wool_care"},
-    "jean": {"dc_program": "jean"},
-    "baby_clothes": {"dc_program": "baby_clothes"},
-    "cotton": {"dc_program": "cotton"},
-    "outdoor": {"dc_program": "outdoor"},
-    "hot_wind_dry": {"dc_program": "hot_air_dry"},
-    "fresh_air": {"dc_program": "cold_air_fresh_air"},
-    "towel": {"dc_program": "towel"},
-    "down_jacket": {"dc_program": "down_jacket"},
-}
-
 DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
@@ -373,67 +331,103 @@ DEVICE_MAPPING[("38208002", "38209227")] = {
     },
     "entities": {
         Platform.BINARY_SENSOR: {
-            "db_detergent_needed": {
+            "db_detergent_needed_b": {
+                "attribute": "db_detergent_needed",
                 "device_class": BinarySensorDeviceClass.PROBLEM,
-                "translation_key": "lower_drum_detergent_needed",
+                "translation_key": "db_detergent_needed_b",
             },
         },
         Platform.LOCK: {
-            "db_baby_lock": {
+            "db_baby_lock_b": {
+                "attribute": "db_baby_lock",
                 "rationale": [0, 1],
-                "translation_key": "lower_drum_child_lock",
+                "translation_key": "db_baby_lock_b",
             },
-            "dc_baby_lock": {
+            "dc_baby_lock_t": {
+                "attribute": "dc_baby_lock",
                 "rationale": [0, 1],
-                "translation_key": "upper_drum_child_lock",
+                "translation_key": "dc_baby_lock_t",
             },
         },
         Platform.SWITCH: {
-            "db_power": {
+            "db_power_b": {
+                "attribute": "db_power",
                 "device_class": SwitchDeviceClass.SWITCH,
-                "translation_key": "lower_drum_power",
+                "translation_key": "db_power_b",
             },
-            "db_control_status": {
+            "db_control_status_b": {
+                "attribute": "db_control_status",
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": ["pause", "start"],
-                "translation_key": "lower_drum_control_status",
+                "translation_key": "db_control_status_b",
             },
-            "db_voice_not_disturb_switch": {
+            "db_voice_not_disturb_switch_b": {
+                "attribute": "db_voice_not_disturb_switch",
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": [0, 1],
-                "translation_key": "nightly",
+                "translation_key": "db_voice_not_disturb_switch_b",
             },
-            "db_cycle_memory": {
+            "db_cycle_memory_b": {
+                "attribute": "db_cycle_memory",
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": [0, 1],
-                "translation_key": "cycle_memory",
+                "translation_key": "db_cycle_memory_b",
             },
-            "dc_power": {
+            "dc_power_t": {
+                "attribute": "dc_power",
                 "device_class": SwitchDeviceClass.SWITCH,
-                "translation_key": "upper_drum_power",
+                "translation_key": "dc_power_t",
             },
-            "dc_control_status": {
+            "dc_control_status_t": {
+                "attribute": "dc_control_status",
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": ["pause", "start"],
-                "translation_key": "upper_drum_control_status",
+                "translation_key": "dc_control_status_t",
             },
-            "dc_sterilize": {
+            "dc_sterilize_t": {
+                "attribute": "dc_sterilize",
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": [0, 1],
-                "translation_key": "upper_drum_sterilize",
+                "translation_key": "dc_sterilize_t",
             },
-            "dc_prevent_wrinkle": {
+            "dc_prevent_wrinkle_t": {
+                "attribute": "dc_prevent_wrinkle",
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": [0, 1],
-                "translation_key": "upper_drum_prevent_wrinkle",
+                "translation_key": "dc_prevent_wrinkle_t",
             },
         },
         Platform.SELECT: {
-            "db_program": {
-                "options": MGH20VE5PRO_PROGRAMS,
-                "translation_key": "lower_drum_program",
+            "db_program_b": {
+                "attribute": "db_program",
+                "options": {
+                    "mixed_wash": {"db_program": "mixed_wash"},
+                    "fast_wash": {"db_program": "fast_wash"},
+                    "single_dehytration": {"db_program": "single_dehytration"},
+                    "rinsing_dehydration": {"db_program": "rinsing_dehydration"},
+                    "fast_wash_30": {"db_program": "fast_wash_30"},
+                    "eco": {"db_program": "eco"},
+                    "down_jacket": {"db_program": "down_jacket"},
+                    "ssp": {"db_program": "ssp"},
+                    "cotton": {"db_program": "cotton"},
+                    "steep": {"db_program": "steep"},
+                    "big": {"db_program": "big"},
+                    "enzyme": {"db_program": "enzyme"},
+                    "baby_clothes": {"db_program": "baby_clothes"},
+                    "remove_mite_wash": {"db_program": "remove_mite_wash"},
+                    "shirt": {"db_program": "shirt"},
+                    "wool": {"db_program": "green_wool"},
+                    "steam_sterilize_wash": {
+                        "db_program": "steam_sterilize_wash"
+                    },
+                    "outdoor": {"db_program": "outdoor"},
+                    "towel": {"db_program": "bath_towel"},
+                    "jean": {"db_program": "jean"},
+                },
+                "translation_key": "db_program_b",
             },
-            "db_temperature": {
+            "db_temperature_b": {
+                "attribute": "db_temperature",
                 "options": {
                     "cold_water": {"db_temperature": 1},
                     "30c": {"db_temperature": 3},
@@ -441,9 +435,10 @@ DEVICE_MAPPING[("38208002", "38209227")] = {
                     "60c": {"db_temperature": 5},
                     "95c": {"db_temperature": 6},
                 },
-                "translation_key": "temperature",
+                "translation_key": "db_temperature_b",
             },
-            "db_detergent": {
+            "db_detergent_b": {
+                "attribute": "db_detergent",
                 "options": {
                     "off": {"db_detergent": 0},
                     "l1": {"db_detergent": 1},
@@ -451,17 +446,19 @@ DEVICE_MAPPING[("38208002", "38209227")] = {
                     "l3": {"db_detergent": 3},
                     "l4": {"db_detergent": 4},
                 },
-                "translation_key": "detergent",
+                "translation_key": "db_detergent_b",
             },
-            "db_dehydration_speed": {
+            "db_dehydration_speed_b": {
+                "attribute": "db_dehydration_speed",
                 "options": {
                     "no_spin": {"db_dehydration_speed": 0},
                     "800rpm": {"db_dehydration_speed": 3},
                     "1000rpm": {"db_dehydration_speed": 4},
                 },
-                "translation_key": "dehydration_speed",
+                "translation_key": "db_dehydration_speed_b",
             },
-            "db_rinse_count": {
+            "db_rinse_count_b": {
+                "attribute": "db_rinse_count",
                 "options": {
                     "1_time": {"db_rinse_count": 1},
                     "2_times": {"db_rinse_count": 2},
@@ -469,63 +466,91 @@ DEVICE_MAPPING[("38208002", "38209227")] = {
                     "4_times": {"db_rinse_count": 4},
                     "5_times": {"db_rinse_count": 5},
                 },
-                "translation_key": "soak_count",
+                "translation_key": "db_rinse_count_b",
             },
-            "dc_program": {
-                "options": MGH20VE5PRO_DRYER_PROGRAMS,
-                "translation_key": "upper_drum_program",
+            "dc_program_t": {
+                "attribute": "dc_program",
+                "options": {
+                    "mixed_dry": {"dc_program": "mixed_wash"},
+                    "quick_dry": {"dc_program": "quick_dry"},
+                    "big_dry": {"dc_program": "big"},
+                    "sterilize_dry": {"dc_program": "degerm"},
+                    "air_wash": {"dc_program": "air_wash"},
+                    "fixed_time_dry": {"dc_program": "fixed_time_dry"},
+                    "shirt": {"dc_program": "shirt"},
+                    "wool_care": {"dc_program": "wool_care"},
+                    "jean": {"dc_program": "jean"},
+                    "baby_clothes": {"dc_program": "baby_clothes"},
+                    "cotton": {"dc_program": "cotton"},
+                    "outdoor": {"dc_program": "outdoor"},
+                    "hot_wind_dry": {"dc_program": "hot_air_dry"},
+                    "fresh_air": {"dc_program": "cold_air_fresh_air"},
+                    "towel": {"dc_program": "towel"},
+                    "down_jacket": {"dc_program": "down_jacket"},
+                },
+                "translation_key": "dc_program_t",
             },
-            "dc_intensity": {
+            "dc_intensity_t": {
+                "attribute": "dc_intensity",
                 "options": {
                     "iron_now": {"dc_intensity": 1},
                     "wear_now": {"dc_intensity": 2},
                     "store": {"dc_intensity": 3},
                 },
-                "translation_key": "intensity",
+                "translation_key": "dc_intensity_t",
             },
         },
         Platform.SENSOR: {
-            "db_error_code": {
+            "db_error_code_b": {
+                "attribute": "db_error_code",
                 "device_class": SensorDeviceClass.ENUM,
-                "translation_key": "lower_drum_error_code",
+                "translation_key": "db_error_code_b",
             },
-            "db_remain_time": {
+            "db_remain_time_b": {
+                "attribute": "db_remain_time",
                 "device_class": SensorDeviceClass.DURATION,
                 "unit_of_measurement": UnitOfTime.MINUTES,
                 "state_class": SensorStateClass.MEASUREMENT,
-                "translation_key": "lower_drum_remain_time",
+                "translation_key": "db_remain_time_b",
             },
-            "db_progress": {
+            "db_progress_b": {
+                "attribute": "db_progress",
                 "device_class": SensorDeviceClass.ENUM,
-                "translation_key": "lower_drum_progress",
+                "translation_key": "db_progress_b",
             },
-            "db_running_status": {
+            "db_running_status_b": {
+                "attribute": "db_running_status",
                 "device_class": SensorDeviceClass.ENUM,
-                "translation_key": "lower_drum_running_status",
+                "translation_key": "db_running_status_b",
             },
-            "dc_error_code": {
+            "dc_error_code_t": {
+                "attribute": "dc_error_code",
                 "device_class": SensorDeviceClass.ENUM,
-                "translation_key": "upper_drum_error_code",
+                "translation_key": "dc_error_code_t",
             },
-            "dc_remain_time": {
+            "dc_remain_time_t": {
+                "attribute": "dc_remain_time",
                 "device_class": SensorDeviceClass.DURATION,
                 "unit_of_measurement": UnitOfTime.MINUTES,
                 "state_class": SensorStateClass.MEASUREMENT,
-                "translation_key": "upper_drum_remain_time",
+                "translation_key": "dc_remain_time_t",
             },
-            "dc_dry_status": {
+            "dc_dry_status_t": {
+                "attribute": "dc_dry_status",
                 "device_class": SensorDeviceClass.ENUM,
-                "translation_key": "upper_drum_dry_status",
+                "translation_key": "dc_dry_status_t",
             },
-            "dc_running_status": {
+            "dc_running_status_t": {
+                "attribute": "dc_running_status",
                 "device_class": SensorDeviceClass.ENUM,
-                "translation_key": "upper_drum_running_status",
+                "translation_key": "dc_running_status_t",
             },
-            "dc_dry_time": {
+            "dc_dry_time_t": {
+                "attribute": "dc_dry_time",
                 "device_class": SensorDeviceClass.DURATION,
                 "unit_of_measurement": UnitOfTime.MINUTES,
                 "state_class": SensorStateClass.MEASUREMENT,
-                "translation_key": "upper_drum_dry_time",
+                "translation_key": "dc_dry_time_t",
             },
         },
     },

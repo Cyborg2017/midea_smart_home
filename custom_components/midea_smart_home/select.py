@@ -34,6 +34,7 @@ async def async_setup_entry(
                 status_key = config.get("status_key")
                 ignore_values = config.get("ignore_values")
                 include_current = config.get("include_current")
+                attribute = config.get("attribute")
                 if isinstance(options, dict):
                     option_list = list(options.keys())
                 else:
@@ -41,7 +42,8 @@ async def async_setup_entry(
                 entities.append(
                     MideaSelectEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        select_id, option_list, options, command, translation_key, condition, status_key, ignore_values, include_current, model
+                        select_id, option_list, options, command, translation_key, condition, status_key, ignore_values, include_current, model,
+                        attribute
                     )
                 )
 
@@ -67,6 +69,7 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
         ignore_values: list = None,
         include_current: list = None,
         model: str = None,
+        attribute: str = None,
     ):
         config = {"translation_key": translation_key} if translation_key else {}
         super().__init__(
@@ -74,6 +77,7 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
             platform_name="select", config=config, condition=condition
         )
         self._select_id = select_id
+        self._protocol_attribute = attribute or select_id
         self._options = options
         self._options_map = options_map
         self._command = command
@@ -155,7 +159,7 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
                 return self._last_option
 
         data = self.coordinator.data or {}
-        value = data.get(self._select_id)
+        value = data.get(self._protocol_attribute)
 
         if value is not None:
             if self._is_ignored_value(value):
@@ -203,4 +207,4 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
             await self.coordinator.async_set_control(merged_command)
         else:
             index = self._options.index(option)
-            await self.coordinator.async_set_control(self._select_id, index)
+            await self.coordinator.async_set_control(self._protocol_attribute, index)
