@@ -407,7 +407,6 @@ class MideaDevice:
         polling_interval: int = 30,
         initial_query: Optional[list] = None,
         polling_query: Optional[list] = None,
-        alternate_polling: bool = False,
     ):
         self._device_id = device_id
         self._device_type = device_type
@@ -420,7 +419,7 @@ class MideaDevice:
         self._initial_query = initial_query or []
         # Store polling_query for periodic polling
         self._polling_query = polling_query or []
-        self._alternate_polling = alternate_polling
+        self._d9_push_device = False
 
         # Initialize Logic Handler
         self._logic_handler = DeviceLogicHandler(device_type, device_name)
@@ -469,8 +468,17 @@ class MideaDevice:
         self._controller.register_update(self._on_device_update)
 
         if device_type == 0xD9:
-            self._controller.set_skip_initial_refresh(True)
-            if self._alternate_polling:
+            # Multi-prefix D9 devices publish separate drum updates
+            # instead of alternating DB polls.
+            initial_keys = set()
+            for query in self._initial_query:
+                if isinstance(query, set):
+                    initial_keys |= query
+                elif isinstance(query, dict):
+                    initial_keys |= set(query)
+            self._d9_push_device = len(initial_keys) > 1
+            if not self._d9_push_device:
+                self._controller.set_skip_initial_refresh(True)
                 self._start_poll_thread()
         elif self._enable_polling:
             self._start_attribute_poll_thread()
@@ -674,7 +682,7 @@ class MideaDevice:
                 self._unavailable_timer = None
             self._available = True
 
-        if self._device_type == 0xD9 and self._alternate_polling:
+        if self._device_type == 0xD9 and not self._d9_push_device:
             if poll_location is None:
                 return
 

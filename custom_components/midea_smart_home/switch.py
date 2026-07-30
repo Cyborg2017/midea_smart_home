@@ -32,12 +32,10 @@ async def async_setup_entry(
                 condition = config.get("condition")
                 command = config.get("command")
                 include_current = config.get("include_current")
-                attribute = config.get("attribute")
                 entities.append(
                     MideaSwitchEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        switch_id, translation_key, switch_rationale, condition, command, include_current, model,
-                        attribute
+                        switch_id, translation_key, switch_rationale, condition, command, include_current, model
                     )
                 )
 
@@ -62,7 +60,6 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         command: dict = None,
         include_current: list = None,
         model: str = None,
-        attribute: str = None,
     ):
         config = {"translation_key": translation_key} if translation_key else {}
         super().__init__(
@@ -70,7 +67,6 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
             platform_name="switch", config=config, rationale=rationale, condition=condition
         )
         self._switch_id = switch_id
-        self._protocol_attribute = attribute or switch_id
         self._command = command
         self._include_current = include_current or []
 
@@ -95,7 +91,7 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
 
     @property
     def is_on(self) -> bool:
-        return self._get_status_on_off(self._protocol_attribute)
+        return self._get_status_on_off(self._switch_id)
 
     async def _async_set_status_on_off(self, attribute_key: str, turn_on: bool) -> None:
         value = self._rationale[int(turn_on)]
@@ -112,7 +108,7 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         await self.coordinator.async_set_control(merged_command)
 
     async def async_turn_on(self, **kwargs: Any) -> None:
-        await self._async_set_status_on_off(self._protocol_attribute, True)
+        await self._async_set_status_on_off(self._switch_id, True)
 
     async def async_turn_off(self, **kwargs: Any) -> None:
-        await self._async_set_status_on_off(self._protocol_attribute, False)
+        await self._async_set_status_on_off(self._switch_id, False)

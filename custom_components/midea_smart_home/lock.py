@@ -32,12 +32,10 @@ async def async_setup_entry(
                 condition = config.get("condition")
                 command = config.get("command")
                 include_current = config.get("include_current")
-                attribute = config.get("attribute")
                 entities.append(
                     MideaLockEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        lock_id, translation_key, lock_rationale, condition, command, include_current, model,
-                        attribute
+                        lock_id, translation_key, lock_rationale, condition, command, include_current, model
                     )
                 )
 
@@ -61,7 +59,6 @@ class MideaLockEntity(MideaBaseEntity, LockEntity):
         command: dict = None,
         include_current: list = None,
         model: str = None,
-        attribute: str = None,
     ):
         config = {"translation_key": translation_key} if translation_key else {}
         super().__init__(
@@ -69,20 +66,19 @@ class MideaLockEntity(MideaBaseEntity, LockEntity):
             platform_name="lock", config=config, rationale=rationale, condition=condition
         )
         self._lock_id = lock_id
-        self._protocol_attribute = attribute or lock_id
         self._command = command
         self._include_current = include_current or []
 
     @property
     def is_locked(self) -> bool:
-        return self._get_status_on_off(self._protocol_attribute)
+        return self._get_status_on_off(self._lock_id)
 
     async def _async_set_status_locked(self, locked: bool) -> None:
         value = self._rationale[int(locked)]
         merged_command = {}
         if isinstance(self._command, dict):
             merged_command.update(self._command)
-        merged_command[self._protocol_attribute] = value
+        merged_command[self._lock_id] = value
 
         for attr in self._include_current:
             current_value = self._get_nested_value(attr)

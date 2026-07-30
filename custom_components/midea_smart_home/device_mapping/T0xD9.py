@@ -6,7 +6,6 @@ from homeassistant.components.switch import SwitchDeviceClass
 DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
-        "alternate_polling": True,
         "initial_query": [
             {"db"}
         ],
@@ -162,7 +161,6 @@ DEVICE_MAPPING = {
     },
     "default_compound_washer": {
         "rationale": ["off", "on"],
-        "alternate_polling": True,
         "initial_query": [
             {"db"}
         ],
@@ -320,86 +318,79 @@ DEVICE_MAPPING = {
 
 DEVICE_MAPPING[("38208002", "38209227")] = {
     "rationale": ["off", "on"],
-    "alternate_polling": False,
     "initial_query": [
         {"db"},
         {"dc"},
     ],
-    "default_values": {
-        "db_location": 2,
-        "dc_location": 1,
-    },
     "entities": {
         Platform.BINARY_SENSOR: {
-            "db_detergent_needed_b": {
-                "attribute": "db_detergent_needed",
+            "db_detergent_needed": {
                 "device_class": BinarySensorDeviceClass.PROBLEM,
                 "translation_key": "db_detergent_needed_b",
             },
         },
         Platform.LOCK: {
-            "db_baby_lock_b": {
-                "attribute": "db_baby_lock",
+            "db_baby_lock": {
                 "rationale": [0, 1],
+                "command": {"db_location": 2},
                 "translation_key": "db_baby_lock_b",
             },
-            "dc_baby_lock_t": {
-                "attribute": "dc_baby_lock",
+            "dc_baby_lock": {
                 "rationale": [0, 1],
+                "command": {"dc_location": 1},
                 "translation_key": "dc_baby_lock_t",
             },
         },
         Platform.SWITCH: {
-            "db_power_b": {
-                "attribute": "db_power",
+            "db_power": {
                 "device_class": SwitchDeviceClass.SWITCH,
+                "command": {"db_location": 2},
                 "translation_key": "db_power_b",
             },
-            "db_control_status_b": {
-                "attribute": "db_control_status",
+            "db_control_status": {
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": ["pause", "start"],
+                "command": {"db_location": 2},
                 "translation_key": "db_control_status_b",
             },
-            "db_voice_not_disturb_switch_b": {
-                "attribute": "db_voice_not_disturb_switch",
+            "db_voice_not_disturb_switch": {
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": [0, 1],
+                "command": {"db_location": 2},
                 "translation_key": "db_voice_not_disturb_switch_b",
             },
-            "db_cycle_memory_b": {
-                "attribute": "db_cycle_memory",
+            "db_cycle_memory": {
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": [0, 1],
+                "command": {"db_location": 2},
                 "translation_key": "db_cycle_memory_b",
             },
-            "dc_power_t": {
-                "attribute": "dc_power",
+            "dc_power": {
                 "device_class": SwitchDeviceClass.SWITCH,
+                "command": {"dc_location": 1},
                 "translation_key": "dc_power_t",
             },
-            "dc_control_status_t": {
-                "attribute": "dc_control_status",
+            "dc_control_status": {
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": ["pause", "start"],
+                "command": {"dc_location": 1},
                 "translation_key": "dc_control_status_t",
             },
-            "dc_sterilize_t": {
-                "attribute": "dc_sterilize",
+            "dc_sterilize": {
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": [0, 1],
+                "command": {"dc_location": 1},
                 "translation_key": "dc_sterilize_t",
             },
-            "dc_prevent_wrinkle_t": {
-                "attribute": "dc_prevent_wrinkle",
+            "dc_prevent_wrinkle": {
                 "device_class": SwitchDeviceClass.SWITCH,
                 "rationale": [0, 1],
+                "command": {"dc_location": 1},
                 "translation_key": "dc_prevent_wrinkle_t",
             },
         },
         Platform.SELECT: {
-            "db_program_b": {
-                "attribute": "db_program",
+            "db_program": {
                 "options": {
                     "mixed_wash": {"db_program": "mixed_wash"},
                     "fast_wash": {"db_program": "fast_wash"},
@@ -424,10 +415,10 @@ DEVICE_MAPPING[("38208002", "38209227")] = {
                     "towel": {"db_program": "bath_towel"},
                     "jean": {"db_program": "jean"},
                 },
+                "command": {"db_location": 2},
                 "translation_key": "db_program_b",
             },
-            "db_temperature_b": {
-                "attribute": "db_temperature",
+            "db_temperature": {
                 "options": {
                     "cold_water": {"db_temperature": 1},
                     "30c": {"db_temperature": 3},
@@ -435,10 +426,10 @@ DEVICE_MAPPING[("38208002", "38209227")] = {
                     "60c": {"db_temperature": 5},
                     "95c": {"db_temperature": 6},
                 },
+                "command": {"db_location": 2},
                 "translation_key": "db_temperature_b",
             },
-            "db_detergent_b": {
-                "attribute": "db_detergent",
+            "db_detergent": {
                 "options": {
                     "off": {"db_detergent": 0},
                     "l1": {"db_detergent": 1},
@@ -446,19 +437,19 @@ DEVICE_MAPPING[("38208002", "38209227")] = {
                     "l3": {"db_detergent": 3},
                     "l4": {"db_detergent": 4},
                 },
+                "command": {"db_location": 2},
                 "translation_key": "db_detergent_b",
             },
-            "db_dehydration_speed_b": {
-                "attribute": "db_dehydration_speed",
+            "db_dehydration_speed": {
                 "options": {
                     "no_spin": {"db_dehydration_speed": 0},
                     "800rpm": {"db_dehydration_speed": 3},
                     "1000rpm": {"db_dehydration_speed": 4},
                 },
+                "command": {"db_location": 2},
                 "translation_key": "db_dehydration_speed_b",
             },
-            "db_rinse_count_b": {
-                "attribute": "db_rinse_count",
+            "db_rinse_count": {
                 "options": {
                     "1_time": {"db_rinse_count": 1},
                     "2_times": {"db_rinse_count": 2},
@@ -466,10 +457,10 @@ DEVICE_MAPPING[("38208002", "38209227")] = {
                     "4_times": {"db_rinse_count": 4},
                     "5_times": {"db_rinse_count": 5},
                 },
+                "command": {"db_location": 2},
                 "translation_key": "db_rinse_count_b",
             },
-            "dc_program_t": {
-                "attribute": "dc_program",
+            "dc_program": {
                 "options": {
                     "mixed_dry": {"dc_program": "mixed_wash"},
                     "quick_dry": {"dc_program": "quick_dry"},
@@ -488,65 +479,57 @@ DEVICE_MAPPING[("38208002", "38209227")] = {
                     "towel": {"dc_program": "towel"},
                     "down_jacket": {"dc_program": "down_jacket"},
                 },
+                "command": {"dc_location": 1},
                 "translation_key": "dc_program_t",
             },
-            "dc_intensity_t": {
-                "attribute": "dc_intensity",
+            "dc_intensity": {
                 "options": {
                     "iron_now": {"dc_intensity": 1},
                     "wear_now": {"dc_intensity": 2},
                     "store": {"dc_intensity": 3},
                 },
+                "command": {"dc_location": 1},
                 "translation_key": "dc_intensity_t",
             },
         },
         Platform.SENSOR: {
-            "db_error_code_b": {
-                "attribute": "db_error_code",
+            "db_error_code": {
                 "device_class": SensorDeviceClass.ENUM,
                 "translation_key": "db_error_code_b",
             },
-            "db_remain_time_b": {
-                "attribute": "db_remain_time",
+            "db_remain_time": {
                 "device_class": SensorDeviceClass.DURATION,
                 "unit_of_measurement": UnitOfTime.MINUTES,
                 "state_class": SensorStateClass.MEASUREMENT,
                 "translation_key": "db_remain_time_b",
             },
-            "db_progress_b": {
-                "attribute": "db_progress",
+            "db_progress": {
                 "device_class": SensorDeviceClass.ENUM,
                 "translation_key": "db_progress_b",
             },
-            "db_running_status_b": {
-                "attribute": "db_running_status",
+            "db_running_status": {
                 "device_class": SensorDeviceClass.ENUM,
                 "translation_key": "db_running_status_b",
             },
-            "dc_error_code_t": {
-                "attribute": "dc_error_code",
+            "dc_error_code": {
                 "device_class": SensorDeviceClass.ENUM,
                 "translation_key": "dc_error_code_t",
             },
-            "dc_remain_time_t": {
-                "attribute": "dc_remain_time",
+            "dc_remain_time": {
                 "device_class": SensorDeviceClass.DURATION,
                 "unit_of_measurement": UnitOfTime.MINUTES,
                 "state_class": SensorStateClass.MEASUREMENT,
                 "translation_key": "dc_remain_time_t",
             },
-            "dc_dry_status_t": {
-                "attribute": "dc_dry_status",
+            "dc_dry_status": {
                 "device_class": SensorDeviceClass.ENUM,
                 "translation_key": "dc_dry_status_t",
             },
-            "dc_running_status_t": {
-                "attribute": "dc_running_status",
+            "dc_running_status": {
                 "device_class": SensorDeviceClass.ENUM,
                 "translation_key": "dc_running_status_t",
             },
-            "dc_dry_time_t": {
-                "attribute": "dc_dry_time",
+            "dc_dry_time": {
                 "device_class": SensorDeviceClass.DURATION,
                 "unit_of_measurement": UnitOfTime.MINUTES,
                 "state_class": SensorStateClass.MEASUREMENT,

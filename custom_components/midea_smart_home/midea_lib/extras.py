@@ -1,7 +1,7 @@
 """Midea Smart Home Extra Logic Handler."""
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -14,18 +14,9 @@ class DeviceLogicHandler:
         self._last_high_float_type: Any = None
         self._last_valid_humidity: Any = None
 
-    def adjust_control_status(
-        self,
-        data: dict,
-        running_status: str,
-        bucket: Optional[str] = None,
-    ) -> None:
+    def adjust_control_status(self, data: dict, running_status: str, prefix: str) -> None:
         control_status = "start" if running_status == "start" else "pause"
-        control_status_key = (
-            f"{bucket or 'db'}_control_status"
-            if self.device_type == 0xD9
-            else "control_status"
-        )
+        control_status_key = f"{prefix}_control_status" if prefix else "control_status"
         data[control_status_key] = control_status
 
     def adjust_work_switch(self, data: dict) -> None:
@@ -85,28 +76,18 @@ class DeviceLogicHandler:
         status: dict = None
     ) -> None:
         if self.device_type == 0xD9:
-            self._adjust_d9_running_status_for_power_off(data)
-            for bucket in ("db", "dc", "da"):
-                running_status_key = f"{bucket}_running_status"
-                if running_status_key in data:
-                    running_status = data[running_status_key]
-                    self.adjust_control_status(
-                        data,
-                        running_status,
-                        bucket,
-                    )
-                    remain_time_key = f"{bucket}_remain_time"
-                    if remain_time_key in data:
-                        self._adjust_remain_time_by_status(
-                            data,
-                            remain_time_key,
-                            running_status,
-                        )
-            self.process_progress(data, "db_running_status", "db_progress")
+            for prefix in ("da", "db", "dc"):
+                running_key = f"{prefix}_running_status"
+                if running_key not in data:
+                    continue
+                self._d9_push_device_running_status_for_power_off(data, prefix)
+                self.adjust_control_status(data, data[running_key], prefix)
+                self.process_progress(data, running_key, f"{prefix}_progress")
+                self._d9_push_device_remain_time(data, prefix)
 
         elif self.device_type in [0xDA, 0xDB, 0xDC]:
             if "running_status" in data:
-                self.adjust_control_status(data, data["running_status"])
+                self.adjust_control_status(data, data["running_status"], "")
             self.process_progress(data, "running_status", "progress")
             self._adjust_remain_time(data)
 
@@ -156,10 +137,10 @@ class DeviceLogicHandler:
         # Handle common (non-suffixed) fields from the first poll response
         if raw_status and raw_status.get('db_position') == 1:
             if "db_running_status" in data:
-                self.adjust_control_status(data, data["db_running_status"])
+                self.adjust_control_status(data, data["db_running_status"], "db")
             self.process_progress(data, "db_running_status", "db_progress")
-            self._adjust_db_running_status_for_power_off(data)
-            self._adjust_db_remain_time(data)
+            self._d9_polling_device_running_status_for_power_off(data)
+            self._d9_polling_device_remain_time(data)
 
         # Handle suffixed progress for the specific bucket
         if progress_key in data:
@@ -239,28 +220,34 @@ class DeviceLogicHandler:
         else:
             data["db_remain_time_long"] = max(remain_l, remain_r)
 
-    def _adjust_db_running_status_for_power_off(self, data: dict) -> None:
+    def _d9_polling_device_running_status_for_power_off(self, data: dict) -> None:
         db_power = data.get("db_power")
         if db_power == "off" or db_power == 0:
             if "db_running_status" in data:
                 data["db_running_status"] = "standby"
 
-    @staticmethod
-    def _adjust_d9_running_status_for_power_off(data: dict) -> None:
-        for bucket in ("db", "dc", "da"):
-            power = data.get(f"{bucket}_power")
-            if power == "off" or power == 0:
-                data[f"{bucket}_running_status"] = "standby"
-                if bucket == "dc" and "dc_dry_status" in data:
-                    data["dc_dry_status"] = "idle"
-
     def _adjust_remain_time(self, data: dict) -> None:
         if "remain_time" in data and "running_status" in data:
             self._adjust_remain_time_by_status(data, "remain_time", data["running_status"])
 
-    def _adjust_db_remain_time(self, data: dict) -> None:
+    def _d9_polling_device_remain_time(self, data: dict) -> None:
         if "db_remain_time" in data and "db_running_status" in data:
             self._adjust_remain_time_by_status(data, "db_remain_time", data["db_running_status"])
+
+    def _d9_push_device_running_status_for_power_off(self, data: dict, prefix: str) -> None:
+        power = data.get(f"{prefix}_power")
+        if power == "off" or power == 0:
+            running_key = f"{prefix}_running_status"
+            if running_key in data:
+                data[running_key] = "standby"
+            if prefix == "dc" and "dc_dry_status" in data:
+                data["dc_dry_status"] = "idle"
+
+    def _d9_push_device_remain_time(self, data: dict, prefix: str) -> None:
+        remain_key = f"{prefix}_remain_time"
+        running_key = f"{prefix}_running_status"
+        if remain_key in data and running_key in data:
+            self._adjust_remain_time_by_status(data, remain_key, data[running_key])
 
     def process_progress(self, data: dict, status_key: str, progress_key: str) -> None:
         """Process progress sensor special logic"""
@@ -320,20 +307,14 @@ class DeviceLogicHandler:
     def prepare_control_data(self, control: dict, current_data: dict = None) -> dict:
         """Prepare control data with device-specific requirements."""
         if self.device_type == 0xD9:
-            bucket = control.get("bucket")
-            if bucket not in ("da", "db", "dc"):
-                active_property = next(
-                    (
-                        key for key in control
-                        if key.split("_", 1)[0] in ("da", "db", "dc")
-                    ),
-                    "db",
-                )
-                bucket = active_property.split("_", 1)[0]
-            control["bucket"] = bucket
-            location_key = f"{bucket}_location"
-            if location_key not in control and current_data and location_key in current_data:
-                control[location_key] = current_data[location_key]
+            if "da_location" in control:
+                control["bucket"] = "da"
+            elif "dc_location" in control:
+                control["bucket"] = "dc"
+            else:
+                control["bucket"] = "db"
+                if "db_location" not in control and current_data and "db_location" in current_data:
+                    control["db_location"] = current_data["db_location"]
         return control
 
     def adjust_b3_function_control(self, data: dict) -> None:

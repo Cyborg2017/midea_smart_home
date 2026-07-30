@@ -150,7 +150,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         default_values = dict(device_mapping.get("default_values", {}))
         initial_query = device_mapping.get("initial_query")
         polling_query = device_mapping.get("polling_query")
-        alternate_polling = device_mapping.get("alternate_polling", False)
         # Check if polling is supported (based on existence of polling_query)
         enable_polling = polling_query is not None and isinstance(polling_query, list) and len(polling_query) > 0
         # Get polling settings from device data (user configurable via Options)
@@ -201,7 +200,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 polling_interval=polling_interval,
                 initial_query=initial_query,
                 polling_query=polling_query,
-                alternate_polling=alternate_polling,
             )
             device.open()
             import time

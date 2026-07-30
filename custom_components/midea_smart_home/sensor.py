@@ -38,12 +38,11 @@ async def async_setup_entry(
                 state_class = config.get("state_class")
                 suggested_display_precision = config.get("suggested_display_precision")
                 options = config.get("options")
-                attribute = config.get("attribute")
                 entities.append(
                     MideaSensorEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
                         sensor_id, name, device_class, unit, translation_key, state_class, model,
-                        suggested_display_precision, options, attribute
+                        suggested_display_precision, options
                     )
                 )
 
@@ -83,7 +82,6 @@ class MideaSensorEntity(MideaBaseEntity, SensorEntity):
         model: str = None,
         suggested_display_precision: Optional[int] = None,
         options: Optional[list] = None,
-        attribute: str = None,
     ):
         config = {"translation_key": translation_key} if translation_key else {}
         super().__init__(
@@ -91,7 +89,6 @@ class MideaSensorEntity(MideaBaseEntity, SensorEntity):
             platform_name="sensor", config=config
         )
         self._sensor_id = sensor_id
-        self._protocol_attribute = attribute or sensor_id
 
         if options is not None:
             self._attr_options = options
@@ -131,7 +128,7 @@ class MideaSensorEntity(MideaBaseEntity, SensorEntity):
             return None
 
         data = self.coordinator.data or {}
-        value = data.get(self._protocol_attribute)
+        value = data.get(self._sensor_id)
 
         if value is None or value == "":
             return None
