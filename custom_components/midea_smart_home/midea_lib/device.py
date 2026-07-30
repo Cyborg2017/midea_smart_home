@@ -429,6 +429,8 @@ class MideaDevice:
         self._initial_query = initial_query or []
         # Store polling_query for periodic polling
         self._polling_query = polling_query or []
+        # D9 push device flag (only meaningful for T0xD9)
+        self._d9_push_device = False
 
         # Initialize Logic Handler
         self._logic_handler = DeviceLogicHandler(device_type, device_name)
@@ -477,8 +479,18 @@ class MideaDevice:
         self._controller.register_update(self._on_device_update)
 
         if device_type == 0xD9:
-            self._controller.set_skip_initial_refresh(True)
-            self._start_poll_thread()
+            # Initial_query contains only one of da/db/dc) use the dedicated poll thread.
+            # two or more of da/db/dc) rely on push updates.
+            initial_keys = set()
+            for q in self._initial_query:
+                if isinstance(q, set):
+                    initial_keys |= q
+                elif isinstance(q, dict):
+                    initial_keys |= set(q.keys())
+            self._d9_push_device = len(initial_keys) > 1
+            if not self._d9_push_device:
+                self._controller.set_skip_initial_refresh(True)
+                self._start_poll_thread()
         elif self._enable_polling:
             self._start_attribute_poll_thread()
 
@@ -682,43 +694,48 @@ class MideaDevice:
             self._available = True
 
         if self._device_type == 0xD9:
-            if poll_location is None:
+            if self._d9_push_device:
+                # D9 push devices rely on push updates.
+                pass
+            else:
+                # D9 polling devices use the dedicated poll thread.
+                if poll_location is None:
+                    return
+
+                data_type = status.get('data_type')
+                if data_type != '03db':
+                    return
+
+                db_location = status.get("db_location")
+                if db_location not in (1, 2) or db_location != poll_location:
+                    return
+
+                db_position = status.get('db_position')
+                suffix = "_l" if db_location == 1 else "_r"
+                poll_keys = (
+                    "db_detergent_needed", "db_remain_time", "db_progress",
+                    "db_running_status", "db_error_code"
+                )
+
+                new_data = self._data.copy()
+                updated_keys = []
+
+                if db_position == 1:
+                    for key, value in status.items():
+                        if key not in _SKIP_KEYS:
+                            new_data[key] = value
+                            updated_keys.append(key)
+
+                for key in poll_keys:
+                    if key in status:
+                        new_data[key + suffix] = status[key]
+                        updated_keys.append(key + suffix)
+
+                if self._logic_handler.apply_special_handling_for_poll(new_data, suffix, status):
+                    self._data = new_data
+                    if updated_keys:
+                        self._notify_update()
                 return
-
-            data_type = status.get('data_type')
-            if data_type != '03db':
-                return
-
-            db_location = status.get("db_location")
-            if db_location not in (1, 2) or db_location != poll_location:
-                return
-
-            db_position = status.get('db_position')
-            suffix = "_l" if db_location == 1 else "_r"
-            poll_keys = (
-                "db_detergent_needed", "db_remain_time", "db_progress",
-                "db_running_status", "db_error_code"
-            )
-
-            new_data = self._data.copy()
-            updated_keys = []
-
-            if db_position == 1:
-                for key, value in status.items():
-                    if key not in _SKIP_KEYS:
-                        new_data[key] = value
-                        updated_keys.append(key)
-
-            for key in poll_keys:
-                if key in status:
-                    new_data[key + suffix] = status[key]
-                    updated_keys.append(key + suffix)
-
-            if self._logic_handler.apply_special_handling_for_poll(new_data, suffix, status):
-                self._data = new_data
-                if updated_keys:
-                    self._notify_update()
-            return
 
         # Merge with existing data
         new_data = self._data.copy()
