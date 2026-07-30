@@ -146,6 +146,9 @@
       "lack_water": {
         "name": "Water Shortage Status"
       },
+      "lower_drum_detergent_needed": {
+        "name": "Lower Drum Detergent Needed"
+      },
       "oilcup_position": {
         "name": "Oil Cup Position"
       },
@@ -480,6 +483,12 @@
     "lock": {
       "child_lock": {
         "name": "Child Lock"
+      },
+      "lower_drum_child_lock": {
+        "name": "Lower Drum Child Lock"
+      },
+      "upper_drum_child_lock": {
+        "name": "Upper Drum Child Lock"
       }
     },
     "number": {
@@ -753,27 +762,6 @@
           "underpants": "Underpants",
           "underwear": "Underwear",
           "water_ssp": "Deep Clean"
-        }
-      },
-      "dc_program": {
-        "name": "Dry/Care Program",
-        "state": {
-          "air_wash": "Air Wash",
-          "baby_clothes": "Baby Clothes",
-          "big_dry": "Bulky Dry",
-          "cotton": "Cotton",
-          "down_jacket": "Down Jacket",
-          "fixed_time_dry": "Timed Dry",
-          "fresh_air": "Cold Air Refresh",
-          "hot_wind_dry": "Warm Clothes",
-          "jean": "Jeans",
-          "mixed_dry": "Mixed Dry",
-          "outdoor": "Outdoor",
-          "quick_dry": "Quick Dry",
-          "shirt": "Shirt",
-          "sterilize_dry": "Sterilize Dry",
-          "towel": "Towel/Bath Towel",
-          "wool_care": "Wool Care"
         }
       },
       "degerming": {
@@ -1077,6 +1065,31 @@
           "blink": "Blink",
           "breath": "Breathing",
           "discolor": "Color Change"
+        }
+      },
+      "lower_drum_program": {
+        "name": "Lower Drum Wash Program",
+        "state": {
+          "baby_clothes": "Baby Clothes",
+          "big": "Bulky",
+          "cotton": "Cotton",
+          "down_jacket": "Down Jacket",
+          "eco": "Eco",
+          "enzyme": "Enzyme Wash",
+          "fast_wash": "Quick Wash",
+          "fast_wash_30": "30-Minute Quick Wash",
+          "jean": "Jeans",
+          "mixed_wash": "Mixed Wash",
+          "outdoor": "Outdoor",
+          "remove_mite_wash": "Mite Removal",
+          "rinsing_dehydration": "Rinse+Spin",
+          "shirt": "Shirt",
+          "single_dehytration": "Spin Only",
+          "ssp": "Deep Clean",
+          "steam_sterilize_wash": "Steam Sterilize",
+          "steep": "Soak",
+          "towel": "Towel/Bath Towel",
+          "wool": "Wool"
         }
       },
       "milk_temperature": {
@@ -1628,6 +1641,27 @@
           "up": "Up"
         }
       },
+      "upper_drum_program": {
+        "name": "Upper Drum Dry/Care Program",
+        "state": {
+          "air_wash": "Air Wash",
+          "baby_clothes": "Baby Clothes",
+          "big_dry": "Bulky Dry",
+          "cotton": "Cotton",
+          "down_jacket": "Down Jacket",
+          "fixed_time_dry": "Timed Dry",
+          "fresh_air": "Cold Air Refresh",
+          "hot_wind_dry": "Warm Clothes",
+          "jean": "Jeans",
+          "mixed_dry": "Mixed Dry",
+          "outdoor": "Outdoor",
+          "quick_dry": "Quick Dry",
+          "shirt": "Shirt",
+          "sterilize_dry": "Sterilize Dry",
+          "towel": "Towel/Bath Towel",
+          "wool_care": "Wool Care"
+        }
+      },
       "warm_water_temperature": {
         "name": "Warm Water Set Temperature",
         "state": {
@@ -2113,6 +2147,37 @@
       "location_status": {
         "name": "Current Position"
       },
+      "lower_drum_error_code": {
+        "name": "Lower Drum Error Code"
+      },
+      "lower_drum_progress": {
+        "name": "Lower Drum Progress",
+        "state": {
+          "idle": "Idle",
+          "pre-wash": "Pre Wash",
+          "rinse": "Rinse",
+          "spin": "Spin",
+          "spin_high": "Spin High",
+          "unknown": "Unknown",
+          "wash": "Wash",
+          "weight": "Weight"
+        }
+      },
+      "lower_drum_remain_time": {
+        "name": "Lower Drum Remaining Time"
+      },
+      "lower_drum_running_status": {
+        "name": "Lower Drum Running Status",
+        "state": {
+          "delay": "Delayed",
+          "end": "Finished",
+          "fault": "Fault",
+          "off": "Off",
+          "pause": "Paused",
+          "standby": "Standby",
+          "start": "Running"
+        }
+      },
       "main_light_brightness": {
         "name": "Main Light Brightness"
       },
@@ -2228,6 +2293,43 @@
       },
       "tvoc_density": {
         "name": "TVOC Density"
+      },
+      "upper_drum_dry_status": {
+        "name": "Upper Drum Drying Stage",
+        "state": {
+          "cooling": "Cooling",
+          "dampproofing": "Damp Proofing",
+          "ending": "Ending",
+          "heating": "Heating",
+          "idle": "Idle",
+          "ironing": "Iron Dry",
+          "preventwrinkling": "Anti-Wrinkle",
+          "steamironing": "Steam Care",
+          "sterilizing": "Sterilizing"
+        }
+      },
+      "upper_drum_dry_time": {
+        "name": "Upper Drum Dry Time"
+      },
+      "upper_drum_error_code": {
+        "name": "Upper Drum Error Code"
+      },
+      "upper_drum_remain_time": {
+        "name": "Upper Drum Remaining Time"
+      },
+      "upper_drum_running_status": {
+        "name": "Upper Drum Running Status",
+        "state": {
+          "delay": "Delayed",
+          "delay_choosing": "Setting Delay",
+          "delay_pause": "Delay Paused",
+          "end": "Finished",
+          "end_prevent_wrinkle": "Anti-Wrinkle",
+          "fault": "Fault",
+          "pause": "Paused",
+          "standby": "Standby",
+          "start": "Running"
+        }
       },
       "warming_time": {
         "name": "Warming Time"
@@ -2365,12 +2467,6 @@
       "damp_dry_signal": {
         "name": "Damp Dry Signal"
       },
-      "db_control_status": {
-        "name": "Lower Drum Start/Stop"
-      },
-      "dc_control_status": {
-        "name": "Upper Drum Start/Stop"
-      },
       "deep_cold_mode": {
         "name": "-30°C Deep Freeze (Deep Freeze Lock Fresh)"
       },
@@ -2473,6 +2569,12 @@
       "linkage_2": {
         "name": "One-Key Good Air"
       },
+      "lower_drum_control_status": {
+        "name": "Lower Drum Start/Stop"
+      },
+      "lower_drum_power": {
+        "name": "Lower Drum Power"
+      },
       "microbubble": {
         "name": "Microbubble Soak"
       },
@@ -2574,6 +2676,18 @@
       },
       "ultraviolet_lamp": {
         "name": "UV Sterilization"
+      },
+      "upper_drum_control_status": {
+        "name": "Upper Drum Start/Stop"
+      },
+      "upper_drum_power": {
+        "name": "Upper Drum Power"
+      },
+      "upper_drum_prevent_wrinkle": {
+        "name": "Upper Drum Anti-Wrinkle"
+      },
+      "upper_drum_sterilize": {
+        "name": "Upper Drum Sterilize"
       },
       "uvswitch": {
         "name": "UV Sterilization"

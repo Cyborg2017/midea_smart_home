@@ -85,17 +85,24 @@ class DeviceLogicHandler:
         status: dict = None
     ) -> None:
         if self.device_type == 0xD9:
+            self._adjust_d9_running_status_for_power_off(data)
             for bucket in ("db", "dc", "da"):
                 running_status_key = f"{bucket}_running_status"
                 if running_status_key in data:
+                    running_status = data[running_status_key]
                     self.adjust_control_status(
                         data,
-                        data[running_status_key],
+                        running_status,
                         bucket,
                     )
+                    remain_time_key = f"{bucket}_remain_time"
+                    if remain_time_key in data:
+                        self._adjust_remain_time_by_status(
+                            data,
+                            remain_time_key,
+                            running_status,
+                        )
             self.process_progress(data, "db_running_status", "db_progress")
-            self._adjust_db_running_status_for_power_off(data)
-            self._adjust_db_remain_time(data)
 
         elif self.device_type in [0xDA, 0xDB, 0xDC]:
             if "running_status" in data:
@@ -238,6 +245,15 @@ class DeviceLogicHandler:
             if "db_running_status" in data:
                 data["db_running_status"] = "standby"
 
+    @staticmethod
+    def _adjust_d9_running_status_for_power_off(data: dict) -> None:
+        for bucket in ("db", "dc", "da"):
+            power = data.get(f"{bucket}_power")
+            if power == "off" or power == 0:
+                data[f"{bucket}_running_status"] = "standby"
+                if bucket == "dc" and "dc_dry_status" in data:
+                    data["dc_dry_status"] = "idle"
+
     def _adjust_remain_time(self, data: dict) -> None:
         if "remain_time" in data and "running_status" in data:
             self._adjust_remain_time_by_status(data, "remain_time", data["running_status"])
@@ -304,14 +320,16 @@ class DeviceLogicHandler:
     def prepare_control_data(self, control: dict, current_data: dict = None) -> dict:
         """Prepare control data with device-specific requirements."""
         if self.device_type == 0xD9:
-            bucket = next(
-                (
-                    prefix
-                    for prefix in ("dc", "da", "db")
-                    if any(key.startswith(f"{prefix}_") for key in control)
-                ),
-                "db",
-            )
+            bucket = control.get("bucket")
+            if bucket not in ("da", "db", "dc"):
+                active_property = next(
+                    (
+                        key for key in control
+                        if key.split("_", 1)[0] in ("da", "db", "dc")
+                    ),
+                    "db",
+                )
+                bucket = active_property.split("_", 1)[0]
             control["bucket"] = bucket
             location_key = f"{bucket}_location"
             if location_key not in control and current_data and location_key in current_data:

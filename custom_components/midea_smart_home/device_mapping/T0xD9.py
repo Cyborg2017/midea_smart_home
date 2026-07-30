@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 from homeassistant.const import Platform, UnitOfTime
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
@@ -8,7 +6,7 @@ from homeassistant.components.switch import SwitchDeviceClass
 MGH20VE5PRO_PROGRAMS = {
     "mixed_wash": {"db_program": "mixed_wash"},
     "fast_wash": {"db_program": "fast_wash"},
-    "single_dehytration": {"db_program": "single_dehydration"},
+    "single_dehytration": {"db_program": "single_dehytration"},
     "rinsing_dehydration": {"db_program": "rinsing_dehydration"},
     "fast_wash_30": {"db_program": "fast_wash_30"},
     "eco": {"db_program": "eco"},
@@ -50,6 +48,7 @@ MGH20VE5PRO_DRYER_PROGRAMS = {
 DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
+        "alternate_polling": True,
         "initial_query": [
             {"db"}
         ],
@@ -205,6 +204,7 @@ DEVICE_MAPPING = {
     },
     "default_compound_washer": {
         "rationale": ["off", "on"],
+        "alternate_polling": True,
         "initial_query": [
             {"db"}
         ],
@@ -360,32 +360,173 @@ DEVICE_MAPPING = {
     }
 }
 
-DEVICE_MAPPING["mgh20ve5pro"] = deepcopy(
-    DEVICE_MAPPING["default_compound_washer"]
-)
-DEVICE_MAPPING["mgh20ve5pro"]["initial_query"] = [
-    {"db"},
-    {"dc"},
-]
-DEVICE_MAPPING["mgh20ve5pro"]["entities"][Platform.SWITCH]["db_control_status"] = {
-    "device_class": SwitchDeviceClass.SWITCH,
-    "rationale": ["pause", "start"],
-    "command": {"db_location": 2},
-    "translation_key": "db_control_status",
-}
-DEVICE_MAPPING["mgh20ve5pro"]["entities"][Platform.SWITCH]["dc_control_status"] = {
-    "device_class": SwitchDeviceClass.SWITCH,
-    "rationale": ["pause", "start"],
-    "command": {"dc_location": 1},
-    "translation_key": "dc_control_status",
-}
-DEVICE_MAPPING["mgh20ve5pro"]["entities"][Platform.SELECT]["db_program"] = {
-    "options": MGH20VE5PRO_PROGRAMS,
-    "command": {"db_location": 2},
-    "translation_key": "program",
-}
-DEVICE_MAPPING["mgh20ve5pro"]["entities"][Platform.SELECT]["dc_program"] = {
-    "options": MGH20VE5PRO_DRYER_PROGRAMS,
-    "command": {"dc_location": 1},
-    "translation_key": "dc_program",
+DEVICE_MAPPING[("38208002", "38209227")] = {
+    "rationale": ["off", "on"],
+    "alternate_polling": False,
+    "initial_query": [
+        {"db"},
+        {"dc"},
+    ],
+    "default_values": {
+        "db_location": 2,
+        "dc_location": 1,
+    },
+    "entities": {
+        Platform.BINARY_SENSOR: {
+            "db_detergent_needed": {
+                "device_class": BinarySensorDeviceClass.PROBLEM,
+                "translation_key": "lower_drum_detergent_needed",
+            },
+        },
+        Platform.LOCK: {
+            "db_baby_lock": {
+                "rationale": [0, 1],
+                "translation_key": "lower_drum_child_lock",
+            },
+            "dc_baby_lock": {
+                "rationale": [0, 1],
+                "translation_key": "upper_drum_child_lock",
+            },
+        },
+        Platform.SWITCH: {
+            "db_power": {
+                "device_class": SwitchDeviceClass.SWITCH,
+                "translation_key": "lower_drum_power",
+            },
+            "db_control_status": {
+                "device_class": SwitchDeviceClass.SWITCH,
+                "rationale": ["pause", "start"],
+                "translation_key": "lower_drum_control_status",
+            },
+            "db_voice_not_disturb_switch": {
+                "device_class": SwitchDeviceClass.SWITCH,
+                "rationale": [0, 1],
+                "translation_key": "nightly",
+            },
+            "db_cycle_memory": {
+                "device_class": SwitchDeviceClass.SWITCH,
+                "rationale": [0, 1],
+                "translation_key": "cycle_memory",
+            },
+            "dc_power": {
+                "device_class": SwitchDeviceClass.SWITCH,
+                "translation_key": "upper_drum_power",
+            },
+            "dc_control_status": {
+                "device_class": SwitchDeviceClass.SWITCH,
+                "rationale": ["pause", "start"],
+                "translation_key": "upper_drum_control_status",
+            },
+            "dc_sterilize": {
+                "device_class": SwitchDeviceClass.SWITCH,
+                "rationale": [0, 1],
+                "translation_key": "upper_drum_sterilize",
+            },
+            "dc_prevent_wrinkle": {
+                "device_class": SwitchDeviceClass.SWITCH,
+                "rationale": [0, 1],
+                "translation_key": "upper_drum_prevent_wrinkle",
+            },
+        },
+        Platform.SELECT: {
+            "db_program": {
+                "options": MGH20VE5PRO_PROGRAMS,
+                "translation_key": "lower_drum_program",
+            },
+            "db_temperature": {
+                "options": {
+                    "cold_water": {"db_temperature": 1},
+                    "30c": {"db_temperature": 3},
+                    "40c": {"db_temperature": 4},
+                    "60c": {"db_temperature": 5},
+                    "95c": {"db_temperature": 6},
+                },
+                "translation_key": "temperature",
+            },
+            "db_detergent": {
+                "options": {
+                    "off": {"db_detergent": 0},
+                    "l1": {"db_detergent": 1},
+                    "l2": {"db_detergent": 2},
+                    "l3": {"db_detergent": 3},
+                    "l4": {"db_detergent": 4},
+                },
+                "translation_key": "detergent",
+            },
+            "db_dehydration_speed": {
+                "options": {
+                    "no_spin": {"db_dehydration_speed": 0},
+                    "800rpm": {"db_dehydration_speed": 3},
+                    "1000rpm": {"db_dehydration_speed": 4},
+                },
+                "translation_key": "dehydration_speed",
+            },
+            "db_rinse_count": {
+                "options": {
+                    "1_time": {"db_rinse_count": 1},
+                    "2_times": {"db_rinse_count": 2},
+                    "3_times": {"db_rinse_count": 3},
+                    "4_times": {"db_rinse_count": 4},
+                    "5_times": {"db_rinse_count": 5},
+                },
+                "translation_key": "soak_count",
+            },
+            "dc_program": {
+                "options": MGH20VE5PRO_DRYER_PROGRAMS,
+                "translation_key": "upper_drum_program",
+            },
+            "dc_intensity": {
+                "options": {
+                    "iron_now": {"dc_intensity": 1},
+                    "wear_now": {"dc_intensity": 2},
+                    "store": {"dc_intensity": 3},
+                },
+                "translation_key": "intensity",
+            },
+        },
+        Platform.SENSOR: {
+            "db_error_code": {
+                "device_class": SensorDeviceClass.ENUM,
+                "translation_key": "lower_drum_error_code",
+            },
+            "db_remain_time": {
+                "device_class": SensorDeviceClass.DURATION,
+                "unit_of_measurement": UnitOfTime.MINUTES,
+                "state_class": SensorStateClass.MEASUREMENT,
+                "translation_key": "lower_drum_remain_time",
+            },
+            "db_progress": {
+                "device_class": SensorDeviceClass.ENUM,
+                "translation_key": "lower_drum_progress",
+            },
+            "db_running_status": {
+                "device_class": SensorDeviceClass.ENUM,
+                "translation_key": "lower_drum_running_status",
+            },
+            "dc_error_code": {
+                "device_class": SensorDeviceClass.ENUM,
+                "translation_key": "upper_drum_error_code",
+            },
+            "dc_remain_time": {
+                "device_class": SensorDeviceClass.DURATION,
+                "unit_of_measurement": UnitOfTime.MINUTES,
+                "state_class": SensorStateClass.MEASUREMENT,
+                "translation_key": "upper_drum_remain_time",
+            },
+            "dc_dry_status": {
+                "device_class": SensorDeviceClass.ENUM,
+                "translation_key": "upper_drum_dry_status",
+            },
+            "dc_running_status": {
+                "device_class": SensorDeviceClass.ENUM,
+                "translation_key": "upper_drum_running_status",
+            },
+            "dc_dry_time": {
+                "device_class": SensorDeviceClass.DURATION,
+                "unit_of_measurement": UnitOfTime.MINUTES,
+                "state_class": SensorStateClass.MEASUREMENT,
+                "translation_key": "upper_drum_dry_time",
+            },
+        },
+    },
 }
