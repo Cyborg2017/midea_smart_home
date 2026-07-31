@@ -85,7 +85,9 @@ class DeviceLogicHandler:
                     continue
                 self._d9_push_device_running_status_for_power_off(data, prefix)
                 self.adjust_control_status(data, data[running_key], prefix=prefix)
-                self.process_progress(data, running_key, f"{prefix}_progress")
+                # dc drum (dryer) reports progress via dc_dry_status
+                progress_key = "dc_dry_status" if prefix == "dc" else f"{prefix}_progress"
+                self.process_progress(data, running_key, progress_key)
                 self._d9_push_device_remain_time(data, prefix)
 
         elif self.device_type in [0xDA, 0xDB, 0xDC]:
@@ -280,7 +282,17 @@ class DeviceLogicHandler:
                 return
             calculated_value = -1
 
-        if self.device_type == 0xDA:
+        # For T0xD9 combo devices, map each drum by its prefix (da/db/dc)
+        effective_type = self.device_type
+        if self.device_type == 0xD9:
+            if progress_key.startswith("da_"):
+                effective_type = 0xDA
+            elif progress_key.startswith("db_"):
+                effective_type = 0xDB
+            elif progress_key.startswith("dc_"):
+                effective_type = 0xDC
+
+        if effective_type == 0xDA:
             progress_map = {
                 0: "idle",
                 1: "spin",
@@ -291,14 +303,7 @@ class DeviceLogicHandler:
                 6: "dry",
                 7: "soak",
             }
-        elif self.device_type == 0xDC:
-            progress_map = {
-                0: "idle",
-                1: "dry",
-                2: "anti-wrinkle",
-                3: "cold_air",
-            }
-        else:
+        elif effective_type == 0xDB:
             progress_map = {
                 0: "idle",
                 1: "spin",
@@ -310,6 +315,15 @@ class DeviceLogicHandler:
                 7: "spin_high",
                 8: "unknown",
             }
+        elif effective_type == 0xDC:
+            progress_map = {
+                0: "idle",
+                1: "dry",
+                2: "anti-wrinkle",
+                3: "cold_air",
+            }
+        else:
+            return
         data[progress_key] = progress_map.get(calculated_value, "unknown")
 
     def prepare_control_data(self, control: dict, current_data: dict = None) -> dict:
