@@ -107,3 +107,19 @@ def get_device_mapping(device_type: int, model: str = "", sn8: str = "", categor
         result = mapping
 
     return result
+
+def is_d9_polling_device(device_type: int, device_mapping: dict) -> bool:
+    """Check if a T0xD9 device uses the dedicated poll thread.
+
+    D9 devices whose initial_query contains only one drum key (da/db/dc)
+    are polled by a dedicated thread; multi-drum devices rely on push.
+    """
+    if device_type != 0xD9:
+        return False
+    initial_keys = set()
+    for query in device_mapping.get("initial_query") or []:
+        if isinstance(query, set):
+            initial_keys |= query
+        elif isinstance(query, dict):
+            initial_keys |= set(query.keys())
+    return len(initial_keys) <= 1

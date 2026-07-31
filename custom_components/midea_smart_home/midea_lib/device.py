@@ -423,14 +423,18 @@ class MideaDevice:
         self._default_values = default_values or {}
         self._centralized = list(centralized) if isinstance(centralized, (list, tuple, set)) else []
         self._enable_polling = enable_polling
-        # Ensure polling_interval is between 1 and 30 seconds
-        self._polling_interval = max(1, min(30, int(polling_interval)))
+        if device_type == 0xD9:
+            # D9 poll thread: per-drum refresh interval between 1 and 5 seconds
+            self._polling_interval = max(1.0, min(5.0, float(polling_interval)))
+        else:
+            # Ensure polling_interval is between 1 and 30 seconds
+            self._polling_interval = max(1, min(30, int(polling_interval)))
         # Store initial_query for initial status queries
         self._initial_query = initial_query or []
         # Store polling_query for periodic polling
         self._polling_query = polling_query or []
-        # D9 push device flag (only meaningful for T0xD9)
-        self._d9_push_device = False
+        # D9 polling device flag (only meaningful for T0xD9)
+        self._d9_polling_device = False
 
         # Initialize Logic Handler
         self._logic_handler = DeviceLogicHandler(device_type, device_name)
@@ -487,8 +491,8 @@ class MideaDevice:
                     initial_keys |= q
                 elif isinstance(q, dict):
                     initial_keys |= set(q.keys())
-            self._d9_push_device = len(initial_keys) > 1
-            if not self._d9_push_device:
+            self._d9_polling_device = len(initial_keys) <= 1
+            if self._d9_polling_device:
                 self._controller.set_skip_initial_refresh(True)
                 self._start_poll_thread()
         elif self._enable_polling:
@@ -547,13 +551,19 @@ class MideaDevice:
         while self._poll_run:
             if self._controller.connected:
                 try:
-                    interval = 0.5 if self._data.get('db_power') else 1.0
+                    # Configured interval while running, +1 second in standby
+                    interval = float(self._polling_interval)
+                    if not self._data.get('db_power'):
+                        interval += 1.0
+                    # Two poll queries per cycle (location 1 and 2), so sleep
+                    # half the interval each to refresh every drum once per interval
+                    gap = interval / 2
                     self._controller.send_poll_query(1)
-                    time.sleep(interval)
+                    time.sleep(gap)
                     if not self._poll_run:
                         break
                     self._controller.send_poll_query(2)
-                    time.sleep(interval)
+                    time.sleep(gap)
                 except Exception as e:
                     _LOGGER.debug("[%s] Poll query error: %s", self._device_id, e)
             else:
@@ -694,10 +704,8 @@ class MideaDevice:
             self._available = True
 
         if self._device_type == 0xD9:
-            if self._d9_push_device:
-                # D9 push devices rely on push updates.
-                pass
-            else:
+            # D9 push devices rely on push updates and fall through below.
+            if self._d9_polling_device:
                 # D9 polling devices use the dedicated poll thread.
                 if poll_location is None:
                     return

@@ -12,6 +12,7 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig, SelectSelectorMode
 
 from .const import (
     CONF_ACCOUNT,
@@ -1453,7 +1454,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             return default
 
         # Find devices that have polling_attributes configured in their device_mapping
-        from .device_mapping import get_device_mapping
+        from .device_mapping import get_device_mapping, is_d9_polling_device
         configurable_devices = []
 
         # Define polling options: disabled and intervals in seconds
@@ -1469,6 +1470,15 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             "20": _translate("option_20s", "20s"),
             "25": _translate("option_25s", "25s"),
             "30": _translate("option_30s", "30s"),
+        }
+
+        # D9 poll thread options: running interval 1-5s (standby +1s)
+        d9_polling_options = {
+            "1": _translate("option_1s", "1s"),
+            "2": _translate("option_2s", "2s"),
+            "3": _translate("option_3s", "3s"),
+            "4": _translate("option_4s", "4s"),
+            "5": _translate("option_5s", "5s")
         }
 
         for device in devices:
@@ -1490,24 +1500,32 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
 
             device_mapping = get_device_mapping(device_type_int, model, sn8, category)
             polling_query = device_mapping.get("polling_query")
-            # Check if device supports polling (based on existence of polling_query)
-            enable_polling = polling_query is not None and isinstance(polling_query, list) and len(polling_query) > 0
+            d9_polling = is_d9_polling_device(device_type_int, device_mapping)
+            # Check if device supports polling (based on existence of polling_query,
+            # or the dedicated poll thread for D9 polling devices)
+            enable_polling = (
+                polling_query is not None and isinstance(polling_query, list) and len(polling_query) > 0
+            ) or d9_polling
 
             if enable_polling:
                 device_name = device.get(CONF_DEVICE_NAME, f"Device {device_id}")
-                current_interval = device.get("polling_interval", 30)
+                current_interval = device.get("polling_interval", 1 if d9_polling else 30)
                 polling_enabled = device.get("polling_enabled", True)
+                device_options = d9_polling_options if d9_polling else polling_options
 
                 # Determine current selection based on enabled status and interval
                 if not polling_enabled:
                     current_selection = "disabled"
                 else:
                     current_selection = str(current_interval)
+                    if current_selection not in device_options:
+                        current_selection = "1" if d9_polling else "30"
 
                 configurable_devices.append({
                     "device_id": device_id,
                     "device_name": device_name,
                     "current_selection": current_selection,
+                    "options": device_options,
                 })
 
         if not configurable_devices:
@@ -1524,6 +1542,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             device_id = device_info["device_id"]
             device_name = device_info["device_name"]
             current_selection = device_info["current_selection"]
+            device_options = device_info["options"]
 
             if device_name in device_name_count:
                 device_name_count[device_name] += 1
@@ -1533,7 +1552,18 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 base_key = device_name
 
             # Create a single Select dropdown instead of boolean + slider
-            schema_dict[vol.Optional(base_key, default=current_selection)] = vol.In(polling_options)
+            # Use SelectSelector to force dropdown rendering (vol.In renders as
+            # radio buttons when there are <= 5 options, e.g. D9 polling devices)
+            select_options = [
+                {"value": val, "label": label}
+                for val, label in device_options.items()
+            ]
+            schema_dict[vol.Optional(base_key, default=current_selection)] = SelectSelector(
+                SelectSelectorConfig(
+                    options=select_options,
+                    mode=SelectSelectorMode.DROPDOWN,
+                )
+            )
 
             if not hasattr(self, '_polling_device_mapping'):
                 self._polling_device_mapping = {}
@@ -1543,7 +1573,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             }
 
             # Get display text for current selection
-            selection_text = polling_options.get(current_selection, current_selection)
+            selection_text = device_options.get(current_selection, current_selection)
             device_info_lines.append(f"{i}. {device_name} ({device_id}) - {selection_text}")
 
         device_info_text = "\n".join(device_info_lines)
@@ -1582,11 +1612,13 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                             else:
                                 # Polling enabled with specific interval
                                 try:
-                                    interval = int(selected_value)
+                                    interval = float(selected_value)
+                                    if interval.is_integer():
+                                        interval = int(interval)
                                     device["polling_enabled"] = True
                                     device["polling_interval"] = interval
                                     _LOGGER.debug(
-                                        "Set polling interval for device %s (%s) to %d seconds",
+                                        "Set polling interval for device %s (%s) to %s seconds",
                                         device_info['device_name'],
                                         device_id,
                                         interval
