@@ -2661,7 +2661,7 @@ DEVICE_MAPPING = {
             }
         }
     },
-    ("23096245", "22396337", "22396345", "22396335", "22396339", "22396341"): {
+    "23096245": {
         "rationale": ["off", "on"],
         "initial_query": [
             {},
@@ -2693,7 +2693,6 @@ DEVICE_MAPPING = {
                     },
                     "target_temperature": ["temperature"],
                     "current_temperature": "indoor_temperature",
-                    "current_humidity": "indoor_humidity",
                     "pre_mode": "mode",
                     "aux_heat": "ptc",
                     "min_temp": 16,
@@ -2737,6 +2736,96 @@ DEVICE_MAPPING = {
             Platform.SENSOR: {
                 "mode": {
                     "device_class": SensorDeviceClass.ENUM,
+                },
+                "indoor_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
+    },
+    ("22396337", "22396345", "22396335", "22396339", "22396341"): {
+        "rationale": ["off", "on"],
+        "initial_query": [
+            {},
+            {"run_status"},
+            {"out_run_status"}
+        ],
+        "polling_query": [
+            {"out_run_status"}
+        ],
+        "entities": {
+            Platform.CLIMATE: {
+                "air_conditioner": {
+                    "power": "power",
+                    "hvac_modes": {
+                        "off": {"power": "off"},
+                        "heat": {"power": "on", "mode": "heat"},
+                        "cool": {"power": "on", "mode": "cool"},
+                        "auto": {"power": "on", "mode": "auto"},
+                        "dry": {"power": "on", "mode": "dry"},
+                        "fan_only": {"power": "on", "mode": "fan"}
+                    },
+                    "fan_modes": {
+                        "20": {"wind_speed": 20},
+                        "40": {"wind_speed": 40},
+                        "60": {"wind_speed": 60},
+                        "80": {"wind_speed": 80},
+                        "100": {"wind_speed": 100},
+                        "102": {"wind_speed": 102}
+                    },
+                    "target_temperature": ["temperature", "small_temperature"],
+                    "current_temperature": "indoor_temperature",
+                    "current_humidity": "indoor_humidity",
+                    "pre_mode": "mode",
+                    "aux_heat": "ptc",
+                    "min_temp": 16,
+                    "max_temp": 30,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_HALVES
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SENSOR: {
+                "mode": {
+                    "device_class": SensorDeviceClass.ENUM
                 },
                 "indoor_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
