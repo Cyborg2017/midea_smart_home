@@ -2633,7 +2633,7 @@
     "error": {
       "all_devices_added": "所有发现的设备都已添加过了",
       "no_account_password": "请先配置账号密码",
-      "no_cache_found": "未发现本地缓存文件，无需清理",
+      "no_cache_found": "未发现本地配置文件，无需清理",
       "no_configurable_devices": "没有找到需要轮询的设备",
       "no_devices_found": "局域网中未发现新设备"
     },
@@ -2649,8 +2649,8 @@
         "title": "添加新设备"
       },
       "clear_cache": {
-        "description": "清理本地缓存文件：\n\n    📁 当前缓存将备份到：.storage/midea_smart_home-backup\n\n    ⚠️ 点击提交执行清理",
-        "title": "清理本地缓存"
+        "description": "清理本地配置文件：\n\n    📁 本地lua及json配置文件将被清理，另存为：.storage/midea_smart_home-backup\n\n    ⚠️ 请注意：本操作会彻底移除配置文件，除非完全重新配置集成，否则勿动",
+        "title": "清理配置文件"
       },
       "configure_notifications": {
         "data": {
@@ -2698,7 +2698,7 @@
       "init": {
         "menu_options": {
           "add_device": "➕ 继续添加其他设备",
-          "clear_cache": "🗑️ 清理本地缓存文件",
+          "clear_cache": "🗑️ 清理本地配置文件",
           "configure_notifications": "🔔 配置设备上下线通知",
           "configure_polling": "⏱️ 配置轮询间隔时间",
           "configure_update_check": "🔄 配置集成更新检查",

@@ -2633,7 +2633,7 @@
     "error": {
       "all_devices_added": "All discovered devices have already been added",
       "no_account_password": "Please configure account and password first",
-      "no_cache_found": "No local cache files found, no need to clean",
+      "no_cache_found": "No local configuration files found, no need to clean",
       "no_configurable_devices": "No devices with polling attributes found",
       "no_devices_found": "No new devices found on local network"
     },
@@ -2649,8 +2649,8 @@
         "title": "Add New Device"
       },
       "clear_cache": {
-        "description": "Clear local cache files:\n\n    📁 Current cache will be backed up to: .storage/midea_smart_home-backup\n\n    ⚠️ Click Submit to proceed",
-        "title": "Clear Local Cache"
+        "description": "Clear local configuration files:\n\n    📁 Local lua/json configuration files will be cleared and backed up to: .storage/midea_smart_home-backup\n\n    ⚠️ Note: This operation will completely remove configuration files. Do not proceed unless you need to fully reconfigure the integration",
+        "title": "Clear Local Configuration"
       },
       "configure_notifications": {
         "data": {
@@ -2698,7 +2698,7 @@
       "init": {
         "menu_options": {
           "add_device": "➕ Add New Device",
-          "clear_cache": "🗑️ Clear local cache files",
+          "clear_cache": "🗑️ Clear local configuration files",
           "configure_notifications": "🔔 Configure Device Notifications",
           "configure_polling": "⏱️ Configure Polling Interval",
           "configure_update_check": "🔄 Configure Integration Update Check",
