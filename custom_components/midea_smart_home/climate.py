@@ -65,6 +65,7 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
         self._device_type = int(self._device_type, 16) if isinstance(self._device_type, str) else self._device_type
 
         self._key_power = self._config.get("power")
+        self._key_pre_mode = self._config.get("pre_mode")
         self._key_hvac_modes = self._config.get("hvac_modes")
         self._key_preset_modes = self._config.get("preset_modes")
         self._key_fan_modes = self._config.get("fan_modes")
@@ -678,7 +679,10 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
 
     async def async_turn_on(self) -> None:
         if self._key_power is not None:
-            await self.coordinator.async_set_control(self._key_power, self._rationale[1])
+            controls = {self._key_power: self._rationale[1]}
+            if self._key_pre_mode is not None and (value := self._get_nested_value(self._key_pre_mode)) is not None:
+                controls[self._key_pre_mode] = value
+            await self.coordinator.async_set_controls(controls)
 
     async def async_turn_off(self) -> None:
         if self._key_power is not None:
