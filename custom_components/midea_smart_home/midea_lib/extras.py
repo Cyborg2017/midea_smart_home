@@ -13,6 +13,8 @@ class DeviceLogicHandler:
         self._last_standby_status: Any = None
         self._last_high_float_type: Any = None
         self._last_valid_humidity: Any = None
+        self._last_valid_input_temp: Any = None
+        self._last_valid_env_temp: Any = None
 
     def adjust_control_status(self, data: dict, running_status: str) -> None:
         control_status = "start" if running_status == "start" else "pause"
@@ -103,6 +105,8 @@ class DeviceLogicHandler:
         elif self.device_type == 0xED:
             self.adjust_standby_status_for_wash(data)
             self.adjust_high_float_type_when_filter_on(data)
+            if status:
+                self.adjust_ed_temperature(data, status)
 
         elif self.device_type == 0x26:
             self.adjust_bath_heater_direction(data)
@@ -343,6 +347,29 @@ class DeviceLogicHandler:
                 data["high_float_type"] = self._last_high_float_type
         else:
             self._last_high_float_type = data.get("high_float_type")
+
+    def adjust_ed_temperature(self, data: dict, status: dict) -> None:
+        """For T0xED devices, filter out invalid temperature readings (0).
+
+        Preserves the last valid temperature value for input_temperature_Sensing
+        and env_temperature sensors.
+        """
+        if self.device_type != 0xED:
+            return
+
+        for key, last_valid_key in [
+            ("input_temperature_Sensing", "_last_valid_input_temp"),
+            ("env_temperature", "_last_valid_env_temp")
+        ]:
+            if key not in status:
+                continue
+
+            value = status[key]
+            if value is not None and value != 0:
+                data[key] = value
+                setattr(self, last_valid_key, value)
+            elif getattr(self, last_valid_key) is not None:
+                data[key] = getattr(self, last_valid_key)
 
     def adjust_bath_heater_direction(self, data: dict) -> None:
         """For T0x26 devices, map direction values to nearest multiple of 10.
