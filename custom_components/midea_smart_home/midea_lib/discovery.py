@@ -26,6 +26,8 @@ DISCOVERY_TIMEOUT = 8.0
 DISCOVERY_RETRIES = 5
 DISCOVERY_INTERVAL = 2.0
 DISCOVERY_PORTS = [6445, 20086]
+UNICAST_SCAN_TIMEOUT = 5.0
+UNICAST_MAX_PREFIX = 24
 
 BROADCAST_MSG = bytes([
     0x5A, 0x5A, 0x01, 0x11, 0x48, 0x00, 0x92, 0x00,
@@ -54,6 +56,24 @@ def _get_broadcast_addresses() -> list:
                     addr = str(local_network.broadcast_address)
                     if addr not in nets:
                         nets.append(addr)
+    return nets
+
+def _get_local_networks() -> list:
+    """Get local private IPv4 networks for unicast fallback scan."""
+    nets = []
+    adapters = ifaddr.get_adapters()
+    for adapter in adapters:
+        for ip in adapter.ips:
+            if ip.is_IPv4 and ip.network_prefix < 32:
+                local_network = IPv4Network(f"{ip.ip}/{ip.network_prefix}", strict=False)
+                if (
+                    local_network.is_private
+                    and not local_network.is_loopback
+                    and not local_network.is_link_local
+                    and local_network.prefixlen >= UNICAST_MAX_PREFIX
+                ):
+                    if local_network not in nets:
+                        nets.append(local_network)
     return nets
 
 def _parse_v1_response(data: bytes, addr: tuple) -> dict | None:
@@ -265,6 +285,30 @@ def discover_devices(timeout: float = DISCOVERY_TIMEOUT, scan_address: str = "au
             if retry_count < DISCOVERY_RETRIES:
                 send_broadcast()
                 last_broadcast_time = time.time()
+
+    # Fallback: unicast subnet scan when broadcast finds no devices
+    is_auto = not scan_address or scan_address.lower() == "auto"
+    if not devices and is_auto:
+        _LOGGER.info("Broadcast found no devices, trying unicast subnet scan")
+        local_networks = _get_local_networks()
+        unicast_targets = []
+        for net in local_networks:
+            for host_ip in net.hosts():
+                unicast_targets.append(str(host_ip))
+
+        if unicast_targets:
+            _LOGGER.info("Unicast scanning %d IPs across %d subnets",
+                         len(unicast_targets), len(local_networks))
+            for ip_addr in unicast_targets:
+                for port in DISCOVERY_PORTS:
+                    try:
+                        sock.sendto(BROADCAST_MSG, (ip_addr, port))
+                    except (socket.error, OSError):
+                        pass
+
+            unicast_start = time.time()
+            while time.time() - unicast_start < UNICAST_SCAN_TIMEOUT:
+                receive_responses()
 
     sock.close()
     _LOGGER.info("Discovery completed, found %d devices", len(devices))
