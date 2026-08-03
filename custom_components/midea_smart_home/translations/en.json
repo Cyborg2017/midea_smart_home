@@ -122,6 +122,9 @@
       "freezer_door_state": {
         "name": "Freezer Door State"
       },
+      "freezing_all_ice_status": {
+        "name": "Freezing All Ice Status"
+      },
       "heat_status": {
         "name": "Heat Status"
       },

@@ -55,6 +55,10 @@ DEVICE_MAPPING = {
                 },
                 "freezer_door_open_overtime": {
                     "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "freezing_all_ice_status": {
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
+                    "rationale": ["invalid", "valid"]
                 }
             },
             Platform.CLIMATE: {
@@ -242,6 +246,10 @@ DEVICE_MAPPING = {
                 },
                 "freezer_door_open_overtime": {
                     "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "freezing_all_ice_status": {
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
+                    "rationale": ["invalid", "valid"]
                 }
             },
             Platform.CLIMATE: {
@@ -499,6 +507,10 @@ DEVICE_MAPPING = {
                 },
                 "freezer_door_open_overtime": {
                     "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "freezing_all_ice_status": {
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
+                    "rationale": ["invalid", "valid"]
                 }
             },
             Platform.CLIMATE: {
