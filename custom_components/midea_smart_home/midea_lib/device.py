@@ -2,6 +2,7 @@
 
 import socket
 import json
+import struct
 import threading
 import logging
 import time
@@ -24,6 +25,7 @@ CONNECTION_TIMEOUT = 10
 SOCKET_TIMEOUT = 10
 HEARTBEAT_INTERVAL = 10
 MIN_MSG_LENGTH = 56
+_LINGER_TIMEOUT = 2
 _SKIP_KEYS = frozenset({'data_type', 'bucket', 'category', 'version'})
 
 
@@ -121,7 +123,17 @@ class DeviceController(threading.Thread):
         self._sock = None
         if sock:
             try:
+                # Enable linger so close() blocks briefly to ensure the
+                # TCP FIN packet is actually sent to the device.
+                linger = struct.pack('ii', 1, _LINGER_TIMEOUT)
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, linger)
+            except OSError:
+                pass
+            try:
                 sock.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                pass
+            try:
                 sock.close()
             except OSError:
                 pass
