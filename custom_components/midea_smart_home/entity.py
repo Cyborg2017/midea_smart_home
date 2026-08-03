@@ -26,6 +26,9 @@ def iter_midea_device_configs(
     for device_id_str, data in entry_data.items():
         if device_id_str == "device_list":
             continue
+        # Only device entries are dicts; skip non-dict values like "update_entity"
+        if not isinstance(data, dict):
+            continue
         coordinator = data.get("coordinator")
         if not coordinator:
             continue
