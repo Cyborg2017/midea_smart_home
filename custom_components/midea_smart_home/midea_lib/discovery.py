@@ -196,10 +196,12 @@ def discover_devices(timeout: float = DISCOVERY_TIMEOUT, scan_address: str = "au
         _LOGGER.warning("No valid network interfaces found for discovery")
         return {}
 
-    _LOGGER.debug("Broadcast addresses: %s", nets)
+    _LOGGER.info("Discovery target addresses: %s", nets)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    sock.bind(("", 0))
     sock.setblocking(False)
 
     devices = {}
