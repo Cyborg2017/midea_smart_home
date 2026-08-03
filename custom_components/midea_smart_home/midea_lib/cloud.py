@@ -1,5 +1,7 @@
 """Midea Smart Home Cloud API client."""
 
+import hashlib
+import hmac
 import json
 import logging
 import time
@@ -142,7 +144,7 @@ class MideaCloud:
         self._uid: str | None = None
         self._login_id = ""
 
-    def _make_general_data(self) -> dict[Any, Any]:
+    def _make_general_data(self) -> dict[str, Any]:
         return {}
 
     async def _api_request(
@@ -520,12 +522,10 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
     Returns:
         tuple[bool, str]: (success, lua_content)
     """
-    import hashlib
-    import hmac
-
-    # Use the same hardcoded keys as in all_in_one_getter.py
-    iot_key = bytes.fromhex(format(9795516279659324117647275084689641883661667, 'x')).decode()
-    hmac_key = bytes.fromhex(format(117390035944627627450677220413733956185864939010425, 'x')).decode()
+    # Reuse the Meiju Cloud keys defined in SUPPORTED_CLOUDS to avoid duplication.
+    meiju_cloud = cast(dict[str, Any], SUPPORTED_CLOUDS["Meiju Cloud"])
+    iot_key = meiju_cloud["iot_key"]
+    hmac_key = meiju_cloud["hmac_key"]
 
     lua_data = {
         "applianceSn": sn,
@@ -535,7 +535,7 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
         "iotAppId": "900",
         "modelNumber": model_number or "0",
         "reqId": token_hex(16),
-        "stamp": datetime.now().strftime("%Y%m%d%H%M%S"),
+        "stamp": datetime.now(tz=UTC).strftime("%Y%m%d%H%M%S"),
     }
 
     # Build request
