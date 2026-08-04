@@ -116,6 +116,9 @@
       "flip_status": {
         "name": "马桶盖状态"
       },
+      "flowmeter_error": {
+        "name": "流量计错误"
+      },
       "freezer_door_open_overtime": {
         "name": "冷冻门打开超时"
       },
@@ -149,6 +152,24 @@
       "lack_water": {
         "name": "缺水状态"
       },
+      "leak_water": {
+        "name": "漏水"
+      },
+      "low_battery": {
+        "name": "低电量"
+      },
+      "low_salt": {
+        "name": "盐量不足"
+      },
+      "maintenance_remind": {
+        "name": "维护提醒"
+      },
+      "micro_leak": {
+        "name": "微漏"
+      },
+      "no_salt": {
+        "name": "无盐"
+      },
       "oilcup_position": {
         "name": "油杯位置"
       },
@@ -163,6 +184,15 @@
       },
       "pure_water_status": {
         "name": "纯水箱水位状态"
+      },
+      "rsj_stand_by": {
+        "name": "软水机待机"
+      },
+      "rtc_error": {
+        "name": "RTC 错误"
+      },
+      "salt_level_sensor_error": {
+        "name": "盐位传感器错误"
       },
       "screen_status": {
         "name": "屏幕状态"
@@ -519,11 +549,17 @@
       "hosting_upper": {
         "name": "PM2.5上限(自动净化)"
       },
+      "leak_water_protection_value": {
+        "name": "漏水保护值"
+      },
       "lightness": {
         "name": "照明亮度"
       },
       "main_light_brightness": {
         "name": "主灯亮度"
+      },
+      "micro_leak_protection_value": {
+        "name": "微漏保护值"
       },
       "milk_temperature": {
         "name": "泡奶设定温度"
@@ -561,6 +597,12 @@
       "temperature": {
         "name": "设定温度"
       },
+      "timing_regeneration_hour": {
+        "name": "定时再生小时"
+      },
+      "timing_regeneration_min": {
+        "name": "定时再生分钟"
+      },
       "warm_water_temperature": {
         "name": "温水设定温度"
       },
@@ -572,6 +614,9 @@
       },
       "wash_time": {
         "name": "洗涤时间"
+      },
+      "water_hardness": {
+        "name": "进水硬度"
       },
       "weight": {
         "name": "重量"
@@ -1929,6 +1974,9 @@
       "battery_percent": {
         "name": "电池电量"
       },
+      "battery_voltage": {
+        "name": "电池电压"
+      },
       "bottom_temperature": {
         "name": "底部温度"
       },
@@ -1952,6 +2000,9 @@
       },
       "current_time_power": {
         "name": "实时功率"
+      },
+      "days_since_last_regeneration": {
+        "name": "距上次再生天数"
       },
       "db_error_code_l": {
         "name": "错误代码(左筒)"
@@ -2041,6 +2092,9 @@
       "flexzone_temperature": {
         "name": "变温空间设定温度"
       },
+      "flushing_days": {
+        "name": "冲洗天数"
+      },
       "freezing_real_temperature": {
         "name": "冷冻实际温度"
       },
@@ -2085,6 +2139,9 @@
       },
       "lan_ip": {
         "name": "局域网IP"
+      },
+      "left_salt": {
+        "name": "剩余盐量"
       },
       "life_pcb": {
         "name": "PCB滤芯剩余量"
@@ -2143,6 +2200,9 @@
       "power_statistics": {
         "name": "当前功率"
       },
+      "pre_regeneration_days": {
+        "name": "预再生天数"
+      },
       "progress": {
         "name": "当前进程",
         "state": {
@@ -2163,8 +2223,17 @@
       "refrigeration_real_temperature": {
         "name": "冷藏实际温度"
       },
+      "regeneration_count": {
+        "name": "再生次数"
+      },
+      "regeneration_left_seconds": {
+        "name": "再生剩余时间"
+      },
       "remain_time": {
         "name": "剩余时间"
+      },
+      "remind_maintenance_days": {
+        "name": "提醒维护天数"
       },
       "return_water_tem": {
         "name": "回水温度"
@@ -2175,6 +2244,9 @@
       "running_status": {
         "name": "运行状态"
       },
+      "salt_alarm_threshold": {
+        "name": "盐报警阈值"
+      },
       "set_time": {
         "name": "设定时间"
       },
@@ -2184,11 +2256,17 @@
       "smelly_threshold": {
         "name": "异味触发阈值"
       },
+      "soft_available_big": {
+        "name": "剩余可软水量"
+      },
       "storage_temperature": {
         "name": "冷藏设定温度"
       },
       "sub_work_status": {
         "name": "子工作状态"
+      },
+      "supply_voltage": {
+        "name": "供电电压"
       },
       "sweep_mop_mode": {
         "name": "扫拖模式"
@@ -2211,6 +2289,12 @@
       "tvoc_density": {
         "name": "TVOC浓度"
       },
+      "use_days": {
+        "name": "使用天数"
+      },
+      "velocity": {
+        "name": "流速"
+      },
       "warming_time": {
         "name": "保温时间"
       },
@@ -2228,11 +2312,20 @@
       "wash_time_value": {
         "name": "洗涤时间"
       },
+      "water_consumption_average": {
+        "name": "平均用水量"
+      },
+      "water_consumption_big": {
+        "name": "总用水量"
+      },
       "water_consumption_l": {
         "name": "总用水量"
       },
       "water_consumption_once": {
         "name": "本次用水量"
+      },
+      "water_consumption_today": {
+        "name": "今日用水量"
       },
       "water_feedback": {
         "name": "水位反馈"
@@ -2410,6 +2503,9 @@
       "heat": {
         "name": "加热功能"
       },
+      "holiday_mode": {
+        "name": "假日模式"
+      },
       "human_sensing_switch": {
         "name": "感应亮屏"
       },
@@ -2434,6 +2530,9 @@
       "laundry": {
         "name": "一键晾衣"
       },
+      "leak_water_protection": {
+        "name": "漏水保护"
+      },
       "light": {
         "name": "灯光"
       },
@@ -2448,6 +2547,12 @@
       },
       "linkage_2": {
         "name": "一键好空气"
+      },
+      "maintenance_reminder_switch": {
+        "name": "维护提醒开关"
+      },
+      "micro_leak_protection": {
+        "name": "微漏保护"
       },
       "microbubble": {
         "name": "超微净泡"
@@ -2497,6 +2602,9 @@
       "radar_induction_enable": {
         "name": "人感夜灯"
       },
+      "regeneration": {
+        "name": "再生"
+      },
       "remind_sound": {
         "name": "提醒声音"
       },
@@ -2520,6 +2628,9 @@
       },
       "smelly_enable": {
         "name": "异味感应"
+      },
+      "soften": {
+        "name": "软水模式"
       },
       "steam": {
         "name": "蒸汽"
