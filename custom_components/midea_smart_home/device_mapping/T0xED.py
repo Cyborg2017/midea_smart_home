@@ -1,4 +1,4 @@
-from homeassistant.const import Platform, PERCENTAGE, UnitOfTemperature, UnitOfTime, UnitOfVolume, CONCENTRATION_PARTS_PER_MILLION
+from homeassistant.const import Platform, PERCENTAGE, UnitOfElectricPotential, UnitOfTemperature, UnitOfTime, UnitOfVolume, CONCENTRATION_PARTS_PER_MILLION
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
@@ -1103,6 +1103,316 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
+    },
+    "default_water_softener": {
+        "rationale": ["off", "on"],
+        "entities": {
+            Platform.SWITCH: {
+                "soften": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "regeneration": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "holiday_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "leak_water_protection": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "micro_leak_protection": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "maintenance_reminder_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "rsj_stand_by": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "leak_water": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "micro_leak": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "low_salt": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "no_salt": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "salt_level_sensor_error": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "flowmeter_error": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "maintenance_remind": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "low_battery": {
+                    "device_class": BinarySensorDeviceClass.BATTERY
+                },
+                "rtc_error": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                }
+            },
+            Platform.SENSOR: {
+                "velocity": {
+                    "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
+                    "unit_of_measurement": "L/min",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "left_salt": {
+                    "device_class": SensorDeviceClass.BATTERY,
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "water_consumption_big": {
+                    "device_class": SensorDeviceClass.VOLUME,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.TOTAL_INCREASING
+                },
+                "water_consumption_today": {
+                    "device_class": SensorDeviceClass.VOLUME,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.TOTAL_INCREASING
+                },
+                "water_consumption_average": {
+                    "device_class": SensorDeviceClass.VOLUME,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "soft_available_big": {
+                    "device_class": SensorDeviceClass.VOLUME,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "regeneration_count": {
+                    "state_class": SensorStateClass.TOTAL_INCREASING
+                },
+                "regeneration_left_seconds": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "days_since_last_regeneration": {
+                    "unit_of_measurement": UnitOfTime.DAYS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "pre_regeneration_days": {
+                    "unit_of_measurement": UnitOfTime.DAYS
+                },
+                "use_days": {
+                    "unit_of_measurement": UnitOfTime.DAYS
+                },
+                "flushing_days": {
+                    "unit_of_measurement": UnitOfTime.DAYS
+                },
+                "remind_maintenance_days": {
+                    "unit_of_measurement": UnitOfTime.DAYS
+                },
+                "salt_alarm_threshold": {
+                    "unit_of_measurement": PERCENTAGE
+                },
+                "battery_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "supply_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            },
+            Platform.NUMBER: {
+                "water_hardness": {
+                    "min": 0,
+                    "max": 500,
+                    "step": 1
+                },
+                "timing_regeneration_hour": {
+                    "min": 0,
+                    "max": 23,
+                    "step": 1,
+                    "unit_of_measurement": UnitOfTime.HOURS
+                },
+                "timing_regeneration_min": {
+                    "min": 0,
+                    "max": 59,
+                    "step": 1,
+                    "unit_of_measurement": UnitOfTime.MINUTES
+                },
+                "leak_water_protection_value": {
+                    "min": 0,
+                    "max": 100,
+                    "step": 1
+                },
+                "micro_leak_protection_value": {
+                    "min": 0,
+                    "max": 100,
+                    "step": 1
+                }
+            }
+        }
+    },
+    "63600119": {
+        "rationale": ["off", "on"],
+        "entities": {
+            Platform.SWITCH: {
+                "soften": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "regeneration": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "holiday_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "leak_water_protection": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "micro_leak_protection": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "maintenance_reminder_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "rsj_stand_by": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "leak_water": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "micro_leak": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "low_salt": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "no_salt": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "salt_level_sensor_error": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "flowmeter_error": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "maintenance_remind": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "low_battery": {
+                    "device_class": BinarySensorDeviceClass.BATTERY
+                },
+                "rtc_error": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                }
+            },
+            Platform.SENSOR: {
+                "velocity": {
+                    "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
+                    "unit_of_measurement": "L/min",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "left_salt": {
+                    "device_class": SensorDeviceClass.BATTERY,
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "water_consumption_big": {
+                    "device_class": SensorDeviceClass.VOLUME,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.TOTAL_INCREASING
+                },
+                "water_consumption_today": {
+                    "device_class": SensorDeviceClass.VOLUME,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.TOTAL_INCREASING
+                },
+                "water_consumption_average": {
+                    "device_class": SensorDeviceClass.VOLUME,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "soft_available_big": {
+                    "device_class": SensorDeviceClass.VOLUME,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "regeneration_count": {
+                    "state_class": SensorStateClass.TOTAL_INCREASING
+                },
+                "regeneration_left_seconds": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "days_since_last_regeneration": {
+                    "unit_of_measurement": UnitOfTime.DAYS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "pre_regeneration_days": {
+                    "unit_of_measurement": UnitOfTime.DAYS
+                },
+                "use_days": {
+                    "unit_of_measurement": UnitOfTime.DAYS
+                },
+                "flushing_days": {
+                    "unit_of_measurement": UnitOfTime.DAYS
+                },
+                "remind_maintenance_days": {
+                    "unit_of_measurement": UnitOfTime.DAYS
+                },
+                "salt_alarm_threshold": {
+                    "unit_of_measurement": PERCENTAGE
+                },
+                "battery_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "supply_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            },
+            Platform.NUMBER: {
+                "water_hardness": {
+                    "min": 0,
+                    "max": 500,
+                    "step": 1
+                },
+                "timing_regeneration_hour": {
+                    "min": 0,
+                    "max": 23,
+                    "step": 1,
+                    "unit_of_measurement": UnitOfTime.HOURS
+                },
+                "timing_regeneration_min": {
+                    "min": 0,
+                    "max": 59,
+                    "step": 1,
+                    "unit_of_measurement": UnitOfTime.MINUTES
+                },
+                "leak_water_protection_value": {
+                    "min": 0,
+                    "max": 100,
+                    "step": 1
+                },
+                "micro_leak_protection_value": {
+                    "min": 0,
+                    "max": 100,
+                    "step": 1
                 }
             }
         }
