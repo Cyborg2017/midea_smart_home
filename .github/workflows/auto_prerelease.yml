@@ -84,6 +84,8 @@ jobs:
           
           current_version = manifest['version']
 
+          now = datetime.now(timezone(timedelta(hours=8)))
+
           # 判断当前版本是否已是 prerelease
           is_current_prerelease = bool(re.match(r'.*-b\d+$', current_version))
 
@@ -104,15 +106,17 @@ jobs:
               else:
                   next_b = 0
           else:
-              # 正式版，先bump patch再从b0开始（如 26.6.3 -> 26.6.4-b0）
+              # 正式版：新月份从当月的 .0-b0 开始，同月则递增 patch（如 26.7.5 -> 26.8.0-b0）
               ver_parts = current_version.split('.')
-              ver_parts[2] = str(int(ver_parts[2]) + 1)
-              base_version = '.'.join(ver_parts)
+              current_year, current_month, current_patch = map(int, ver_parts)
+              version_year = 2000 + current_year
+              if version_year == now.year and current_month == now.month:
+                  base_version = f"{current_year}.{current_month}.{current_patch + 1}"
+              else:
+                  base_version = f"{now.year % 100}.{now.month}.0"
               next_b = 0
 
           prerelease_version = f"{base_version}-b{next_b}"
-
-          now = datetime.now(timezone(timedelta(hours=8)))
 
           # Update manifest.json with prerelease version so HA can display it
           manifest['version'] = prerelease_version
