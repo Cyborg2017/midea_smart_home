@@ -533,6 +533,9 @@
       "boiling_water_temperature": {
         "name": "沸水设定温度"
       },
+      "clean_water_consumption": {
+        "name": "清洗间隔用水量"
+      },
       "custom_height": {
         "name": "晾衣高度"
       },
@@ -733,6 +736,15 @@
           "dark": "半亮",
           "exit": "关闭",
           "light": "全亮"
+        }
+      },
+      "clean_interval": {
+        "name": "清洗间隔周期",
+        "state": {
+          "7_days": "7天",
+          "15_days": "15天",
+          "30_days": "30天",
+          "off": "关闭"
         }
       },
       "clean_mode": {
@@ -1661,6 +1673,47 @@
           "30": "30天"
         }
       },
+      "single_max_water_consumption": {
+        "name": "漏水保护流量设置",
+        "state": {
+          "500l": "500L",
+          "700l": "700L",
+          "900l": "900L",
+          "1500l": "1500L",
+          "2000l": "2000L",
+          "off": "关闭"
+        }
+      },
+      "single_max_water_time": {
+        "name": "漏水保护时间设置",
+        "state": {
+          "30min": "0.5小时",
+          "60min": "1小时",
+          "90min": "1.5小时",
+          "120min": "2小时",
+          "150min": "2.5小时",
+          "180min": "3小时",
+          "210min": "3.5小时",
+          "240min": "4小时",
+          "270min": "4.5小时",
+          "300min": "5小时",
+          "330min": "5.5小时",
+          "360min": "6小时",
+          "390min": "6.5小时",
+          "420min": "7小时",
+          "450min": "7.5小时",
+          "480min": "8小时",
+          "510min": "8.5小时",
+          "540min": "9小时",
+          "570min": "9.5小时",
+          "600min": "10小时",
+          "630min": "10.5小时",
+          "660min": "11小时",
+          "690min": "11.5小时",
+          "720min": "12小时",
+          "off": "关闭"
+        }
+      },
       "soak_count": {
         "name": "漂洗次数",
         "state": {
@@ -2083,6 +2136,12 @@
       "bottom_temperature": {
         "name": "底部温度"
       },
+      "clean_interval_next_days_remaining": {
+        "name": "距离下次冲洗剩余天数"
+      },
+      "clean_water_consumption_next_remaining": {
+        "name": "距离下次冲洗剩余用水量"
+      },
       "cur_humidity": {
         "name": "当前湿度"
       },
@@ -2288,6 +2347,12 @@
       "indoor_temperature": {
         "name": "室内温度"
       },
+      "input_pressure_sensing": {
+        "name": "进水压力"
+      },
+      "input_temperature_sensing": {
+        "name": "进水温度"
+      },
       "lan_ip": {
         "name": "局域网IP"
       },
@@ -2428,6 +2493,9 @@
       "temp_set": {
         "name": "目标温度"
       },
+      "today_water_consumption": {
+        "name": "今日用水量"
+      },
       "top_temperature": {
         "name": "顶部温度"
       },
@@ -2480,6 +2548,9 @@
       },
       "water_feedback": {
         "name": "水位反馈"
+      },
+      "water_flow": {
+        "name": "水流量"
       },
       "water_full_level": {
         "name": "水箱水位"
@@ -2747,6 +2818,12 @@
       "offline_voice_function": {
         "name": "离线语音"
       },
+      "open_close_switch": {
+        "name": "全屋水开关"
+      },
+      "open_close_water_pressure": {
+        "name": "微漏检测"
+      },
       "open_door_tips_switch": {
         "name": "开门提示音"
       },
@@ -2806,6 +2883,9 @@
       },
       "soften": {
         "name": "软水模式"
+      },
+      "start_clean": {
+        "name": "立即冲洗"
       },
       "steam": {
         "name": "蒸汽"

@@ -94,7 +94,7 @@ For detailed configuration guide, please see [Configuration Guide](GUIDE.md)
 | 20 | 0xE3 | Gas Water Heater |
 | 21 | 0xE6 | Gas Wall Hanging Stove |
 | 22 | 0xEA | Rice Cooker |
-| 23 | 0xED | Net Drinking Machine / Water Purifier / Pipeline Machine / Water Softener |
+| 23 | 0xED | Net Drinking Machine / Water Purifier / Pipeline Machine / Water Softener / Pre-filter​ |
 | 24 | 0xFA | Electric Fan |
 | 25 | 0xFB | Electric Heater |
 | 26 | 0xFC | Air Purifier |

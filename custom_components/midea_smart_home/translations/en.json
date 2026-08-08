@@ -533,6 +533,9 @@
       "boiling_water_temperature": {
         "name": "Boiling Water Set Temperature"
       },
+      "clean_water_consumption": {
+        "name": "Cleaning Water Consumption"
+      },
       "custom_height": {
         "name": "Laundry Height"
       },
@@ -733,6 +736,15 @@
           "dark": "Dark",
           "exit": "Off",
           "light": "Bright"
+        }
+      },
+      "clean_interval": {
+        "name": "Cleaning Interval",
+        "state": {
+          "7_days": "7 days",
+          "15_days": "15 days",
+          "30_days": "30 days",
+          "off": "Off"
         }
       },
       "clean_mode": {
@@ -1661,6 +1673,47 @@
           "30": "30 days"
         }
       },
+      "single_max_water_consumption": {
+        "name": "Leak Protection Volume",
+        "state": {
+          "500l": "500 L",
+          "700l": "700 L",
+          "900l": "900 L",
+          "1500l": "1500 L",
+          "2000l": "2000 L",
+          "off": "Off"
+        }
+      },
+      "single_max_water_time": {
+        "name": "Leak Protection Time",
+        "state": {
+          "30min": "0.5 h",
+          "60min": "1 h",
+          "90min": "1.5 h",
+          "120min": "2 h",
+          "150min": "2.5 h",
+          "180min": "3 h",
+          "210min": "3.5 h",
+          "240min": "4 h",
+          "270min": "4.5 h",
+          "300min": "5 h",
+          "330min": "5.5 h",
+          "360min": "6 h",
+          "390min": "6.5 h",
+          "420min": "7 h",
+          "450min": "7.5 h",
+          "480min": "8 h",
+          "510min": "8.5 h",
+          "540min": "9 h",
+          "570min": "9.5 h",
+          "600min": "10 h",
+          "630min": "10.5 h",
+          "660min": "11 h",
+          "690min": "11.5 h",
+          "720min": "12 h",
+          "off": "Off"
+        }
+      },
       "soak_count": {
         "name": "Rinse Count",
         "state": {
@@ -2083,6 +2136,12 @@
       "bottom_temperature": {
         "name": "Bottom Temperature"
       },
+      "clean_interval_next_days_remaining": {
+        "name": "Remaining Days Until Next Cleaning"
+      },
+      "clean_water_consumption_next_remaining": {
+        "name": "Remaining Water Consumption Until Next Cleaning"
+      },
       "cur_humidity": {
         "name": "Current Humidity"
       },
@@ -2288,6 +2347,12 @@
       "indoor_temperature": {
         "name": "Indoor Temperature"
       },
+      "input_pressure_sensing": {
+        "name": "Inlet Water Pressure"
+      },
+      "input_temperature_sensing": {
+        "name": "Inlet Water Temperature"
+      },
       "lan_ip": {
         "name": "LAN IP"
       },
@@ -2428,6 +2493,9 @@
       "temp_set": {
         "name": "Target Temperature"
       },
+      "today_water_consumption": {
+        "name": "Today's Water Consumption"
+      },
       "top_temperature": {
         "name": "Top Temperature"
       },
@@ -2480,6 +2548,9 @@
       },
       "water_feedback": {
         "name": "Water Level Feedback"
+      },
+      "water_flow": {
+        "name": "Water Flow"
       },
       "water_full_level": {
         "name": "Water Full Level"
@@ -2747,6 +2818,12 @@
       "offline_voice_function": {
         "name": "Offline Voice"
       },
+      "open_close_switch": {
+        "name": "Open/Close Switch"
+      },
+      "open_close_water_pressure": {
+        "name": "Water Pressure Valve"
+      },
       "open_door_tips_switch": {
         "name": "Door Open Alert"
       },
@@ -2806,6 +2883,9 @@
       },
       "soften": {
         "name": "Soften"
+      },
+      "start_clean": {
+        "name": "Start Cleaning"
       },
       "steam": {
         "name": "Steam"
