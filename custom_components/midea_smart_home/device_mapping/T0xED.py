@@ -1,4 +1,4 @@
-from homeassistant.const import Platform, PERCENTAGE, UnitOfElectricPotential, UnitOfTemperature, UnitOfTime, UnitOfVolume, CONCENTRATION_PARTS_PER_MILLION
+from homeassistant.const import Platform, PERCENTAGE, UnitOfElectricPotential, UnitOfRatio, UnitOfTemperature, UnitOfTime, UnitOfVolume
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
@@ -184,11 +184,11 @@ DEVICE_MAPPING = {
             },
             Platform.SENSOR: {
                 "in_tds": {
-                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "out_tds": {
-                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "life_1": {
@@ -339,11 +339,11 @@ DEVICE_MAPPING = {
             },
             Platform.SENSOR: {
                 "in_tds": {
-                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "out_tds": {
-                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "life_1": {
@@ -428,11 +428,11 @@ DEVICE_MAPPING = {
             },
             Platform.SENSOR: {
                 "in_tds": {
-                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "out_tds": {
-                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "life_1": {
@@ -515,11 +515,11 @@ DEVICE_MAPPING = {
             },
             Platform.SENSOR: {
                 "in_tds": {
-                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "out_tds": {
-                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "life_1": {
@@ -557,11 +557,11 @@ DEVICE_MAPPING = {
             },
             Platform.SENSOR: {
                 "in_tds": {
-                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "out_tds": {
-                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "life_1": {
@@ -1076,7 +1076,7 @@ DEVICE_MAPPING = {
             },
             Platform.SENSOR: {
                 "out_tds": {
-                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "life_1": {

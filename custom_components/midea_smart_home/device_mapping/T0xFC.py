@@ -1,4 +1,4 @@
-from homeassistant.const import Platform, UnitOfTemperature, PERCENTAGE, CONCENTRATION_MICROGRAMS_PER_CUBIC_METER
+from homeassistant.const import Platform, UnitOfDensity, UnitOfTemperature, PERCENTAGE
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
 
@@ -88,24 +88,24 @@ DEVICE_MAPPING = {
                 },
                 "hcho":{
                     "device_class": SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
-                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                    "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
 
                 },
                 "pm1":{
                     "device_class": SensorDeviceClass.PM1,
-                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                    "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
 
                 },
                 "pm25":{
                     "device_class": SensorDeviceClass.PM25,
-                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                    "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "pm10":{
                     "device_class": SensorDeviceClass.PM10,
-                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                    "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
 
                 }
@@ -197,24 +197,24 @@ DEVICE_MAPPING = {
                 },
                 "hcho":{
                     "device_class": SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
-                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                    "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
 
                 },
                 "pm1":{
                     "device_class": SensorDeviceClass.PM1,
-                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                    "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
 
                 },
                 "pm25":{
                     "device_class": SensorDeviceClass.PM25,
-                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                    "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "pm10":{
                     "device_class": SensorDeviceClass.PM10,
-                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                    "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
 
                 }
