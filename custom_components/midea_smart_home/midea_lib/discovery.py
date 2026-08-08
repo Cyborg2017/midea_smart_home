@@ -205,7 +205,11 @@ def _parse_scan_address(scan_address: str) -> list:
     except ValueError:
         return None
 
-def discover_devices(timeout: float = DISCOVERY_TIMEOUT, scan_address: str = "auto") -> dict:
+def discover_devices(
+    timeout: float = DISCOVERY_TIMEOUT,
+    scan_address: str = "auto",
+    scan_mode: str = "broadcast"
+) -> dict:
     target_addresses = _parse_scan_address(scan_address)
     if target_addresses is None:
         nets = _get_broadcast_addresses()
@@ -273,23 +277,29 @@ def discover_devices(timeout: float = DISCOVERY_TIMEOUT, scan_address: str = "au
             except (socket.error, OSError):
                 break
 
-    send_broadcast()
-    last_broadcast_time = time.time()
+    is_unicast = scan_mode == "unicast"
+    if not is_unicast:
+        send_broadcast()
+        last_broadcast_time = time.time()
 
-    while time.time() - start_time < timeout:
-        receive_responses()
+        while time.time() - start_time < timeout:
+            receive_responses()
 
-        elapsed = time.time() - last_broadcast_time
-        if elapsed >= DISCOVERY_INTERVAL:
-            retry_count = int((time.time() - start_time) / DISCOVERY_INTERVAL)
-            if retry_count < DISCOVERY_RETRIES:
-                send_broadcast()
-                last_broadcast_time = time.time()
+            elapsed = time.time() - last_broadcast_time
+            if elapsed >= DISCOVERY_INTERVAL:
+                retry_count = int((time.time() - start_time) / DISCOVERY_INTERVAL)
+                if retry_count < DISCOVERY_RETRIES:
+                    send_broadcast()
+                    last_broadcast_time = time.time()
 
-    # Fallback: unicast subnet scan when broadcast finds no devices
+    # Scan unicast when explicitly selected, or as a fallback if broadcast finds no devices.
     is_auto = not scan_address or scan_address.lower() == "auto"
-    if not devices and is_auto:
-        _LOGGER.info("Broadcast found no devices, trying unicast subnet scan")
+    if is_unicast or (not devices and is_auto):
+        _LOGGER.info(
+            "Using unicast subnet scan (mode=%s, broadcast_devices=%d)",
+            scan_mode,
+            len(devices),
+        )
         local_networks = _get_local_networks()
         unicast_targets = []
         for net in local_networks:

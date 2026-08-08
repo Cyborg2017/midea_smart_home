@@ -55,6 +55,13 @@ STEP_USER_DATA_SCHEMA = vol.Schema({
     vol.Required(CONF_ACCOUNT): str,
     vol.Required(CONF_PASSWORD): str,
     vol.Optional("scan_address", default="auto"): str,
+    vol.Optional("scan_mode", default="broadcast"): SelectSelector(
+        SelectSelectorConfig(
+            options=["broadcast", "unicast"],
+            translation_key="scan_mode",
+            mode=SelectSelectorMode.DROPDOWN,
+        )
+    )
 })
 
 def get_lua_storage_path(hass_config_dir: str) -> Path:
@@ -98,6 +105,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._account: str = None
         self._password: str = None
         self._scan_address: str = "auto"
+        self._scan_mode: str = "broadcast"
         self._session: ClientSession = None
         self._preset_cloud = None
         self._user_cloud = None
@@ -119,6 +127,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._account = user_input.get(CONF_ACCOUNT)
             self._password = user_input.get(CONF_PASSWORD)
             self._scan_address = user_input.get("scan_address", "auto")
+            self._scan_mode = user_input.get("scan_mode", "broadcast")
 
             existing_entries = self.hass.config_entries.async_entries(DOMAIN)
             for entry in existing_entries:
@@ -143,7 +152,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         self._discovered_devices = await self.hass.async_add_executor_job(
-            discover_devices, DISCOVERY_TIMEOUT, self._scan_address
+            discover_devices, DISCOVERY_TIMEOUT, self._scan_address, self._scan_mode
         )
 
         if not self._discovered_devices:
@@ -728,6 +737,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         self._selected_devices: list = []
         self._current_device_index: int = 0
         self._devices_data: list = list(config_entry.data.get("devices", []))
+        self._scan_mode: str = "broadcast"
         self._session: ClientSession = None
         self._preset_cloud = None
         self._user_cloud = None
@@ -871,18 +881,28 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     ) -> FlowResult:
         if user_input is not None:
             scan_address = user_input.get("scan_address", "auto")
-            return await self._discover_devices(scan_address)
+            self._scan_mode = user_input.get("scan_mode", "broadcast")
+            return await self._discover_devices(scan_address, self._scan_mode)
 
         return self.async_show_form(
             step_id="add_device",
             data_schema=vol.Schema({
                 vol.Optional("scan_address", default="auto"): str,
+                vol.Optional("scan_mode", default="broadcast"): SelectSelector(
+                    SelectSelectorConfig(
+                        options=["broadcast", "unicast"],
+                        translation_key="scan_mode",
+                        mode=SelectSelectorMode.DROPDOWN,
+                    )
+                ),
             }),
         )
 
-    async def _discover_devices(self, scan_address: str = "auto") -> FlowResult:
+    async def _discover_devices(
+        self, scan_address: str = "auto", scan_mode: str = "broadcast"
+    ) -> FlowResult:
         self._discovered_devices = await self.hass.async_add_executor_job(
-            discover_devices, DISCOVERY_TIMEOUT, scan_address
+            discover_devices, DISCOVERY_TIMEOUT, scan_address, scan_mode
         )
 
         if not self._discovered_devices:
@@ -998,7 +1018,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_select_device_rescan_option(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        return await self._discover_devices()
+        return await self._discover_devices(scan_mode=self._scan_mode)
 
     async def async_step_get_token_option(
         self, user_input: dict[str, Any] | None = None

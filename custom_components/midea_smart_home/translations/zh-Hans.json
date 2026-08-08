@@ -50,10 +50,12 @@
         "data": {
           "account": "账号",
           "password": "密码",
-          "scan_address": "扫描地址"
+          "scan_address": "扫描地址",
+          "scan_mode": "扫描模式"
         },
         "data_description": {
-          "scan_address": "[1] 输入路由器地址（如 192.168.1.1）扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）"
+          "scan_address": "[1] 输入路由器地址（如 192.168.1.1）扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）",
+          "scan_mode": "说明：广播模式下，若多次出现搜索出的设备列表显示不全，请尝试使用单播模式 (该模式下扫描时间可能会延长，需耐心等待)。"
         },
         "description": "输入美的美居账号密码，下载必要的资源文件",
         "title": "Midea Smart Home 设置"
@@ -2927,10 +2929,12 @@
     "step": {
       "add_device": {
         "data": {
-          "scan_address": "扫描地址"
+          "scan_address": "扫描地址",
+          "scan_mode": "扫描模式"
         },
         "data_description": {
-          "scan_address": "[1] 输入路由器地址扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）"
+          "scan_address": "[1] 输入路由器地址扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）",
+          "scan_mode": "说明：广播模式下，若多次出现搜索出的设备列表显示不全，请尝试使用单播模式 (该模式下扫描时间可能会延长，需耐心等待)。"
         },
         "description": "搜索局域网中的新设备（已添加的设备将自动过滤）",
         "title": "添加新设备"
@@ -3023,6 +3027,14 @@
           "password": "美的美居密码"
         },
         "title": "更新账号密码"
+      }
+    }
+  },
+  "selector": {
+    "scan_mode": {
+      "options": {
+        "broadcast": "广播",
+        "unicast": "单播"
       }
     }
   }

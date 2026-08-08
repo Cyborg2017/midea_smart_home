@@ -50,10 +50,12 @@
         "data": {
           "account": "Account",
           "password": "Password",
-          "scan_address": "Scan Address"
+          "scan_address": "Scan Address",
+          "scan_mode": "Scan Mode"
         },
         "data_description": {
-          "scan_address": "Enter router address (e.g., 192.168.1.1) to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection"
+          "scan_address": "Enter router address (e.g., 192.168.1.1) to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
+          "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
         },
         "description": "Enter your Midea Meiju account credentials to download necessary resource files",
         "title": "Midea Smart Home Setup"
@@ -2927,10 +2929,12 @@
     "step": {
       "add_device": {
         "data": {
-          "scan_address": "Scan Address"
+          "scan_address": "Scan Address",
+          "scan_mode": "Scan Mode"
         },
         "data_description": {
-          "scan_address": "Enter router address to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection"
+          "scan_address": "Enter router address to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
+          "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
         },
         "description": "Search for new devices on local network (already added devices will be filtered out)",
         "title": "Add New Device"
@@ -3023,6 +3027,14 @@
           "password": "Midea Meiju password"
         },
         "title": "Update Account/Password"
+      }
+    }
+  },
+  "selector": {
+    "scan_mode": {
+      "options": {
+        "broadcast": "Broadcast",
+        "unicast": "Unicast"
       }
     }
   }
