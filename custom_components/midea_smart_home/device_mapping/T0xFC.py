@@ -94,13 +94,11 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
                     "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
-
                 },
                 "pm1":{
                     "device_class": SensorDeviceClass.PM1,
                     "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
-
                 },
                 "pm25":{
                     "device_class": SensorDeviceClass.PM25,
@@ -111,7 +109,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.PM10,
                     "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
-
                 }
             }
         }
@@ -205,13 +202,11 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
                     "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
-
                 },
                 "pm1":{
                     "device_class": SensorDeviceClass.PM1,
                     "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
-
                 },
                 "pm25":{
                     "device_class": SensorDeviceClass.PM25,
@@ -222,7 +217,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.PM10,
                     "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
-
                 }
             }
         }
