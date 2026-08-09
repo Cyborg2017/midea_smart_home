@@ -11,57 +11,68 @@ DEVICE_MAPPING = {
                 "temperature": {
                     "min": 0,
                     "max": 100,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "detergent": {
                     "min": 0,
                     "max": 5,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "softener": {
                     "min": 0,
                     "max": 5,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "dehydration_speed": {
                     "min": 0,
                     "max": 1600,
-                    "step": 100
+                    "step": 100,
+                    "mode": "box"
                 },
                 "soak_time": {
                     "min": 0,
                     "max": 40,
-                    "step": 10
+                    "step": 10,
+                    "mode": "box"
                 },
                 "wash_time": {
                     "min": 0,
                     "max": 20,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "rinse_count": {
                     "min": 0,
                     "max": 3,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "dehydration_time": {
                     "min": 0,
                     "max": 9,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "wash_level": {
                     "min": 0,
                     "max": 8,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "rinse_level": {
                     "min": 0,
                     "max": 8,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "wash_strength": {
                     "min": 1,
                     "max": 4,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 }
             },
             Platform.BINARY_SENSOR: {

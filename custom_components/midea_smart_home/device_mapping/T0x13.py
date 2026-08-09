@@ -38,6 +38,7 @@ DEVICE_MAPPING = {
                     "min": 0,
                     "max": 60,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
                 }
             }
@@ -80,6 +81,7 @@ DEVICE_MAPPING = {
                     "min": 0,
                     "max": 60,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
                 }
             }
@@ -122,6 +124,7 @@ DEVICE_MAPPING = {
                     "min": 0,
                     "max": 60,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
                 }
             }

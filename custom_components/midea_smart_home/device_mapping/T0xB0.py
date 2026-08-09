@@ -55,30 +55,35 @@ DEVICE_MAPPING = {
                     "min": 0,
                     "max": 250,
                     "step": 5,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTemperature.CELSIUS
                 },
                 "work_hour": {
                     "min": 0,
                     "max": 23,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.HOURS
                 },
                 "work_minute": {
                     "min": 0,
                     "max": 59,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
                 },
                 "work_second": {
                     "min": 0,
                     "max": 59,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.SECONDS
                 },
                 "weight": {
                     "min": 0,
                     "max": 1500,
                     "step": 100,
+                    "mode": "box",
                     "unit_of_measurement": "g"
                 }
             },
@@ -161,30 +166,35 @@ DEVICE_MAPPING = {
                     "min": 0,
                     "max": 250,
                     "step": 5,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTemperature.CELSIUS
                 },
                 "work_hour": {
                     "min": 0,
                     "max": 23,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.HOURS
                 },
                 "work_minute": {
                     "min": 0,
                     "max": 59,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
                 },
                 "work_second": {
                     "min": 0,
                     "max": 59,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.SECONDS
                 },
                 "weight": {
                     "min": 0,
                     "max": 1500,
                     "step": 100,
+                    "mode": "box",
                     "unit_of_measurement": "g"
                 }
             },

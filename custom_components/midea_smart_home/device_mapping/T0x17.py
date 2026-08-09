@@ -18,11 +18,13 @@ DEVICE_MAPPING = {
                     "min": 0,
                     "max": 100,
                     "step": 10,
+                    "mode": "box"
                 },
                 "custom_timing": {
                     "min": 0,
                     "max": 180,
                     "step": 5,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
                 }
             },
@@ -62,11 +64,13 @@ DEVICE_MAPPING = {
                     "min": 0,
                     "max": 100,
                     "step": 10,
+                    "mode": "box"
                 },
                 "custom_timing": {
                     "min": 0,
                     "max": 180,
                     "step": 5,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
                 }
             },

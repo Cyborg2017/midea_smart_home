@@ -10,12 +10,16 @@ DEVICE_MAPPING = {
                 "hosting_upper": {
                     "min": 10,
                     "max": 75,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box",
+                    "mode": "box"
                 },
                 "hosting_lower": {
                     "min": 10,
                     "max": 75,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box",
+                    "mode": "box"
                 }
             },
             Platform.LOCK: {
@@ -119,12 +123,14 @@ DEVICE_MAPPING = {
                 "hosting_upper": {
                     "min": 10,
                     "max": 75,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "hosting_lower": {
                     "min": 10,
                     "max": 75,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 }
             },
             Platform.LOCK: {

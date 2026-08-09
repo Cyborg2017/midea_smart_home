@@ -59,6 +59,7 @@ DEVICE_MAPPING = {
                     "min": 0,
                     "max": 72,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.HOURS
                 },
             },
@@ -191,6 +192,7 @@ DEVICE_MAPPING = {
                     "min": 0,
                     "max": 72,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.HOURS
                 },
             },
@@ -303,6 +305,7 @@ DEVICE_MAPPING = {
                     "min": 0,
                     "max": 72,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.HOURS
                 }
             },

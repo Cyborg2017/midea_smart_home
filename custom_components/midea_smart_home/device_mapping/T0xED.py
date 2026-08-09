@@ -168,18 +168,21 @@ DEVICE_MAPPING = {
                     "min": 500,
                     "max": 5000,
                     "step": 500,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 },
                 "quantify_22": {
                     "min": 500,
                     "max": 5000,
                     "step": 500,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 },
                 "quantify_23": {
                     "min": 500,
                     "max": 5000,
                     "step": 500,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 }
             },
@@ -323,18 +326,21 @@ DEVICE_MAPPING = {
                     "min": 500,
                     "max": 5000,
                     "step": 500,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 },
                 "quantify_22": {
                     "min": 500,
                     "max": 5000,
                     "step": 500,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 },
                 "quantify_23": {
                     "min": 500,
                     "max": 5000,
                     "step": 500,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 }
             },
@@ -412,18 +418,21 @@ DEVICE_MAPPING = {
                     "min": 300,
                     "max": 500,
                     "step": 100,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 },
                 "quantify_22": {
                     "min": 500,
                     "max": 1000,
                     "step": 100,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 },
                 "quantify_23": {
                     "min": 1000,
                     "max": 1500,
                     "step": 100,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 }
             },
@@ -499,18 +508,21 @@ DEVICE_MAPPING = {
                     "min": 300,
                     "max": 1000,
                     "step": 100,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 },
                 "quantify_22": {
                     "min": 1100,
                     "max": 1900,
                     "step": 100,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 },
                 "quantify_23": {
                     "min": 2000,
                     "max": 5000,
                     "step": 500,
+                    "mode": "box",
                     "unit_of_measurement": "mL"
                 }
             },
@@ -673,6 +685,7 @@ DEVICE_MAPPING = {
                     "min": 35,
                     "max": 95,
                     "step": 5,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTemperature.CELSIUS
                 }
             },
@@ -762,24 +775,28 @@ DEVICE_MAPPING = {
                     "min": 45,
                     "max": 50,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTemperature.CELSIUS
                 },
                 "honey_temperature": {
                     "min": 50,
                     "max": 70,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTemperature.CELSIUS
                 },
                 "tea_temperature": {
                     "min": 71,
                     "max": 85,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTemperature.CELSIUS
                 },
                 "custom_temperature_1": {
                     "min": 86,
                     "max": 100,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "translation_key": "boiling_water_temperature"
                 }
@@ -1035,6 +1052,7 @@ DEVICE_MAPPING = {
                     "min": 86,
                     "max": 98,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "translation_key": "boiling_water_temperature"
                 },
@@ -1042,6 +1060,7 @@ DEVICE_MAPPING = {
                     "min": 40,
                     "max": 85,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "translation_key": "warm_water_temperature"
                 }
@@ -1248,29 +1267,34 @@ DEVICE_MAPPING = {
                 "water_hardness": {
                     "min": 0,
                     "max": 500,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "timing_regeneration_hour": {
                     "min": 0,
                     "max": 23,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.HOURS
                 },
                 "timing_regeneration_min": {
                     "min": 0,
                     "max": 59,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
                 },
                 "leak_water_protection_value": {
                     "min": 0,
                     "max": 100,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "micro_leak_protection_value": {
                     "min": 0,
                     "max": 100,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 }
             }
         }
@@ -1403,29 +1427,34 @@ DEVICE_MAPPING = {
                 "water_hardness": {
                     "min": 0,
                     "max": 500,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "timing_regeneration_hour": {
                     "min": 0,
                     "max": 23,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.HOURS
                 },
                 "timing_regeneration_min": {
                     "min": 0,
                     "max": 59,
                     "step": 1,
+                    "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
                 },
                 "leak_water_protection_value": {
                     "min": 0,
                     "max": 100,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 },
                 "micro_leak_protection_value": {
                     "min": 0,
                     "max": 100,
-                    "step": 1
+                    "step": 1,
+                    "mode": "box"
                 }
             }
         }
