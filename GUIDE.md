@@ -1,222 +1,234 @@
-# Midea Smart Home Configuration Guide
+# Midea Smart Home 配置指南
 
-[简体中文](GUIDE_hans.md) | English
+本指南将帮助您完成 Midea Smart Home 集成的配置。
 
-This guide will help you configure the Midea Smart Home integration.
+## 目录
 
-## Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration Flow](#configuration-flow)
-  - [Step 1: Enter Account Credentials](#step-1-enter-account-credentials)
-  - [Step 2: Select Devices](#step-2-select-devices)
-  - [Step 3: Device Authentication](#step-3-device-authentication)
-  - [Step 4: Configuration Complete](#step-4-configuration-complete)
-- [Options](#options)
-  - [Update Account Credentials](#update-account-credentials)
-  - [Sync Device Info from Cloud](#sync-device-info-from-cloud)
-  - [Clear Local Cache](#clear-local-cache)
-- [FAQ](#faq)
+- [前置条件](#前置条件)
+- [安装集成](#安装集成)
+- [配置流程](#配置流程)
+  - [步骤 1：输入账号密码](#步骤-1输入账号密码)
+  - [步骤 2：选择设备](#步骤-2选择设备)
+  - [步骤 3：设备认证](#步骤-3设备认证)
+  - [步骤 4：配置完成](#步骤-4配置完成)
+- [选项功能](#选项功能)
+  - [更新账号密码](#更新账号密码)
+  - [同步云端设备信息](#同步云端设备信息)
+  - [清理本地缓存](#清理本地缓存)
+- [常见问题](#常见问题)
 
 ---
 
-## Prerequisites
+## 前置条件
 
-1. **Midea Meiju Account**: A registered Midea Meiju account (phone number)
-2. **Devices Bound**: Devices must be bound in the Midea Meiju App first
-3. **Network**: Home Assistant and devices should be on the same LAN
+1. **美的美居账号**：需要已注册的美的美居账号（手机号）
+2. **设备已绑定**：设备需要先在美的美居 App 中绑定
+3. **网络环境**：Home Assistant 与设备在同一局域网内
 
-## Installation
+## 安装集成
 
-### HACS Installation (Recommended)
+### HACS 安装（推荐）
 
-1. Open HACS
-2. Search for "Midea Smart Home"
-3. Click Download and restart Home Assistant
+1. 打开 HACS
+2. 搜索 "Midea Smart Home"
+3. 点击下载并重启 Home Assistant
 
-### Manual Installation
+### 手动安装
 
-1. Copy `custom_components/midea_smart_home` to your Home Assistant `custom_components` directory
-2. Restart Home Assistant
-
----
-
-## Configuration Flow
-
-### Step 1: Enter Account Credentials
-
-1. Go to **Settings** → **Devices & Services** → **Add Integration**
-2. Search for "Midea Smart Home" and select it
-3. Enter your Midea Meiju account and password
-
-![Enter Account Credentials](docs/images/en/1.png)
-
-#### Scan Address Options
-
-| Input | Description |
-|-------|-------------|
-| `auto` | Auto-detect network interfaces and scan (recommended) |
-| Router IP (e.g., `192.168.1.1`) | Scan the entire subnet |
-| Device IP (e.g., `192.168.1.100`) | Scan only the specified device |
+1. 将 `custom_components/midea_smart_home` 复制到 Home Assistant 的 `custom_components` 目录
+2. 重启 Home Assistant
 
 ---
 
-### Step 2: Select Devices
+## 配置流程
 
-The system will automatically scan for Midea devices on your LAN. After scanning, the device selection screen will appear.
+### 步骤 1：输入账号密码
 
-![Select Devices](docs/images/en/2.png)
+1. 进入 **设置** → **设备与服务** → **添加集成**
+2. 搜索 "Midea Smart Home" 并选择
+3. 输入您的美的美居账号和密码
 
-#### Options
+![输入账号密码选择搜索模式](docs/images/zh/1.png)
 
-| Option | Function |
-|--------|----------|
-| ✅ Continue with selected devices | Proceed to select devices to add |
-| 🔄 Rescan for devices | Rescan the network for more devices |
+#### 扫描地址说明
 
-#### Rescan
+| 输入内容 | 说明 |
+|---------|------|
+| `auto` | 自动检测网络接口并扫描（默认推荐） |
+| 路由器地址（如 `192.168.1.1`） | 扫描整个网段 |
+| 设备 IP（如 `192.168.1.100`） | 只扫描指定设备 |
 
-If not all devices were found on the first scan, click "Rescan":
+#### 扫描模式说明
 
-![Rescan for Devices](docs/images/en/3.png)
-
-**Note**: Rescanning only searches the LAN again, it does not re-authenticate with the cloud.
-
-#### Select Devices to Add
-
-After clicking "Continue with selected devices", a device list will appear with all devices pre-selected:
-
-![Devices Pre-selected](docs/images/en/4.png)
-
-You can deselect devices you don't want to add, then click Submit.
+| 扫描模式 | 说明 |
+|---------|------|
+| 广播模式 | 扫描整个网段，但如果设备列表显示不全，请尝试使用单播模式 |
+| 单播模式 | 该模式下扫描时间可能会延长，需耐心等待 |
 
 ---
 
-### Step 3: Device Authentication
+### 步骤 2：选择设备
 
-The system will automatically obtain Token and Key for each device for local communication.
+系统会自动扫描局域网内的美的设备，扫描完成后显示设备选择界面。
 
-![Device Authentication](docs/images/en/6.png)
+![选择设备界面](docs/images/zh/2.png)
 
-**Note**: This process requires connecting to the cloud API, please ensure network connectivity.
+#### 选项说明
 
----
+| 选项 | 功能 |
+|------|------|
+| ✅ 前往添加设备 | 继续选择要添加的设备 |
+| 🔄 重新扫描（尝试搜索更多设备） | 重新扫描网络，搜索更多设备 |
 
-### Step 4: Configuration Complete
+#### 重新扫描
 
-After successful authentication, the integration configuration is complete. You will see the integration entry:
+如果第一次扫描没有找到所有设备，可以点击"重新扫描"：
 
-![Configuration Complete](docs/images/en/7.png)
+![尝试重新搜索更多设备](docs/images/zh/3.png)
 
-Entry title format: `Midea | {account} | {home_name}`
+**注意**：重新扫描不会重新登录云端，只会重新搜索局域网设备。
 
----
+#### 选择要添加的设备
 
-## Options
+点击"前往添加设备"后，会显示设备列表，默认已勾选所有设备：
 
-Click the "Configure" button in the top right corner of the integration entry to access these options:
+![默认勾选所有已搜索到的设备](docs/images/zh/4.png)
 
-![Options Menu](docs/images/en/8.png)
-
-### Update Account Credentials
-
-![Update Account](docs/images/en/9.png)
-
-Update your Midea Meiju account credentials. Use this if you've changed your password.
-
-### Sync Device Info from Cloud
-
-![Sync from Cloud](docs/images/en/10.png)
-
-Sync device names, models, and other info from the cloud. The integration will automatically reload after syncing.
-
-**Use Cases**:
-- Changed device names in the Midea Meiju App
-- Need to update device model information
-
-### Clear Local Cache
-
-![Clear Cache](docs/images/en/11.png)
-
-Clear locally cached Lua scripts and JSON files. Current cache will be backed up to `.storage/midea_smart_home-backup`.
-
-**Use Cases**:
-- Device protocol updated and needs re-downloading
-- Protocol parsing issues
-- Completely remove integration entry and reconfigure (recommended to clear cache)
+您可以取消勾选不需要添加的设备，然后点击提交。
 
 ---
 
-## FAQ
+### 步骤 3：设备认证
 
-### Q: Cannot find any devices?
+系统会自动获取每个设备的 Token 和 Key，用于本地通信认证。
 
-**Solutions**:
-1. Make sure devices are powered on
-2. Confirm devices are bound in the Midea Meiju App
-3. Ensure Home Assistant and devices are on the same LAN (same subnet)
-4. Try entering your router IP (e.g., `192.168.1.1`) to scan the entire subnet or specify device IP (e.g., `192.168.1.100`)
-5. If using Docker, ensure network mode is `host` or port forwarding is configured correctly
-6. Some devices may need firmware updates via the Midea Meiju App first
+![设备认证界面](docs/images/zh/6.png)
 
-### Q: Device authentication failed?
-
-**Solutions**:
-1. Check if account credentials are correct
-2. Confirm devices are bound to the current account
-3. Try re-logging into the Midea Meiju App and retry
-4. If using Midea Meiju overseas account, you may need to use the overseas version of the App
-
-### Q: Device shows but cannot be controlled?
-
-**Solutions**:
-1. Check if the device is online (via Midea Meiju App)
-2. Try reloading the integration
-3. If it's a new device type, it may not be supported yet. Please submit an Issue
-
-### Q: Device names not updated?
-
-**Solutions**:
-1. Go to integration options
-2. Click "Sync device info from cloud"
-3. Wait for sync to complete, devices will auto-reload
-
-### Q: What device types are supported?
-
-Please see [Supported Devices](README.md#supported-devices)
+**注意**：此过程需要连接云端 API，请确保网络畅通。
 
 ---
 
-## Debug Logging
+### 步骤 4：配置完成
 
-To troubleshoot issues, you can enable debug logging for detailed information.
+认证成功后，集成配置完成，您将看到集成条目：
 
-### How to Enable
+![配置成功，集成条目界面](docs/images/zh/7.png)
 
-Add the following to your `configuration.yaml`:
+集成条目名称格式：`Midea | {账号} | {家庭名称}`
+
+---
+
+## 选项功能
+
+点击集成条目右上角的"配置"按钮，可以访问以下选项：
+
+![选项界面](docs/images/zh/8.png)
+
+### 更新账号密码
+
+![更新账号密码界面](docs/images/zh/9.png)
+
+用于更新美的美居账号密码。如果密码已更改，请在此更新。
+
+### 同步云端设备信息
+
+![同步设备信息界面](docs/images/zh/10.png)
+
+从云端同步设备名称、型号等信息至本地。同步完成后会自动重新加载集成。
+
+**使用场景**：
+- 在美的美居 App 中修改了设备名称
+- 需要更新设备型号信息
+
+### 清理本地配置文件
+
+![清理本地配置文件界面](docs/images/zh/11.png)
+
+清理本地配置文件的 Lua 脚本和 JSON 文件。当前配置文件会备份到 `.storage/midea_smart_home-backup`。
+
+**使用场景**：
+- 设备协议更新后需要重新下载
+- 遇到协议解析问题时
+- 完全删除集成条目，重新配置的时候（推荐清理配置文件）
+
+---
+
+### 配置轮询间隔时间
+
+![配置轮询间隔时间](docs/images/zh/13.png)
+
+**说明**：对于某些设备（如双筒洗衣机、空调等），可以配置辅助轮询以获取实时状态更新。选择"off"将完全禁用该设备的轮询（不影响设备主动上报）。
+
+### 配置设备上下线通知
+
+![配置上下线通知](docs/images/zh/14.png)
+
+**说明**：配置设备上下线时是否在 Home Assistant 中发送持久通知，方便了解设备连接状态。
+
+### 配置集成更新检查
+
+![配置集成更新检查](docs/images/zh/15.png)
+
+**说明**：配置是否定期检查集成是否有新版本。每次重启 Home Assistant 时都会自动检查一次（无论此设置如何）。
+
+## 常见问题
+
+### Q: 扫描不到设备？
+
+**解决方案**：
+1. 确认设备已连接电源并开机
+2. 确认设备已绑定到美的美居 App
+3. 确认 Home Assistant 和设备在同一局域网（同一网段）
+4. 尝试输入路由器地址（如 `192.168.1.1`）扫描整个网段或指定设备 IP（如 `192.168.1.100`）
+5. 尝试使用单播模式扫描
+6. 确认网络模式为 `host` 或正确配置端口转发
+
+### Q: 认证界面显示设备是 v3 协议，但 token / key 为空？
+
+**解决方案**：
+1. 尝试 ping 'mapp.appsmb.com'，确认与服务器网络连接正常
+2. 获取完整日志，并加群或在GitHub Issues提交反馈
+
+### Q: 认证界面显示设备是 v2 协议，但无法认证添加？
+
+**解决方案**：
+1. 如果日志显示 'This format is recognized but TCP communication is not yet supported'，表明这是v2新协议设备，
+   目前无有效方法可以与这类设备进行通信。
+
+### Q: 支持哪些设备类型？
+
+请查看 [支持的设备列表](README.md#支持的设备)
+
+---
+
+## 调试日志
+
+如需排查问题，可以开启调试日志获取详细信息。
+
+### 开启方法
+
+在 Home Assistant 的 `configuration.yaml` 中添加以下配置：
 
 ```yaml
 logger:
   default: warning
   logs:
     custom_components.midea_smart_home: debug
-    midealocal: debug
 ```
 
-Save and restart Home Assistant or call the `logger.set_level` service.
+保存后重启 Home Assistant 或调用 `logger.set_level` 服务。
 
-### Viewing Logs
+### 查看并下载日志
 
-1. **Via Web UI**: Settings → System → Logs
-2. **Via File**: `home-assistant.log` file in your Home Assistant config directory
+1. **通过 Web 界面**：设置 → 系统 → 日志
+2. **通过文件**：`home-assistant.log` 文件位于 Home Assistant 配置目录
 
-### When Submitting an Issue
+### 提交 Issue 时
 
-Please attach relevant logs and remove sensitive information (such as Token, Key, account, etc.).
+请附上相关日志，并移除敏感信息（如 Token、Key、账号等）。
 
 ---
 
-## Support
+## 技术支持
 
-If you encounter any issues, please visit [GitHub Issues](https://github.com/Cyborg2017/midea_smart_home/issues).
+如遇问题，请访问 [GitHub Issues](https://github.com/Cyborg2017/midea_smart_home/issues) 反馈。

@@ -1,110 +1,118 @@
 # Midea Smart Home
 
-English | [简体中文](README_hans.md)
-
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
 [![License][license-shield]](LICENSE)
 [![hacs][hacsbadge]][hacs]
 
-Home Assistant custom integration for Midea smart devices via local network.
+Home Assistant 美的设备本地控制集成，无需云端即可控制您的智能设备。
 
-## Features
+## 获取帮助
 
-- **Local Control**: Devices are controlled directly via local network, no cloud connection required
-- **Auto Protocol Download**: Automatically download Lua protocol scripts from cloud (first-time setup only)
-- **Flexible Configuration**: Support customizing entity attributes through device mapping files, easy to adapt new devices
-- **Multi-language Support**: Support Chinese and English interface
-- **Rich Entity Platforms**: Support climate, sensor, switch, select, button, number, vacuum, binary_sensor, fan, humidifier, light, cover, water_heater
+- 欢迎加入QQ群交流，获取最新更新和帮助：
 
-## Workflow
+![加入QQ群](docs/images/zh/12.png)
 
-**Configuration Phase**
-1. User enters Midea account credentials
-2. Login to Midea Cloud API
+## 功能特点
 
-**Discovery Phase**
-1. Get device details from cloud (Device ID, Model, SN8, etc.)
-2. Auto-download Lua protocol file for the device
-3. Scan device IP address in local network
-4. Get device Token and Key for V3 protocol devices (not required for V1/V2)
+- **本地控制**：设备通过本地网络直接控制，无需依赖云端连接
+- **自动下载协议**：自动从云端下载设备对应的 Lua 协议脚本（首次配置）
+- **灵活配置**：支持通过设备映射文件自定义实体属性，方便适配新设备
+- **多语言支持**：支持中文、英文界面
+- **丰富的实体平台**：支持 climate、sensor、switch、select、button、number、vacuum、binary_sensor、fan、humidifier、light、cover、water_heater
 
-**Runtime Phase**
-1. Connect to device via local network
-2. Parse device protocol using Lua script
-3. Most devices receive status updates via callback push; special devices (e.g. 0xD9 Twin Tub Washer) use periodic polling
-4. User commands sent directly to device (no cloud needed)
+## 工作流程
 
-## Requirements
+**配置阶段**
+
+1. 用户输入美的账号密码
+2. 登录美的云端 API
+
+**发现阶段**
+
+1. 从云端获取设备详细信息（设备ID、型号、SN8等）
+2. 自动下载设备对应的 Lua 协议文件
+3. 在本地局域网中扫描设备 IP 地址
+4. 获取设备的 Token 和 Key（仅 V3 协议设备需要，V1/V2 协议设备无需）
+
+**运行阶段**
+
+1. 通过本地网络连接设备
+2. 使用 Lua 脚本解析设备协议
+3. 普通设备通过回调推送状态更新，特殊设备（如 0xD9 复式洗衣机）使用定时轮询
+4. 用户操作直接发送到设备（无需云端）
+
+## 环境要求
 
 - **Home Assistant** >= 2025.12.4
 
-## Installation
+## 安装
 
-### One-Click Install (Recommended)
+### 一键安装（推荐）
 
-[![Open your Home Assistant instance and add this HACS repository.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Cyborg2017&repository=midea_smart_home&category=integration)
+[![打开您的 Home Assistant 实例并添加此 HACS 仓库。](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Cyborg2017&repository=midea_smart_home&category=integration)
 
-### HACS (Custom Repository)
+### HACS 自定义仓库
 
-1. Open HACS in Home Assistant
-2. Go to "Integrations"
-3. Click the "+" button (top right)
-4. Click "⚙️ Custom repositories" (3 dots menu > Custom repositories)
-5. Enter: `https://github.com/Cyborg2017/midea_smart_home`
-6. Category: **Integration**
-7. Click "Add"
-8. Search for "Midea Smart Home" and click "Download"
+1. 在 Home Assistant 中打开 HACS
+2. 进入"集成"
+3. 点击右上角"+"按钮
+4. 点击"⚙️ 自定义存储库"（3 点菜单 > 自定义存储库）
+5. 输入：`https://github.com/Cyborg2017/midea_smart_home`
+6. 类别选择：**集成**
+7. 点击"添加"
+8. 搜索"Midea Smart Home"并点击"下载"
 
-### Manual Installation
+### 手动安装
 
-1. Copy the `custom_components/midea_smart_home` directory to your Home Assistant `custom_components` folder
-2. Restart Home Assistant
-3. Go to Settings > Devices & Services
-4. Click "Add Integration"
-5. Search for "Midea Smart Home"
+1. 将 `custom_components/midea_smart_home` 目录复制到您的 Home Assistant `custom_components` 文件夹
+2. 重启 Home Assistant
+3. 进入 设置 > 设备与服务
+4. 点击"添加集成"
+5. 搜索"Midea Smart Home"
 
-## Configuration
+## 配置
 
-For detailed configuration guide, please see [Configuration Guide](GUIDE.md)
+详细配置教程请查看 [配置指南](GUIDE.md)
 
-## Supported Devices
+## 支持的设备
 
-| No. | Code | Device Type |
-|-----|------|-------------|
-| 1 | 0x13 | Smart Light |
-| 2 | 0x17 | Drying Rack |
-| 3 | 0x26 | Bath Heater |
-| 4 | 0x9C | Integrated Stove |
-| 5 | 0xA1 | Dehumidifier |
-| 6 | 0xAC | Floor Air Conditioner / Wall Air Conditioner / Central Air Conditioner / Central Fresh Air / Central Miniaturized Fresh Air |
-| 7 | 0xB0 | Microwave Oven |
-| 8 | 0xB6 | Range Hood |
-| 9 | 0xB8 | Smart Robot Vacuum |
-| 10 | 0xBF | Microwave Steam Oven |
-| 11 | 0xC2 | Smart Toilet |
-| 12 | 0xCA | Multi-Door Fridge |
-| 13 | 0xCC | WiFi Remote Control Device (Central Air Conditioner) |
-| 14 | 0xD9 | Twin Tub Washing Machine |
-| 15 | 0xDA | Top Load Washing Machine |
-| 16 | 0xDB | Cylinder Washing Machine |
-| 17 | 0xDC | Clothes Dryer |
-| 18 | 0xE1 | Dishwasher |
-| 19 | 0xE2 | Electric Water Heater |
-| 20 | 0xE3 | Gas Water Heater |
-| 21 | 0xE6 | Gas Wall Hanging Stove |
-| 22 | 0xEA | Rice Cooker |
-| 23 | 0xED | Net Drinking Machine / Water Purifier / Pipeline Machine / Water Softener / Pre-filter​ |
-| 24 | 0xFA | Electric Fan |
-| 25 | 0xFB | Electric Heater |
-| 26 | 0xFC | Air Purifier |
-| 27 | 0xFD | Humidifier |
+| 序号 | 代码   | 设备类型          |
+| ----- | ------ | ----------------- |
+| 1  | 0x13 | 智能灯           |
+| 2  | 0x17 | 晾衣架           |
+| 3  | 0x26 | 浴霸            |
+| 4  | 0x9C | 集成灶           |
+| 5  | 0xA1 | 除湿机           |
+| 6  | 0xAC | 柜式空调 / 壁挂空调 / 中央空调 & 风管机 / 新风 / 迷你新风 |
+| 7  | 0xB0 | 微波炉           |
+| 8  | 0xB6 | 油烟机           |
+| 9  | 0xB8 | 扫地机器人         |
+| 10  | 0xBF | 微蒸烤一体机         |
+| 11 | 0xC2 | 智能马桶         |
+| 12 | 0xCA | 多开门冰箱         |
+| 13 | 0xCC | Wifi线控器 (中央空调 / 风管机)         |
+| 14 | 0xD9 | 复式洗衣机         |
+| 15 | 0xDA | 波轮洗衣机         |
+| 16 | 0xDB | 滚筒洗衣机         |
+| 17 | 0xDC | 干衣机           |
+| 18 | 0xE1 | 洗碗机           |
+| 19 | 0xE2 | 电热水器          |
+| 20 | 0xE3 | 燃气热水器         |
+| 21 | 0xE6 | 壁挂炉           |
+| 22 | 0xEA | 电饭煲         |
+| 23 | 0xED | 净饮机 / 净水机 / 管线机 / 软水机 / 前置过滤器 |
+| 24 | 0xFA | 风扇            |
+| 25 | 0xFB | 取暖器           |
+| 26 | 0xFC | 空气净化器         |
+| 27 | 0xFD | 加湿器           |
 
-> More device types are being adapted. Contributions are welcome!
+> 其他类型的设备正在适配中，欢迎贡献代码！
 
-## Credits
+## 致谢
 
-This project uses/references some code from:
+本项目参考/使用了以下项目的部分代码：
+
 - [midea_auto_cloud](https://github.com/sususweet/midea_auto_cloud)
 - [midea_ac_lan](https://github.com/wuwentao/midea_ac_lan)
 - [midea-local](https://github.com/midea-lan/midea-local)
