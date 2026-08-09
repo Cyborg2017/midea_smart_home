@@ -7,3 +7,7 @@ contact_links:
   - name: 📋 查看支持的设备列表
     url: https://github.com/Cyborg2017/midea_smart_home#supported-devices
     about: 查看当前支持的美的设备类型，确认你的设备是否已支持
+
+  - name: 💬 加入 QQ 群
+    url: https://qm.qq.com/q/RMkn3ntWgi
+    about: 点击链接加入群聊【Midea Smart Home】，获取帮助并交流设备 Lua 文件

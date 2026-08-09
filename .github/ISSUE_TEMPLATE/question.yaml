@@ -1,6 +1,12 @@
 name: ❓ 问题咨询
 description: 使用问题或帮助请求
 body:
+  - type: markdown
+    attributes:
+      value: |
+        如需排查设备问题，请上传对应的 Lua 文件。
+        也可以加入 [Midea Smart Home QQ 群](https://qm.qq.com/q/RMkn3ntWgi) 获取帮助。
+
   - type: textarea
     attributes:
       label: 问题描述
@@ -59,6 +65,21 @@ body:
     attributes:
       label: 你已经尝试过什么？
       description: 请描述你已经尝试过的解决方案或方法
+
+  - type: textarea
+    attributes:
+      label: Lua 文件
+      description: |-
+        请上传该设备对应的 `.lua` 文件，可直接将文件拖入此输入框。
+
+        Lua 文件通常在以下位置（`<HA 配置目录>`就是包含 `configuration.yaml` 的目录，通常是 `/config`）：
+
+        1. 云端下载文件存放目录：`<HA 配置目录>/.storage/midea_smart_home/lua_devices/T0xED_12345678.lua`
+        2. 如果设备没有 `SN8`，文件名为 `T0xED.lua`。其中 `ED` 是设备 Code，`12345678` 是设备 SN8，请替换为你的实际值。
+        3. `.storage` 是隐藏目录；也可以在集成日志中搜索 `Using Lua file from` 查看实际使用的完整路径。
+
+        如果无法提供 Lua 文件，请说明原因（例如设备太新、云端拉取失败等）。
+      placeholder: 将 Lua 文件拖到这里
 
   - type: textarea
     attributes:
