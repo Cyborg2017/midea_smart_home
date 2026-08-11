@@ -376,7 +376,6 @@
             "supply_voltage": { "default": "mdi:flash" },
             "sweep_mop_mode": { "default": "mdi:robot-vacuum" },
             "tank_status": { "default": "mdi:water" },
-            "today_water_consumption": { "default": "mdi:water" },
             "top_temperature": { "default": "mdi:thermometer" },
             "total_elec_value": { "default": "mdi:flash" },
             "total_working_time": { "default": "mdi:clock-outline" },

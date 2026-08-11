@@ -2493,9 +2493,6 @@
       "temp_set": {
         "name": "目标温度"
       },
-      "today_water_consumption": {
-        "name": "今日用水量"
-      },
       "top_temperature": {
         "name": "顶部温度"
       },

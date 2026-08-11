@@ -2493,9 +2493,6 @@
       "temp_set": {
         "name": "Target Temperature"
       },
-      "today_water_consumption": {
-        "name": "Today's Water Consumption"
-      },
       "top_temperature": {
         "name": "Top Temperature"
       },

@@ -53,6 +53,19 @@ DEVICE_MAPPING = {
                 }
             },
             Platform.SWITCH: {
+                "open_close_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "leak_water_protect": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "leak_water_protection"
+                },
+                "start_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "open_close_water_pressure": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
                 "wash": {
                     "device_class": SwitchDeviceClass.SWITCH
                 },
@@ -161,6 +174,53 @@ DEVICE_MAPPING = {
                         "4500": {"first_custom_out_water_mode": 1, "first_custom_out_water_ml": 4500},
                         "5000": {"first_custom_out_water_mode": 1, "first_custom_out_water_ml": 5000}
                     }
+                },
+                "clean_interval": {
+                    "options": {
+                        "off": {"clean_interval": "0"},
+                        "7_days": {"clean_interval": "7"},
+                        "15_days": {"clean_interval": "15"},
+                        "30_days": {"clean_interval": "30"}
+                    }
+                },
+                "single_max_water_time": {
+                    "options": {
+                        "off": {"single_max_water_time": "0"},
+                        "30min": {"single_max_water_time": "2"},
+                        "60min": {"single_max_water_time": "4"},
+                        "90min": {"single_max_water_time": "6"},
+                        "120min": {"single_max_water_time": "8"},
+                        "150min": {"single_max_water_time": "10"},
+                        "180min": {"single_max_water_time": "12"},
+                        "210min": {"single_max_water_time": "14"},
+                        "240min": {"single_max_water_time": "16"},
+                        "270min": {"single_max_water_time": "18"},
+                        "300min": {"single_max_water_time": "20"},
+                        "330min": {"single_max_water_time": "22"},
+                        "360min": {"single_max_water_time": "24"},
+                        "390min": {"single_max_water_time": "26"},
+                        "420min": {"single_max_water_time": "28"},
+                        "450min": {"single_max_water_time": "30"},
+                        "480min": {"single_max_water_time": "32"},
+                        "510min": {"single_max_water_time": "34"},
+                        "540min": {"single_max_water_time": "36"},
+                        "570min": {"single_max_water_time": "38"},
+                        "600min": {"single_max_water_time": "40"},
+                        "630min": {"single_max_water_time": "42"},
+                        "660min": {"single_max_water_time": "44"},
+                        "690min": {"single_max_water_time": "46"},
+                        "720min": {"single_max_water_time": "48"}
+                    }
+                },
+                "single_max_water_consumption": {
+                    "options": {
+                        "off": {"single_max_water_consumption": "0"},
+                        "500l": {"single_max_water_consumption": "10"},
+                        "700l": {"single_max_water_consumption": "14"},
+                        "900l": {"single_max_water_consumption": "18"},
+                        "1500l": {"single_max_water_consumption": "30"},
+                        "2000l": {"single_max_water_consumption": "40"}
+                    }
                 }
             },
             Platform.NUMBER: {
@@ -184,6 +244,13 @@ DEVICE_MAPPING = {
                     "step": 500,
                     "mode": "box",
                     "unit_of_measurement": "mL"
+                },
+                "clean_water_consumption": {
+                    "min": 0,
+                    "max": 60,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfVolume.CUBIC_METERS
                 }
             },
             Platform.SENSOR: {
@@ -221,6 +288,38 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "cur_temperature"
+                },
+                "input_temperature_Sensing": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "input_temperature_sensing"
+                },
+                "input_pressure_Sensing": {
+                    "device_class": SensorDeviceClass.PRESSURE,
+                    "unit_of_measurement": UnitOfPressure.KPA,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "input_pressure_sensing"
+                },
+                "all_water_consumption": {
+                    "device_class": SensorDeviceClass.VOLUME,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "translation_key": "water_consumption_l"
+                },
+                "water_flow": {
+                    "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
+                    "unit_of_measurement": UnitOfVolumeFlowRate.LITERS_PER_MINUTE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "clean_water_consumption_next_remaining": {
+                    "device_class": SensorDeviceClass.VOLUME,
+                    "unit_of_measurement": UnitOfVolume.CUBIC_METERS
+                },
+                "clean_interval_next_days_remaining": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.DAYS,
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             }
         }
@@ -1553,11 +1652,6 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfVolume.LITERS,
                     "state_class": SensorStateClass.TOTAL_INCREASING,
                     "translation_key": "water_consumption_l"
-                },
-                "today_water_consumption": {
-                    "device_class": SensorDeviceClass.VOLUME,
-                    "unit_of_measurement": UnitOfVolume.LITERS,
-                    "state_class": SensorStateClass.TOTAL_INCREASING
                 },
                 "water_flow": {
                     "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
