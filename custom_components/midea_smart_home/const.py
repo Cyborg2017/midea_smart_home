@@ -46,7 +46,7 @@ class ProtocolVersion:
     V3 = 3
 
 DEVICE_TYPES = {
-    0x13: "Smart Light",
+    0x13: "Smart Light / Fan Light",
     0x17: "Laundry Machine",
     0x26: "Bath Heater",
     0x9C: "Integrated Stove",
@@ -59,7 +59,7 @@ DEVICE_TYPES = {
     0xC2: "Smart Toilet",
     0xCA: "Multi-Door Fridge",
     0xCC: "WiFi Remote Control Device (Central Air Conditioner)",
-    0xD9: "Twin Tub Washing Machine",
+    0xD9: "Twin Tub Washing Machine (Left & Right / Top & Bottom)",
     0xDA: "Top Load Washing Machine",
     0xDB: "Cylinder Washing Machine",
     0xDC: "Clothes Dryer",
@@ -75,4 +75,4 @@ DEVICE_TYPES = {
     0xFD: "Humidifier"
 }
 
-PLATFORMS = ["climate", "sensor", "switch", "select", "button", "number", "vacuum", "binary_sensor", "fan", "humidifier", "light", "cover", "water_heater", "text", "lock", "time", "update"]
+PLATFORMS = ["binary_sensor", "button", "climate", "cover", "fan", "humidifier", "light", "lock", "number", "select", "sensor", "switch", "text", "time", "update", "vacuum", "water_heater"]

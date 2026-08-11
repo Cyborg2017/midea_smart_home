@@ -19,7 +19,7 @@ Home Assistant 美的设备本地控制集成，无需云端即可控制您的�
 - **自动下载协议**：自动从云端下载设备对应的 Lua 协议脚本（首次配置）
 - **灵活配置**：支持通过设备映射文件自定义实体属性，方便适配新设备
 - **多语言支持**：支持中文、英文界面
-- **丰富的实体平台**：支持 climate、sensor、switch、select、button、number、vacuum、binary_sensor、fan、humidifier、light、cover、water_heater
+- **丰富的实体平台**：支持 binary_sensor、button、climate、cover、fan、humidifier、light、lock、number、select、sensor、switch、text、time、update、vacuum、water_heater
 
 ## 工作流程
 
@@ -79,7 +79,7 @@ Home Assistant 美的设备本地控制集成，无需云端即可控制您的�
 
 | 序号 | 代码   | 设备类型          |
 | ----- | ------ | ----------------- |
-| 1  | 0x13 | 智能灯           |
+| 1  | 0x13 | 智能灯 / 风扇灯   |
 | 2  | 0x17 | 晾衣架           |
 | 3  | 0x26 | 浴霸            |
 | 4  | 0x9C | 集成灶           |
@@ -92,7 +92,7 @@ Home Assistant 美的设备本地控制集成，无需云端即可控制您的�
 | 11 | 0xC2 | 智能马桶         |
 | 12 | 0xCA | 多开门冰箱         |
 | 13 | 0xCC | Wifi线控器 (中央空调 / 风管机)         |
-| 14 | 0xD9 | 复式洗衣机         |
+| 14 | 0xD9 | 复式洗衣机 (左右双筒 / 上下双筒)        |
 | 15 | 0xDA | 波轮洗衣机         |
 | 16 | 0xDB | 滚筒洗衣机         |
 | 17 | 0xDC | 干衣机           |
