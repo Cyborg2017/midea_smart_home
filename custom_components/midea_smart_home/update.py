@@ -153,6 +153,14 @@ class MideaUpdateEntity(UpdateEntity):
 
     async def async_check_for_update(self) -> None:
         """Check GitHub for the latest release."""
+        # Clear previous update state before checking for new updates
+        self._attr_latest_version = None
+        self._attr_release_summary = None
+        self._attr_release_url = None
+        self._release_notes = None
+        self._download_url = None
+        self._latest_tag = None
+
         session = async_get_clientsession(self._hass)
         try:
             timeout = aiohttp.ClientTimeout(total=API_TIMEOUT)
@@ -206,6 +214,9 @@ class MideaUpdateEntity(UpdateEntity):
 
         except (aiohttp.ClientError, asyncio.TimeoutError) as e:
             _LOGGER.warning("Failed to check for updates: %s", e)
+            # Restore installed version as latest if check fails
+            self._attr_latest_version = self._attr_installed_version
+            self.async_write_ha_state()
 
     def _is_newer_version(self, latest: str, installed: str | None) -> bool:
         """Check if the latest version is newer than the installed version."""
