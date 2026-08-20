@@ -16,6 +16,7 @@ from ..const import (
     CONF_PROTOCOL,
     CONF_SN,
     CONF_SN8,
+    CONF_UDPID,
     ProtocolVersion,
 )
 from .security import LocalSecurity
@@ -99,9 +100,13 @@ def _parse_v1_response(data: bytes, addr: tuple) -> dict | None:
         return None
 
 def _parse_v2_v3_response(data: bytes, addr: tuple, security: LocalSecurity) -> dict | None:
+    udpid_hex: str | None = None
     if data[:2].hex() == "8370" and data[8:10].hex() == "5a5a":
         protocol = ProtocolVersion.V3
         inner_data = data[8:-16] if len(data) > 24 else data[8:]
+        # The last 16 bytes of the V3 broadcast reply are the device's real udpid.
+        if len(data) > 24:
+            udpid_hex = data[-16:].hex()
     elif data[:2].hex() == "5a5a":
         msg_type = data[2:4].hex()
         if msg_type == "0110":
@@ -133,7 +138,7 @@ def _parse_v2_v3_response(data: bytes, addr: tuple, security: LocalSecurity) -> 
         except ValueError:
             pass
 
-    return {
+    result = {
         CONF_DEVICE_ID: device_id,
         CONF_IP: addr[0],
         CONF_DEVICE_TYPE: device_type,
@@ -141,6 +146,9 @@ def _parse_v2_v3_response(data: bytes, addr: tuple, security: LocalSecurity) -> 
         CONF_SN8: sn8,
         CONF_PROTOCOL: protocol,
     }
+    if udpid_hex:
+        result[CONF_UDPID] = udpid_hex
+    return result
 
 def _parse_0110_response(data: bytes, addr: tuple) -> dict | None:
     if len(data) < 120:
