@@ -31,6 +31,7 @@ from .const import (
     CONF_ROOM_NAME,
     CONF_SN,
     CONF_SN8,
+    CONF_UDPID,
     CONF_PRODUCT_MODEL,
     CONF_MODEL_NUMBER,
     CONF_TOKEN,
@@ -363,14 +364,15 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         ip_address: str,
         port: int,
         protocol: int,
+        udpid: str | None = None,
     ) -> tuple:
-        """Try preset accounts to get validated token/key for a device.
+        """Get validated token/key for a device.
 
-        Strategy (based on empirical testing, 18 devices in 16.7s):
-        - One login lets you get 3-5 devices' tokens before returning EMPTY.
-        - EMPTY means access_token needs refresh → re-login (same cloud instance).
-        - Login failure → wait 5s and retry once.
-        - Reuses a single cloud instance across all devices (preserves _security state).
+        Strategy:
+        - Prefer the user's own logged-in cloud (Meiju Cloud /v2, supports the
+          real udpid from the broadcast tail for 2023+ new modules).
+        - Fall back to preset accounts (NetHome Plus /v1) for older devices.
+        - Reuses cached cloud instances across devices (preserves _security state).
 
         Returns (token, key, source) or ("", "", "manual") on failure.
         """
@@ -378,6 +380,26 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if not is_v3:
             return "", "", "not_needed"
 
+        # 1) Prefer the user's own cloud (Meiju Cloud /v2, supports real udpid for new modules)
+        if self._user_cloud is not None:
+            try:
+                keys = await self._user_cloud.get_cloud_keys(device_id, udpid)
+                for method, data in keys.items():
+                    token = data["token"]
+                    key = data["key"]
+                    if await self._validate_token_key(
+                        device_id, ip_address, port, token, key
+                    ):
+                        _LOGGER.info(
+                            "[%d][user:%s] Got token/key (method=%d)",
+                            device_id, self._account, method,
+                        )
+                        return token, key, f"user:{self._account}"
+                _LOGGER.debug("[%d] User cloud token/key failed TCP validation", device_id)
+            except Exception as e:
+                _LOGGER.debug("[%d] User cloud get token error: %s", device_id, e)
+
+        # 2) Fall back to preset accounts (NetHome Plus /v1)
         try:
             from .midea_lib.cloud import get_all_preset_accounts, get_midea_cloud
 
@@ -576,6 +598,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             ip_address = current_device[CONF_IP]
             token, key, key_source = await self._acquire_validated_token_key(
                 device_id, ip_address, DEFAULT_PORT, protocol,
+                udpid=current_device.get(CONF_UDPID),
             )
             if token and key:
                 _LOGGER.info("Using token/key from %s for device %s", key_source, device_id)
@@ -792,14 +815,15 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         ip_address: str,
         port: int,
         protocol: int,
+        udpid: str | None = None,
     ) -> tuple:
-        """Try preset accounts to get validated token/key for a device.
+        """Get validated token/key for a device.
 
-        Strategy (based on empirical testing, 18 devices in 16.7s):
-        - One login lets you get 3-5 devices' tokens before returning EMPTY.
-        - EMPTY means access_token needs refresh → re-login (same cloud instance).
-        - Login failure → wait 5s and retry once.
-        - Reuses a single cloud instance across all devices (preserves _security state).
+        Strategy:
+        - Prefer the user's own logged-in cloud (Meiju Cloud /v2, supports the
+          real udpid from the broadcast tail for 2023+ new modules).
+        - Fall back to preset accounts (NetHome Plus /v1) for older devices.
+        - Reuses cached cloud instances across devices (preserves _security state).
 
         Returns (token, key, source) or ("", "", "manual") on failure.
         """
@@ -807,6 +831,26 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         if not is_v3:
             return "", "", "not_needed"
 
+        # 1) Prefer the user's own cloud (Meiju Cloud /v2, supports real udpid for new modules)
+        if self._user_cloud is not None:
+            try:
+                keys = await self._user_cloud.get_cloud_keys(device_id, udpid)
+                for method, data in keys.items():
+                    token = data["token"]
+                    key = data["key"]
+                    if await self._validate_token_key(
+                        device_id, ip_address, port, token, key
+                    ):
+                        _LOGGER.info(
+                            "[%d][user:%s] Got token/key (method=%d)",
+                            device_id, self._account, method,
+                        )
+                        return token, key, f"user:{self._account}"
+                _LOGGER.debug("[%d] User cloud token/key failed TCP validation", device_id)
+            except Exception as e:
+                _LOGGER.debug("[%d] User cloud get token error: %s", device_id, e)
+
+        # 2) Fall back to preset accounts (NetHome Plus /v1)
         try:
             from .midea_lib.cloud import get_all_preset_accounts, get_midea_cloud
 
@@ -1138,6 +1182,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             ip_address = current_device[CONF_IP]
             token, key, key_source = await self._acquire_validated_token_key(
                 device_id, ip_address, DEFAULT_PORT, protocol,
+                udpid=current_device.get(CONF_UDPID),
             )
             if token and key:
                 _LOGGER.info("Using token/key from %s for device %s", key_source, device_id)
