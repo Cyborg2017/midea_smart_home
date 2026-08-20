@@ -209,10 +209,12 @@ class MideaCloud:
     async def login(self) -> bool:
         raise NotImplementedError
 
-    async def get_cloud_keys(self, appliance_id: int) -> dict[int, dict[str, Any]]:
+    async def get_cloud_keys(
+        self, appliance_id: int, udpid: str | None = None
+    ) -> dict[int, dict[str, Any]]:
         result = {}
         for method in [1, 2]:
-            udp_id = self._security.get_udp_id(appliance_id, method)
+            udp_id = udpid or self._security.get_udp_id(appliance_id, method)
             data = self._make_general_data()
             data.update({"udpid": udp_id})
             response = await self._api_request(
@@ -221,7 +223,7 @@ class MideaCloud:
             )
             if response and "tokenlist" in response:
                 for token in response["tokenlist"]:
-                    if token["udpId"] == udp_id:
+                    if token.get("udpId", "").lower() == udp_id.lower():
                         result[method] = {
                             "token": token["token"].lower(),
                             "key": token["key"].lower(),
@@ -259,6 +261,7 @@ class MeijuCloud(MideaCloud):
             password=password,
             api_url=cloud_data["api_url"],
         )
+        self._home_group_map: dict[int, str] = {}
 
     def _make_general_data(self) -> dict[str, Any]:
         return {
@@ -308,6 +311,7 @@ class MeijuCloud(MideaCloud):
                 data=data,
             ):
                 self._access_token = response["mdata"]["accessToken"]
+                self._uid = (response["mdata"].get("userInfo") or {}).get("uid")
                 self._security.set_aes_keys(
                     self._security.aes_decrypt_with_fixed_key(response["key"]),
                     b"0",
@@ -328,6 +332,7 @@ class MeijuCloud(MideaCloud):
             appliances = {}
             for home in response.get("homeList") or []:
                 home_name = home.get("name", home.get("nickname", ""))
+                home_group_id = home.get("homegroupId") or home.get("id")
                 for room in home.get("roomList") or []:
                     room_name = room.get("name", room.get("nickname", ""))
                     for appliance in room.get("applianceList"):
@@ -362,7 +367,63 @@ class MeijuCloud(MideaCloud):
                         if not model or len(model) == 0:
                             device_info["model"] = device_info["sn8"]
                         appliances[int(appliance["applianceCode"])] = device_info
+                        if home_group_id:
+                            self._home_group_map[int(appliance["applianceCode"])] = home_group_id
             return appliances
+        return None
+
+    async def get_cloud_keys(
+        self, appliance_id: int, udpid: str | None = None
+    ) -> dict[int, dict[str, Any]]:
+        """Meiju Cloud /v1/iot/secure/getToken is offline (40404); use /v2 instead.
+
+        /v2 body requires {udpid, applianceCodes, homegroupId}.
+        udpid prefers the real value from the broadcast tail (discovery);
+        falls back to method1/2 derivation for legacy modules.
+        """
+        home_group_id = self._home_group_map.get(appliance_id)
+        if not home_group_id:
+            home_group_id = await self._query_homegroup(appliance_id)
+        if not home_group_id:
+            return {}
+        result = {}
+        for method in [1, 2]:
+            udp_id = udpid or self._security.get_udp_id(appliance_id, method)
+            data = self._make_general_data()
+            data.update({
+                "udpid": udp_id,
+                "applianceCodes": [str(appliance_id)],
+                "homegroupId": home_group_id,
+            })
+            response = await self._api_request(
+                endpoint="/v2/iot/secure/getToken",
+                data=data,
+            )
+            if response and "tokenlist" in response:
+                for token in response["tokenlist"]:
+                    if token.get("udpId", "").lower() == udp_id.lower():
+                        result[method] = {
+                            "token": token["token"].lower(),
+                            "key": token["key"].lower(),
+                        }
+        return result
+
+    async def _query_homegroup(self, appliance_id: int) -> str | None:
+        """Look up the device's homegroupId via /v1/appliance/home/list/get on cache miss."""
+        response = await self._api_request(
+            endpoint="/v1/appliance/home/list/get",
+            data={"homegroupId": None},
+        )
+        if not response:
+            return None
+        for home in response.get("homeList") or []:
+            home_group_id = home.get("homegroupId") or home.get("id")
+            for room in home.get("roomList") or []:
+                for appliance in room.get("applianceList") or []:
+                    if str(appliance.get("applianceCode")) == str(appliance_id):
+                        if home_group_id:
+                            self._home_group_map[appliance_id] = home_group_id
+                        return home_group_id
         return None
 
 
