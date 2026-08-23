@@ -12,7 +12,7 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig, SelectSelectorMode
+from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig, SelectSelectorMode, TextSelector, TextSelectorConfig, TextSelectorType
 
 from .const import (
     CONF_ACCOUNT,
@@ -1045,7 +1045,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     ) -> FlowResult:
         return self.async_show_menu(
             step_id="init",
-            menu_options=["add_device", "update_account", "sync_cloud", "clear_cache", "configure_polling", "configure_notifications", "configure_update_check"],
+            menu_options=["add_device", "update_account", "sync_cloud", "backup_config", "clear_cache", "configure_polling", "configure_notifications", "configure_update_check"],
         )
 
     async def async_step_add_device(
@@ -1553,6 +1553,77 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
 
         return self.async_show_form(
             step_id="sync_cloud",
+        )
+
+    async def async_step_backup_config(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Build a zip of the local json_files and expose its download URL.
+
+        The zip is written under config/www so it is served as a static file
+        via the /local/ path. The fully-qualified absolute download URL is
+        displayed directly in the form so the user can copy it and paste it
+        into any browser tab to start the download.
+        """
+        if user_input is not None:
+            return self.async_create_entry(title="", data={})
+
+        # Build the archive and count files in the executor (blocking I/O must
+        # stay off the event loop)
+        from .backup import build_backup_archive, schedule_backup_cleanup
+        web_path, file_count = await self.hass.async_add_executor_job(
+            build_backup_archive, self.hass
+        )
+
+        if web_path:
+            schedule_backup_cleanup(self.hass, web_path)
+        else:
+            return self._show_backup_config_form(error="backup_build_failed")
+
+        # Build an absolute URL. We prefer the same origin the user is already
+        # on so pasting the URL into a new tab immediately reaches HA without
+        # extra auth.
+        download_url = web_path
+        from homeassistant.helpers.network import get_url
+        for candidate in (
+            lambda: get_url(self.hass, prefer_external=False),
+            lambda: self.hass.config.internal_url,
+            lambda: self.hass.config.external_url,
+        ):
+            try:
+                base = candidate()
+            except Exception:
+                base = None
+            if base:
+                download_url = base.rstrip("/") + web_path
+                break
+
+        return self._show_backup_config_form(
+            download_url=download_url, file_count=file_count
+        )
+
+    def _show_backup_config_form(
+        self,
+        download_url: str = "",
+        file_count: int = 0,
+        error: str = "",
+    ) -> FlowResult:
+        errors = {"base": error} if error else None
+        schema = {}
+        if download_url:
+            schema[vol.Optional(
+                "download_url",
+                default=download_url,
+                description={"suggested_value": download_url},
+            )] = str
+        return self.async_show_form(
+            step_id="backup_config",
+            data_schema=vol.Schema(schema),
+            description_placeholders={
+                "file_count": str(file_count),
+                "download_url": download_url,
+            },
+            errors=errors,
         )
 
     async def async_step_clear_cache(

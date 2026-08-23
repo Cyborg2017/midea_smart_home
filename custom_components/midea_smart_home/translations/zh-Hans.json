@@ -3001,6 +3001,7 @@
     },
     "error": {
       "all_devices_added": "所有发现的设备都已添加过了",
+      "backup_build_failed": "生成备份压缩包失败，请查看 Home Assistant 日志。",
       "no_account_password": "请先配置账号密码",
       "no_cache_found": "未发现本地配置文件，无需清理",
       "no_configurable_devices": "没有找到需要轮询的设备",
@@ -3018,6 +3019,16 @@
         },
         "description": "搜索局域网中的新设备（已添加的设备将自动过滤）",
         "title": "添加新设备"
+      },
+      "backup_config": {
+        "data": {
+          "download_url": "下载链接（可复制）"
+        },
+        "data_description": {
+          "download_url": "选中整行复制，粘贴到浏览器新标签页即开始下载 zip（10 分钟内有效）"
+        },
+        "description": "将本地设备配置文件打包成 zip 下载。\n\n    📁 来源：.storage/midea_smart_home/json_files（共 {file_count} 个文件）\n\n    📋 操作：从下方「下载链接」字段全选 → 复制 → 粘贴到浏览器新标签页 → 回车。\n\n    ⚠️ 压缩包内含设备 token/key，请妥善保管；链接 10 分钟内有效，过期可重新进入此页生成。",
+        "title": "备份本地配置"
       },
       "clear_cache": {
         "description": "清理本地配置文件：\n\n    📁 本地lua及json配置文件将被清理，另存为：.storage/midea_smart_home-backup\n\n    ⚠️ 请注意：本操作会彻底移除配置文件，除非完全重新配置集成，否则勿动",
@@ -3069,6 +3080,7 @@
       "init": {
         "menu_options": {
           "add_device": "➕ 继续添加其他设备",
+          "backup_config": "📦 备份本地配置文件",
           "clear_cache": "🗑️ 清理本地配置文件",
           "configure_notifications": "🔔 配置设备上下线通知",
           "configure_polling": "⏱️ 配置轮询间隔时间",

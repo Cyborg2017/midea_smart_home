@@ -3001,6 +3001,7 @@
     },
     "error": {
       "all_devices_added": "All discovered devices have already been added",
+      "backup_build_failed": "Failed to build the backup archive. Check the Home Assistant logs for details.",
       "no_account_password": "Please configure account and password first",
       "no_cache_found": "No local configuration files found, no need to clean",
       "no_configurable_devices": "No devices with polling attributes found",
@@ -3018,6 +3019,16 @@
         },
         "description": "Search for new devices on local network (already added devices will be filtered out)",
         "title": "Add New Device"
+      },
+      "backup_config": {
+        "data": {
+          "download_url": "Download URL (copyable)"
+        },
+        "data_description": {
+          "download_url": "Select the full line, copy it, then paste into a new browser tab to start the zip download (valid for 10 minutes)"
+        },
+        "description": "Download a zip archive of the local device configuration files.\n\n    📁 Source: .storage/midea_smart_home/json_files ({file_count} files)\n\n    📋 How to download: select the full URL from the field below → copy → paste into a new browser tab → press Enter.\n\n    ⚠️ The archive contains device tokens/keys. Keep it safe. The link expires in 10 minutes; re-open this page to regenerate.",
+        "title": "Backup Local Configuration"
       },
       "clear_cache": {
         "description": "Clear local configuration files:\n\n    📁 Local lua/json configuration files will be cleared and backed up to: .storage/midea_smart_home-backup\n\n    ⚠️ Note: This operation will completely remove configuration files. Do not proceed unless you need to fully reconfigure the integration",
@@ -3069,6 +3080,7 @@
       "init": {
         "menu_options": {
           "add_device": "➕ Add New Device",
+          "backup_config": "📦 Backup & Download Local Configuration",
           "clear_cache": "🗑️ Clear local configuration files",
           "configure_notifications": "🔔 Configure Device Notifications",
           "configure_polling": "⏱️ Configure Polling Interval",
