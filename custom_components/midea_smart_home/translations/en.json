@@ -2908,6 +2908,9 @@
       "telstar_saving_mode": {
         "name": "Telstar Saving Mode"
       },
+      "temp_wind_switch": {
+        "name": "Wind Follow Temp"
+      },
       "total_power": {
         "name": "Total Power"
       },

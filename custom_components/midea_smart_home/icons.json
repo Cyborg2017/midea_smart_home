@@ -508,6 +508,7 @@
             "storage_power": { "default": "mdi:fridge-top" },
             "strength_clean": { "default": "mdi:hand-wave" },
             "telstar_saving_mode": { "default": "mdi:leaf" },
+            "temp_wind_switch": { "default": "mdi:fan-auto" },
             "total_power": { "default": "mdi:power" },
             "ultraviolet_lamp": { "default": "mdi:sun-wireless" },
             "uvswitch": { "default": "mdi:sun-wireless" },

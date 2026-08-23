@@ -1,4 +1,4 @@
-from homeassistant.const import Platform
+from homeassistant.const import Platform, UnitOfTemperature
 from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
 
@@ -85,6 +85,61 @@ DEVICE_MAPPING = {
                             "speeds": list({"gear": value + 1} for value in range(0, 1))
                         }
                     }
+                }
+            }
+        }
+    },
+    "560011AH": {
+        "rationale": ["off", "on"],
+        "entities": {
+            Platform.SWITCH: {
+                "display_on_off": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["on", "off"],
+                },
+                "humidify": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["off", "1"],
+                },
+                "waterions": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "temp_wind_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "voice": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ['close_buzzer', 'open_buzzer'],
+                    "translation_key": "buzzer"
+                }
+            },
+            Platform.FAN: {
+                "fan": {
+                    "power": "power",
+                    "speeds": list({"gear": value + 1} for value in range(0, 6)),
+                    "oscillate": "swing",
+                    "preset_modes": {
+                        "normal": {
+                            "mode": "normal",
+                            "speeds": list({"gear": value + 1} for value in range(0, 6))
+                        },
+                        "sleep": {
+                            "mode": "sleep",
+                            "speeds": list({"gear": value + 1} for value in range(0, 3))
+                        },
+                        "baby": {
+                            "mode": "baby",
+                            "speeds": list({"gear": value + 1} for value in range(0, 2))
+                        }
+                    }
+                }
+            },
+            Platform.SENSOR: {
+                "temperature_feedback": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "cur_temperature"
                 }
             }
         }

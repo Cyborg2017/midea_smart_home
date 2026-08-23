@@ -2908,6 +2908,9 @@
       "telstar_saving_mode": {
         "name": "超智能省电"
       },
+      "temp_wind_switch": {
+        "name": "风随温变"
+      },
       "total_power": {
         "name": "总电源"
       },
