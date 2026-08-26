@@ -435,6 +435,11 @@ class MideaDevice:
         self._polling_query = polling_query or []
         # D9 polling device flag (only meaningful for T0xD9)
         self._d9_polling_device = False
+        # D9 alternate polling toggled by db_power from 04db push / 03db poll.
+        # Defaults to True so the first poll cycle queries both drums and
+        # populates initial status for the right drum; corrected by db_power
+        # once the first 03db/04db response arrives.
+        self._d9_alternate_polling = True
 
         # Initialize Logic Handler
         self._logic_handler = DeviceLogicHandler(device_type, device_name)
@@ -551,19 +556,20 @@ class MideaDevice:
         while self._poll_run:
             if self._controller.connected:
                 try:
-                    # Configured interval while running, +1 second in standby
-                    interval = float(self._polling_interval)
-                    if not self._data.get('db_power'):
-                        interval += 1.0
-                    # Two poll queries per cycle (location 1 and 2), so sleep
-                    # half the interval each to refresh every drum once per interval
-                    gap = interval / 2
-                    self._controller.send_poll_query(1)
-                    time.sleep(gap)
-                    if not self._poll_run:
-                        break
-                    self._controller.send_poll_query(2)
-                    time.sleep(gap)
+                    if self._d9_alternate_polling:
+                        # Power on: alternate between two drums per cycle
+                        interval = float(self._polling_interval)
+                        gap = interval / 2
+                        self._controller.send_poll_query(1)
+                        time.sleep(gap)
+                        if not self._poll_run:
+                            break
+                        self._controller.send_poll_query(2)
+                        time.sleep(gap)
+                    else:
+                        # Power off: device pushes 04db on power change,
+                        # no need to poll; idle until woken by push update
+                        time.sleep(float(self._polling_interval))
                 except Exception as e:
                     _LOGGER.debug("[%s] Poll query error: %s", self._device_id, e)
             else:
@@ -708,6 +714,16 @@ class MideaDevice:
             if self._d9_polling_device:
                 # D9 polling devices use the dedicated poll thread.
                 if poll_location is None:
+                    # 04db push: sync db_power to state and toggle alternate
+                    # polling. Only db_power is consumed; other shared fields
+                    # are ignored because 04db payloads may carry polluted
+                    # loc=2 values copied from loc=1.
+                    if status.get('data_type') == '04db':
+                        power = status.get('db_power')
+                        if power is not None and self._data.get('db_power') != power:
+                            self._data = {**self._data, 'db_power': power}
+                            self._notify_update()
+                        self._update_d9_alternate_polling(status)
                     return
 
                 data_type = status.get('data_type')
@@ -741,6 +757,7 @@ class MideaDevice:
 
                 if self._logic_handler.apply_special_handling_for_poll(new_data, suffix, status):
                     self._data = new_data
+                    self._update_d9_alternate_polling(new_data)
                     if updated_keys:
                         self._notify_update()
                 return
@@ -786,6 +803,24 @@ class MideaDevice:
                 callback()
             except Exception as e:
                 _LOGGER.error("Error in MideaDevice callback: %s", e)
+
+    def _update_d9_alternate_polling(self, status: dict) -> None:
+        """Toggle alternate drum polling based on db_power.
+
+        Driven by 04db push updates (and synced from 03db poll responses).
+        Only the power field is consumed from 04db; other fields are ignored
+        because 04db payloads may carry polluted shared fields.
+        """
+        power = status.get('db_power')
+        if power is None:
+            return
+        new_state = power in ('on', 1, True)
+        if new_state != self._d9_alternate_polling:
+            self._d9_alternate_polling = new_state
+            _LOGGER.debug(
+                "[%s] D9 alternate polling %s (db_power=%s)",
+                self._device_id, 'enabled' if new_state else 'disabled', power,
+            )
 
     def set_attribute(self, attr: str, value: Any):
         """Set a device attribute."""
