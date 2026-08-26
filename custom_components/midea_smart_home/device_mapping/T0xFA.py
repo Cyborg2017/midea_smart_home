@@ -101,7 +101,7 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["off", "1"],
                 },
-                "waterions": {
+                "anion": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 },
                 "temp_wind_switch": {
