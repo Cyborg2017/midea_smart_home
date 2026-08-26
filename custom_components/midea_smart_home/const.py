@@ -70,6 +70,7 @@ DEVICE_TYPES = {
     0xE3: "Gas Water Heater",
     0xE6: "Gas Wall Hanging Stove",
     0xEA: "Rice Cooker",
+    0xEC: "Electric Pressure Cooker",
     0xED: "Net Drinking Machine / Water Purifier / Pipeline Machine / Water Softener / Pre-filter​",
     0xF1: "Blender",
     0xFA: "Electric Fan",

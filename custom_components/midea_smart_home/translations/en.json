@@ -611,6 +611,12 @@
       "temperature": {
         "name": "Set Temperature"
       },
+      "time_work_hr": {
+        "name": "Cooking Hours"
+      },
+      "time_work_min": {
+        "name": "Cooking Minutes"
+      },
       "timing_regeneration_hour": {
         "name": "Timed Regeneration Hour"
       },
@@ -755,6 +761,27 @@
           "nozzle_clean": "Nozzle Clean",
           "off": "Off",
           "rear_wash": "Rear Wash"
+        }
+      },
+      "cmd_code": {
+        "name": "Cooking Mode",
+        "state": {
+          "beans_tendon": "Beans/Tendon",
+          "beef_mutton": "Beef/Mutton",
+          "fragrant_porridge": "Fragrant Porridge",
+          "fragrant_rice": "Fragrant Rice",
+          "keep_warm": "Keep Warm",
+          "meat_chicken": "Meat/Chicken",
+          "multigrain_porridge": "Multigrain Porridge",
+          "multigrain_rice": "Multigrain Rice",
+          "open_lid_cook": "Open-Lid Cook",
+          "plain_soup": "Plain Soup",
+          "quick_porridge": "Quick Porridge",
+          "quick_rice": "Quick Rice",
+          "soup": "Soup",
+          "stewed_meat": "Stewed Meat",
+          "stop": "Stop",
+          "waterless_bake": "Waterless Bake"
         }
       },
       "cold_water_conservation": {
@@ -1773,6 +1800,9 @@
           "sweep_then_mop": "Sweep Then Mop"
         }
       },
+      "taste": {
+        "name": "Taste"
+      },
       "tea_temperature": {
         "name": "Tea Temperature",
         "state": {
@@ -2492,6 +2522,9 @@
       },
       "temp_set": {
         "name": "Target Temperature"
+      },
+      "temperature_bottom": {
+        "name": "Bottom Temperature"
       },
       "top_temperature": {
         "name": "Top Temperature"
