@@ -68,6 +68,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN].setdefault(entry.entry_id, {})
 
+    # Attach (once) the in-memory log ring buffer so recent integration logs
+    # can be dumped on demand from the options flow (fetch diagnostics).
+    from .diagnostics import install_ring_buffer
+    install_ring_buffer()
+
     devices = entry.data.get("devices", [])
     if not devices:
         devices = [entry.data]

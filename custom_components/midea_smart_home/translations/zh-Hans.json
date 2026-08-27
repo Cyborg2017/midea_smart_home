@@ -3035,6 +3035,7 @@
     "error": {
       "all_devices_added": "所有发现的设备都已添加过了",
       "backup_build_failed": "生成备份压缩包失败，请查看 Home Assistant 日志。",
+      "diagnostics_build_failed": "生成诊断压缩包失败，请查看 Home Assistant 日志。",
       "no_account_password": "请先配置账号密码",
       "no_cache_found": "未发现本地配置文件，无需清理",
       "no_configurable_devices": "没有找到需要轮询的设备",
@@ -3096,6 +3097,16 @@
         "description": "配置是否定期检查集成是否有新版本。\n\n💡 每次重启 Home Assistant 时都会自动检查一次（无论此设置如何）。\n\n当前设置: {current_interval}",
         "title": "配置集成更新检查"
       },
+      "fetch_diagnostics": {
+        "data": {
+          "download_url": "下载链接（可复制）"
+        },
+        "data_description": {
+          "download_url": "选中整行复制，粘贴到浏览器新标签页即开始下载 zip（10 分钟内有效）"
+        },
+        "description": "生成诊断压缩包，包含最近的集成日志和所有设备的属性列表。\n\n    📦 压缩包内容：\n    • midea_debug.log — 最近日志记录（已捕获 {record_count} 条）\n    • device_attributes.json — 每台设备的完整属性字典（共 {device_count} 台设备）\n\n    📋 操作：从下方「下载链接」字段全选 → 复制 → 粘贴到浏览器新标签页 → 回车。\n\n    💡 请先为本集成开启 debug 日志，复现问题后重新进入本页生成。\n\n    🔧 调试日志开启方法：在 Home Assistant 的 configuration.yaml 中添加以下配置：\n\n    logger:\n      default: warning\n      logs:\n        custom_components.midea_smart_home: debug\n\n    保存后重启 Home Assistant 生效。",
+        "title": "获取日志与设备属性"
+      },
       "get_token_option": {
         "data": {
           "key": "Key",
@@ -3118,6 +3129,7 @@
           "configure_notifications": "🔔 配置设备上下线通知",
           "configure_polling": "⏱️ 配置轮询间隔时间",
           "configure_update_check": "🔄 配置集成更新检查",
+          "fetch_diagnostics": "🔬 获取日志与设备属性",
           "sync_cloud": "☁️ 同步云端设备名称",
           "update_account": "🔑 更新美的账号密码"
         },

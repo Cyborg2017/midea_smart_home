@@ -1045,7 +1045,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     ) -> FlowResult:
         return self.async_show_menu(
             step_id="init",
-            menu_options=["add_device", "update_account", "sync_cloud", "backup_config", "clear_cache", "configure_polling", "configure_notifications", "configure_update_check"],
+            menu_options=["add_device", "update_account", "sync_cloud", "backup_config", "fetch_diagnostics", "clear_cache", "configure_polling", "configure_notifications", "configure_update_check"],
         )
 
     async def async_step_add_device(
@@ -1621,6 +1621,78 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             data_schema=vol.Schema(schema),
             description_placeholders={
                 "file_count": str(file_count),
+                "download_url": download_url,
+            },
+            errors=errors,
+        )
+
+    async def async_step_fetch_diagnostics(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Bundle recent integration logs + all-device attribute lists into a zip.
+
+        The zip is written under config/www so it is served as a static file
+        via the /local/ path. The fully-qualified absolute download URL is
+        displayed directly in the form so the user can copy it and paste it
+        into any browser tab to start the download.
+        """
+        if user_input is not None:
+            return self.async_create_entry(title="", data={})
+
+        from .diagnostics import build_diagnostics_archive, schedule_diagnostics_cleanup
+        web_path, stats = await self.hass.async_add_executor_job(
+            build_diagnostics_archive, self.hass, self._config_entry
+        )
+
+        if web_path:
+            schedule_diagnostics_cleanup(self.hass, web_path)
+        else:
+            return self._show_fetch_diagnostics_form(error="diagnostics_build_failed")
+
+        # Build an absolute URL (same origin as the user is on) so pasting the
+        # URL into a new tab immediately reaches HA without extra auth.
+        download_url = web_path
+        from homeassistant.helpers.network import get_url
+        for candidate in (
+            lambda: get_url(self.hass, prefer_external=False),
+            lambda: self.hass.config.internal_url,
+            lambda: self.hass.config.external_url,
+        ):
+            try:
+                base = candidate()
+            except Exception:
+                base = None
+            if base:
+                download_url = base.rstrip("/") + web_path
+                break
+
+        return self._show_fetch_diagnostics_form(
+            download_url=download_url,
+            record_count=stats.get("record_count", 0),
+            device_count=stats.get("device_count", 0),
+        )
+
+    def _show_fetch_diagnostics_form(
+        self,
+        download_url: str = "",
+        record_count: int = 0,
+        device_count: int = 0,
+        error: str = "",
+    ) -> FlowResult:
+        errors = {"base": error} if error else None
+        schema = {}
+        if download_url:
+            schema[vol.Optional(
+                "download_url",
+                default=download_url,
+                description={"suggested_value": download_url},
+            )] = str
+        return self.async_show_form(
+            step_id="fetch_diagnostics",
+            data_schema=vol.Schema(schema),
+            description_placeholders={
+                "record_count": str(record_count),
+                "device_count": str(device_count),
                 "download_url": download_url,
             },
             errors=errors,

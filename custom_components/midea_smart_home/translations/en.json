@@ -3035,6 +3035,7 @@
     "error": {
       "all_devices_added": "All discovered devices have already been added",
       "backup_build_failed": "Failed to build the backup archive. Check the Home Assistant logs for details.",
+      "diagnostics_build_failed": "Failed to build the diagnostics archive. Check the Home Assistant logs for details.",
       "no_account_password": "Please configure account and password first",
       "no_cache_found": "No local configuration files found, no need to clean",
       "no_configurable_devices": "No devices with polling attributes found",
@@ -3096,6 +3097,16 @@
         "description": "Configure whether to periodically check for new integration versions.\n\n💡 An update check is always performed on Home Assistant startup (regardless of this setting).\n\nCurrent setting: {current_interval}",
         "title": "Configure Integration Update Check"
       },
+      "fetch_diagnostics": {
+        "data": {
+          "download_url": "Download URL (copyable)"
+        },
+        "data_description": {
+          "download_url": "Select the full line, copy it, then paste into a new browser tab to start the zip download (valid for 10 minutes)"
+        },
+        "description": "Generate a diagnostic bundle containing recent integration logs and the attribute list of every device.\n\n    📦 Archive contents:\n    • midea_debug.log — recent log records ({record_count} records captured)\n    • device_attributes.json — full attribute dict for each device ({device_count} devices)\n\n    📋 How to download: select the full URL from the field below → copy → paste into a new browser tab → press Enter.\n\n    💡 First enable debug logging for this integration, reproduce the issue, then reopen this page to regenerate.\n\n    🔧 How to enable: add the following to your Home Assistant configuration.yaml:\n\n    logger:\n      default: warning\n      logs:\n        custom_components.midea_smart_home: debug\n\n    Restart Home Assistant after saving for it to take effect.",
+        "title": "Fetch Logs & Device Attributes"
+      },
       "get_token_option": {
         "data": {
           "key": "Key",
@@ -3118,6 +3129,7 @@
           "configure_notifications": "🔔 Configure Device Notifications",
           "configure_polling": "⏱️ Configure Polling Interval",
           "configure_update_check": "🔄 Configure Integration Update Check",
+          "fetch_diagnostics": "🔬 Fetch Logs & Device Attributes",
           "sync_cloud": "☁️ Sync device info from cloud",
           "update_account": "🔑 Update Midea Account/Password"
         },
