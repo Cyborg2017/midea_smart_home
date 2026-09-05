@@ -1,4 +1,4 @@
-from homeassistant.const import Platform, UnitOfTime
+from custom_components.midea_smart_home.device_mapping._common import *
 
 DEVICE_MAPPING = {
     "default": {

@@ -1,8 +1,4 @@
-from homeassistant.const import Platform, PERCENTAGE, UnitOfDensity, UnitOfRatio, UnitOfTemperature, PRECISION_HALVES, PRECISION_WHOLE, UnitOfTime,\
-     UnitOfPower, UnitOfEnergy
-from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
-from homeassistant.components.switch import SwitchDeviceClass
-from homeassistant.components.humidifier import HumidifierDeviceClass
+from custom_components.midea_smart_home.device_mapping._common import *
 
 DEVICE_MAPPING = {
     "default": {

@@ -1,7 +1,4 @@
-from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
-from homeassistant.components.binary_sensor import BinarySensorDeviceClass
-from homeassistant.const import Platform, UnitOfPressure, UnitOfTime, UnitOfElectricPotential
-from homeassistant.components.switch import SwitchDeviceClass
+from custom_components.midea_smart_home.device_mapping._common import *
 
 DEVICE_MAPPING = {
     "default": {

@@ -1,5 +1,4 @@
-from homeassistant.const import Platform, UnitOfTemperature, UnitOfTime
-from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
+from custom_components.midea_smart_home.device_mapping._common import *
 
 DEVICE_MAPPING = {
     "default": {
