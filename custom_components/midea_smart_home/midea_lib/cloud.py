@@ -671,6 +671,64 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
                                         'if(messageBytes[3] == 0x45) then 			keyP["indoor_humidity"] = messageBytes[4] 			end 			if(messageBytes[3] == 0x44) then'
                                     )
 
+                                    # Add group_data_two / group_data_seven queries (0x42 / 0x47)
+                                    modified = modified.replace(
+                                        'or queryType=="group_data_five"',
+                                        'or queryType=="group_data_five" or queryType=="group_data_two" or queryType=="group_data_seven"'
+                                    )
+
+                                    modified = modified.replace(
+                                        'if(queryType == "group_data_five") then 				bodyBytes[3] = 0x45 			end',
+                                        'if(queryType == "group_data_five") then 				bodyBytes[3] = 0x45 			end'
+                                        ' 			if(queryType == "group_data_two") then 				bodyBytes[3] = 0x42 			end'
+                                        ' 			if(queryType == "group_data_seven") then 				bodyBytes[3] = 0x47 			end'
+                                    )
+
+                                    # Parse group 1 (0x41 compressor/refrigerant), group 2 (0x42 fan/pump),
+                                    # group 7 (0x47 compressor power) responses in the 0xC1 frame.
+                                    modified = modified.replace(
+                                        'if(messageBytes[3] == 0x45) then 			keyP["indoor_humidity"] = messageBytes[4] 			end',
+                                        'if(messageBytes[3] == 0x45) then 			keyP["indoor_humidity"] = messageBytes[4] 			end'
+                                        ' 			if(messageBytes[3] == 0x41) then'
+                                        ' 				keyP["t2_temp"] = (messageBytes[11] - 30) / 2'
+                                        ' 				keyP["condenser_temperature"] = (messageBytes[12] - 50) / 2'
+                                        ' 				keyP["outdoor_ambient_temperature"] = (messageBytes[13] - 50) / 2'
+                                        ' 				keyP["discharge_pipe_temperature"] = messageBytes[14]'
+                                        ' 				keyP["compressor_frequency"] = messageBytes[4]'
+                                        ' 				keyP["target_compressor_frequency"] = messageBytes[5]'
+                                        ' 				keyP["compressor_current"] = messageBytes[7]'
+                                        ' 				keyP["compressor_voltage"] = messageBytes[8]'
+                                        ' 			end'
+                                        ' 			if(messageBytes[3] == 0x42) then'
+                                        ' 				keyP["target_indoor_fan_speed"] = messageBytes[4] * 8'
+                                        ' 				keyP["indoor_fan_speed"] = messageBytes[5] * 8'
+                                        ' 				keyP["water_pump_running"] = bit.rshift(bit.band(messageBytes[8], 0x10), 4)'
+                                        ' 			end'
+                                        ' 			if(messageBytes[3] == 0x47) then'
+                                        ' 				keyP["compressor_power"] = messageBytes[10] + bit.lshift(messageBytes[11], 8)'
+                                        ' 			end'
+                                    )
+
+                                    # dataToJson only emits fields it copies from keyP into the
+                                    # streams output table. The group 1/2/7 values are parsed into
+                                    # keyP above, so mirror the native t2_temp copy to actually
+                                    # emit them in the status JSON (otherwise they stay unknown).
+                                    modified = modified.replace(
+                                        'if(keyP["current_time_power"] ~= nil) then 		streams["current_time_power"] = keyP["current_time_power"] 	end',
+                                        'if(keyP["current_time_power"] ~= nil) then 		streams["current_time_power"] = keyP["current_time_power"] 	end'
+                                        ' if (keyP["compressor_frequency"] ~= nil) then streams["compressor_frequency"] = keyP["compressor_frequency"] end'
+                                        ' if (keyP["target_compressor_frequency"] ~= nil) then streams["target_compressor_frequency"] = keyP["target_compressor_frequency"] end'
+                                        ' if (keyP["compressor_current"] ~= nil) then streams["compressor_current"] = keyP["compressor_current"] end'
+                                        ' if (keyP["compressor_voltage"] ~= nil) then streams["compressor_voltage"] = keyP["compressor_voltage"] end'
+                                        ' if (keyP["condenser_temperature"] ~= nil) then streams["condenser_temperature"] = keyP["condenser_temperature"] end'
+                                        ' if (keyP["outdoor_ambient_temperature"] ~= nil) then streams["outdoor_ambient_temperature"] = keyP["outdoor_ambient_temperature"] end'
+                                        ' if (keyP["discharge_pipe_temperature"] ~= nil) then streams["discharge_pipe_temperature"] = keyP["discharge_pipe_temperature"] end'
+                                        ' if (keyP["indoor_fan_speed"] ~= nil) then streams["indoor_fan_speed"] = keyP["indoor_fan_speed"] end'
+                                        ' if (keyP["target_indoor_fan_speed"] ~= nil) then streams["target_indoor_fan_speed"] = keyP["target_indoor_fan_speed"] end'
+                                        ' if (keyP["water_pump_running"] ~= nil) then streams["water_pump_running"] = keyP["water_pump_running"] end'
+                                        ' if (keyP["compressor_power"] ~= nil) then streams["compressor_power"] = keyP["compressor_power"] end'
+                                    )
+
                                 # Fix Lua 5.1 # operator on 0-indexed tables for T0xCA.
                                 # bodyBytes is built as {[0]=b0, [1]=b1, ...} but Lua 5.1's #
                                 # only counts keys starting from 1, so # returns length-1,
