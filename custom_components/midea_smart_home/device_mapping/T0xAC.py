@@ -801,7 +801,7 @@ DEVICE_MAPPING = {
                 },
                 "indoor_co2": {
                     "device_class": SensorDeviceClass.CO2,
-                    "unit_of_measurement": UnitOfRatio.PARTS_PER_MILLION,
+                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "outdoor_temperature": {
@@ -811,7 +811,7 @@ DEVICE_MAPPING = {
                 },
                 "tvoc_density": {
                     "device_class": SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
-                    "unit_of_measurement": UnitOfDensity.MICROGRAMS_PER_CUBIC_METER,
+                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             }
