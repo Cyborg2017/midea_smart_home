@@ -222,6 +222,9 @@
       },
       "water_output_switch": {
         "name": "Tap Water"
+      },
+      "water_pump_running": {
+        "name": "Water Pump Running"
       }
     },
     "button": {
@@ -2172,6 +2175,21 @@
       "clean_water_consumption_next_remaining": {
         "name": "Remaining Water Consumption Until Next Cleaning"
       },
+      "compressor_current": {
+        "name": "Compressor Current"
+      },
+      "compressor_frequency": {
+        "name": "Compressor Frequency"
+      },
+      "compressor_power": {
+        "name": "Compressor Power"
+      },
+      "compressor_voltage": {
+        "name": "Compressor Voltage"
+      },
+      "condenser_temperature": {
+        "name": "Condenser Temperature"
+      },
       "cur_humidity": {
         "name": "Current Humidity"
       },
@@ -2305,6 +2323,9 @@
       "dehydration_time_value": {
         "name": "Dehydration Time"
       },
+      "discharge_pipe_temperature": {
+        "name": "Discharge Pipe Temperature"
+      },
       "dry_time": {
         "name": "Dry Time"
       },
@@ -2371,6 +2392,9 @@
       "indoor_co2": {
         "name": "Indoor CO2"
       },
+      "indoor_fan_speed": {
+        "name": "Indoor Fan Speed"
+      },
       "indoor_humidity": {
         "name": "Indoor Humidity"
       },
@@ -2427,6 +2451,9 @@
       },
       "out_water_tem": {
         "name": "Outlet Water Temperature"
+      },
+      "outdoor_ambient_temperature": {
+        "name": "Outdoor Ambient Temperature"
       },
       "outdoor_temperature": {
         "name": "Outdoor Temperature"
@@ -2517,8 +2544,17 @@
       "sweep_mop_mode": {
         "name": "Sweep Mop Mode"
       },
+      "t2_temp": {
+        "name": "Evaporator Temperature"
+      },
       "tank_status": {
         "name": "Tank Status"
+      },
+      "target_compressor_frequency": {
+        "name": "Target Compressor Frequency"
+      },
+      "target_indoor_fan_speed": {
+        "name": "Target Indoor Fan Speed"
       },
       "temp_set": {
         "name": "Target Temperature"

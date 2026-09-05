@@ -11,12 +11,18 @@ DEVICE_MAPPING = {
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "polling_query": [
             {"indoor_temperature"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -223,6 +229,64 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.TOTAL_INCREASING,
                     "suggested_display_precision": 2,
                     "translation_key": "total_elec_value"
+                },
+                "compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_current": {
+                    "device_class": SensorDeviceClass.CURRENT,
+                    "unit_of_measurement": UnitOfElectricCurrent.AMPERE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "t2_temp": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "condenser_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_ambient_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "discharge_pipe_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.WATT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -235,12 +299,18 @@ DEVICE_MAPPING = {
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "polling_query": [
             {"indoor_temperature"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -433,6 +503,64 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.TOTAL_INCREASING,
                     "suggested_display_precision": 2,
                     "translation_key": "total_elec_value"
+                },
+                "compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_current": {
+                    "device_class": SensorDeviceClass.CURRENT,
+                    "unit_of_measurement": UnitOfElectricCurrent.AMPERE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "t2_temp": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "condenser_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_ambient_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "discharge_pipe_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.WATT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -831,12 +959,18 @@ DEVICE_MAPPING = {
             {"inner_purifier"},
             {"inner_purifier_fan_speed"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "polling_query": [
             {"indoor_temperature"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -1033,6 +1167,64 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.TOTAL_INCREASING,
                     "suggested_display_precision": 2,
                     "translation_key": "total_elec_value"
+                },
+                "compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_current": {
+                    "device_class": SensorDeviceClass.CURRENT,
+                    "unit_of_measurement": UnitOfElectricCurrent.AMPERE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "t2_temp": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "condenser_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_ambient_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "discharge_pipe_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.WATT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -1044,12 +1236,18 @@ DEVICE_MAPPING = {
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "polling_query": [
             {"indoor_temperature"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -1191,6 +1389,64 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.TOTAL_INCREASING,
                     "suggested_display_precision": 2,
                     "translation_key": "total_elec_value"
+                },
+                "compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_current": {
+                    "device_class": SensorDeviceClass.CURRENT,
+                    "unit_of_measurement": UnitOfElectricCurrent.AMPERE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "t2_temp": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "condenser_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_ambient_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "discharge_pipe_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.WATT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -1205,12 +1461,18 @@ DEVICE_MAPPING = {
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "polling_query": [
             {"indoor_temperature"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -1417,6 +1679,64 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.TOTAL_INCREASING,
                     "suggested_display_precision": 2,
                     "translation_key": "total_elec_value"
+                },
+                "compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_current": {
+                    "device_class": SensorDeviceClass.CURRENT,
+                    "unit_of_measurement": UnitOfElectricCurrent.AMPERE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "t2_temp": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "condenser_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_ambient_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "discharge_pipe_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.WATT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -1428,12 +1748,18 @@ DEVICE_MAPPING = {
             {"e0_query"},
             {"screen_display"},
             {"smart_dry_value"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "polling_query": [
             {"e0_query"},
             {"smart_dry_value"},
-            {"group_data_four"}
+            {"group_data_four"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "entities": {
             Platform.CLIMATE: {
@@ -1700,6 +2026,64 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.TOTAL_INCREASING,
                     "suggested_display_precision": 2,
                     "translation_key": "total_elec_value"
+                },
+                "compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_current": {
+                    "device_class": SensorDeviceClass.CURRENT,
+                    "unit_of_measurement": UnitOfElectricCurrent.AMPERE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "t2_temp": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "condenser_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_ambient_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "discharge_pipe_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.WATT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -1717,12 +2101,18 @@ DEVICE_MAPPING = {
             {"fresh_filter_time_use"},
             {"fresh_air_fan_speed"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "polling_query": [
             {"indoor_temperature"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -1897,6 +2287,64 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.TOTAL_INCREASING,
                     "suggested_display_precision": 2,
                     "translation_key": "total_elec_value"
+                },
+                "compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_current": {
+                    "device_class": SensorDeviceClass.CURRENT,
+                    "unit_of_measurement": UnitOfElectricCurrent.AMPERE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "t2_temp": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "condenser_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_ambient_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "discharge_pipe_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.WATT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -1912,13 +2360,19 @@ DEVICE_MAPPING = {
             {"temperature"},
             {"group_data_one"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "polling_query": [
             {"temperature"},
             {"group_data_one"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "centralized": ["buzzer_all"],
         "entities": {
@@ -2090,6 +2544,64 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.TOTAL_INCREASING,
                     "suggested_display_precision": 1,
                     "translation_key": "total_elec_value"
+                },
+                "compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_current": {
+                    "device_class": SensorDeviceClass.CURRENT,
+                    "unit_of_measurement": UnitOfElectricCurrent.AMPERE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "t2_temp": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "condenser_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_ambient_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "discharge_pipe_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.WATT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -2103,12 +2615,18 @@ DEVICE_MAPPING = {
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "polling_query": [
             {"indoor_temperature"},
             {"group_data_four"},
-            {"group_data_five"}
+            {"group_data_five"},
+            {"group_data_one"},
+            {"group_data_two"},
+            {"group_data_seven"}
         ],
         "centralized": ["buzzer"],
         "calculate":{
@@ -2264,6 +2782,64 @@ DEVICE_MAPPING = {
                     "state_class": SensorStateClass.TOTAL_INCREASING,
                     "suggested_display_precision": 2,
                     "translation_key": "total_elec_value"
+                },
+                "compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_compressor_frequency": {
+                    "device_class": SensorDeviceClass.FREQUENCY,
+                    "unit_of_measurement": UnitOfFrequency.HERTZ,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_current": {
+                    "device_class": SensorDeviceClass.CURRENT,
+                    "unit_of_measurement": UnitOfElectricCurrent.AMPERE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_voltage": {
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "t2_temp": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "condenser_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "outdoor_ambient_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "discharge_pipe_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "target_indoor_fan_speed": {
+                    "unit_of_measurement": "RPM",
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "compressor_power": {
+                    "device_class": SensorDeviceClass.POWER,
+                    "unit_of_measurement": UnitOfPower.WATT,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
