@@ -68,6 +68,50 @@ class DeviceLogicHandler:
             # Keep the last valid humidity value if new value is invalid
             data["indoor_humidity"] = self._last_valid_humidity
 
+    def adjust_ac_compressor_current(self, data: dict, status: dict) -> None:
+        """For AC devices, derive compressor_current when it reports 0.
+
+        compressor_current and compressor_voltage come from group 1 (0x41)
+        while compressor_power comes from group 7 (0x47), so they may arrive
+        in different messages. Read power/voltage from the accumulated `data`
+        to use the latest known values.
+        """
+        if "compressor_current" not in status:
+            return
+
+        current = status.get("compressor_current")
+        if current is None:
+            return
+
+        try:
+            current = float(current)
+        except (ValueError, TypeError):
+            return
+
+        if current > 0:
+            data["compressor_current"] = current
+            return
+
+        # current == 0: derive I = P / U from accumulated values
+        power = data.get("compressor_power")
+        voltage = data.get("compressor_voltage")
+        if power is None or voltage is None:
+            data["compressor_current"] = current
+            return
+
+        try:
+            power = float(power)
+            voltage = float(voltage)
+        except (ValueError, TypeError):
+            data["compressor_current"] = current
+            return
+
+        if voltage == 0:
+            data["compressor_current"] = current
+            return
+
+        data["compressor_current"] = power / voltage
+
     def apply_special_handling(
         self,
         data: dict,
@@ -104,6 +148,7 @@ class DeviceLogicHandler:
             self.adjust_ac_mode(data)
             if status:
                 self.adjust_ac_humidity(data, status)
+                self.adjust_ac_compressor_current(data, status)
 
         elif self.device_type == 0x9C:
             self.adjust_b3_function_control(data)
