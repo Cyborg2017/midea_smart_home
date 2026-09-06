@@ -362,7 +362,6 @@
             "night_light_brightness": { "default": "mdi:brightness-5" },
             "order_time": { "default": "mdi:timer" },
             "out_tds": { "default": "mdi:water-check" },
-            "outdoor_ambient_temperature": { "default": "mdi:thermometer" },
             "outdoor_temperature": { "default": "mdi:thermometer" },
             "pm1": { "default": "mdi:blur" },
             "pm10": { "default": "mdi:blur" },

@@ -2452,9 +2452,6 @@
       "out_water_tem": {
         "name": "出水温度"
       },
-      "outdoor_ambient_temperature": {
-        "name": "室外环境温度"
-      },
       "outdoor_temperature": {
         "name": "室外机温度"
       },
