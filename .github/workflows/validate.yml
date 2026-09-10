@@ -36,3 +36,5 @@ jobs:
         run: python scripts/format_code.py --check
       - name: Check translations sorting
         run: python scripts/sort_translations.py --check
+      - name: Check device mapping sorting
+        run: python scripts/sort_device_mapping.py --check
