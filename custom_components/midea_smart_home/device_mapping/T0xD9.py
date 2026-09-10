@@ -7,14 +7,6 @@ DEVICE_MAPPING = {
             {"db"}
         ],
         "entities": {
-            Platform.BINARY_SENSOR: {
-                "db_detergent_needed_l": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "db_detergent_needed_r": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                }
-            },
             Platform.LOCK: {
                 "db_baby_lock": {
                     "rationale": [0, 1],
@@ -117,6 +109,14 @@ DEVICE_MAPPING = {
                         "timer_60": {"db_dry": 5},
                         "timer_30": {"db_dry": 4}
                     }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "db_detergent_needed_l": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "db_detergent_needed_r": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
                 }
             },
             Platform.SENSOR: {
@@ -162,14 +162,6 @@ DEVICE_MAPPING = {
             {"db"}
         ],
         "entities": {
-            Platform.BINARY_SENSOR: {
-                "db_detergent_needed_l": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "db_detergent_needed_r": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                }
-            },
             Platform.LOCK: {
                 "db_baby_lock": {
                     "rationale": [0, 1],
@@ -272,6 +264,14 @@ DEVICE_MAPPING = {
                         "timer_60": {"db_dry": 5},
                         "timer_30": {"db_dry": 4}
                     }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "db_detergent_needed_l": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "db_detergent_needed_r": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
                 }
             },
             Platform.SENSOR: {
@@ -318,12 +318,6 @@ DEVICE_MAPPING = {
             {"dc"}
         ],
         "entities": {
-            Platform.BINARY_SENSOR: {
-                "db_detergent_needed": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM,
-                    "translation_key": "db_detergent_needed_b"
-                }
-            },
             Platform.LOCK: {
                 "db_baby_lock": {
                     "rationale": [0, 1],
@@ -485,6 +479,12 @@ DEVICE_MAPPING = {
                     },
                     "command": {"dc_location": 1},
                     "translation_key": "dc_intensity_t"
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "db_detergent_needed": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                    "translation_key": "db_detergent_needed_b"
                 }
             },
             Platform.SENSOR: {

@@ -15,6 +15,20 @@ DEVICE_MAPPING = {
             ]
         },
         "entities": {
+            Platform.NUMBER: {
+                "time_work_hr": {
+                    "min": 0,
+                    "max": 23,
+                    "step": 1,
+                    "unit_of_measurement": UnitOfTime.HOURS
+                },
+                "time_work_min": {
+                    "min": 0,
+                    "max": 59,
+                    "step": 1,
+                    "unit_of_measurement": UnitOfTime.MINUTES
+                }
+            },
             Platform.SELECT: {
                 "cmd_code": {
                     "options": {
@@ -42,20 +56,6 @@ DEVICE_MAPPING = {
                         "2": {"taste": "2"},
                         "3": {"taste": "3"}
                     }
-                }
-            },
-            Platform.NUMBER: {
-                "time_work_hr": {
-                    "min": 0,
-                    "max": 23,
-                    "step": 1,
-                    "unit_of_measurement": UnitOfTime.HOURS
-                },
-                "time_work_min": {
-                    "min": 0,
-                    "max": 59,
-                    "step": 1,
-                    "unit_of_measurement": UnitOfTime.MINUTES
                 }
             },
             Platform.SENSOR: {
@@ -93,6 +93,20 @@ DEVICE_MAPPING = {
             ]
         },
         "entities": {
+            Platform.NUMBER: {
+                "time_work_hr": {
+                    "min": 0,
+                    "max": 23,
+                    "step": 1,
+                    "unit_of_measurement": UnitOfTime.HOURS
+                },
+                "time_work_min": {
+                    "min": 0,
+                    "max": 59,
+                    "step": 1,
+                    "unit_of_measurement": UnitOfTime.MINUTES
+                }
+            },
             Platform.SELECT: {
                 "cmd_code": {
                     "options": {
@@ -120,20 +134,6 @@ DEVICE_MAPPING = {
                         "2": {"taste": "2"},
                         "3": {"taste": "3"}
                     }
-                }
-            },
-            Platform.NUMBER: {
-                "time_work_hr": {
-                    "min": 0,
-                    "max": 23,
-                    "step": 1,
-                    "unit_of_measurement": UnitOfTime.HOURS
-                },
-                "time_work_min": {
-                    "min": 0,
-                    "max": 59,
-                    "step": 1,
-                    "unit_of_measurement": UnitOfTime.MINUTES
                 }
             },
             Platform.SENSOR: {
@@ -171,6 +171,20 @@ DEVICE_MAPPING = {
             ]
         },
         "entities": {
+            Platform.NUMBER: {
+                "time_work_hr": {
+                    "min": 0,
+                    "max": 23,
+                    "step": 1,
+                    "unit_of_measurement": UnitOfTime.HOURS
+                },
+                "time_work_min": {
+                    "min": 0,
+                    "max": 59,
+                    "step": 1,
+                    "unit_of_measurement": UnitOfTime.MINUTES
+                }
+            },
             Platform.SELECT: {
                 "cmd_code": {
                     "options": {
@@ -198,20 +212,6 @@ DEVICE_MAPPING = {
                         "2": {"taste": "2"},
                         "3": {"taste": "3"}
                     }
-                }
-            },
-            Platform.NUMBER: {
-                "time_work_hr": {
-                    "min": 0,
-                    "max": 23,
-                    "step": 1,
-                    "unit_of_measurement": UnitOfTime.HOURS
-                },
-                "time_work_min": {
-                    "min": 0,
-                    "max": 59,
-                    "step": 1,
-                    "unit_of_measurement": UnitOfTime.MINUTES
                 }
             },
             Platform.SENSOR: {

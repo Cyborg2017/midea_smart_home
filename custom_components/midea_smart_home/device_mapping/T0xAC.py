@@ -93,6 +93,60 @@ DEVICE_MAPPING = {
                     }
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "buzzer": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "default_value": "on",
+                },
+                "screen_display": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "display_on_off"
+                },
+                "prevent_straight_wind": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [1, 2]
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "light_sensitive": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 3]
+                },
+                "power_saving": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
             Platform.SELECT: {
                 "wind_swing_ud_angle": {
                     "options": {
@@ -144,58 +198,9 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.SWITCH: {
-                "power": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "buzzer": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "default_value": "on",
-                },
-                "screen_display": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "display_on_off"
-                },
-                "prevent_straight_wind": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [1, 2]
-                },
-                "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "light_sensitive": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 3]
-                },
-                "power_saving": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -277,11 +282,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.POWER,
                     "unit_of_measurement": UnitOfPower.WATT,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "water_pump_running": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -362,6 +362,60 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_HALVES,
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "buzzer": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "default_value": "on",
+                },
+                "screen_display": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "display_on_off"
+                },
+                "prevent_straight_wind": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [1, 2]
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "light_sensitive": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 3]
+                },
+                "power_saving": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
             Platform.SELECT: {
                 "wind_swing_ud_angle": {
                     "options": {
@@ -413,58 +467,9 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.SWITCH: {
-                "power": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "buzzer": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "default_value": "on",
-                },
-                "screen_display": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "display_on_off"
-                },
-                "prevent_straight_wind": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [1, 2]
-                },
-                "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "light_sensitive": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 3]
-                },
-                "power_saving": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -546,11 +551,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.POWER,
                     "unit_of_measurement": UnitOfPower.WATT,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "water_pump_running": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -650,6 +650,67 @@ DEVICE_MAPPING = {
                     "max_temp": 30,
                     "temperature_unit": UnitOfTemperature.CELSIUS,
                     "precision": PRECISION_HALVES,
+                }
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "screen_display": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 100],
+                    "translation_key": "display_on_off"
+                },
+                "light": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 100]
+                },
+                "buzzer_all": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "buzzer"
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "air_remove_odor": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "rewarming_dry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "linkage_2": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SELECT: {
@@ -842,67 +903,6 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.SWITCH: {
-                "power": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "screen_display": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 100],
-                    "translation_key": "display_on_off"
-                },
-                "light": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 100]
-                },
-                "buzzer_all": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1],
-                    "translation_key": "buzzer"
-                },
-                "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "air_remove_odor": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
-                },
-                "rewarming_dry": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "linkage_2": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
-                }
-            },
             Platform.SENSOR: {
                 "mode": {
                     "device_class": SensorDeviceClass.ENUM,
@@ -1039,6 +1039,46 @@ DEVICE_MAPPING = {
                     }
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "buzzer": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "default_value": "on",
+                },
+                "screen_display": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "display_on_off"
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
             Platform.SELECT: {
                 "whirl_wind": {
                     "options": {
@@ -1087,44 +1127,9 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.SWITCH: {
-                "buzzer": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "default_value": "on",
-                },
-                "screen_display": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "display_on_off"
-                },
-                "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -1206,11 +1211,6 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfPower.WATT,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
-            },
-            Platform.BINARY_SENSOR: {
-                "water_pump_running": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                }
             }
         }
     },
@@ -1281,6 +1281,46 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_HALVES,
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "buzzer": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "default_value": "on",
+                },
+                "screen_display": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "display_on_off"
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
             Platform.SELECT: {
                 "wind_swing_ud_angle": {
                     "options": {
@@ -1303,44 +1343,9 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.SWITCH: {
-                "buzzer": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "default_value": "on",
-                },
-                "screen_display": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "display_on_off"
-                },
-                "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -1422,11 +1427,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.POWER,
                     "unit_of_measurement": UnitOfPower.WATT,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "water_pump_running": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -1523,6 +1523,60 @@ DEVICE_MAPPING = {
                     }
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "buzzer": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "default_value": "on",
+                },
+                "screen_display": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "display_on_off"
+                },
+                "prevent_straight_wind": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [1, 2]
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "light_sensitive": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 3]
+                },
+                "power_saving": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
             Platform.SELECT: {
                 "wind_swing_ud_angle": {
                     "options": {
@@ -1574,58 +1628,9 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.SWITCH: {
-                "power": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "buzzer": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "default_value": "on",
-                },
-                "screen_display": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "display_on_off"
-                },
-                "prevent_straight_wind": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [1, 2]
-                },
-                "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "light_sensitive": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 3]
-                },
-                "power_saving": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -1707,11 +1712,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.POWER,
                     "unit_of_measurement": UnitOfPower.WATT,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "water_pump_running": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -1833,6 +1833,78 @@ DEVICE_MAPPING = {
                     }
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "screen_display": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 100],
+                    "translation_key": "display_on_off"
+                },
+                "buzzer_all": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "buzzer"
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "air_remove_odor": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "linkage_2": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "no_wind_sense": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "no_wind_sense_judge_param": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "degerming": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "light_sensitive": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 3]
+                },
+                "prevent_straight_wind": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [1, 2]
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
             Platform.SELECT: {
                 "fresh_air": {
                     "options": {
@@ -1898,76 +1970,9 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.SWITCH: {
-                "power": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "screen_display": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 100],
-                    "translation_key": "display_on_off"
-                },
-                "buzzer_all": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1],
-                    "translation_key": "buzzer"
-                },
-                "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "air_remove_odor": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "linkage_2": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
-                },
-                "no_wind_sense": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
-                },
-                "no_wind_sense_judge_param": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
-                },
-                "degerming": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "light_sensitive": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 3]
-                },
-                "prevent_straight_wind": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [1, 2]
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -2049,11 +2054,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.POWER,
                     "unit_of_measurement": UnitOfPower.WATT,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "water_pump_running": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -2153,6 +2153,50 @@ DEVICE_MAPPING = {
                     }
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "buzzer": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "default_value": "on",
+                },
+                "screen_display": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "display_on_off"
+                },
+                "prevent_straight_wind": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [1, 2]
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
             Platform.SELECT: {
                 "wind_swing_ud_angle": {
                     "options": {
@@ -2183,48 +2227,9 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.SWITCH: {
-                "buzzer": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "default_value": "on",
-                },
-                "screen_display": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "display_on_off"
-                },
-                "prevent_straight_wind": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [1, 2]
-                },
-                "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -2306,11 +2311,6 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfPower.WATT,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
-            },
-            Platform.BINARY_SENSOR: {
-                "water_pump_running": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                }
             }
         }
     },
@@ -2385,49 +2385,6 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_HALVES,
                 }
             },
-            Platform.SELECT: {
-                "wind_swing_ud_angle": {
-                    "options": {
-                        "off": {"wind_swing_ud_angle": 0},
-                        "top": {"wind_swing_ud_angle": 1},
-                        "upper": {"wind_swing_ud_angle": 25},
-                        "middle": {"wind_swing_ud_angle": 50},
-                        "lower": {"wind_swing_ud_angle": 75},
-                        "bottom": {"wind_swing_ud_angle": 100}
-                    }
-                },
-                "wind_swing_lr_angle": {
-                    "options": {
-                        "off": {"wind_swing_lr_angle": 0},
-                        "leftmost": {"wind_swing_lr_angle": 1},
-                        "left": {"wind_swing_lr_angle": 25},
-                        "middle": {"wind_swing_lr_angle": 50},
-                        "right": {"wind_swing_lr_angle": 75},
-                        "rightmost": {"wind_swing_lr_angle": 100}
-                    }
-                },
-                "wind_around": {
-                    "options": {
-                        "off": {"wind_around": "off"},
-                        "up": {"wind_around": "on", "wind_around_ud": 1},
-                        "down": {"wind_around": "on", "wind_around_ud": 2}
-                    }
-                },
-                "prevent_straight_wind": {
-                    "options": {
-                        "off": {"prevent_straight_wind": 1},
-                        "up": {"prevent_straight_wind": 2, "prevent_straight_wind_lr": 2},
-                        "down": {"prevent_straight_wind": 2, "prevent_straight_wind_lr": 3}
-                    }
-                },
-                "ptc": {
-                    "options": {
-                        "off": {"ptc": "off"},
-                        "mode_1": {"ptc": "on", "ptc_default_rule": 1},
-                        "mode_2": {"ptc": "on", "ptc_default_rule": 0}
-                    }
-                },
-            },
             Platform.TIME: {
                 "power_on_timer": {
                     "target_keys": {
@@ -2476,6 +2433,54 @@ DEVICE_MAPPING = {
                 },
                 "self_clean": {
                     "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.SELECT: {
+                "wind_swing_ud_angle": {
+                    "options": {
+                        "off": {"wind_swing_ud_angle": 0},
+                        "top": {"wind_swing_ud_angle": 1},
+                        "upper": {"wind_swing_ud_angle": 25},
+                        "middle": {"wind_swing_ud_angle": 50},
+                        "lower": {"wind_swing_ud_angle": 75},
+                        "bottom": {"wind_swing_ud_angle": 100}
+                    }
+                },
+                "wind_swing_lr_angle": {
+                    "options": {
+                        "off": {"wind_swing_lr_angle": 0},
+                        "leftmost": {"wind_swing_lr_angle": 1},
+                        "left": {"wind_swing_lr_angle": 25},
+                        "middle": {"wind_swing_lr_angle": 50},
+                        "right": {"wind_swing_lr_angle": 75},
+                        "rightmost": {"wind_swing_lr_angle": 100}
+                    }
+                },
+                "wind_around": {
+                    "options": {
+                        "off": {"wind_around": "off"},
+                        "up": {"wind_around": "on", "wind_around_ud": 1},
+                        "down": {"wind_around": "on", "wind_around_ud": 2}
+                    }
+                },
+                "prevent_straight_wind": {
+                    "options": {
+                        "off": {"prevent_straight_wind": 1},
+                        "up": {"prevent_straight_wind": 2, "prevent_straight_wind_lr": 2},
+                        "down": {"prevent_straight_wind": 2, "prevent_straight_wind_lr": 3}
+                    }
+                },
+                "ptc": {
+                    "options": {
+                        "off": {"ptc": "off"},
+                        "mode_1": {"ptc": "on", "ptc_default_rule": 1},
+                        "mode_2": {"ptc": "on", "ptc_default_rule": 0}
+                    }
+                },
+            },
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -2557,11 +2562,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.POWER,
                     "unit_of_measurement": UnitOfPower.WATT,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "water_pump_running": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -2645,26 +2645,25 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_HALVES
                 }
             },
-            Platform.SELECT: {
-                "wind_swing_ud_angle": {
-                    "options": {
-                        "off": {"wind_swing_ud_angle": 0},
-                        "top": {"wind_swing_ud_angle": 1},
-                        "upper": {"wind_swing_ud_angle": 25},
-                        "middle": {"wind_swing_ud_angle": 50},
-                        "lower": {"wind_swing_ud_angle": 75},
-                        "bottom": {"wind_swing_ud_angle": 100}
-                    }
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
                 },
-                "wind_swing_lr_angle": {
-                    "options": {
-                        "off": {"wind_swing_lr_angle": 0},
-                        "leftmost": {"wind_swing_lr_angle": 1},
-                        "left": {"wind_swing_lr_angle": 25},
-                        "middle": {"wind_swing_lr_angle": 50},
-                        "right": {"wind_swing_lr_angle": 75},
-                        "rightmost": {"wind_swing_lr_angle": 100}
-                    }
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
                 }
             },
             Platform.SWITCH: {
@@ -2690,25 +2689,31 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
+            Platform.SELECT: {
+                "wind_swing_ud_angle": {
+                    "options": {
+                        "off": {"wind_swing_ud_angle": 0},
+                        "top": {"wind_swing_ud_angle": 1},
+                        "upper": {"wind_swing_ud_angle": 25},
+                        "middle": {"wind_swing_ud_angle": 50},
+                        "lower": {"wind_swing_ud_angle": 75},
+                        "bottom": {"wind_swing_ud_angle": 100}
+                    }
                 },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
+                "wind_swing_lr_angle": {
+                    "options": {
+                        "off": {"wind_swing_lr_angle": 0},
+                        "leftmost": {"wind_swing_lr_angle": 1},
+                        "left": {"wind_swing_lr_angle": 25},
+                        "middle": {"wind_swing_lr_angle": 50},
+                        "right": {"wind_swing_lr_angle": 75},
+                        "rightmost": {"wind_swing_lr_angle": 100}
+                    }
                 }
             },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+            Platform.BINARY_SENSOR: {
+                "water_pump_running": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -2791,11 +2796,6 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfPower.WATT,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
-            },
-            Platform.BINARY_SENSOR: {
-                "water_pump_running": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                }
             }
         }
     },
@@ -2867,26 +2867,6 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_HALVES,
                 }
             },
-            Platform.SWITCH: {
-                "fengguan_remove_odor": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": ["on", "off"],
-                },
-                "power": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "follow_body_sense": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": ["off", "on"],
-                    "command": {"follow_body_sense_enable": 1}
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
             Platform.TIME: {
                 "power_on_timer": {
                     "target_keys": {
@@ -2906,6 +2886,26 @@ DEVICE_MAPPING = {
             Platform.BUTTON: {
                 "cancel_power_on_off_timer": {
                     "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "fengguan_remove_odor": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["on", "off"],
+                },
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "follow_body_sense": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["off", "on"],
+                    "command": {"follow_body_sense_enable": 1}
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -2984,23 +2984,6 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_HALVES,
                 }
             },
-            Platform.SWITCH: {
-                "power": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "ac_dry"
-                },
-                "follow_body_sense": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": ["off", "on"],
-                    "command": {"follow_body_sense_enable": 1}
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
             Platform.TIME: {
                 "power_on_timer": {
                     "target_keys": {
@@ -3020,6 +3003,23 @@ DEVICE_MAPPING = {
             Platform.BUTTON: {
                 "cancel_power_on_off_timer": {
                     "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
+                },
+                "follow_body_sense": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["off", "on"],
+                    "command": {"follow_body_sense_enable": 1}
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -3100,6 +3100,27 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_HALVES,
                 }
             },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -3142,27 +3163,6 @@ DEVICE_MAPPING = {
                         "rightmost": {"left_right_wind_direction": 9, "wind_swing_lr": "off"}
                     },
                     "translation_key": "wind_swing_lr_angle"
-                }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
                 }
             },
             Platform.SENSOR: {
@@ -3228,17 +3228,6 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_WHOLE
                 }
             },
-            Platform.SWITCH: {
-                "power": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
             Platform.TIME: {
                 "power_on_timer": {
                     "target_keys": {
@@ -3258,6 +3247,17 @@ DEVICE_MAPPING = {
             Platform.BUTTON: {
                 "cancel_power_on_off_timer": {
                     "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -3318,17 +3318,6 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_HALVES
                 }
             },
-            Platform.SWITCH: {
-                "power": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
             Platform.TIME: {
                 "power_on_timer": {
                     "target_keys": {
@@ -3348,6 +3337,17 @@ DEVICE_MAPPING = {
             Platform.BUTTON: {
                 "cancel_power_on_off_timer": {
                     "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -3547,26 +3547,6 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_HALVES,
                 }
             },
-            Platform.SWITCH: {
-                "power": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "ptc": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "ac_dry"
-                },
-                "follow_body_sense": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": ["off", "on"],
-                    "command": {"follow_body_sense_enable": 1}
-                },
-                "self_clean": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
             Platform.TIME: {
                 "power_on_timer": {
                     "target_keys": {
@@ -3586,6 +3566,26 @@ DEVICE_MAPPING = {
             Platform.BUTTON: {
                 "cancel_power_on_off_timer": {
                     "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "ptc": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
+                },
+                "follow_body_sense": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["off", "on"],
+                    "command": {"follow_body_sense_enable": 1}
+                },
+                "self_clean": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -3752,16 +3752,6 @@ DEVICE_MAPPING = {
             {"indoor_temperature"}
         ],
         "entities": {
-            Platform.SWITCH: {
-                "new_wind_machine": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "power"
-                },
-                "fresh_air_remove_odor": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
-                }
-            },
             Platform.FAN: {
                 "intake_fan": {
                     "power": "new_wind_machine_intake_switch",
@@ -3772,6 +3762,16 @@ DEVICE_MAPPING = {
                     "power": "new_wind_machine_exhaust_switch",
                     "rationale": [0, 1],
                     "speeds": list({"fresh_air_exhaust_fan_speed": value + 1} for value in range(0, 100))
+                }
+            },
+            Platform.SWITCH: {
+                "new_wind_machine": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "power"
+                },
+                "fresh_air_remove_odor": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
                 }
             },
             Platform.SELECT: {

@@ -17,6 +17,28 @@ DEVICE_MAPPING = {
             ],
         },
         "entities": {
+            Platform.LIGHT: {
+                "common_light": {
+                    "power": "light",
+                    "brightness": {"lightness": [10, 100]},
+                    "command": {
+                        "electronic_control_version": 2,
+                        "type": "b6",
+                        "b6_action": "setting",
+                        "setting": "light"
+                    }
+                }
+            },
+            Platform.BUTTON: {
+                "left_stove_off": {
+                    "command": {"electronic_control_version": 2, "type": "b7", "b7_work_burner_control": 1,
+                                "b7_function_control": 1},
+                },
+                "right_stove_off": {
+                    "command": {"electronic_control_version": 2, "type": "b7", "b7_work_burner_control": 2,
+                                "b7_function_control": 1},
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -38,71 +60,6 @@ DEVICE_MAPPING = {
                         "b6_action": "control"
                     }
                 },
-            },
-            Platform.LIGHT: {
-                "common_light": {
-                    "power": "light",
-                    "brightness": {"lightness": [10, 100]},
-                    "command": {
-                        "electronic_control_version": 2,
-                        "type": "b6",
-                        "b6_action": "setting",
-                        "setting": "light"
-                    }
-                }
-            },
-            Platform.SENSOR: {
-                "b7_left_status": {
-                    "device_class": SensorDeviceClass.ENUM,
-                },
-                "b7_right_status": {
-                    "device_class": SensorDeviceClass.ENUM,
-                },
-                "b7_vbattery":{
-                    "device_class": SensorDeviceClass.VOLTAGE,
-                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
-                    "state_class": SensorStateClass.MEASUREMENT,
-                },
-                "total_working_time": {
-                    "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.MINUTES,
-                    "state_class": SensorStateClass.TOTAL_INCREASING,
-                },
-                "total_energy_consumption": {
-                    "device_class": SensorDeviceClass.ENERGY,
-                    "unit_of_measurement": "kWh",
-                    "state_class": SensorStateClass.TOTAL_INCREASING,
-                    "translation_key": "total_elec_value"
-                },
-                "wind_pressure": {
-                    "device_class": SensorDeviceClass.PRESSURE,
-                    "unit_of_measurement": UnitOfPressure.PA,
-                    "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "hotclean_tips": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "oilcup_position": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "hotclean_stage": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "steaming": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                }
-            },
-            Platform.BUTTON: {
-                "left_stove_off": {
-                    "command": {"electronic_control_version": 2, "type": "b7", "b7_work_burner_control": 1,
-                                "b7_function_control": 1},
-                },
-                "right_stove_off": {
-                    "command": {"electronic_control_version": 2, "type": "b7", "b7_work_burner_control": 2,
-                                "b7_function_control": 1},
-                }
             },
             Platform.SELECT: {
                 "gear": {
@@ -141,6 +98,49 @@ DEVICE_MAPPING = {
                         "b6_action": "setting",
                         "setting": "gesture"
                     }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "hotclean_tips": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "oilcup_position": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "hotclean_stage": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "steaming": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                }
+            },
+            Platform.SENSOR: {
+                "b7_left_status": {
+                    "device_class": SensorDeviceClass.ENUM,
+                },
+                "b7_right_status": {
+                    "device_class": SensorDeviceClass.ENUM,
+                },
+                "b7_vbattery":{
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                },
+                "total_working_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                },
+                "total_energy_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": "kWh",
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "translation_key": "total_elec_value"
+                },
+                "wind_pressure": {
+                    "device_class": SensorDeviceClass.PRESSURE,
+                    "unit_of_measurement": UnitOfPressure.PA,
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             }
         }
@@ -161,6 +161,28 @@ DEVICE_MAPPING = {
             ],
         },
         "entities": {
+            Platform.LIGHT: {
+                "common_light": {
+                    "power": "light",
+                    "brightness": {"lightness": [10, 100]},
+                    "command": {
+                        "electronic_control_version": 2,
+                        "type": "b6",
+                        "b6_action": "setting",
+                        "setting": "light"
+                    }
+                }
+            },
+            Platform.BUTTON: {
+                "left_stove_off": {
+                    "command": {"electronic_control_version": 2, "type": "b7", "b7_work_burner_control": 1,
+                                "b7_function_control": 1},
+                },
+                "right_stove_off": {
+                    "command": {"electronic_control_version": 2, "type": "b7", "b7_work_burner_control": 2,
+                                "b7_function_control": 1},
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -182,71 +204,6 @@ DEVICE_MAPPING = {
                         "b6_action": "control"
                     }
                 },
-            },
-            Platform.LIGHT: {
-                "common_light": {
-                    "power": "light",
-                    "brightness": {"lightness": [10, 100]},
-                    "command": {
-                        "electronic_control_version": 2,
-                        "type": "b6",
-                        "b6_action": "setting",
-                        "setting": "light"
-                    }
-                }
-            },
-            Platform.SENSOR: {
-                "b7_left_status": {
-                    "device_class": SensorDeviceClass.ENUM,
-                },
-                "b7_right_status": {
-                    "device_class": SensorDeviceClass.ENUM,
-                },
-                "b7_vbattery":{
-                    "device_class": SensorDeviceClass.VOLTAGE,
-                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
-                    "state_class": SensorStateClass.MEASUREMENT,
-                },
-                "total_working_time": {
-                    "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.MINUTES,
-                    "state_class": SensorStateClass.TOTAL_INCREASING,
-                },
-                "total_energy_consumption": {
-                    "device_class": SensorDeviceClass.ENERGY,
-                    "unit_of_measurement": "kWh",
-                    "state_class": SensorStateClass.TOTAL_INCREASING,
-                    "translation_key": "total_elec_value"
-                },
-                "wind_pressure": {
-                    "device_class": SensorDeviceClass.PRESSURE,
-                    "unit_of_measurement": UnitOfPressure.PA,
-                    "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "hotclean_tips": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "oilcup_position": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "hotclean_stage": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "steaming": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                }
-            },
-            Platform.BUTTON: {
-                "left_stove_off": {
-                    "command": {"electronic_control_version": 2, "type": "b7", "b7_work_burner_control": 1,
-                                "b7_function_control": 1},
-                },
-                "right_stove_off": {
-                    "command": {"electronic_control_version": 2, "type": "b7", "b7_work_burner_control": 2,
-                                "b7_function_control": 1},
-                }
             },
             Platform.SELECT: {
                 "gear": {
@@ -286,6 +243,49 @@ DEVICE_MAPPING = {
                         "setting": "gesture"
                     }
                 }
+            },
+            Platform.BINARY_SENSOR: {
+                "hotclean_tips": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "oilcup_position": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "hotclean_stage": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "steaming": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                }
+            },
+            Platform.SENSOR: {
+                "b7_left_status": {
+                    "device_class": SensorDeviceClass.ENUM,
+                },
+                "b7_right_status": {
+                    "device_class": SensorDeviceClass.ENUM,
+                },
+                "b7_vbattery":{
+                    "device_class": SensorDeviceClass.VOLTAGE,
+                    "unit_of_measurement": UnitOfElectricPotential.VOLT,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                },
+                "total_working_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                },
+                "total_energy_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": "kWh",
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "translation_key": "total_elec_value"
+                },
+                "wind_pressure": {
+                    "device_class": SensorDeviceClass.PRESSURE,
+                    "unit_of_measurement": UnitOfPressure.PA,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
             }
         }
     },
@@ -301,6 +301,18 @@ DEVICE_MAPPING = {
             ],
         },
         "entities": {
+            Platform.LIGHT: {
+                "common_light": {
+                    "power": "light",
+                    "brightness": {"lightness": [10, 100]},
+                    "command": {
+                        "electronic_control_version": 2,
+                        "type": "b6",
+                        "b6_action": "setting",
+                        "setting": "light"
+                    }
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -321,50 +333,6 @@ DEVICE_MAPPING = {
                         "type": "b6",
                         "b6_action": "control"
                     }
-                }
-            },
-            Platform.LIGHT: {
-                "common_light": {
-                    "power": "light",
-                    "brightness": {"lightness": [10, 100]},
-                    "command": {
-                        "electronic_control_version": 2,
-                        "type": "b6",
-                        "b6_action": "setting",
-                        "setting": "light"
-                    }
-                }
-            },
-            Platform.SENSOR: {
-                "total_working_time": {
-                    "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.MINUTES,
-                    "state_class": SensorStateClass.TOTAL_INCREASING
-                },
-                "total_energy_consumption": {
-                    "device_class": SensorDeviceClass.ENERGY,
-                    "unit_of_measurement": "kWh",
-                    "state_class": SensorStateClass.TOTAL_INCREASING,
-                    "translation_key": "total_elec_value"
-                },
-                "wind_pressure": {
-                    "device_class": SensorDeviceClass.PRESSURE,
-                    "unit_of_measurement": UnitOfPressure.PA,
-                    "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "hotclean_tips": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "oilcup_position": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "hotclean_stage": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "steaming": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SELECT: {
@@ -402,6 +370,38 @@ DEVICE_MAPPING = {
                         "b6_action": "setting",
                         "setting": "gesture"
                     }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "hotclean_tips": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "oilcup_position": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "hotclean_stage": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "steaming": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                }
+            },
+            Platform.SENSOR: {
+                "total_working_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.TOTAL_INCREASING
+                },
+                "total_energy_consumption": {
+                    "device_class": SensorDeviceClass.ENERGY,
+                    "unit_of_measurement": "kWh",
+                    "state_class": SensorStateClass.TOTAL_INCREASING,
+                    "translation_key": "total_elec_value"
+                },
+                "wind_pressure": {
+                    "device_class": SensorDeviceClass.PRESSURE,
+                    "unit_of_measurement": UnitOfPressure.PA,
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             }
         }

@@ -162,6 +162,15 @@ DEVICE_MAPPING = {
             ]
         },
         "entities": {
+            Platform.TIME: {
+                "work_time": {
+                    "target_keys": {
+                        "hour": "left_time_hour",
+                        "minute": "left_time_min"
+                    },
+                    "time_mode": "direct"
+                }
+            },
             Platform.SELECT: {
                 "mode": {
                     "include_current": ["left_time_hour", "left_time_min"],
@@ -198,15 +207,6 @@ DEVICE_MAPPING = {
                         "middle": {"mouthfeel": "middle"},
                         "hard": {"mouthfeel": "hard"}
                     }
-                }
-            },
-            Platform.TIME: {
-                "work_time": {
-                    "target_keys": {
-                        "hour": "left_time_hour",
-                        "minute": "left_time_min"
-                    },
-                    "time_mode": "direct"
                 }
             },
             Platform.SENSOR: {

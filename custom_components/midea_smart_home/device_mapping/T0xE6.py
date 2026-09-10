@@ -12,23 +12,6 @@ DEVICE_MAPPING = {
             ],
         },
         "entities": {
-            Platform.WATER_HEATER: {
-                "bath_water_heater": {
-                    "translation_key": "bath_water_heater",
-                    "power": "power",
-                    "operation_list": {
-                        "off": {"power": "off"},
-                        "normal": {"bath_mode": 0},
-                        "smart_temp": {"bath_mode": 10}
-                    },
-                    "target_temperature": "current_bath_set_temperature",
-                    "current_temperature": "bath_out_water_temperature",
-                    "min_temp": 35,
-                    "max_temp": 60,
-                    "temperature_unit": UnitOfTemperature.CELSIUS,
-                    "precision": PRECISION_WHOLE
-                }
-            },
             Platform.CLIMATE: {
                 "heating": {
                     "translation_key": "heating",
@@ -50,9 +33,34 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_WHOLE
                 }
             },
+            Platform.WATER_HEATER: {
+                "bath_water_heater": {
+                    "translation_key": "bath_water_heater",
+                    "power": "power",
+                    "operation_list": {
+                        "off": {"power": "off"},
+                        "normal": {"bath_mode": 0},
+                        "smart_temp": {"bath_mode": 10}
+                    },
+                    "target_temperature": "current_bath_set_temperature",
+                    "current_temperature": "bath_out_water_temperature",
+                    "min_temp": 35,
+                    "max_temp": 60,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "heating_work": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "bathing_work": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -89,14 +97,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.PRESSURE,
                     "unit_of_measurement": UnitOfPressure.BAR,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "heating_work": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "bathing_work": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -112,23 +112,6 @@ DEVICE_MAPPING = {
             ],
         },
         "entities": {
-            Platform.WATER_HEATER: {
-                "bath_water_heater": {
-                    "translation_key": "bath_water_heater",
-                    "power": "power",
-                    "operation_list": {
-                        "off": {"power": "off"},
-                        "normal": {"bath_mode": 0},
-                        "smart_temp": {"bath_mode": 10}
-                    },
-                    "target_temperature": "current_bath_set_temperature",
-                    "current_temperature": "bath_out_water_temperature",
-                    "min_temp": 35,
-                    "max_temp": 60,
-                    "temperature_unit": UnitOfTemperature.CELSIUS,
-                    "precision": PRECISION_WHOLE
-                }
-            },
             Platform.CLIMATE: {
                 "heating": {
                     "translation_key": "heating",
@@ -150,9 +133,34 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_WHOLE
                 }
             },
+            Platform.WATER_HEATER: {
+                "bath_water_heater": {
+                    "translation_key": "bath_water_heater",
+                    "power": "power",
+                    "operation_list": {
+                        "off": {"power": "off"},
+                        "normal": {"bath_mode": 0},
+                        "smart_temp": {"bath_mode": 10}
+                    },
+                    "target_temperature": "current_bath_set_temperature",
+                    "current_temperature": "bath_out_water_temperature",
+                    "min_temp": 35,
+                    "max_temp": 60,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "heating_work": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "bathing_work": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -189,14 +197,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.PRESSURE,
                     "unit_of_measurement": UnitOfPressure.BAR,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "heating_work": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "bathing_work": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }

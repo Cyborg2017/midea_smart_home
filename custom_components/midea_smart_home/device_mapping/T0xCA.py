@@ -4,6 +4,34 @@ DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.CLIMATE: {
+                "storage_zone": {
+                    "power": "storage_power",
+                    "hvac_modes": {
+                        "off": {"storage_power": "off"},
+                        "cool": {"storage_power": "on"}
+                    },
+                    "target_temperature": "storage_temperature",
+                    "current_temperature": "refrigeration_real_temperature",
+                    "min_temp": 2,
+                    "max_temp": 8,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE
+                },
+                "freezing_zone": {
+                    "power": "freezing_power",
+                    "hvac_modes": {
+                        "off": {"freezing_power": "off"},
+                        "cool": {"freezing_power": "on"}
+                    },
+                    "target_temperature": "freezing_temperature",
+                    "current_temperature": "freezing_real_temperature",
+                    "min_temp": -24,
+                    "max_temp": -16,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE
+                }
+            },
             Platform.SWITCH: {
                 "storage_power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -38,52 +66,6 @@ DEVICE_MAPPING = {
                 },
                 "silent_mode": {
                     "device_class": SwitchDeviceClass.SWITCH,
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "storage_door_state": {
-                    "device_class": BinarySensorDeviceClass.DOOR,
-                },
-                "freezer_door_state": {
-                    "device_class": BinarySensorDeviceClass.DOOR,
-                },
-                "storage_door_open_overtime": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "freezer_door_open_overtime": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "freezing_all_ice_status": {
-                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
-                    "rationale": ["invalid", "valid"]
-                }
-            },
-            Platform.CLIMATE: {
-                "storage_zone": {
-                    "power": "storage_power",
-                    "hvac_modes": {
-                        "off": {"storage_power": "off"},
-                        "cool": {"storage_power": "on"}
-                    },
-                    "target_temperature": "storage_temperature",
-                    "current_temperature": "refrigeration_real_temperature",
-                    "min_temp": 2,
-                    "max_temp": 8,
-                    "temperature_unit": UnitOfTemperature.CELSIUS,
-                    "precision": PRECISION_WHOLE
-                },
-                "freezing_zone": {
-                    "power": "freezing_power",
-                    "hvac_modes": {
-                        "off": {"freezing_power": "off"},
-                        "cool": {"freezing_power": "on"}
-                    },
-                    "target_temperature": "freezing_temperature",
-                    "current_temperature": "freezing_real_temperature",
-                    "min_temp": -24,
-                    "max_temp": -16,
-                    "temperature_unit": UnitOfTemperature.CELSIUS,
-                    "precision": PRECISION_WHOLE
                 }
             },
             Platform.SELECT: {
@@ -154,6 +136,24 @@ DEVICE_MAPPING = {
                         "7": {"rise_time_start_hour": "7"},
                         "8": {"rise_time_start_hour": "8"}
                     }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "storage_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR,
+                },
+                "freezer_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR,
+                },
+                "storage_door_open_overtime": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "freezer_door_open_overtime": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "freezing_all_ice_status": {
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
+                    "rationale": ["invalid", "valid"]
                 }
             },
             Platform.SENSOR: {
@@ -195,6 +195,34 @@ DEVICE_MAPPING = {
     "default_fridge": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.CLIMATE: {
+                "storage_zone": {
+                    "power": "storage_power",
+                    "hvac_modes": {
+                        "off": {"storage_power": "off"},
+                        "cool": {"storage_power": "on"}
+                    },
+                    "target_temperature": "storage_temperature",
+                    "current_temperature": "refrigeration_real_temperature",
+                    "min_temp": 2,
+                    "max_temp": 8,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE
+                },
+                "freezing_zone": {
+                    "power": "freezing_power",
+                    "hvac_modes": {
+                        "off": {"freezing_power": "off"},
+                        "cool": {"freezing_power": "on"}
+                    },
+                    "target_temperature": "freezing_temperature",
+                    "current_temperature": "freezing_real_temperature",
+                    "min_temp": -24,
+                    "max_temp": -16,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE
+                }
+            },
             Platform.SWITCH: {
                 "storage_power": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -229,52 +257,6 @@ DEVICE_MAPPING = {
                 },
                 "silent_mode": {
                     "device_class": SwitchDeviceClass.SWITCH,
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "storage_door_state": {
-                    "device_class": BinarySensorDeviceClass.DOOR,
-                },
-                "freezer_door_state": {
-                    "device_class": BinarySensorDeviceClass.DOOR,
-                },
-                "storage_door_open_overtime": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "freezer_door_open_overtime": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "freezing_all_ice_status": {
-                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
-                    "rationale": ["invalid", "valid"]
-                }
-            },
-            Platform.CLIMATE: {
-                "storage_zone": {
-                    "power": "storage_power",
-                    "hvac_modes": {
-                        "off": {"storage_power": "off"},
-                        "cool": {"storage_power": "on"}
-                    },
-                    "target_temperature": "storage_temperature",
-                    "current_temperature": "refrigeration_real_temperature",
-                    "min_temp": 2,
-                    "max_temp": 8,
-                    "temperature_unit": UnitOfTemperature.CELSIUS,
-                    "precision": PRECISION_WHOLE
-                },
-                "freezing_zone": {
-                    "power": "freezing_power",
-                    "hvac_modes": {
-                        "off": {"freezing_power": "off"},
-                        "cool": {"freezing_power": "on"}
-                    },
-                    "target_temperature": "freezing_temperature",
-                    "current_temperature": "freezing_real_temperature",
-                    "min_temp": -24,
-                    "max_temp": -16,
-                    "temperature_unit": UnitOfTemperature.CELSIUS,
-                    "precision": PRECISION_WHOLE
                 }
             },
             Platform.SELECT: {
@@ -347,6 +329,24 @@ DEVICE_MAPPING = {
                     }
                 }
             },
+            Platform.BINARY_SENSOR: {
+                "storage_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR,
+                },
+                "freezer_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR,
+                },
+                "storage_door_open_overtime": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "freezer_door_open_overtime": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "freezing_all_ice_status": {
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
+                    "rationale": ["invalid", "valid"]
+                }
+            },
             Platform.SENSOR: {
                 "storage_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
@@ -386,31 +386,6 @@ DEVICE_MAPPING = {
     "310A0808": {
         "rationale": ["off", "on"],
         "entities": {
-            Platform.SWITCH: {
-                "storage_power": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "freezing_power": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "storage_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "freezing_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "intelligent_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "storage_door_state": {
-                    "device_class": BinarySensorDeviceClass.DOOR,
-                },
-                "freezer_door_state": {
-                    "device_class": BinarySensorDeviceClass.DOOR,
-                }
-            },
             Platform.CLIMATE: {
                 "storage_zone": {
                     "power": "storage_power",
@@ -437,6 +412,31 @@ DEVICE_MAPPING = {
                     "max_temp": -16,
                     "temperature_unit": UnitOfTemperature.CELSIUS,
                     "precision": PRECISION_WHOLE
+                }
+            },
+            Platform.SWITCH: {
+                "storage_power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "freezing_power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "storage_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "freezing_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "intelligent_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "storage_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR,
+                },
+                "freezer_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR,
                 }
             },
             Platform.SENSOR: {
@@ -469,47 +469,6 @@ DEVICE_MAPPING = {
             {"temperature"}
         ],
         "entities": {
-            Platform.SWITCH: {
-                "storage_power": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "freezing_power": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "storage_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "freezing_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "deep_cold_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "freezing_light_open_chose": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "open_door_tips_switch": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "storage_door_state": {
-                    "device_class": BinarySensorDeviceClass.DOOR,
-                },
-                "freezer_door_state": {
-                    "device_class": BinarySensorDeviceClass.DOOR,
-                },
-                "storage_door_open_overtime": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "freezer_door_open_overtime": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "freezing_all_ice_status": {
-                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
-                    "rationale": ["invalid", "valid"]
-                }
-            },
             Platform.CLIMATE: {
                 "storage_zone": {
                     "power": "storage_power",
@@ -538,6 +497,29 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_WHOLE
                 }
             },
+            Platform.SWITCH: {
+                "storage_power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "freezing_power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "storage_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "freezing_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "deep_cold_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "freezing_light_open_chose": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "open_door_tips_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                }
+            },
             Platform.SELECT: {
                 "flexzone_function": {
                     "options": {
@@ -552,6 +534,24 @@ DEVICE_MAPPING = {
                         "rapid_ice_making": {"freezing_ice_machine_power": "on", "rapid_ice_making": "on"},
                         "normal_ice_making": {"freezing_ice_machine_power": "on", "rapid_ice_making": "off"}
                     }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "storage_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR,
+                },
+                "freezer_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR,
+                },
+                "storage_door_open_overtime": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "freezer_door_open_overtime": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "freezing_all_ice_status": {
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
+                    "rationale": ["invalid", "valid"]
                 }
             },
             Platform.SENSOR: {
@@ -593,32 +593,6 @@ DEVICE_MAPPING = {
     "310A1619": {
         "rationale": ["off", "on"],
         "entities": {
-            Platform.SWITCH: {
-                "storage_power": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "freezing_power": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "storage_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "freezing_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "intelligent_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "daily"
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "storage_door_state": {
-                    "device_class": BinarySensorDeviceClass.DOOR
-                },
-                "freezer_door_state": {
-                    "device_class": BinarySensorDeviceClass.DOOR
-                }
-            },
             Platform.CLIMATE: {
                 "storage_zone": {
                     "power": "storage_power",
@@ -645,6 +619,32 @@ DEVICE_MAPPING = {
                     "max_temp": -16,
                     "temperature_unit": UnitOfTemperature.CELSIUS,
                     "precision": PRECISION_WHOLE
+                }
+            },
+            Platform.SWITCH: {
+                "storage_power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "freezing_power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "storage_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "freezing_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "intelligent_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "daily"
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "storage_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR
+                },
+                "freezer_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR
                 }
             },
             Platform.SENSOR: {
@@ -674,38 +674,6 @@ DEVICE_MAPPING = {
     "310A1696": {
         "rationale": ["off", "on"],
         "entities": {
-            Platform.SWITCH: {
-                "storage_power": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "storage_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "freezing_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "open_door_tips_switch": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "intelligent_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "daily"
-                },
-                "telstar_saving_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "silent_mode": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "storage_door_state": {
-                    "device_class": BinarySensorDeviceClass.DOOR,
-                },
-                "storage_door_open_overtime": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                }
-            },
             Platform.CLIMATE: {
                 "storage_zone": {
                     "power": "storage_power",
@@ -732,6 +700,30 @@ DEVICE_MAPPING = {
                     "precision": PRECISION_WHOLE
                 }
             },
+            Platform.SWITCH: {
+                "storage_power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "storage_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "freezing_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "open_door_tips_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "intelligent_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "daily"
+                },
+                "telstar_saving_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "silent_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
             Platform.SELECT: {
                 "flexzone_function": {
                     "options": {
@@ -755,6 +747,14 @@ DEVICE_MAPPING = {
                         "7": {"rise_time_start_hour": "7"},
                         "8": {"rise_time_start_hour": "8"}
                     }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "storage_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR,
+                },
+                "storage_door_open_overtime": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
                 }
             },
             Platform.SENSOR: {

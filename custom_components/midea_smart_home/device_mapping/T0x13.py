@@ -24,15 +24,6 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.SELECT: {
-                "link_age_model": {
-                    "options": {
-                        "breath": {"link_age_model": "breath"},
-                        "blink": {"link_age_model": "blink"},
-                        "discolor": {"link_age_model": "discolor"}
-                    }
-                }
-            },
             Platform.NUMBER: {
                 "delay_light_off": {
                     "min": 0,
@@ -40,6 +31,15 @@ DEVICE_MAPPING = {
                     "step": 1,
                     "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
+                }
+            },
+            Platform.SELECT: {
+                "link_age_model": {
+                    "options": {
+                        "breath": {"link_age_model": "breath"},
+                        "blink": {"link_age_model": "blink"},
+                        "discolor": {"link_age_model": "discolor"}
+                    }
                 }
             }
         }
@@ -67,15 +67,6 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.SELECT: {
-                "link_age_model": {
-                    "options": {
-                        "breath": {"link_age_model": "breath"},
-                        "blink": {"link_age_model": "blink"},
-                        "discolor": {"link_age_model": "discolor"}
-                    }
-                }
-            },
             Platform.NUMBER: {
                 "delay_light_off": {
                     "min": 0,
@@ -83,6 +74,15 @@ DEVICE_MAPPING = {
                     "step": 1,
                     "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
+                }
+            },
+            Platform.SELECT: {
+                "link_age_model": {
+                    "options": {
+                        "breath": {"link_age_model": "breath"},
+                        "blink": {"link_age_model": "blink"},
+                        "discolor": {"link_age_model": "discolor"}
+                    }
                 }
             }
         }
@@ -110,15 +110,6 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.SELECT: {
-                "link_age_model": {
-                    "options": {
-                        "breath": {"link_age_model": "breath"},
-                        "blink": {"link_age_model": "blink"},
-                        "discolor": {"link_age_model": "discolor"}
-                    }
-                }
-            },
             Platform.NUMBER: {
                 "delay_light_off": {
                     "min": 0,
@@ -126,6 +117,15 @@ DEVICE_MAPPING = {
                     "step": 1,
                     "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
+                }
+            },
+            Platform.SELECT: {
+                "link_age_model": {
+                    "options": {
+                        "breath": {"link_age_model": "breath"},
+                        "blink": {"link_age_model": "blink"},
+                        "discolor": {"link_age_model": "discolor"}
+                    }
                 }
             }
         }
@@ -135,6 +135,23 @@ DEVICE_MAPPING = {
         "queries": [{}],
         "centralized": [],
         "entities": {
+            Platform.FAN: {
+                "fan": {
+                    "power": "fan_power",
+                    "speeds": list({"fan_speed": str(value)} for value in [1, 21, 41, 61, 81, 100]),
+                    "directions": {
+                        "forward": {"arround_dir": "1"},
+                        "reverse": {"arround_dir": "0"}
+                    },
+                    "preset_modes": {
+                        "fanmanual": {"fan_scene": "fanmanual"},
+                        "const_temperature": {"fan_scene": "const_temperature"},
+                        "baby_wind": {"fan_scene": "baby_wind"},
+                        "sleep_wind": {"fan_scene": "sleep_wind"},
+                        "forest_wind": {"fan_scene": "forest_wind"}
+                    }
+                }
+            },
             Platform.LIGHT: {
                 "light": {
                     "power": "led_power",
@@ -151,23 +168,6 @@ DEVICE_MAPPING = {
                         "film": {"led_scene_light": "film"},
                         "night": {"led_scene_light": "night"},
                         "ledmanual": {"led_scene_light": "ledmanual"}
-                    }
-                }
-            },
-            Platform.FAN: {
-                "fan": {
-                    "power": "fan_power",
-                    "speeds": list({"fan_speed": str(value)} for value in [1, 21, 41, 61, 81, 100]),
-                    "directions": {
-                        "forward": {"arround_dir": "1"},
-                        "reverse": {"arround_dir": "0"}
-                    },
-                    "preset_modes": {
-                        "fanmanual": {"fan_scene": "fanmanual"},
-                        "const_temperature": {"fan_scene": "const_temperature"},
-                        "baby_wind": {"fan_scene": "baby_wind"},
-                        "sleep_wind": {"fan_scene": "sleep_wind"},
-                        "forest_wind": {"fan_scene": "forest_wind"}
                     }
                 }
             }
@@ -178,6 +178,23 @@ DEVICE_MAPPING = {
         "queries": [{}],
         "centralized": [],
         "entities": {
+            Platform.FAN: {
+                "fan": {
+                    "power": "fan_power",
+                    "speeds": list({"fan_speed": str(value)} for value in [1, 21, 41, 61, 81, 100]),
+                    "directions": {
+                        "forward": {"arround_dir": "1"},
+                        "reverse": {"arround_dir": "0"}
+                    },
+                    "preset_modes": {
+                        "fanmanual": {"fan_scene": "fanmanual"},
+                        "const_temperature": {"fan_scene": "const_temperature"},
+                        "baby_wind": {"fan_scene": "baby_wind"},
+                        "sleep_wind": {"fan_scene": "sleep_wind"},
+                        "forest_wind": {"fan_scene": "forest_wind"}
+                    }
+                }
+            },
             Platform.LIGHT: {
                 "light": {
                     "power": "led_power",
@@ -194,23 +211,6 @@ DEVICE_MAPPING = {
                         "film": {"led_scene_light": "film"},
                         "night": {"led_scene_light": "night"},
                         "ledmanual": {"led_scene_light": "ledmanual"}
-                    }
-                }
-            },
-            Platform.FAN: {
-                "fan": {
-                    "power": "fan_power",
-                    "speeds": list({"fan_speed": str(value)} for value in [1, 21, 41, 61, 81, 100]),
-                    "directions": {
-                        "forward": {"arround_dir": "1"},
-                        "reverse": {"arround_dir": "0"}
-                    },
-                    "preset_modes": {
-                        "fanmanual": {"fan_scene": "fanmanual"},
-                        "const_temperature": {"fan_scene": "const_temperature"},
-                        "baby_wind": {"fan_scene": "baby_wind"},
-                        "sleep_wind": {"fan_scene": "sleep_wind"},
-                        "forest_wind": {"fan_scene": "forest_wind"}
                     }
                 }
             }

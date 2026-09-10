@@ -44,6 +44,11 @@ DEVICE_MAPPING = {
                     }
                 }
             },
+            Platform.BINARY_SENSOR: {
+                "feedback": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                }
+            },
             Platform.SENSOR: {
                 "out_water_tem": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
@@ -70,11 +75,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
                     "unit_of_measurement": UnitOfVolumeFlowRate.LITERS_PER_HOUR,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "feedback": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -122,6 +122,11 @@ DEVICE_MAPPING = {
                     }
                 }
             },
+            Platform.BINARY_SENSOR: {
+                "feedback": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                }
+            },
             Platform.SENSOR: {
                 "out_water_tem": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
@@ -148,11 +153,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
                     "unit_of_measurement": UnitOfVolumeFlowRate.LITERS_PER_HOUR,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "feedback": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }
@@ -208,6 +208,11 @@ DEVICE_MAPPING = {
                     }
                 }
             },
+            Platform.BINARY_SENSOR: {
+                "feedback": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                }
+            },
             Platform.SENSOR: {
                 "out_water_tem": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
@@ -234,11 +239,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
                     "unit_of_measurement": UnitOfVolumeFlowRate.LITERS_PER_HOUR,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "feedback": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             }
         }

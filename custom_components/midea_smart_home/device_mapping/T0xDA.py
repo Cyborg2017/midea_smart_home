@@ -4,6 +4,11 @@ DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.NUMBER: {
                 "temperature": {
                     "min": 0,
@@ -72,25 +77,6 @@ DEVICE_MAPPING = {
                     "mode": "box"
                 }
             },
-            Platform.BINARY_SENSOR: {
-                "softener_lack": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "detergent_lack": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "door_opened": {
-                    "device_class": BinarySensorDeviceClass.OPENING
-                },
-                "bucket_water_overheating": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                }
-            },
-            Platform.LOCK: {
-                "lock": {
-                    "translation_key": "child_lock"
-                }
-            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -119,6 +105,20 @@ DEVICE_MAPPING = {
                         "strong_wash": {"program": "strong_wash"},
                         "bucket_self_clean": {"program": "bucket_self_clean"},
                     }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "softener_lack": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "detergent_lack": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "door_opened": {
+                    "device_class": BinarySensorDeviceClass.OPENING
+                },
+                "bucket_water_overheating": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
                 }
             },
             Platform.SENSOR: {

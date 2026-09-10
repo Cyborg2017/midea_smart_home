@@ -12,6 +12,49 @@ DEVICE_MAPPING = {
             {"light, self_clean, sound"}
         ],
         "entities": {
+            Platform.HUMIDIFIER: {
+                "dehumidifier": {
+                    "device_class": HumidifierDeviceClass.DEHUMIDIFIER,
+                    "power": "power",
+                    "target_humidity": "humidity",
+                    "current_humidity": "cur_humidity",
+                    "min_humidity": 35,
+                    "max_humidity": 85,
+                    "target_humidity_step": 5,
+                    "mode": "mode",
+                    "modes": {
+                        "continuity": {"mode": "continuity"},
+                        "dry_clothes": {"mode": "dry_clothes"},
+                        "auto": {"mode": "auto"},
+                        "eco": {"mode": "eco"},
+                        "set": {"mode": "set"}
+                    }
+                }
+            },
+            Platform.TEXT: {
+                "external_humidity_sensor": {}
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.LOCK: {
                 "child_lock": {}
             },
@@ -42,49 +85,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1]
                 }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
-                }
-            },
-            Platform.HUMIDIFIER: {
-                "dehumidifier": {
-                    "device_class": HumidifierDeviceClass.DEHUMIDIFIER,
-                    "power": "power",
-                    "target_humidity": "humidity",
-                    "current_humidity": "cur_humidity",
-                    "min_humidity": 35,
-                    "max_humidity": 85,
-                    "target_humidity_step": 5,
-                    "mode": "mode",
-                    "modes": {
-                        "continuity": {"mode": "continuity"},
-                        "dry_clothes": {"mode": "dry_clothes"},
-                        "auto": {"mode": "auto"},
-                        "eco": {"mode": "eco"},
-                        "set": {"mode": "set"}
-                    }
-                }
-            },
-            Platform.TEXT: {
-                "external_humidity_sensor": {}
             },
             Platform.SELECT: {
                 "wind_speed": {
@@ -126,6 +126,49 @@ DEVICE_MAPPING = {
             {"light, self_clean, sound"}
         ],
         "entities": {
+            Platform.HUMIDIFIER: {
+                "dehumidifier": {
+                    "device_class": HumidifierDeviceClass.DEHUMIDIFIER,
+                    "power": "power",
+                    "target_humidity": "humidity",
+                    "current_humidity": "cur_humidity",
+                    "min_humidity": 35,
+                    "max_humidity": 85,
+                    "target_humidity_step": 5,
+                    "mode": "mode",
+                    "modes": {
+                        "continuity": {"mode": "continuity"},
+                        "dry_clothes": {"mode": "dry_clothes"},
+                        "auto": {"mode": "auto"},
+                        "eco": {"mode": "eco"},
+                        "set": {"mode": "set"}
+                    }
+                }
+            },
+            Platform.TEXT: {
+                "external_humidity_sensor": {}
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.LOCK: {
                 "child_lock": {}
             },
@@ -156,49 +199,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1]
                 }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
-                }
-            },
-            Platform.HUMIDIFIER: {
-                "dehumidifier": {
-                    "device_class": HumidifierDeviceClass.DEHUMIDIFIER,
-                    "power": "power",
-                    "target_humidity": "humidity",
-                    "current_humidity": "cur_humidity",
-                    "min_humidity": 35,
-                    "max_humidity": 85,
-                    "target_humidity_step": 5,
-                    "mode": "mode",
-                    "modes": {
-                        "continuity": {"mode": "continuity"},
-                        "dry_clothes": {"mode": "dry_clothes"},
-                        "auto": {"mode": "auto"},
-                        "eco": {"mode": "eco"},
-                        "set": {"mode": "set"}
-                    }
-                }
-            },
-            Platform.TEXT: {
-                "external_humidity_sensor": {}
             },
             Platform.SELECT: {
                 "wind_speed": {
@@ -240,6 +240,48 @@ DEVICE_MAPPING = {
             {"light, self_clean, sound"}
         ],
         "entities": {
+            Platform.HUMIDIFIER: {
+                "dehumidifier": {
+                    "device_class": HumidifierDeviceClass.DEHUMIDIFIER,
+                    "power": "power",
+                    "target_humidity": "humidity",
+                    "current_humidity": "cur_humidity",
+                    "min_humidity": 35,
+                    "max_humidity": 85,
+                    "target_humidity_step": 5,
+                    "mode": "mode",
+                    "modes": {
+                        "continuity": {"mode": "continuity"},
+                        "dry_clothes": {"mode": "dry_clothes"},
+                        "eco": {"mode": "eco"},
+                        "set": {"mode": "set"}
+                    }
+                }
+            },
+            Platform.TEXT: {
+                "external_humidity_sensor": {}
+            },
+            Platform.TIME: {
+                "power_on_timer": {
+                    "target_keys": {
+                        "duration": "power_on_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_on_timer": "on"}
+                },
+                "power_off_timer": {
+                    "target_keys": {
+                        "duration": "power_off_time_value"
+                    },
+                    "time_mode": "convert",
+                    "command": {"power_off_timer": "on"}
+                }
+            },
+            Platform.BUTTON: {
+                "cancel_power_on_off_timer": {
+                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
+                }
+            },
             Platform.LOCK: {
                 "child_lock": {}
             },
@@ -266,48 +308,6 @@ DEVICE_MAPPING = {
                     "rationale": [0, 1],
                     "translation_key": "buzzer"
                 }
-            },
-            Platform.TIME: {
-                "power_on_timer": {
-                    "target_keys": {
-                        "duration": "power_on_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_on_timer": "on"}
-                },
-                "power_off_timer": {
-                    "target_keys": {
-                        "duration": "power_off_time_value"
-                    },
-                    "time_mode": "convert",
-                    "command": {"power_off_timer": "on"}
-                }
-            },
-            Platform.BUTTON: {
-                "cancel_power_on_off_timer": {
-                    "command": {"power_on_timer": "off", "power_off_timer": "off"}
-                }
-            },
-            Platform.HUMIDIFIER: {
-                "dehumidifier": {
-                    "device_class": HumidifierDeviceClass.DEHUMIDIFIER,
-                    "power": "power",
-                    "target_humidity": "humidity",
-                    "current_humidity": "cur_humidity",
-                    "min_humidity": 35,
-                    "max_humidity": 85,
-                    "target_humidity_step": 5,
-                    "mode": "mode",
-                    "modes": {
-                        "continuity": {"mode": "continuity"},
-                        "dry_clothes": {"mode": "dry_clothes"},
-                        "eco": {"mode": "eco"},
-                        "set": {"mode": "set"}
-                    }
-                }
-            },
-            Platform.TEXT: {
-                "external_humidity_sensor": {}
             },
             Platform.SELECT: {
                 "wind_speed": {
@@ -347,24 +347,26 @@ DEVICE_MAPPING = {
             {"light, sound"}
         ],
         "entities": {
-            Platform.SWITCH: {
-                "anion": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                },
-                "light": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1],
-                    "translation_key": "display_on_off"
-                },
-                "sound": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1],
-                    "translation_key": "buzzer"
-                },
-                "water_pump": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": [0, 1]
+            Platform.HUMIDIFIER: {
+                "dehumidifier": {
+                    "device_class": HumidifierDeviceClass.DEHUMIDIFIER,
+                    "power": "power",
+                    "target_humidity": "humidity",
+                    "current_humidity": "cur_humidity",
+                    "min_humidity": 35,
+                    "max_humidity": 85,
+                    "target_humidity_step": 5,
+                    "mode": "mode",
+                    "modes": {
+                        "continuity": {"mode": "continuity"},
+                        "dry_clothes": {"mode": "dry_clothes"},
+                        "auto": {"mode": "auto"},
+                        "set": {"mode": "set"}
+                    }
                 }
+            },
+            Platform.TEXT: {
+                "external_humidity_sensor": {}
             },
             Platform.TIME: {
                 "power_on_timer": {
@@ -387,26 +389,24 @@ DEVICE_MAPPING = {
                     "command": {"power_on_timer": "off", "power_off_timer": "off"}
                 }
             },
-            Platform.HUMIDIFIER: {
-                "dehumidifier": {
-                    "device_class": HumidifierDeviceClass.DEHUMIDIFIER,
-                    "power": "power",
-                    "target_humidity": "humidity",
-                    "current_humidity": "cur_humidity",
-                    "min_humidity": 35,
-                    "max_humidity": 85,
-                    "target_humidity_step": 5,
-                    "mode": "mode",
-                    "modes": {
-                        "continuity": {"mode": "continuity"},
-                        "dry_clothes": {"mode": "dry_clothes"},
-                        "auto": {"mode": "auto"},
-                        "set": {"mode": "set"}
-                    }
+            Platform.SWITCH: {
+                "anion": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "light": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "display_on_off"
+                },
+                "sound": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "buzzer"
+                },
+                "water_pump": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
                 }
-            },
-            Platform.TEXT: {
-                "external_humidity_sensor": {}
             },
             Platform.SELECT: {
                 "wind_speed": {

@@ -96,6 +96,15 @@ DEVICE_MAPPING = {
                     "rationale": ["close_all", "night_light"]
                 }
             },
+            Platform.NUMBER: {
+                "radar_induction_closing_time": {
+                    "min": 1,
+                    "max": 5,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTime.MINUTES
+                }
+            },
             Platform.SWITCH: {
                 "radar_induction_enable": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -104,13 +113,9 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                 }
             },
-            Platform.NUMBER: {
-                "radar_induction_closing_time": {
-                    "min": 1,
-                    "max": 5,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTime.MINUTES
+            Platform.BINARY_SENSOR: {
+                "current_radar_status": {
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY
                 }
             },
             Platform.SENSOR: {
@@ -127,11 +132,6 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "cur_temperature"
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "current_radar_status": {
-                    "device_class": BinarySensorDeviceClass.OCCUPANCY
                 }
             }
         }
@@ -231,6 +231,15 @@ DEVICE_MAPPING = {
                     "rationale": ["close_all", "night_light"]
                 }
             },
+            Platform.NUMBER: {
+                "radar_induction_closing_time": {
+                    "min": 1,
+                    "max": 5,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTime.MINUTES
+                }
+            },
             Platform.SWITCH: {
                 "radar_induction_enable": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -239,13 +248,9 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                 }
             },
-            Platform.NUMBER: {
-                "radar_induction_closing_time": {
-                    "min": 1,
-                    "max": 5,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTime.MINUTES
+            Platform.BINARY_SENSOR: {
+                "current_radar_status": {
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY
                 }
             },
             Platform.SENSOR: {
@@ -262,11 +267,6 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "cur_temperature"
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "current_radar_status": {
-                    "device_class": BinarySensorDeviceClass.OCCUPANCY
                 }
             }
         }
@@ -387,6 +387,11 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH
                 }
             },
+            Platform.BINARY_SENSOR: {
+                "smelly_trigger": {
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY
+                }
+            },
             Platform.SENSOR: {
                 "main_light_brightness": {
                     "unit_of_measurement": PERCENTAGE,
@@ -400,11 +405,6 @@ DEVICE_MAPPING = {
                 },
                 "smelly_level": {
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "smelly_trigger": {
-                    "device_class": BinarySensorDeviceClass.OCCUPANCY
                 }
             }
         }
@@ -456,6 +456,16 @@ DEVICE_MAPPING = {
                     "rationale": ["close_all", "main_light"]
                 }
             },
+            Platform.SWITCH: {
+                "smelly_enable": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "smelly_trigger": {
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY
+                }
+            },
             Platform.SENSOR: {
                 "current_temperature": {
                     "device_class": SensorDeviceClass.TEMPERATURE,
@@ -468,16 +478,6 @@ DEVICE_MAPPING = {
                 },
                 "smelly_threshold": {
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.SWITCH: {
-                "smelly_enable": {
-                    "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
-            Platform.BINARY_SENSOR: {
-                "smelly_trigger": {
-                    "device_class": BinarySensorDeviceClass.OCCUPANCY
                 }
             }
         }

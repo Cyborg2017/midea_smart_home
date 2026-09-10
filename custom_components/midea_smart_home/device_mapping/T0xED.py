@@ -12,40 +12,39 @@ DEVICE_MAPPING = {
             ],
         },
         "entities": {
-            Platform.BINARY_SENSOR: {
-                "standby_status": {
-                    "device_class": BinarySensorDeviceClass.RUNNING,
-                    "rationale": [1, 0],
-                    "translation_key": "water_output_switch"
-                },
-                "sleep": {
-                    "device_class": BinarySensorDeviceClass.OPENING,
-                    "rationale": ["on", "off"],
-                    "translation_key": "screen_status"
-                },
-                "lack_water": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM,
-                    "translation_key": "pure_water_status"
-                },
-                "out_water": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "out_ice": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "ice_status": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "ice_gall_status": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                },
-                "filter": {
-                    "device_class": BinarySensorDeviceClass.RUNNING
-                }
-            },
             Platform.LOCK: {
                 "lock": {
                     "translation_key": "child_lock"
+                }
+            },
+            Platform.NUMBER: {
+                "quantify_21": {
+                    "min": 500,
+                    "max": 5000,
+                    "step": 500,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
+                },
+                "quantify_22": {
+                    "min": 500,
+                    "max": 5000,
+                    "step": 500,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
+                },
+                "quantify_23": {
+                    "min": 500,
+                    "max": 5000,
+                    "step": 500,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
+                },
+                "clean_water_consumption": {
+                    "min": 0,
+                    "max": 60,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfVolume.CUBIC_METERS
                 }
             },
             Platform.SWITCH: {
@@ -219,34 +218,35 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.NUMBER: {
-                "quantify_21": {
-                    "min": 500,
-                    "max": 5000,
-                    "step": 500,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
+            Platform.BINARY_SENSOR: {
+                "standby_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING,
+                    "rationale": [1, 0],
+                    "translation_key": "water_output_switch"
                 },
-                "quantify_22": {
-                    "min": 500,
-                    "max": 5000,
-                    "step": 500,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
+                "sleep": {
+                    "device_class": BinarySensorDeviceClass.OPENING,
+                    "rationale": ["on", "off"],
+                    "translation_key": "screen_status"
                 },
-                "quantify_23": {
-                    "min": 500,
-                    "max": 5000,
-                    "step": 500,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
+                "lack_water": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                    "translation_key": "pure_water_status"
                 },
-                "clean_water_consumption": {
-                    "min": 0,
-                    "max": 60,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfVolume.CUBIC_METERS
+                "out_water": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "out_ice": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "ice_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "ice_gall_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "filter": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
                 }
             },
             Platform.SENSOR: {
@@ -331,11 +331,27 @@ DEVICE_MAPPING = {
             ],
         },
         "entities": {
-            Platform.BINARY_SENSOR: {
-                "standby_status": {
-                    "device_class": BinarySensorDeviceClass.RUNNING,
-                    "rationale": [1, 0],
-                    "translation_key": "water_output_switch"
+            Platform.NUMBER: {
+                "quantify_21": {
+                    "min": 500,
+                    "max": 5000,
+                    "step": 500,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
+                },
+                "quantify_22": {
+                    "min": 500,
+                    "max": 5000,
+                    "step": 500,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
+                },
+                "quantify_23": {
+                    "min": 500,
+                    "max": 5000,
+                    "step": 500,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
                 }
             },
             Platform.SWITCH: {
@@ -416,27 +432,11 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.NUMBER: {
-                "quantify_21": {
-                    "min": 500,
-                    "max": 5000,
-                    "step": 500,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
-                },
-                "quantify_22": {
-                    "min": 500,
-                    "max": 5000,
-                    "step": 500,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
-                },
-                "quantify_23": {
-                    "min": 500,
-                    "max": 5000,
-                    "step": 500,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
+            Platform.BINARY_SENSOR: {
+                "standby_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING,
+                    "rationale": [1, 0],
+                    "translation_key": "water_output_switch"
                 }
             },
             Platform.SENSOR: {
@@ -475,11 +475,27 @@ DEVICE_MAPPING = {
     "632009F5": {
         "rationale": ["off", "on"],
         "entities": {
-            Platform.BINARY_SENSOR: {
-                "standby_status": {
-                    "device_class": BinarySensorDeviceClass.RUNNING,
-                    "rationale": [1, 0],
-                    "translation_key": "water_output_switch"
+            Platform.NUMBER: {
+                "quantify_21": {
+                    "min": 300,
+                    "max": 500,
+                    "step": 100,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
+                },
+                "quantify_22": {
+                    "min": 500,
+                    "max": 1000,
+                    "step": 100,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
+                },
+                "quantify_23": {
+                    "min": 1000,
+                    "max": 1500,
+                    "step": 100,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
                 }
             },
             Platform.SWITCH: {
@@ -508,27 +524,11 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.NUMBER: {
-                "quantify_21": {
-                    "min": 300,
-                    "max": 500,
-                    "step": 100,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
-                },
-                "quantify_22": {
-                    "min": 500,
-                    "max": 1000,
-                    "step": 100,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
-                },
-                "quantify_23": {
-                    "min": 1000,
-                    "max": 1500,
-                    "step": 100,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
+            Platform.BINARY_SENSOR: {
+                "standby_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING,
+                    "rationale": [1, 0],
+                    "translation_key": "water_output_switch"
                 }
             },
             Platform.SENSOR: {
@@ -570,11 +570,27 @@ DEVICE_MAPPING = {
             ],
         },
         "entities": {
-            Platform.BINARY_SENSOR: {
-                "standby_status": {
-                    "device_class": BinarySensorDeviceClass.RUNNING,
-                    "rationale": [1, 0],
-                    "translation_key": "water_output_switch"
+            Platform.NUMBER: {
+                "quantify_21": {
+                    "min": 300,
+                    "max": 1000,
+                    "step": 100,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
+                },
+                "quantify_22": {
+                    "min": 1100,
+                    "max": 1900,
+                    "step": 100,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
+                },
+                "quantify_23": {
+                    "min": 2000,
+                    "max": 5000,
+                    "step": 500,
+                    "mode": "box",
+                    "unit_of_measurement": "mL"
                 }
             },
             Platform.SWITCH: {
@@ -598,27 +614,11 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.NUMBER: {
-                "quantify_21": {
-                    "min": 300,
-                    "max": 1000,
-                    "step": 100,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
-                },
-                "quantify_22": {
-                    "min": 1100,
-                    "max": 1900,
-                    "step": 100,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
-                },
-                "quantify_23": {
-                    "min": 2000,
-                    "max": 5000,
-                    "step": 500,
-                    "mode": "box",
-                    "unit_of_measurement": "mL"
+            Platform.BINARY_SENSOR: {
+                "standby_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING,
+                    "rationale": [1, 0],
+                    "translation_key": "water_output_switch"
                 }
             },
             Platform.SENSOR: {
@@ -651,16 +651,16 @@ DEVICE_MAPPING = {
     "63201787": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.SWITCH: {
+                "wash": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
             Platform.BINARY_SENSOR: {
                 "standby_status": {
                     "device_class": BinarySensorDeviceClass.RUNNING,
                     "rationale": [1, 0],
                     "translation_key": "water_output_switch"
-                }
-            },
-            Platform.SWITCH: {
-                "wash": {
-                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SENSOR: {
@@ -691,6 +691,15 @@ DEVICE_MAPPING = {
             Platform.LOCK: {
                 "lock": {
                     "translation_key": "child_lock"
+                }
+            },
+            Platform.NUMBER: {
+                "custom_temperature_1": {
+                    "min": 35,
+                    "max": 95,
+                    "step": 5,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS
                 }
             },
             Platform.SWITCH: {
@@ -775,15 +784,6 @@ DEVICE_MAPPING = {
                     "command": {"set_germicidal_countdown": "on"}
                 }
             },
-            Platform.NUMBER: {
-                "custom_temperature_1": {
-                    "min": 35,
-                    "max": 95,
-                    "step": 5,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTemperature.CELSIUS
-                }
-            },
             Platform.BINARY_SENSOR: {
                 "sleep": {
                     "device_class": BinarySensorDeviceClass.OPENING,
@@ -825,6 +825,37 @@ DEVICE_MAPPING = {
                     "translation_key": "child_lock"
                 }
             },
+            Platform.NUMBER: {
+                "milk_temperature": {
+                    "min": 45,
+                    "max": 50,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS
+                },
+                "honey_temperature": {
+                    "min": 50,
+                    "max": 70,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS
+                },
+                "tea_temperature": {
+                    "min": 71,
+                    "max": 85,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS
+                },
+                "custom_temperature_1": {
+                    "min": 86,
+                    "max": 100,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "translation_key": "boiling_water_temperature"
+                }
+            },
             Platform.SELECT: {
                 "quantify_1": {
                     "options": {
@@ -863,37 +894,6 @@ DEVICE_MAPPING = {
                         "100": {"plateau_boiling_point": 0}
                     },
                     "command": {"plateau_power": "on"}
-                }
-            },
-            Platform.NUMBER: {
-                "milk_temperature": {
-                    "min": 45,
-                    "max": 50,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTemperature.CELSIUS
-                },
-                "honey_temperature": {
-                    "min": 50,
-                    "max": 70,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTemperature.CELSIUS
-                },
-                "tea_temperature": {
-                    "min": 71,
-                    "max": 85,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTemperature.CELSIUS
-                },
-                "custom_temperature_1": {
-                    "min": 86,
-                    "max": 100,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
-                    "translation_key": "boiling_water_temperature"
                 }
             },
             Platform.BINARY_SENSOR: {
@@ -1056,6 +1056,24 @@ DEVICE_MAPPING = {
             ],
         },
         "entities": {
+            Platform.NUMBER: {
+                "custom_temperature_1": {
+                    "min": 86,
+                    "max": 98,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "translation_key": "boiling_water_temperature"
+                },
+                "milk_temperature": {
+                    "min": 40,
+                    "max": 85,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "translation_key": "warm_water_temperature"
+                }
+            },
             Platform.SWITCH: {
                 "cool": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -1142,24 +1160,6 @@ DEVICE_MAPPING = {
                     }
                 }
             },
-            Platform.NUMBER: {
-                "custom_temperature_1": {
-                    "min": 86,
-                    "max": 98,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
-                    "translation_key": "boiling_water_temperature"
-                },
-                "milk_temperature": {
-                    "min": 40,
-                    "max": 85,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
-                    "translation_key": "warm_water_temperature"
-                }
-            },
             Platform.BINARY_SENSOR: {
                 "sleep": {
                     "device_class": BinarySensorDeviceClass.OPENING,
@@ -1237,6 +1237,40 @@ DEVICE_MAPPING = {
     "default_water_softener": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.NUMBER: {
+                "water_hardness": {
+                    "min": 0,
+                    "max": 500,
+                    "step": 1,
+                    "mode": "box"
+                },
+                "timing_regeneration_hour": {
+                    "min": 0,
+                    "max": 23,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTime.HOURS
+                },
+                "timing_regeneration_min": {
+                    "min": 0,
+                    "max": 59,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTime.MINUTES
+                },
+                "leak_water_protection_value": {
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "mode": "box"
+                },
+                "micro_leak_protection_value": {
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "mode": "box"
+                }
+            },
             Platform.SWITCH: {
                 "soften": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -1356,40 +1390,6 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.VOLTAGE,
                     "unit_of_measurement": UnitOfElectricPotential.VOLT,
                     "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
-            Platform.NUMBER: {
-                "water_hardness": {
-                    "min": 0,
-                    "max": 500,
-                    "step": 1,
-                    "mode": "box"
-                },
-                "timing_regeneration_hour": {
-                    "min": 0,
-                    "max": 23,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTime.HOURS
-                },
-                "timing_regeneration_min": {
-                    "min": 0,
-                    "max": 59,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTime.MINUTES
-                },
-                "leak_water_protection_value": {
-                    "min": 0,
-                    "max": 100,
-                    "step": 1,
-                    "mode": "box"
-                },
-                "micro_leak_protection_value": {
-                    "min": 0,
-                    "max": 100,
-                    "step": 1,
-                    "mode": "box"
                 }
             }
         }
@@ -1397,6 +1397,40 @@ DEVICE_MAPPING = {
     "63600119": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.NUMBER: {
+                "water_hardness": {
+                    "min": 0,
+                    "max": 500,
+                    "step": 1,
+                    "mode": "box"
+                },
+                "timing_regeneration_hour": {
+                    "min": 0,
+                    "max": 23,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTime.HOURS
+                },
+                "timing_regeneration_min": {
+                    "min": 0,
+                    "max": 59,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTime.MINUTES
+                },
+                "leak_water_protection_value": {
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "mode": "box"
+                },
+                "micro_leak_protection_value": {
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "mode": "box"
+                }
+            },
             Platform.SWITCH: {
                 "soften": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -1517,46 +1551,21 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfElectricPotential.VOLT,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
-            },
-            Platform.NUMBER: {
-                "water_hardness": {
-                    "min": 0,
-                    "max": 500,
-                    "step": 1,
-                    "mode": "box"
-                },
-                "timing_regeneration_hour": {
-                    "min": 0,
-                    "max": 23,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTime.HOURS
-                },
-                "timing_regeneration_min": {
-                    "min": 0,
-                    "max": 59,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfTime.MINUTES
-                },
-                "leak_water_protection_value": {
-                    "min": 0,
-                    "max": 100,
-                    "step": 1,
-                    "mode": "box"
-                },
-                "micro_leak_protection_value": {
-                    "min": 0,
-                    "max": 100,
-                    "step": 1,
-                    "mode": "box"
-                }
             }
         }
     },
     "63200854": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.NUMBER: {
+                "clean_water_consumption": {
+                    "min": 0,
+                    "max": 60,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfVolume.CUBIC_METERS
+                }
+            },
             Platform.SWITCH: {
                 "open_close_switch": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -1619,15 +1628,6 @@ DEVICE_MAPPING = {
                         "1500l": {"single_max_water_consumption": "30"},
                         "2000l": {"single_max_water_consumption": "40"}
                     }
-                }
-            },
-            Platform.NUMBER: {
-                "clean_water_consumption": {
-                    "min": 0,
-                    "max": 60,
-                    "step": 1,
-                    "mode": "box",
-                    "unit_of_measurement": UnitOfVolume.CUBIC_METERS
                 }
             },
             Platform.SENSOR: {

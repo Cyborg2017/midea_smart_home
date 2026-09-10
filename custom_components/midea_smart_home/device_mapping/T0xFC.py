@@ -4,6 +4,11 @@ DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.NUMBER: {
                 "hosting_upper": {
                     "min": 10,
@@ -18,11 +23,6 @@ DEVICE_MAPPING = {
                     "step": 1,
                     "mode": "box",
                     "mode": "box"
-                }
-            },
-            Platform.LOCK: {
-                "lock": {
-                    "translation_key": "child_lock"
                 }
             },
             Platform.SWITCH: {
@@ -114,6 +114,11 @@ DEVICE_MAPPING = {
     "default_air_purifier": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.NUMBER: {
                 "hosting_upper": {
                     "min": 10,
@@ -126,11 +131,6 @@ DEVICE_MAPPING = {
                     "max": 75,
                     "step": 1,
                     "mode": "box"
-                }
-            },
-            Platform.LOCK: {
-                "lock": {
-                    "translation_key": "child_lock"
                 }
             },
             Platform.SWITCH: {

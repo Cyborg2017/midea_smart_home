@@ -11,6 +11,12 @@ DEVICE_MAPPING = {
                     "stop_value": "pause",
                 }
             },
+            Platform.LIGHT: {
+                "common_light": {
+                    "power": "light",
+                    "brightness": {"light_brightness": [20, 100]}
+                }
+            },
             Platform.NUMBER: {
                 "custom_height": {
                     "min": 0,
@@ -24,12 +30,6 @@ DEVICE_MAPPING = {
                     "step": 5,
                     "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
-                }
-            },
-            Platform.LIGHT: {
-                "common_light": {
-                    "power": "light",
-                    "brightness": {"light_brightness": [20, 100]}
                 }
             },
             Platform.SWITCH: {
@@ -57,6 +57,12 @@ DEVICE_MAPPING = {
                     "stop_value": "pause",
                 }
             },
+            Platform.LIGHT: {
+                "common_light": {
+                    "power": "light",
+                    "brightness": {"light_brightness": [20, 100]}
+                }
+            },
             Platform.NUMBER: {
                 "custom_height": {
                     "min": 0,
@@ -70,12 +76,6 @@ DEVICE_MAPPING = {
                     "step": 5,
                     "mode": "box",
                     "unit_of_measurement": UnitOfTime.MINUTES
-                }
-            },
-            Platform.LIGHT: {
-                "common_light": {
-                    "power": "light",
-                    "brightness": {"light_brightness": [20, 100]}
                 }
             },
             Platform.SWITCH: {

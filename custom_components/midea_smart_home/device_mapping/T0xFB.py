@@ -4,6 +4,27 @@ DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.CLIMATE: {
+                "electric_heater": {
+                    "power": "power",
+                    "hvac_modes": {
+                        "off": {"power": "off"},
+                        "heat": {"power": "on"}
+                    },
+                    "preset_modes": {
+                        "full_off": {"gear": 0},
+                        "left_warm": {"gear": 1},
+                        "right_warm": {"gear": 2},
+                        "full_on": {"gear": 3}
+                    },
+                    "target_temperature": "temperature",
+                    "current_temperature": "cur_temperature",
+                    "min_temp": 5,
+                    "max_temp": 35,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE,
+                }
+            },
             Platform.LOCK: {
                 "lock": {
                     "translation_key": "child_lock"
@@ -26,27 +47,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ['close_buzzer', 'open_buzzer'],
                     "translation_key": "buzzer"
-                }
-            },
-            Platform.CLIMATE: {
-                "electric_heater": {
-                    "power": "power",
-                    "hvac_modes": {
-                        "off": {"power": "off"},
-                        "heat": {"power": "on"}
-                    },
-                    "preset_modes": {
-                        "full_off": {"gear": 0},
-                        "left_warm": {"gear": 1},
-                        "right_warm": {"gear": 2},
-                        "full_on": {"gear": 3}
-                    },
-                    "target_temperature": "temperature",
-                    "current_temperature": "cur_temperature",
-                    "min_temp": 5,
-                    "max_temp": 35,
-                    "temperature_unit": UnitOfTemperature.CELSIUS,
-                    "precision": PRECISION_WHOLE,
                 }
             },
             Platform.SENSOR: {
@@ -66,6 +66,27 @@ DEVICE_MAPPING = {
     "default_heater": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.CLIMATE: {
+                "electric_heater": {
+                    "power": "power",
+                    "hvac_modes": {
+                        "off": {"power": "off"},
+                        "heat": {"power": "on"}
+                    },
+                    "preset_modes": {
+                        "full_off": {"gear": 0},
+                        "left_warm": {"gear": 1},
+                        "right_warm": {"gear": 2},
+                        "full_on": {"gear": 3}
+                    },
+                    "target_temperature": "temperature",
+                    "current_temperature": "cur_temperature",
+                    "min_temp": 5,
+                    "max_temp": 35,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE,
+                }
+            },
             Platform.LOCK: {
                 "lock": {
                     "translation_key": "child_lock"
@@ -88,27 +109,6 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ['close_buzzer', 'open_buzzer'],
                     "translation_key": "buzzer"
-                }
-            },
-            Platform.CLIMATE: {
-                "electric_heater": {
-                    "power": "power",
-                    "hvac_modes": {
-                        "off": {"power": "off"},
-                        "heat": {"power": "on"}
-                    },
-                    "preset_modes": {
-                        "full_off": {"gear": 0},
-                        "left_warm": {"gear": 1},
-                        "right_warm": {"gear": 2},
-                        "full_on": {"gear": 3}
-                    },
-                    "target_temperature": "temperature",
-                    "current_temperature": "cur_temperature",
-                    "min_temp": 5,
-                    "max_temp": 35,
-                    "temperature_unit": UnitOfTemperature.CELSIUS,
-                    "precision": PRECISION_WHOLE,
                 }
             },
             Platform.SENSOR: {

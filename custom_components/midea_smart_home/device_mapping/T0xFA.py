@@ -4,19 +4,6 @@ DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
         "entities": {
-            Platform.SWITCH: {
-                "display_on_off": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": ["on", "off"],
-                },
-                "humidify": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": ["off", "1"],
-                },
-                "waterions": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                }
-            },
             Platform.FAN: {
                 "fan": {
                     "power": "power",
@@ -45,12 +32,7 @@ DEVICE_MAPPING = {
                         }
                     }
                 }
-            }
-        }
-    },
-    "default_fan": {
-        "rationale": ["off", "on"],
-        "entities": {
+            },
             Platform.SWITCH: {
                 "display_on_off": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -63,7 +45,12 @@ DEVICE_MAPPING = {
                 "waterions": {
                     "device_class": SwitchDeviceClass.SWITCH,
                 }
-            },
+            }
+        }
+    },
+    "default_fan": {
+        "rationale": ["off", "on"],
+        "entities": {
             Platform.FAN: {
                 "fan": {
                     "power": "power",
@@ -84,12 +71,7 @@ DEVICE_MAPPING = {
                         }
                     }
                 }
-            }
-        }
-    },
-    "560011AH": {
-        "rationale": ["off", "on"],
-        "entities": {
+            },
             Platform.SWITCH: {
                 "display_on_off": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -99,18 +81,15 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["off", "1"],
                 },
-                "anion": {
+                "waterions": {
                     "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "temp_wind_switch": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                },
-                "voice": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": ['close_buzzer', 'open_buzzer'],
-                    "translation_key": "buzzer"
                 }
-            },
+            }
+        }
+    },
+    "560011AH": {
+        "rationale": ["off", "on"],
+        "entities": {
             Platform.FAN: {
                 "fan": {
                     "power": "power",
@@ -130,6 +109,27 @@ DEVICE_MAPPING = {
                             "speeds": list({"gear": value + 1} for value in range(0, 2))
                         }
                     }
+                }
+            },
+            Platform.SWITCH: {
+                "display_on_off": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["on", "off"],
+                },
+                "humidify": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["off", "1"],
+                },
+                "anion": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "temp_wind_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "voice": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ['close_buzzer', 'open_buzzer'],
+                    "translation_key": "buzzer"
                 }
             },
             Platform.SENSOR: {
@@ -175,17 +175,6 @@ DEVICE_MAPPING = {
     "56011C99": {
         "rationale": ["off", "on"],
         "entities": {
-            Platform.SWITCH: {
-                "display_on_off": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": ["on", "off"]
-                },
-                "voice": {
-                    "device_class": SwitchDeviceClass.SWITCH,
-                    "rationale": ["close_buzzer", "open_buzzer"],
-                    "translation_key": "buzzer"
-                }
-            },
             Platform.FAN: {
                 "fan": {
                     "power": "power",
@@ -201,6 +190,17 @@ DEVICE_MAPPING = {
                             "speeds": [{"gear": 9}]
                         }
                     }
+                }
+            },
+            Platform.SWITCH: {
+                "display_on_off": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["on", "off"]
+                },
+                "voice": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["close_buzzer", "open_buzzer"],
+                    "translation_key": "buzzer"
                 }
             },
             Platform.SELECT: {

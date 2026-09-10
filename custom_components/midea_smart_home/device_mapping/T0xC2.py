@@ -4,6 +4,11 @@ DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.BUTTON: {
+                "stop": {
+                    "command": {"stop": "stop"}
+                }
+            },
             Platform.SWITCH: {
                 "power": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -34,11 +39,6 @@ DEVICE_MAPPING = {
                 },
                 "strength_clean": {
                     "device_class": SwitchDeviceClass.SWITCH
-                }
-            },
-            Platform.BUTTON: {
-                "stop": {
-                    "command": {"stop": "stop"}
                 }
             },
             Platform.SELECT: {
@@ -127,18 +127,18 @@ DEVICE_MAPPING = {
                     }
                 },
             },
-            Platform.SENSOR: {
-                "filter_use_per": {
-                    "unit_of_measurement": PERCENTAGE,
-                    "state_class": SensorStateClass.MEASUREMENT
-                }
-            },
             Platform.BINARY_SENSOR: {
                 "on_seat": {
                     "device_class": BinarySensorDeviceClass.OCCUPANCY
                 },
                 "flip_status": {
                     "device_class": BinarySensorDeviceClass.OPENING
+                }
+            },
+            Platform.SENSOR: {
+                "filter_use_per": {
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             }
         }
