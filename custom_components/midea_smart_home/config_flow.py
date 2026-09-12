@@ -108,9 +108,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._scan_address: str = "auto"
         self._scan_mode: str = "broadcast"
         self._session: ClientSession = None
-        self._preset_cloud = None
         self._user_cloud = None
-        self._preset_cloud_token: dict[str, Any] = {}  # cached cloud instances by account
         self._existing_entry: config_entries.ConfigEntry | None = None
         self._cloud_devices: dict = {}
 
@@ -180,18 +178,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._session = ClientSession()
 
             try:
-                from .midea_lib.cloud import get_midea_cloud, get_preset_account_cloud
-
-                preset = get_preset_account_cloud()
-                self._preset_cloud = get_midea_cloud(
-                    cloud_name=preset["cloud_name"],
-                    session=self._session,
-                    account=preset["username"],
-                    password=preset["password"],
-                )
-
-                if not await self._preset_cloud.login():
-                    _LOGGER.warning("Preset cloud login failed")
+                from .midea_lib.cloud import get_midea_cloud
 
                 self._user_cloud = get_midea_cloud(
                     cloud_name="Meiju Cloud",
@@ -412,7 +399,6 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
           and validate it via TCP handshake before reuse.
         - Fall back to the user's own logged-in cloud (Meiju Cloud /v2, supports
           the real udpid from the broadcast tail for 2023+ new modules).
-        - Fall back to preset accounts (NetHome Plus /v1) for older devices.
         - Reuses cached cloud instances across devices (preserves _security state).
 
         Returns (token, key, source) or ("", "", "manual") on failure.
@@ -443,7 +429,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except Exception as e:
                 _LOGGER.debug("[%d] Failed to load local cached token/key: %s", device_id, e)
 
-        # 1) Prefer the user's own cloud (Meiju Cloud /v2, supports real udpid for new modules)
+        # Prefer the user's own cloud (Meiju Cloud /v2, supports real udpid for new modules)
         if self._user_cloud is not None:
             try:
                 keys = await self._user_cloud.get_cloud_keys(device_id, udpid)
@@ -462,66 +448,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except Exception as e:
                 _LOGGER.debug("[%d] User cloud get token error: %s", device_id, e)
 
-        # 2) Fall back to preset accounts (NetHome Plus /v1)
-        try:
-            from .midea_lib.cloud import get_all_preset_accounts, get_midea_cloud
-
-            presets = get_all_preset_accounts()
-            for preset in presets:
-                label = f"{preset['username']}@{preset['cloud_name']}"
-
-                try:
-                    # Reuse cached instance or create new one for this account
-                    cache_key = f"{preset['cloud_name']}:{preset['username']}"
-                    if cache_key in self._preset_cloud_token:
-                        cloud = self._preset_cloud_token[cache_key]
-                    else:
-                        cloud = get_midea_cloud(
-                            cloud_name=preset["cloud_name"],
-                            session=self._session,
-                            account=preset["username"],
-                            password=preset["password"],
-                        )
-                        if not await cloud.login():
-                            _LOGGER.warning("[%d] Preset %s initial login failed", device_id, label)
-                            await asyncio.sleep(5)
-                            if not await cloud.login():
-                                continue
-                        self._preset_cloud_token[cache_key] = cloud
-                        _LOGGER.info("[%d] Preset %s login OK", device_id, label)
-
-                    # Try get_cloud_keys
-                    keys = await cloud.get_cloud_keys(device_id)
-                    if not keys:
-                        _LOGGER.debug("[%d] EMPTY for %s, re-login", device_id, label)
-                        if not await cloud.login():
-                            _LOGGER.debug("[%d] Re-login failed, retry in 5s", device_id)
-                            await asyncio.sleep(5)
-                            if not await cloud.login():
-                                _LOGGER.warning("[%d] Preset %s re-login failed after retry", device_id, label)
-                                continue
-                        keys = await cloud.get_cloud_keys(device_id)
-
-                    if keys:
-                        for method, data in keys.items():
-                            token = data["token"]
-                            key = data["key"]
-                            if await self._validate_token_key(
-                                device_id, ip_address, port, token, key
-                            ):
-                                _LOGGER.info(
-                                    "[%d][%s] Got token/key (method=%d)",
-                                    device_id, label, method,
-                                )
-                                return token, key, f"preset:{label}"
-                        _LOGGER.debug("[%d] Token/key failed TCP validation for %s", device_id, label)
-                except Exception as e:
-                    _LOGGER.debug("[%d] Preset %s error: %s", device_id, label, e)
-
-        except ImportError:
-            pass
-
-        _LOGGER.warning("[%d] No valid token/key found (all presets exhausted)", device_id)
+        _LOGGER.warning("[%d] No valid token/key found", device_id)
         return "", "", "manual"
 
     async def async_step_get_token(
@@ -827,9 +754,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         self._devices_data: list = list(config_entry.data.get("devices", []))
         self._scan_mode: str = "broadcast"
         self._session: ClientSession = None
-        self._preset_cloud = None
         self._user_cloud = None
-        self._preset_cloud_token: dict[str, Any] = {}  # cached cloud instances by account
         self._cloud_devices: dict = {}
 
     async def _validate_token_key(
@@ -928,7 +853,6 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
           and validate it via TCP handshake before reuse.
         - Fall back to the user's own logged-in cloud (Meiju Cloud /v2, supports
           the real udpid from the broadcast tail for 2023+ new modules).
-        - Fall back to preset accounts (NetHome Plus /v1) for older devices.
         - Reuses cached cloud instances across devices (preserves _security state).
 
         Returns (token, key, source) or ("", "", "manual") on failure.
@@ -959,7 +883,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             except Exception as e:
                 _LOGGER.debug("[%d] Failed to load local cached token/key: %s", device_id, e)
 
-        # 1) Prefer the user's own cloud (Meiju Cloud /v2, supports real udpid for new modules)
+        # Prefer the user's own cloud (Meiju Cloud /v2, supports real udpid for new modules)
         if self._user_cloud is not None:
             try:
                 keys = await self._user_cloud.get_cloud_keys(device_id, udpid)
@@ -977,65 +901,6 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 _LOGGER.debug("[%d] User cloud token/key failed TCP validation", device_id)
             except Exception as e:
                 _LOGGER.debug("[%d] User cloud get token error: %s", device_id, e)
-
-        # 2) Fall back to preset accounts (NetHome Plus /v1)
-        try:
-            from .midea_lib.cloud import get_all_preset_accounts, get_midea_cloud
-
-            presets = get_all_preset_accounts()
-            for preset in presets:
-                label = f"{preset['username']}@{preset['cloud_name']}"
-
-                try:
-                    # Reuse cached instance or create new one for this account
-                    cache_key = f"{preset['cloud_name']}:{preset['username']}"
-                    if cache_key in self._preset_cloud_token:
-                        cloud = self._preset_cloud_token[cache_key]
-                    else:
-                        cloud = get_midea_cloud(
-                            cloud_name=preset["cloud_name"],
-                            session=self._session,
-                            account=preset["username"],
-                            password=preset["password"],
-                        )
-                        if not await cloud.login():
-                            _LOGGER.warning("[%d] Preset %s initial login failed", device_id, label)
-                            await asyncio.sleep(5)
-                            if not await cloud.login():
-                                continue
-                        self._preset_cloud_token[cache_key] = cloud
-                        _LOGGER.info("[%d] Preset %s login OK", device_id, label)
-
-                    # Try get_cloud_keys
-                    keys = await cloud.get_cloud_keys(device_id)
-                    if not keys:
-                        _LOGGER.debug("[%d] EMPTY for %s, re-login", device_id, label)
-                        if not await cloud.login():
-                            _LOGGER.debug("[%d] Re-login failed, retry in 5s", device_id)
-                            await asyncio.sleep(5)
-                            if not await cloud.login():
-                                _LOGGER.warning("[%d] Preset %s re-login failed after retry", device_id, label)
-                                continue
-                        keys = await cloud.get_cloud_keys(device_id)
-
-                    if keys:
-                        for method, data in keys.items():
-                            token = data["token"]
-                            key = data["key"]
-                            if await self._validate_token_key(
-                                device_id, ip_address, port, token, key
-                            ):
-                                _LOGGER.info(
-                                    "[%d][%s] Got token/key (method=%d)",
-                                    device_id, label, method,
-                                )
-                                return token, key, f"preset:{label}"
-                        _LOGGER.debug("[%d] Token/key failed TCP validation for %s", device_id, label)
-                except Exception as e:
-                    _LOGGER.debug("[%d] Preset %s error: %s", device_id, label, e)
-
-        except ImportError:
-            pass
 
         _LOGGER.warning("[%d] No valid token/key found", device_id)
         return "", "", "manual"
@@ -1101,18 +966,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             self._session = ClientSession()
 
             try:
-                from .midea_lib.cloud import get_midea_cloud, get_preset_account_cloud
-
-                preset = get_preset_account_cloud()
-                self._preset_cloud = get_midea_cloud(
-                    cloud_name=preset["cloud_name"],
-                    session=self._session,
-                    account=preset["username"],
-                    password=preset["password"],
-                )
-
-                if not await self._preset_cloud.login():
-                    _LOGGER.warning("Preset cloud login failed")
+                from .midea_lib.cloud import get_midea_cloud
 
                 if self._account and self._password:
                     self._user_cloud = get_midea_cloud(

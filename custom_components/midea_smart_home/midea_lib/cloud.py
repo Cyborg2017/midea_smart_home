@@ -42,80 +42,11 @@ SUPPORTED_CLOUDS = {
     },
 }
 
-# Multiple preset accounts, each paired with a specific cloud API.
-# All credentials are XOR-encoded (3-element format: key, key^username, key^password).
-# All accounts share the same base key. Each account will be tried in order; if one fails, the next is used.
-PRESET_ACCOUNTS: list[dict[str, Any]] = [
-    # Account 1: midea_smart_home@yeah.net / mideasmarthome26 -> NetHome Plus
-    {
-        "data": [
-            39182118275972017797890111985649342047468653967530949796945843010512,
-            39182118961190965041038356452242204560213308172028239508034309545636,
-            39182118275972017797890111985698725417270634364159392795375039678950,
-        ],
-        "cloud_name": "NetHome Plus"
-    },
-    # Account 2: nethome+us@mailinator.com / password1 -> NetHome Plus
-    {
-        "data": [
-            39182118275972017797890111985649342047468653967530949796945843010512,
-            39182118967175364252556792044274029144236606293186564273988733916349,
-            39182118275972017797890111985649342047468653969590117477294774902753,
-        ],
-        "cloud_name": "NetHome Plus"
-    },
-    # Account 3: midea_cloud@outlook.com / a0d6e30c94b15 -> NetHome Plus
-    {
-        "data": [
-            39182118275972017797890111985649342047468653967530949796945843010512,
-            39182118275980892824833804202177448991093361348247890162501600564413,
-            39182118275972017797890111985649342050088014265865102175083010656997,
-        ],
-        "cloud_name": "NetHome Plus"
-    }
-]
-
 def get_default_cloud() -> str:
     for key, value in SUPPORTED_CLOUDS.items():
         if cast(dict, value).get("default"):
             return key
     raise ElementMissing
-
-def get_preset_account_cloud() -> dict[str, str]:
-    """Return the first preset account (backward compat for discover step)."""
-    data = PRESET_ACCOUNTS[0]["data"]
-    username = bytes.fromhex(
-        format((data[0] ^ data[1]), "X"),
-    ).decode("utf-8", errors="ignore")
-    password = bytes.fromhex(
-        format((data[0] ^ data[2]), "X"),
-    ).decode("utf-8", errors="ignore")
-    return {
-        "username": username,
-        "password": password,
-        "cloud_name": PRESET_ACCOUNTS[0]["cloud_name"],
-    }
-
-def get_all_preset_accounts() -> list[dict[str, str]]:
-    """Return all preset accounts as [{username, password, cloud_name}, ...].
-
-    Each account uses 3-element XOR encoding: [key, key^username, key^password].
-    """
-    accounts = []
-    for preset in PRESET_ACCOUNTS:
-        data = preset["data"]
-        username = bytes.fromhex(
-            format((data[0] ^ data[1]), "X"),
-        ).decode("utf-8", errors="ignore")
-        password = bytes.fromhex(
-            format((data[0] ^ data[2]), "X"),
-        ).decode("utf-8", errors="ignore")
-        accounts.append({
-            "username": username,
-            "password": password,
-            "cloud_name": preset["cloud_name"],
-        })
-    return accounts
 
 
 class MideaCloud:
