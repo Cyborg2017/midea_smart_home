@@ -79,11 +79,16 @@ async def validate_device(
 
                 def status_callback(status, poll_location=None):
                     nonlocal got_status
-                    got_status = True
+                    # Ignore availability-only updates (e.g. {"available":
+                    # false} after a connection error) and metadata-only
+                    # payloads (e.g. {"version": 0}); require real status
+                    # data parsed from the device reply
+                    if status and set(status) - {"available", "version"}:
+                        got_status = True
 
                 controller.register_update(status_callback)
 
-                while not got_status and (time.time() - start < 10):
+                while not got_status and (time.time() - start < 5):
                     time.sleep(0.5)
 
                 if not got_status:
