@@ -94,6 +94,245 @@ def get_device_json_path(hass_config_dir: str, device_id: int, device_type: int,
         return get_json_files_path(hass_config_dir) / f"T0x{hex(device_type)[2:].upper()}_{device_id}_{sn8}.json"
     return get_json_files_path(hass_config_dir) / f"T0x{hex(device_type)[2:].upper()}_{device_id}.json"
 
+# Internal key on discovered device info caching the probed Lua file path
+_LUA_FILE_CACHE_KEY = "_lua_file"
+
+# Runtime strings for the select-device flow.
+# NOTE: these keys are not allowed inside translation files by the
+# HA/HACS translation validator, so they are kept as built-in constants.
+_FLOW_STRINGS: dict[str, dict[str, str]] = {
+    "en": {
+        "pending_marker": "⏳ Pending",
+        "unsupported_marker": "[Unsupported]",
+        "reason_no_token": "V3 token/key unavailable",
+        "reason_no_lua": "Lua file unavailable",
+        "reason_no_status": "Initialization query returned insufficient data",
+        "reason_protocol": "V2 0x0110 protocol not supported",
+    },
+    "zh-Hans": {
+        "pending_marker": "⏳ 待支持",
+        "unsupported_marker": "[不支持]",
+        "reason_no_token": "V3 无法获取有效 token/key",
+        "reason_no_lua": "无法获取 Lua 文件",
+        "reason_no_status": "初始化查询数据长度不足",
+        "reason_protocol": "V2 0x0110 协议暂不支持",
+    },
+}
+
+async def _get_flow_strings(hass) -> dict[str, str]:
+    """Resolve select-device flow strings for the user's language."""
+    language = hass.config.language or "en"
+    if language not in _FLOW_STRINGS and language.startswith("zh"):
+        language = "zh-Hans"
+    return _FLOW_STRINGS.get(language, _FLOW_STRINGS["en"])
+
+def _device_fields(cloud_devices: dict, info: dict) -> tuple[str, str, str]:
+    """Resolve the common display fields (name, model, protocol) of a device."""
+    cloud_device = cloud_devices.get(info[CONF_DEVICE_ID], {})
+    device_name = cloud_device.get(
+        "name",
+        DEVICE_TYPES.get(info[CONF_DEVICE_TYPE], f"T0x{info[CONF_DEVICE_TYPE]:02X}"),
+    )
+    model = cloud_device.get("model") or info.get(CONF_PRODUCT_MODEL) or "-"
+    if info.get("unsupported_protocol"):
+        protocol = "V2 0x0110"
+    else:
+        protocol = f"V{info.get(CONF_PROTOCOL) or ProtocolVersion.V3}"
+    return device_name, model, protocol
+
+def _device_label(cloud_devices: dict, info: dict) -> str:
+    """Build the display label for a discovered device.
+
+    Shows device name, model, device type and protocol version.
+    """
+    device_name, model, protocol = _device_fields(cloud_devices, info)
+    return f"{device_name} | {model} | T0x{info[CONF_DEVICE_TYPE]:02X} | {protocol}"
+
+def _reason_strings(strings: dict) -> dict[str, str]:
+    """Resolve per-reason display text for unsupported devices."""
+    return {
+        "no_token": strings.get("reason_no_token", "V3 token/key unavailable"),
+        "no_lua": strings.get("reason_no_lua", "Lua file unavailable"),
+        "no_status": strings.get(
+            "reason_no_status",
+            "Initialization query returned insufficient data",
+        ),
+        "protocol": strings.get("reason_protocol", "V2 0x0110 protocol not supported"),
+    }
+
+async def _build_device_selector_options(flow) -> dict[str, str]:
+    """Build the device options map for the multi-select form.
+
+    Unsupported devices are excluded (multi_select has no disabled state)
+    and are listed in the step description as badge entries instead.
+    """
+    strings = await _get_flow_strings(flow.hass)
+    pending_marker = strings.get("pending_marker", "⏳")
+
+    options = {
+        str(did): _device_label(flow._cloud_devices, info)
+        for did, info in flow._supported_devices.items()
+    }
+    options.update({
+        str(did): f"{_device_label(flow._cloud_devices, info)} {pending_marker}"
+        for did, info in flow._pending_devices.items()
+    })
+    return options
+
+async def _build_unsupported_list(
+    hass, discovered: dict, unsupported: dict, cloud_devices: dict
+) -> str:
+    """Build the description lines listing unsupported devices as badges."""
+    if not unsupported:
+        return ""
+    strings = await _get_flow_strings(hass)
+    marker = strings.get("unsupported_marker", "[Unsupported]")
+    reasons = _reason_strings(strings)
+    lines = [
+        f"- {marker} {_device_label(cloud_devices, discovered[did])} | {reasons[reason]}"
+        for did, reason in unsupported.items()
+    ]
+    return "\n\n" + "\n".join(lines)
+
+async def _probe_device_resources(flow, info: dict) -> str:
+    """Ensure token/key (V3 only) and Lua file for a discovered device.
+
+    Probed values are cached back into info (CONF_TOKEN/CONF_KEY for V3,
+    _lua_file for the Lua path) so later steps can reuse them.
+    Returns "ok", "no_token", "no_lua" or "no_status".
+    """
+    device_id = info[CONF_DEVICE_ID]
+    device_type = info.get(CONF_DEVICE_TYPE)
+    protocol = info.get(CONF_PROTOCOL) or ProtocolVersion.V3
+    is_v3 = protocol == ProtocolVersion.V3
+
+    token = key = ""
+    if is_v3:
+        token = info.get(CONF_TOKEN) or ""
+        key = info.get(CONF_KEY) or ""
+        if not (token and key):
+            try:
+                token, key, _ = await flow._acquire_validated_token_key(
+                    device_id, info[CONF_IP], DEFAULT_PORT, protocol,
+                    udpid=info.get(CONF_UDPID),
+                    device_type=device_type,
+                    sn8=info.get(CONF_SN8, ""),
+                )
+            except (socket.error, OSError, ValueError, json.JSONDecodeError) as err:
+                _LOGGER.error("Failed to get token/key for device %s: %s", device_id, err)
+                token = key = ""
+            info[CONF_TOKEN] = token
+            info[CONF_KEY] = key
+        if not (token and key):
+            return "no_token"
+
+    lua_file = info.get(_LUA_FILE_CACHE_KEY) or ""
+    if not lua_file:
+        try:
+            if flow._user_cloud:
+                cloud_device = flow._cloud_devices.get(device_id, {})
+                if cloud_device:
+                    info[CONF_SN] = cloud_device.get("sn") or info.get(CONF_SN, "")
+                    info[CONF_SN8] = cloud_device.get("sn8") or info.get(CONF_SN8, "")
+                    info[CONF_PRODUCT_MODEL] = cloud_device.get("model") or info.get(CONF_PRODUCT_MODEL, "")
+                    info[CONF_MODEL_NUMBER] = cloud_device.get("model_number") or info.get(CONF_MODEL_NUMBER, "")
+                    info[CONF_DEVICE_NAME] = cloud_device.get("name") or info.get(CONF_DEVICE_NAME, "")
+                    info[CONF_MANUFACTURER_CODE] = cloud_device.get("manufacturer_code") or info.get(CONF_MANUFACTURER_CODE, "0000")
+                    info[CONF_CATEGORY] = cloud_device.get("category") or info.get(CONF_CATEGORY, "")
+                    info[CONF_HOME_NAME] = cloud_device.get("home_name", "")
+                    info[CONF_ROOM_NAME] = cloud_device.get("room_name", "")
+
+                sn = info.get(CONF_SN, "")
+                sn8 = info.get(CONF_SN8, "")
+                manufacturer_code = info.get(CONF_MANUFACTURER_CODE, sn[:4] or "0000")
+                lua_storage_dir = get_lua_storage_path(flow.hass.config.config_dir)
+                lua_storage_dir.mkdir(parents=True, exist_ok=True)
+
+                success, downloaded_lua = await download_lua_file(
+                    flow.hass,
+                    flow._user_cloud._access_token,
+                    sn,
+                    device_type,
+                    manufacturer_code,
+                    info.get(CONF_MODEL_NUMBER),
+                )
+
+                if success:
+                    if sn8:
+                        lua_path = lua_storage_dir / f"T0x{hex(device_type)[2:].upper()}_{sn8}.lua"
+                    else:
+                        lua_path = lua_storage_dir / f"T0x{hex(device_type)[2:].upper()}.lua"
+
+                    await flow.hass.async_add_executor_job(write_file, lua_path, downloaded_lua)
+                    lua_file = str(lua_path)
+                    _LOGGER.info("Downloaded Lua file to %s", lua_file)
+        except (socket.error, OSError, ValueError, json.JSONDecodeError) as err:
+            _LOGGER.error("Failed to get Lua for device %s: %s", device_id, err)
+
+        if not lua_file:
+            lua_path = get_lua_file_path(
+                flow.hass.config.config_dir, device_id, device_type, info.get(CONF_SN8, "")
+            )
+            if lua_path.exists():
+                lua_file = str(lua_path)
+
+        info[_LUA_FILE_CACHE_KEY] = lua_file
+
+    if not lua_file:
+        return "no_lua"
+
+    # Initialization query validation: the device must answer the initial
+    # status query with data of sufficient length to be parseable
+    success, error = await validate_device(
+        flow.hass,
+        device_id,
+        info[CONF_IP],
+        DEFAULT_PORT,
+        token,
+        key,
+        lua_file,
+        protocol,
+        sn=info.get(CONF_SN, ""),
+        sn8=info.get(CONF_SN8, ""),
+        device_type=device_type or 0,
+    )
+    if not success:
+        _LOGGER.warning(
+            "Initialization query failed for device %s: %s", device_id, error
+        )
+        return "no_status"
+
+    return "ok"
+
+async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
+    """Classify discovered devices into (supported, unsupported, pending).
+
+    - unsupported: V2 0x0110 variant, V3 token/key or Lua unavailable, or
+      initialization status query failed (insufficient data length)
+    - pending: fully functional (token validated, Lua ready, status query OK)
+      but device type not in DEVICE_TYPES (only the type mapping is missing,
+      awaiting adaptation)
+    - supported: everything else (V1/V2 devices and token-validated V3 devices)
+    """
+    supported: dict = {}
+    unsupported: dict = {}
+    pending: dict = {}
+
+    for did, info in flow._discovered_devices.items():
+        if info.get("unsupported_protocol"):
+            unsupported[did] = "protocol"
+            continue
+        status = await _probe_device_resources(flow, info)
+        if status != "ok":
+            unsupported[did] = status
+            continue
+        if info.get(CONF_DEVICE_TYPE) not in DEVICE_TYPES:
+            pending[did] = info
+            continue
+        supported[did] = info
+
+    return supported, unsupported, pending
+
 
 class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
@@ -111,6 +350,9 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._user_cloud = None
         self._existing_entry: config_entries.ConfigEntry | None = None
         self._cloud_devices: dict = {}
+        self._supported_devices: dict = {}
+        self._unsupported_devices: dict = {}
+        self._pending_devices: dict = {}
 
     async def _cleanup_session(self):
         if self._session:
@@ -210,33 +452,29 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_select_device(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        device_options = {}
-
-        for did, info in self._discovered_devices.items():
-            cloud_device = self._cloud_devices.get(did, {})
-            device_name = cloud_device.get("name", DEVICE_TYPES.get(info[CONF_DEVICE_TYPE], f"T0x{info[CONF_DEVICE_TYPE]:02X}"))
-            device_options[str(did)] = f"{device_name} ( {info[CONF_IP]} )"
+        (
+            self._supported_devices,
+            self._unsupported_devices,
+            self._pending_devices,
+        ) = await _classify_discovered_devices(self)
 
         return self.async_show_menu(
             step_id="select_device",
             menu_options=["select_device_continue", "select_device_rescan"],
             description_placeholders={
-                "device_count": str(len(device_options)),
+                "device_count": str(len(self._supported_devices) + len(self._pending_devices)),
             },
         )
 
     async def async_step_select_device_continue(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        device_options = {}
-
-        for did, info in self._discovered_devices.items():
-            cloud_device = self._cloud_devices.get(did, {})
-            device_name = cloud_device.get("name", DEVICE_TYPES.get(info[CONF_DEVICE_TYPE], f"T0x{info[CONF_DEVICE_TYPE]:02X}"))
-            device_options[str(did)] = f"{device_name} ( {info[CONF_IP]} )"
-
         if user_input is not None:
-            selected = user_input.get("devices", [])
+            allowed = set(self._supported_devices) | set(self._pending_devices)
+            selected = [
+                did for did in user_input.get("devices", [])
+                if int(did) in allowed
+            ]
             if selected:
                 self._selected_devices = [
                     self._discovered_devices[int(did)]
@@ -245,15 +483,27 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._current_device_index = 0
                 return await self.async_step_get_token()
 
-        all_device_ids = list(device_options.keys())
+        all_device_ids = [
+            str(did)
+            for did in self._supported_devices
+        ]
+        all_device_ids.extend(str(did) for did in self._pending_devices)
         return self.async_show_form(
             step_id="select_device_continue",
             data_schema=vol.Schema({
                 vol.Required(
                     "devices",
                     description={"suggested_value": all_device_ids}
-                ): cv.multi_select(device_options),
+                ): cv.multi_select(
+                    await _build_device_selector_options(self)
+                ),
             }),
+            description_placeholders={
+                "unsupported_list": await _build_unsupported_list(
+                    self.hass, self._discovered_devices, self._unsupported_devices,
+                    self._cloud_devices,
+                ),
+            },
         )
 
     async def async_step_select_device_rescan(
@@ -756,6 +1006,9 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         self._session: ClientSession = None
         self._user_cloud = None
         self._cloud_devices: dict = {}
+        self._supported_devices: dict = {}
+        self._unsupported_devices: dict = {}
+        self._pending_devices: dict = {}
 
     async def _validate_token_key(
         self,
@@ -995,33 +1248,29 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_select_device_option(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        device_options = {}
-
-        for did, info in self._discovered_devices.items():
-            cloud_device = self._cloud_devices.get(did, {})
-            device_name = cloud_device.get("name", DEVICE_TYPES.get(info[CONF_DEVICE_TYPE], f"T0x{info[CONF_DEVICE_TYPE]:02X}"))
-            device_options[str(did)] = f"{device_name} ( {info[CONF_IP]} )"
+        (
+            self._supported_devices,
+            self._unsupported_devices,
+            self._pending_devices,
+        ) = await _classify_discovered_devices(self)
 
         return self.async_show_menu(
             step_id="select_device_option",
             menu_options=["select_device_continue_option", "select_device_rescan_option"],
             description_placeholders={
-                "device_count": str(len(device_options)),
+                "device_count": str(len(self._supported_devices) + len(self._pending_devices)),
             },
         )
 
     async def async_step_select_device_continue_option(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        device_options = {}
-
-        for did, info in self._discovered_devices.items():
-            cloud_device = self._cloud_devices.get(did, {})
-            device_name = cloud_device.get("name", DEVICE_TYPES.get(info[CONF_DEVICE_TYPE], f"T0x{info[CONF_DEVICE_TYPE]:02X}"))
-            device_options[str(did)] = f"{device_name} ( {info[CONF_IP]} )"
-
         if user_input is not None:
-            selected = user_input.get("devices", [])
+            allowed = set(self._supported_devices) | set(self._pending_devices)
+            selected = [
+                did for did in user_input.get("devices", [])
+                if int(did) in allowed
+            ]
             if selected:
                 self._selected_devices = [
                     self._discovered_devices[int(did)]
@@ -1030,15 +1279,27 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 self._current_device_index = 0
                 return await self.async_step_get_token_option()
 
-        all_device_ids = list(device_options.keys())
+        all_device_ids = [
+            str(did)
+            for did in self._supported_devices
+        ]
+        all_device_ids.extend(str(did) for did in self._pending_devices)
         return self.async_show_form(
             step_id="select_device_continue_option",
             data_schema=vol.Schema({
                 vol.Required(
                     "devices",
                     description={"suggested_value": all_device_ids}
-                ): cv.multi_select(device_options),
+                ): cv.multi_select(
+                    await _build_device_selector_options(self)
+                ),
             }),
+            description_placeholders={
+                "unsupported_list": await _build_unsupported_list(
+                    self.hass, self._discovered_devices, self._unsupported_devices,
+                    self._cloud_devices,
+                ),
+            },
         )
 
     async def async_step_select_device_rescan_option(

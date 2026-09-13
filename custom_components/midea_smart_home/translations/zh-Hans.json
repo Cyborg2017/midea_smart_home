@@ -32,7 +32,7 @@
         "title": "设备认证 {progress}"
       },
       "select_device": {
-        "description": "已发现 {device_count} 台设备，请选择操作：",
+        "description": "已发现 {device_count} 台可被添加的新设备（含新类型），请选择操作：",
         "menu_options": {
           "select_device_continue": "✅ 前往添加设备",
           "select_device_rescan": "🔄 重新扫描（尝试搜索更多设备）"
@@ -43,7 +43,7 @@
         "data": {
           "devices": "设备"
         },
-        "description": "选择要添加的设备（可多选）",
+        "description": "选择要添加的设备，其中带 ⏳ 标记为新类型设备，如需支持请联系原作者进行适配。{unsupported_list}",
         "title": "选择设备"
       },
       "user": {
@@ -3185,11 +3185,11 @@
         "data": {
           "devices": "设备"
         },
-        "description": "选择要添加的新设备（可多选）",
+        "description": "选择要添加的设备，其中带 ⏳ 标记为新类型设备，如需支持请联系原作者进行适配。{unsupported_list}",
         "title": "选择新设备"
       },
       "select_device_option": {
-        "description": "已发现 {device_count} 台新设备，请选择操作：",
+        "description": "已发现 {device_count} 台可被添加的新设备（含新类型），请选择操作：",
         "menu_options": {
           "select_device_continue_option": "✅ 前往添加设备",
           "select_device_rescan_option": "🔄 重新扫描"
