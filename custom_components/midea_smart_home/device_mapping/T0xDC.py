@@ -245,5 +245,86 @@ DEVICE_MAPPING = {
                 }
             }
         }
+    },
+    "38205789": {
+        "rationale": ["off", "on"],
+        "entities": {
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "control_status": {
+                    "rationale": ["pause", "start"]
+                },
+                "sterilize": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "prevent_wrinkle_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1]
+                },
+                "dry_night": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "nightly"
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "door_warn": {
+                    "device_class": BinarySensorDeviceClass.OPENING,
+                    "translation_key": "door_opened"
+                }
+            },
+            Platform.SELECT: {
+                "program": {
+                    "options": {
+                        "mixed_wash": {"program": "mixed_wash"},
+                        "towel": {"program": "towel"},
+                        "underwear": {"program": "underwear"},
+                        "down_jacket": {"program": "down_jacket"},
+                        "shirt": {"program": "shirt"},
+                        "dehumidification": {"program": "dehumidification"},
+                        "baby_clothes": {"program": "baby_clothes"},
+                        "small_piece_dry": {"program": "small_piece_dry"},
+                        "big_dry": {"program": "big_dry"},
+                        "sun_quilt": {"program": "sun_quilt"},
+                        "wool_nurse": {"program": "wool_nurse"},
+                        "quick_dry": {"program": "quick_dry"},
+                        "hot_air_dry": {"program": "hot_air_dry"},
+                        "cold_air_fresh_air": {"program": "cold_air_fresh_air"},
+                        "air_wash": {"program": "air_wash"}
+                    }
+                },
+                "intensity": {
+                    "options": {
+                        "iron_now": {"intensity": "1"},
+                        "wear_now": {"intensity": "2"},
+                        "store": {"intensity": "3"}
+                    }
+                }
+            },
+            Platform.SENSOR: {
+                "running_status": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "remain_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "progress": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "error_code": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "dry_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
     }
 }
