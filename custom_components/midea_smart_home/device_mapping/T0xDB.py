@@ -1830,7 +1830,7 @@ DEVICE_MAPPING = {
                 "down_light": {
                     "device_class": BinarySensorDeviceClass.OPENING
                 }
-            },            
+            },
             Platform.SENSOR: {
                 "running_status": {
                     "device_class": SensorDeviceClass.ENUM
