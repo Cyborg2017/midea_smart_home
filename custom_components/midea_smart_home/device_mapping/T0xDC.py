@@ -270,12 +270,6 @@ DEVICE_MAPPING = {
                     "translation_key": "nightly"
                 }
             },
-            Platform.BINARY_SENSOR: {
-                "door_warn": {
-                    "device_class": BinarySensorDeviceClass.OPENING,
-                    "translation_key": "door_opened"
-                }
-            },
             Platform.SELECT: {
                 "program": {
                     "options": {
@@ -302,6 +296,12 @@ DEVICE_MAPPING = {
                         "wear_now": {"intensity": "2"},
                         "store": {"intensity": "3"}
                     }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "door_warn": {
+                    "device_class": BinarySensorDeviceClass.OPENING,
+                    "translation_key": "door_opened"
                 }
             },
             Platform.SENSOR: {
