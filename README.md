@@ -71,9 +71,10 @@ Home Assistant 美的设备本地控制集成，无需云端即可控制您的�
 4. 点击"添加集成"
 5. 搜索"Midea Smart Home"
 
-## 配置
+## 文档
 
-详细配置教程请查看 [配置指南](GUIDE.md)
+- 📖 **[配置指南](docs/guides/SETUP_GUIDE.md)**：集成安装、添加设备、选项功能与常见问题的图文教程
+- 🤖 **[借助 AI 适配 / 调试设备指南](docs/guides/AI_DEVICE_GUIDE.md)**：想让列表中"⏳ 待支持"的新设备尽快可用，或设备实体缺失、数值异常、Lua 协议解析有问题时，按本指南收集诊断材料并配合 AI 编程助手（Trae、ChatGPT、Claude、Cursor 等）完成适配与调试，内含数据链路说明、`device_mapping` 配置速查、CI 格式规则和可直接复制的提示词模板
 
 ## 支持的设备
 
