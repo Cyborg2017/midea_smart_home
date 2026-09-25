@@ -100,6 +100,9 @@
       "device_status": {
         "name": "设备状态"
       },
+      "door_open": {
+        "name": "炉门状态"
+      },
       "door_opened": {
         "name": "门状态"
       },
@@ -1785,6 +1788,23 @@
           "sauce": "酱渍"
         }
       },
+      "steam_oven_mode": {
+        "name": "烹饪模式",
+        "state": {
+          "above_inside_outside_tube": "双上管",
+          "above_inside_outside_tube_fan": "薄层快烤",
+          "above_inside_tube": "红外烧烤",
+          "double_tube": "上下烧烤",
+          "double_tube_fan": "立体烤",
+          "hot_wind_tube_fan": "热风对流",
+          "none": "无",
+          "pure_steam": "蒸汽/杀菌",
+          "scale_clean": "除垢",
+          "steam_hot_wind_tube_fan": "蒸汽热风",
+          "underside_tube": "底部烤",
+          "zymosis": "发酵"
+        }
+      },
       "steam_quantity": {
         "name": "蒸汽挡位",
         "state": {
@@ -2050,7 +2070,9 @@
           "pause": "暂停",
           "power_off": "关机",
           "power_on": "开机",
-          "resume": "继续"
+          "resume": "继续",
+          "standby": "待机",
+          "work": "工作"
         }
       }
     },
@@ -2335,6 +2357,25 @@
       "error_code": {
         "name": "错误代码"
       },
+      "execute": {
+        "name": "指令执行结果",
+        "state": {
+          "change_water_notice": "请换水",
+          "device_fault": "设备故障",
+          "door_open": "炉门未关闭",
+          "function_nonsupport": "功能不支持",
+          "high_temperature_nonsupport": "高温下不支持",
+          "lack_box": "水箱未安装",
+          "lack_water": "水箱缺水",
+          "ok": "执行成功",
+          "param_range_error": "参数超出范围",
+          "remote_control_closed": "远程控制已关闭",
+          "save_power_nonsupport": "省电模式下不支持",
+          "status_nonsupport": "状态不支持",
+          "unknown": "未知",
+          "working_control_nonsupport": "工作中不支持控制"
+        }
+      },
       "fan_output": {
         "name": "风机状态"
       },
@@ -2529,6 +2570,9 @@
       "soft_available_big": {
         "name": "剩余可软水量"
       },
+      "stepnum": {
+        "name": "当前烹饪段数"
+      },
       "storage_temperature": {
         "name": "冷藏设定温度"
       },
@@ -2567,6 +2611,9 @@
       },
       "total_working_time": {
         "name": "总工作时间"
+      },
+      "totalstep": {
+        "name": "总烹饪段数"
       },
       "tvoc_density": {
         "name": "TVOC浓度"
@@ -2620,6 +2667,15 @@
       },
       "water_gage_bar": {
         "name": "水压"
+      },
+      "water_status": {
+        "name": "水箱状态",
+        "state": {
+          "change_water": "需要换水",
+          "lack_box": "水箱缺失",
+          "lack_water": "缺水",
+          "normal": "正常"
+        }
       },
       "water_volume": {
         "name": "出水流量"
@@ -2895,6 +2951,9 @@
       },
       "power_saving": {
         "name": "静眠"
+      },
+      "pre_heat": {
+        "name": "预热"
       },
       "preservation_mode": {
         "name": "光量子增养"
