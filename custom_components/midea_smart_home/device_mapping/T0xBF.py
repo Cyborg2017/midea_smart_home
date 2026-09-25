@@ -66,6 +66,12 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": "g"
                 }
             },
+            Platform.SWITCH: {
+                "pre_heat": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["off", "work"]
+                }
+            },
             Platform.SELECT: {
                 "work_mode": {
                     "options": {
@@ -102,12 +108,6 @@ DEVICE_MAPPING = {
                         "30": {"fire_power": "fire_power_3"},
                         "10": {"fire_power": "fire_power_1"},
                         "none": {"fire_power": "fire_power_0"}
-                    }
-                },
-                "pre_heat": {
-                    "options": {
-                        "off": {"pre_heat": "off"},
-                        "on": {"pre_heat": "work"}
                     }
                 },
                 "steam_quantity": {
@@ -235,6 +235,12 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": "g"
                 }
             },
+            Platform.SWITCH: {
+                "pre_heat": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["off", "work"]
+                }
+            },
             Platform.SELECT: {
                 "work_mode": {
                     "options": {
@@ -271,12 +277,6 @@ DEVICE_MAPPING = {
                         "30": {"fire_power": "fire_power_3"},
                         "10": {"fire_power": "fire_power_1"},
                         "none": {"fire_power": "fire_power_0"}
-                    }
-                },
-                "pre_heat": {
-                    "options": {
-                        "off": {"pre_heat": "off"},
-                        "on": {"pre_heat": "work"}
                     }
                 },
                 "steam_quantity": {

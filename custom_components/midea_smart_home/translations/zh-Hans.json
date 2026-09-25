@@ -1477,13 +1477,6 @@
           "off": "关闭定时"
         }
       },
-      "pre_heat": {
-        "name": "预热",
-        "state": {
-          "off": "关闭",
-          "on": "开启"
-        }
-      },
       "prevent_straight_wind": {
         "name": "防直吹",
         "state": {

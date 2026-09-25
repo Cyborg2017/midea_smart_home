@@ -216,7 +216,6 @@
             "plateau_boiling_point": { "default": "mdi:thermometer-high" },
             "power_off_time": { "default": "mdi:timer-off" },
             "power_on_time": { "default": "mdi:timer" },
-            "pre_heat": { "default": "mdi:thermometer-chevron-up" },
             "prevent_straight_wind": { "default": "mdi:fan-off" },
             "program": { "default": "mdi:washing-machine" },
             "ptc": { "default": "mdi:fire" },

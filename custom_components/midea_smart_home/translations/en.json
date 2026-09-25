@@ -1477,13 +1477,6 @@
           "off": "Off Timer"
         }
       },
-      "pre_heat": {
-        "name": "Preheat",
-        "state": {
-          "off": "Off",
-          "on": "On"
-        }
-      },
       "prevent_straight_wind": {
         "name": "Prevent Straight Wind",
         "state": {
