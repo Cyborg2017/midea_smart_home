@@ -861,7 +861,13 @@ class MideaDevice:
         control = controls.copy()
 
         # Handle special logic preparation
-        control = self._logic_handler.prepare_control_data(control, self._data)
+        control = self._logic_handler.prepare_control_data(
+            control,
+            self._data,
+            recent_controls=self._recent_controls,
+            control_timeout=self._control_timeout,
+            centralized=self._centralized
+        )
 
         # Update local state optimistically
         now = time.time()

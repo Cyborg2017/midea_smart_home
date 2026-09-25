@@ -1,6 +1,7 @@
 """Midea Smart Home Extra Logic Handler."""
 
 import logging
+import time
 from typing import Any, Optional
 
 _LOGGER = logging.getLogger(__name__)
@@ -371,7 +372,14 @@ class DeviceLogicHandler:
             return
         data[progress_key] = progress_map.get(calculated_value, "unknown")
 
-    def prepare_control_data(self, control: dict, current_data: dict = None) -> dict:
+    def prepare_control_data(
+        self,
+        control: dict,
+        current_data: dict = None,
+        recent_controls: dict = None,
+        control_timeout: float = 0.0,
+        centralized: Optional[list] = None
+    ) -> dict:
         """Prepare control data with device-specific requirements."""
         if self.device_type == 0xD9:
             # Determine drum prefix from location field
@@ -383,6 +391,20 @@ class DeviceLogicHandler:
                 control["bucket"] = "db"
                 if "db_location" not in control and current_data and "db_location" in current_data:
                     control["db_location"] = current_data["db_location"]
+        if self.device_type == 0x9B:
+            # Cooking parameters are only bundled with a cooking-start
+            # command (work_mode); lock and work_status controls must stay
+            # single-purpose and must not carry them.
+            if "work_mode" in control and centralized:
+                now = time.time()
+                for key in centralized:
+                    if key in control:
+                        continue
+                    recent = (recent_controls or {}).get(key)
+                    if recent and now - recent[1] < control_timeout:
+                        control[key] = recent[0]
+                    elif current_data and key in current_data:
+                        control[key] = current_data[key]
         return control
 
     def adjust_b3_function_control(self, data: dict) -> None:
