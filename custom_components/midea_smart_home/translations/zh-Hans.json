@@ -100,14 +100,26 @@
       "device_status": {
         "name": "设备状态"
       },
+      "door_downstair": {
+        "name": "下层柜门"
+      },
       "door_open": {
         "name": "炉门状态"
       },
       "door_opened": {
         "name": "门状态"
       },
+      "door_upstair": {
+        "name": "上层柜门"
+      },
       "down_light": {
         "name": "筒灯状态"
+      },
+      "downstair_iscooling": {
+        "name": "下层冷却"
+      },
+      "downstair_ispreheat": {
+        "name": "下层预热"
       },
       "drying_tunnel_overheating": {
         "name": "烘干通道过热"
@@ -156,6 +168,9 @@
       },
       "ice_status": {
         "name": "制冰状态"
+      },
+      "is_error": {
+        "name": "故障"
       },
       "lack_water": {
         "name": "缺水状态"
@@ -222,6 +237,12 @@
       },
       "storage_door_state": {
         "name": "冷藏门状态"
+      },
+      "upstair_iscooling": {
+        "name": "上层冷却"
+      },
+      "upstair_ispreheat": {
+        "name": "上层预热"
       },
       "water_output_switch": {
         "name": "龙头出水"
@@ -980,6 +1001,16 @@
           "l4": "L4",
           "off": "关闭",
           "smart": "智能"
+        }
+      },
+      "downstair_mode": {
+        "name": "下层模式",
+        "state": {
+          "dry": "烘干",
+          "off": "关机",
+          "standby": "待机",
+          "sterilize": "高温消毒",
+          "storage": "长效存储"
         }
       },
       "dry_gear": {
@@ -1857,6 +1888,15 @@
           "up": "上升"
         }
       },
+      "upstair_mode": {
+        "name": "上层模式",
+        "state": {
+          "clean": "保洁",
+          "off": "关机",
+          "standby": "待机",
+          "storage": "长效存储"
+        }
+      },
       "warm_water_temperature": {
         "name": "温水设定温度",
         "state": {
@@ -2341,6 +2381,22 @@
       "discharge_pipe_temperature": {
         "name": "排气管温度"
       },
+      "downstair_remain_time": {
+        "name": "下层剩余时间"
+      },
+      "downstair_temp": {
+        "name": "下层温度"
+      },
+      "downstair_work_status": {
+        "name": "下层状态",
+        "state": {
+          "finish": "已完成",
+          "order": "预约中",
+          "power_off": "关机",
+          "power_on": "开机",
+          "working": "运行中"
+        }
+      },
       "dry_time": {
         "name": "烘干时间"
       },
@@ -2610,6 +2666,22 @@
       },
       "tvoc_density": {
         "name": "TVOC浓度"
+      },
+      "upstair_remain_time": {
+        "name": "上层剩余时间"
+      },
+      "upstair_temp": {
+        "name": "上层温度"
+      },
+      "upstair_work_status": {
+        "name": "上层状态",
+        "state": {
+          "finish": "已完成",
+          "order": "预约中",
+          "power_off": "关机",
+          "power_on": "开机",
+          "working": "运行中"
+        }
       },
       "use_days": {
         "name": "使用天数"

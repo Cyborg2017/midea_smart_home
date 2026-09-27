@@ -56,6 +56,7 @@ DEVICE_TYPES = {
     0xAC: "Floor Air Conditioner / Wall Air Conditioner / Central Air Conditioner / Central Fresh Air / Central Miniaturized Fresh Air",
     0xAD: "Air Sensor",
     0xB0: "Microwave Oven",
+    0xB3: "Disinfection Cabinet",
     0xB6: "Range Hood",
     0xB8: "Smart Robot Vacuum",
     0xBF: "Microwave Steam Oven",

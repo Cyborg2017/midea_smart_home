@@ -100,14 +100,26 @@
       "device_status": {
         "name": "Device Status"
       },
+      "door_downstair": {
+        "name": "Lower Door"
+      },
       "door_open": {
         "name": "Oven Door Status"
       },
       "door_opened": {
         "name": "Door Status"
       },
+      "door_upstair": {
+        "name": "Upper Door"
+      },
       "down_light": {
         "name": "Down Light Status"
+      },
+      "downstair_iscooling": {
+        "name": "Lower Cooling"
+      },
+      "downstair_ispreheat": {
+        "name": "Lower Preheating"
       },
       "drying_tunnel_overheating": {
         "name": "Drying Tunnel Overheating"
@@ -156,6 +168,9 @@
       },
       "ice_status": {
         "name": "Ice Making Status"
+      },
+      "is_error": {
+        "name": "Fault"
       },
       "lack_water": {
         "name": "Water Shortage Status"
@@ -222,6 +237,12 @@
       },
       "storage_door_state": {
         "name": "Refrigerator Door State"
+      },
+      "upstair_iscooling": {
+        "name": "Upper Cooling"
+      },
+      "upstair_ispreheat": {
+        "name": "Upper Preheating"
       },
       "water_output_switch": {
         "name": "Tap Water"
@@ -980,6 +1001,16 @@
           "l4": "L4",
           "off": "Off",
           "smart": "Smart"
+        }
+      },
+      "downstair_mode": {
+        "name": "Lower Mode",
+        "state": {
+          "dry": "Drying",
+          "off": "Off",
+          "standby": "Standby",
+          "sterilize": "High-Temp Sterilization",
+          "storage": "Long-Term Storage"
         }
       },
       "dry_gear": {
@@ -1857,6 +1888,15 @@
           "up": "Up"
         }
       },
+      "upstair_mode": {
+        "name": "Upper Mode",
+        "state": {
+          "clean": "Clean",
+          "off": "Off",
+          "standby": "Standby",
+          "storage": "Long-Term Storage"
+        }
+      },
       "warm_water_temperature": {
         "name": "Warm Water Set Temperature",
         "state": {
@@ -2341,6 +2381,22 @@
       "discharge_pipe_temperature": {
         "name": "Discharge Pipe Temperature"
       },
+      "downstair_remain_time": {
+        "name": "Lower Remaining Time"
+      },
+      "downstair_temp": {
+        "name": "Lower Temperature"
+      },
+      "downstair_work_status": {
+        "name": "Lower Status",
+        "state": {
+          "finish": "Finished",
+          "order": "Scheduled",
+          "power_off": "Power Off",
+          "power_on": "Power On",
+          "working": "Working"
+        }
+      },
       "dry_time": {
         "name": "Dry Time"
       },
@@ -2610,6 +2666,22 @@
       },
       "tvoc_density": {
         "name": "TVOC Density"
+      },
+      "upstair_remain_time": {
+        "name": "Upper Remaining Time"
+      },
+      "upstair_temp": {
+        "name": "Upper Temperature"
+      },
+      "upstair_work_status": {
+        "name": "Upper Status",
+        "state": {
+          "finish": "Finished",
+          "order": "Scheduled",
+          "power_off": "Power Off",
+          "power_on": "Power On",
+          "working": "Working"
+        }
       },
       "use_days": {
         "name": "Days In Use"
