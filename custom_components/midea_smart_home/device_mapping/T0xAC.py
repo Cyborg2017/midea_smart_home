@@ -290,6 +290,7 @@ DEVICE_MAPPING = {
         "rationale": ["off", "on"],
         "initial_query": [
             {},
+            {"indoor_humidity"},
             {"prevent_super_cool"},
             {"wind_swing_lr_angle"},
             {"wind_swing_ud_angle"},
@@ -300,6 +301,7 @@ DEVICE_MAPPING = {
             {"group_data_seven"}
         ],
         "polling_query": [
+            {"indoor_humidity"},
             {"indoor_temperature"},
             {"group_data_four"},
             {"group_data_five"},
