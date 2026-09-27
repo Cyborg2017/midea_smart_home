@@ -2428,8 +2428,8 @@
           "door_open": "炉门未关闭",
           "function_nonsupport": "功能不支持",
           "high_temperature_nonsupport": "高温下不支持",
-          "lack_box": "水箱未安装",
-          "lack_water": "水箱缺水",
+          "lack_box": "水盒未安装",
+          "lack_water": "水盒缺水",
           "ok": "执行成功",
           "param_range_error": "参数超出范围",
           "remote_control_closed": "远程控制已关闭",
@@ -2748,10 +2748,10 @@
         "name": "水压"
       },
       "water_status": {
-        "name": "水箱状态",
+        "name": "水盒状态",
         "state": {
           "change_water": "需要换水",
-          "lack_box": "水箱缺失",
+          "lack_box": "水盒缺失",
           "lack_water": "缺水",
           "normal": "正常"
         }

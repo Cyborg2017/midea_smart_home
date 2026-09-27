@@ -2428,8 +2428,8 @@
           "door_open": "Oven Door Open",
           "function_nonsupport": "Function Not Supported",
           "high_temperature_nonsupport": "Not Supported at High Temperature",
-          "lack_box": "Water Tank Not Installed",
-          "lack_water": "Water Tank Empty",
+          "lack_box": "Water Box Not Installed",
+          "lack_water": "Water Box Empty",
           "ok": "Success",
           "param_range_error": "Parameter Out of Range",
           "remote_control_closed": "Remote Control Disabled",
@@ -2748,10 +2748,10 @@
         "name": "Water Pressure"
       },
       "water_status": {
-        "name": "Water Tank Status",
+        "name": "Water Box Status",
         "state": {
           "change_water": "Change Water",
-          "lack_box": "Tank Missing",
+          "lack_box": "Box Missing",
           "lack_water": "Water Shortage",
           "normal": "Normal"
         }
