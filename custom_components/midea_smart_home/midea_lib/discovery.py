@@ -208,8 +208,7 @@ def _parse_scan_address(scan_address: str) -> list:
         broadcast_addr = f"{octets[0]}.{octets[1]}.{octets[2]}.255"
         if octets[3] == 1 or octets[3] == 255:
             return [broadcast_addr]
-        else:
-            return [scan_address]
+        return [".".join(str(octet) for octet in octets)]
     except ValueError:
         return None
 
@@ -308,15 +307,37 @@ def discover_devices(
             scan_mode,
             len(devices),
         )
-        local_networks = _get_local_networks()
-        unicast_targets = []
-        for net in local_networks:
-            for host_ip in net.hosts():
-                unicast_targets.append(str(host_ip))
+        if target_addresses is not None:
+            local_networks = []
+            explicit_address = scan_address.strip()
+            if explicit_address.rsplit(".", 1)[-1] in ("1", "255"):
+                explicit_network = IPv4Network(
+                    f"{explicit_address}/24", strict=False
+                )
+                unicast_targets = [
+                    str(host_ip) for host_ip in explicit_network.hosts()
+                ]
+            else:
+                unicast_targets = target_addresses
+        else:
+            local_networks = _get_local_networks()
+            unicast_targets = []
+            for net in local_networks:
+                for host_ip in net.hosts():
+                    unicast_targets.append(str(host_ip))
 
         if unicast_targets:
-            _LOGGER.info("Unicast scanning %d IPs across %d subnets",
-                         len(unicast_targets), len(local_networks))
+            if target_addresses is not None:
+                _LOGGER.info(
+                    "Unicast scanning %d explicit target IPs",
+                    len(unicast_targets),
+                )
+            else:
+                _LOGGER.info(
+                    "Unicast scanning %d IPs across %d subnets",
+                    len(unicast_targets),
+                    len(local_networks),
+                )
             for ip_addr in unicast_targets:
                 for port in DISCOVERY_PORTS:
                     try:
