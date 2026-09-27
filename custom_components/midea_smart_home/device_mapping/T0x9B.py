@@ -95,6 +95,20 @@ DEVICE_MAPPING = {
                         "above_inside_outside_tube_fan": {"work_mode": "above_inside_outside_tube_fan"},
                         "zymosis": {"work_mode": "zymosis"},
                         "scale_clean": {"work_mode": "scale_clean"},
+                        "pure_preheat": {"work_mode": "pure_preheat"},
+                        "double_tube_1": {"work_mode": "double_tube_1"},
+                        "hot_wind_tube_fan_1": {"work_mode": "hot_wind_tube_fan_1"},
+                        "underside_tube_1": {"work_mode": "underside_tube_1"},
+                        "eco": {"work_mode": "eco"},
+                        "steam_double_tube": {"work_mode": "steam_double_tube"},
+                        "steam_hot_wind_tube": {"work_mode": "steam_hot_wind_tube"},
+                        "steam_double_tube_fan": {"work_mode": "steam_double_tube_fan"},
+                        "steam_underside_tube": {"work_mode": "steam_underside_tube"},
+                        "steam_above_inside_tube_fan": {"work_mode": "steam_above_inside_tube_fan"},
+                        "steam_above_inside_outside_tube_fan": {"work_mode": "steam_above_inside_outside_tube_fan"},
+                        "auto_menu": {"work_mode": "auto_menu", "cloudmenuid": 268},
+                        "hot_wind_tube_fan_3": {"work_mode": "hot_wind_tube_fan_3"},
+                        "pure_steam_3": {"work_mode": "pure_steam_3"},
                         "none": {"work_mode": "ff"}
                     }
                 },
@@ -251,6 +265,20 @@ DEVICE_MAPPING = {
                         "above_inside_outside_tube_fan": {"work_mode": "above_inside_outside_tube_fan"},
                         "zymosis": {"work_mode": "zymosis"},
                         "scale_clean": {"work_mode": "scale_clean"},
+                        "pure_preheat": {"work_mode": "pure_preheat"},
+                        "double_tube_1": {"work_mode": "double_tube_1"},
+                        "hot_wind_tube_fan_1": {"work_mode": "hot_wind_tube_fan_1"},
+                        "underside_tube_1": {"work_mode": "underside_tube_1"},
+                        "eco": {"work_mode": "eco"},
+                        "steam_double_tube": {"work_mode": "steam_double_tube"},
+                        "steam_hot_wind_tube": {"work_mode": "steam_hot_wind_tube"},
+                        "steam_double_tube_fan": {"work_mode": "steam_double_tube_fan"},
+                        "steam_underside_tube": {"work_mode": "steam_underside_tube"},
+                        "steam_above_inside_tube_fan": {"work_mode": "steam_above_inside_tube_fan"},
+                        "steam_above_inside_outside_tube_fan": {"work_mode": "steam_above_inside_outside_tube_fan"},
+                        "auto_menu": {"work_mode": "auto_menu", "cloudmenuid": 268},
+                        "hot_wind_tube_fan_3": {"work_mode": "hot_wind_tube_fan_3"},
+                        "pure_steam_3": {"work_mode": "pure_steam_3"},
                         "none": {"work_mode": "ff"}
                     }
                 },
@@ -403,6 +431,158 @@ DEVICE_MAPPING = {
                         "above_inside_outside_tube_fan": {"work_mode": "above_inside_outside_tube_fan"},
                         "zymosis": {"work_mode": "zymosis"},
                         "scale_clean": {"work_mode": "scale_clean"},
+                        "none": {"work_mode": "ff"}
+                    }
+                },
+                "work_status": {
+                    "options": {
+                        "standby": {"work_status": "standby"},
+                        "work": {"work_status": "work"},
+                        "pause": {"work_status": "pause"}
+                    }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "door_open": {
+                    "device_class": BinarySensorDeviceClass.DOOR
+                }
+            },
+            Platform.SENSOR: {
+                "appoint_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "appointment_time"
+                },
+                "cur_temperature_above": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "error_code": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "execute": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "set_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "stepnum": {
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "totalstep": {
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "water_status": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "work_mode": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "work_status": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "remain_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
+    },
+    "0BS7051W": {
+        "rationale": ["off", "on"],
+        "centralized": [
+            "work_mode",
+            "pre_heat",
+            "steam_quantity",
+            "temperature",
+            "work_hour",
+            "work_minute",
+            "work_second"
+        ],
+        "initial_query": [{}],
+        "polling_query": [{}],
+        "calculate": {
+            "get": [
+                {
+                    "lvalue": "[remain_time]",
+                    "rvalue": "[work_second] + 60 * [work_minute] + 3600 * [work_hour]"
+                },
+                {
+                    "lvalue": "[set_time]",
+                    "rvalue": "[second_set] + 60 * [minute_set] + 3600 * [hour_set]"
+                },
+                {
+                    "lvalue": "[appoint_time]",
+                    "rvalue": "[appoint_second] + 60 * [appoint_minute] + 3600 * [appoint_hour]"
+                }
+            ],
+            "set": [
+            ]
+        },
+        "entities": {
+            Platform.NUMBER: {
+                "temperature": {
+                    "min": 0,
+                    "max": 250,
+                    "step": 5,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS
+                },
+                "work_hour": {
+                    "status_key": "hour_set",
+                    "min": 0,
+                    "max": 23,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTime.HOURS,
+                },
+                "work_minute": {
+                    "status_key": "minute_set",
+                    "min": 0,
+                    "max": 59,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                }
+            },
+            Platform.SWITCH: {
+                "furnace_light": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "pre_heat": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["off", "work"]
+                }
+            },
+            Platform.SELECT: {
+                "work_mode": {
+                    "translation_key": "steam_oven_mode",
+                    "options": {
+                        "pure_preheat": {"work_mode": "pure_preheat"},
+                        "double_tube_1": {"work_mode": "double_tube_1"},
+                        "hot_wind_tube_fan_1": {"work_mode": "hot_wind_tube_fan_1"},
+                        "double_tube_fan": {"work_mode": "double_tube_fan"},
+                        "above_inside_outside_tube_fan": {"work_mode": "above_inside_outside_tube_fan"},
+                        "underside_tube_1": {"work_mode": "underside_tube_1"},
+                        "above_inside_tube": {"work_mode": "above_inside_tube"},
+                        "eco": {"work_mode": "eco"},
+                        "pure_steam": {"work_mode": "pure_steam"},
+                        "zymosis": {"work_mode": "zymosis"},
+                        "steam_double_tube": {"work_mode": "steam_double_tube"},
+                        "steam_hot_wind_tube": {"work_mode": "steam_hot_wind_tube"},
+                        "steam_double_tube_fan": {"work_mode": "steam_double_tube_fan"},
+                        "steam_underside_tube": {"work_mode": "steam_underside_tube"},
+                        "steam_above_inside_tube_fan": {"work_mode": "steam_above_inside_tube_fan"},
+                        "steam_above_inside_outside_tube_fan": {"work_mode": "steam_above_inside_outside_tube_fan"},
+                        "auto_menu": {"work_mode": "auto_menu", "cloudmenuid": 268},
+                        "hot_wind_tube_fan_3": {"work_mode": "hot_wind_tube_fan_3"},
+                        "scale_clean": {"work_mode": "scale_clean"},
+                        "pure_steam_3": {"work_mode": "pure_steam_3"},
                         "none": {"work_mode": "ff"}
                     }
                 },
