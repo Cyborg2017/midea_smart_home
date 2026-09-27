@@ -501,6 +501,7 @@
             "freezing_power": { "default": "mdi:fridge-bottom" },
             "frequency_hot": { "default": "mdi:fire" },
             "fresh_air_remove_odor": { "default": "mdi:air-purifier" },
+            "furnace_light": { "default": "mdi:lightbulb-on" },
             "germicidal": { "default": "mdi:fire-circle" },
             "gesture": { "default": "mdi:hand-wave" },
             "heat": { "default": "mdi:fire" },

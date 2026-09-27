@@ -17,7 +17,7 @@ DEVICE_MAPPING = {
         "calculate": {
             "get": [
                 {
-                    "lvalue": "[work_time]",
+                    "lvalue": "[remain_time]",
                     "rvalue": "[work_second] + 60 * [work_minute] + 3600 * [work_hour]"
                 },
                 {
@@ -47,6 +47,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                 },
                 "work_hour": {
+                    "status_key": "hour_set",
                     "min": 0,
                     "max": 23,
                     "step": 1,
@@ -54,6 +55,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTime.HOURS,
                 },
                 "work_minute": {
+                    "status_key": "minute_set",
                     "min": 0,
                     "max": 59,
                     "step": 1,
@@ -62,6 +64,9 @@ DEVICE_MAPPING = {
                 }
             },
             Platform.SWITCH: {
+                "furnace_light": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
                 "pre_heat": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["off", "work"]
@@ -144,7 +149,7 @@ DEVICE_MAPPING = {
                 "work_status": {
                     "device_class": SensorDeviceClass.ENUM
                 },
-                "work_time": {
+                "remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.SECONDS,
                     "state_class": SensorStateClass.MEASUREMENT
@@ -168,7 +173,7 @@ DEVICE_MAPPING = {
         "calculate": {
             "get": [
                 {
-                    "lvalue": "[work_time]",
+                    "lvalue": "[remain_time]",
                     "rvalue": "[work_second] + 60 * [work_minute] + 3600 * [work_hour]"
                 },
                 {
@@ -198,6 +203,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS
                 },
                 "work_hour": {
+                    "status_key": "hour_set",
                     "min": 0,
                     "max": 23,
                     "step": 1,
@@ -205,6 +211,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTime.HOURS,
                 },
                 "work_minute": {
+                    "status_key": "minute_set",
                     "min": 0,
                     "max": 59,
                     "step": 1,
@@ -213,6 +220,9 @@ DEVICE_MAPPING = {
                 }
             },
             Platform.SWITCH: {
+                "furnace_light": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
                 "pre_heat": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["off", "work"]
@@ -295,7 +305,7 @@ DEVICE_MAPPING = {
                 "work_status": {
                     "device_class": SensorDeviceClass.ENUM
                 },
-                "work_time": {
+                "remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.SECONDS,
                     "state_class": SensorStateClass.MEASUREMENT
@@ -319,7 +329,7 @@ DEVICE_MAPPING = {
         "calculate": {
             "get": [
                 {
-                    "lvalue": "[work_time]",
+                    "lvalue": "[remain_time]",
                     "rvalue": "[work_second] + 60 * [work_minute] + 3600 * [work_hour]"
                 },
                 {
@@ -349,6 +359,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                 },
                 "work_hour": {
+                    "status_key": "hour_set",
                     "min": 0,
                     "max": 23,
                     "step": 1,
@@ -356,6 +367,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTime.HOURS,
                 },
                 "work_minute": {
+                    "status_key": "minute_set",
                     "min": 0,
                     "max": 59,
                     "step": 1,
@@ -445,7 +457,7 @@ DEVICE_MAPPING = {
                 "work_status": {
                     "device_class": SensorDeviceClass.ENUM
                 },
-                "work_time": {
+                "remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.SECONDS,
                     "state_class": SensorStateClass.MEASUREMENT

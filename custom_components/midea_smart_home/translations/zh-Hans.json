@@ -2924,6 +2924,9 @@
       "fresh_air_remove_odor": {
         "name": "新风除菌"
       },
+      "furnace_light": {
+        "name": "炉灯"
+      },
       "germicidal": {
         "name": "高温杀菌"
       },
