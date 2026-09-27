@@ -18,11 +18,11 @@ DEVICE_MAPPING = {
             "get": [
                 {
                     "lvalue": "[work_time]",
-                    "rvalue": "[work_second] + 60 * [work_minute] + 3600 * [work_hour]"
+                    "rvalue": "int(([work_second] + 60 * [work_minute] + 3600 * [work_hour] + 59) / 60)"
                 },
                 {
                     "lvalue": "[set_time]",
-                    "rvalue": "[second_set] + 60 * [minute_set] + 3600 * [hour_set]"
+                    "rvalue": "int(([second_set] + 60 * [minute_set] + 3600 * [hour_set] + 59) / 60)"
                 }
             ],
             "set": [
@@ -159,12 +159,12 @@ DEVICE_MAPPING = {
                 },
                 "work_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "set_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             }
@@ -187,11 +187,11 @@ DEVICE_MAPPING = {
             "get": [
                 {
                     "lvalue": "[work_time]",
-                    "rvalue": "[work_second] + 60 * [work_minute] + 3600 * [work_hour]"
+                    "rvalue": "int(([work_second] + 60 * [work_minute] + 3600 * [work_hour] + 59) / 60)"
                 },
                 {
                     "lvalue": "[set_time]",
-                    "rvalue": "[second_set] + 60 * [minute_set] + 3600 * [hour_set]"
+                    "rvalue": "int(([second_set] + 60 * [minute_set] + 3600 * [hour_set] + 59) / 60)"
                 }
             ],
             "set": [
@@ -328,12 +328,12 @@ DEVICE_MAPPING = {
                 },
                 "work_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "set_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             }

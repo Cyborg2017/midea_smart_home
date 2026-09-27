@@ -9,15 +9,15 @@ DEVICE_MAPPING = {
             "get": [
                 {
                     "lvalue": "[downstair_remain_time]",
-                    "rvalue": "[downstair_sec] + 60 * [downstair_min] + 3600 * [downstair_hour]"
+                    "rvalue": "int(([downstair_sec] + 60 * [downstair_min] + 3600 * [downstair_hour] + 59) / 60)"
                 },
                 {
                     "lvalue": "[order_time]",
-                    "rvalue": "[order_sec] + 60 * [order_min] + 3600 * [order_hour]"
+                    "rvalue": "int(([order_sec] + 60 * [order_min] + 3600 * [order_hour] + 59) / 60)"
                 },
                 {
                     "lvalue": "[upstair_remain_time]",
-                    "rvalue": "[upstair_sec] + 60 * [upstair_min] + 3600 * [upstair_hour]"
+                    "rvalue": "int(([upstair_sec] + 60 * [upstair_min] + 3600 * [upstair_hour] + 59) / 60)"
                 }
             ]
         },
@@ -73,7 +73,7 @@ DEVICE_MAPPING = {
             Platform.SENSOR: {
                 "downstair_remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "downstair_temp": {
@@ -89,12 +89,12 @@ DEVICE_MAPPING = {
                 },
                 "order_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "upstair_remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "upstair_temp": {
@@ -116,15 +116,15 @@ DEVICE_MAPPING = {
             "get": [
                 {
                     "lvalue": "[downstair_remain_time]",
-                    "rvalue": "[downstair_sec] + 60 * [downstair_min] + 3600 * [downstair_hour]"
+                    "rvalue": "int(([downstair_sec] + 60 * [downstair_min] + 3600 * [downstair_hour] + 59) / 60)"
                 },
                 {
                     "lvalue": "[order_time]",
-                    "rvalue": "[order_sec] + 60 * [order_min] + 3600 * [order_hour]"
+                    "rvalue": "int(([order_sec] + 60 * [order_min] + 3600 * [order_hour] + 59) / 60)"
                 },
                 {
                     "lvalue": "[upstair_remain_time]",
-                    "rvalue": "[upstair_sec] + 60 * [upstair_min] + 3600 * [upstair_hour]"
+                    "rvalue": "int(([upstair_sec] + 60 * [upstair_min] + 3600 * [upstair_hour] + 59) / 60)"
                 }
             ]
         },
@@ -180,7 +180,7 @@ DEVICE_MAPPING = {
             Platform.SENSOR: {
                 "downstair_remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "downstair_temp": {
@@ -196,12 +196,12 @@ DEVICE_MAPPING = {
                 },
                 "order_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "upstair_remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "upstair_temp": {

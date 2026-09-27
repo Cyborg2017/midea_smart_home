@@ -18,15 +18,15 @@ DEVICE_MAPPING = {
             "get": [
                 {
                     "lvalue": "[remain_time]",
-                    "rvalue": "[work_second] + 60 * [work_minute] + 3600 * [work_hour]"
+                    "rvalue": "int(([work_second] + 60 * [work_minute] + 3600 * [work_hour] + 59) / 60)"
                 },
                 {
                     "lvalue": "[set_time]",
-                    "rvalue": "[second_set] + 60 * [minute_set] + 3600 * [hour_set]"
+                    "rvalue": "int(([second_set] + 60 * [minute_set] + 3600 * [hour_set] + 59) / 60)"
                 },
                 {
                     "lvalue": "[appoint_time]",
-                    "rvalue": "[appoint_second] + 60 * [appoint_minute] + 3600 * [appoint_hour]"
+                    "rvalue": "int(([appoint_second] + 60 * [appoint_minute] + 3600 * [appoint_hour] + 59) / 60)"
                 }
             ],
             "set": [
@@ -128,7 +128,7 @@ DEVICE_MAPPING = {
             Platform.SENSOR: {
                 "appoint_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "appointment_time"
                 },
@@ -145,7 +145,7 @@ DEVICE_MAPPING = {
                 },
                 "set_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "stepnum": {
@@ -165,7 +165,7 @@ DEVICE_MAPPING = {
                 },
                 "remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             }
@@ -188,15 +188,15 @@ DEVICE_MAPPING = {
             "get": [
                 {
                     "lvalue": "[remain_time]",
-                    "rvalue": "[work_second] + 60 * [work_minute] + 3600 * [work_hour]"
+                    "rvalue": "int(([work_second] + 60 * [work_minute] + 3600 * [work_hour] + 59) / 60)"
                 },
                 {
                     "lvalue": "[set_time]",
-                    "rvalue": "[second_set] + 60 * [minute_set] + 3600 * [hour_set]"
+                    "rvalue": "int(([second_set] + 60 * [minute_set] + 3600 * [hour_set] + 59) / 60)"
                 },
                 {
                     "lvalue": "[appoint_time]",
-                    "rvalue": "[appoint_second] + 60 * [appoint_minute] + 3600 * [appoint_hour]"
+                    "rvalue": "int(([appoint_second] + 60 * [appoint_minute] + 3600 * [appoint_hour] + 59) / 60)"
                 }
             ],
             "set": [
@@ -298,7 +298,7 @@ DEVICE_MAPPING = {
             Platform.SENSOR: {
                 "appoint_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "appointment_time"
                 },
@@ -315,7 +315,7 @@ DEVICE_MAPPING = {
                 },
                 "set_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "stepnum": {
@@ -335,7 +335,7 @@ DEVICE_MAPPING = {
                 },
                 "remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             }
@@ -358,15 +358,15 @@ DEVICE_MAPPING = {
             "get": [
                 {
                     "lvalue": "[remain_time]",
-                    "rvalue": "[work_second] + 60 * [work_minute] + 3600 * [work_hour]"
+                    "rvalue": "int(([work_second] + 60 * [work_minute] + 3600 * [work_hour] + 59) / 60)"
                 },
                 {
                     "lvalue": "[set_time]",
-                    "rvalue": "[second_set] + 60 * [minute_set] + 3600 * [hour_set]"
+                    "rvalue": "int(([second_set] + 60 * [minute_set] + 3600 * [hour_set] + 59) / 60)"
                 },
                 {
                     "lvalue": "[appoint_time]",
-                    "rvalue": "[appoint_second] + 60 * [appoint_minute] + 3600 * [appoint_hour]"
+                    "rvalue": "int(([appoint_second] + 60 * [appoint_minute] + 3600 * [appoint_hour] + 59) / 60)"
                 }
             ],
             "set": [
@@ -450,7 +450,7 @@ DEVICE_MAPPING = {
             Platform.SENSOR: {
                 "appoint_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "appointment_time"
                 },
@@ -467,7 +467,7 @@ DEVICE_MAPPING = {
                 },
                 "set_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "stepnum": {
@@ -487,7 +487,7 @@ DEVICE_MAPPING = {
                 },
                 "remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             }
@@ -510,15 +510,15 @@ DEVICE_MAPPING = {
             "get": [
                 {
                     "lvalue": "[remain_time]",
-                    "rvalue": "[work_second] + 60 * [work_minute] + 3600 * [work_hour]"
+                    "rvalue": "int(([work_second] + 60 * [work_minute] + 3600 * [work_hour] + 59) / 60)"
                 },
                 {
                     "lvalue": "[set_time]",
-                    "rvalue": "[second_set] + 60 * [minute_set] + 3600 * [hour_set]"
+                    "rvalue": "int(([second_set] + 60 * [minute_set] + 3600 * [hour_set] + 59) / 60)"
                 },
                 {
                     "lvalue": "[appoint_time]",
-                    "rvalue": "[appoint_second] + 60 * [appoint_minute] + 3600 * [appoint_hour]"
+                    "rvalue": "int(([appoint_second] + 60 * [appoint_minute] + 3600 * [appoint_hour] + 59) / 60)"
                 }
             ],
             "set": [
@@ -602,7 +602,7 @@ DEVICE_MAPPING = {
             Platform.SENSOR: {
                 "appoint_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "appointment_time"
                 },
@@ -619,7 +619,7 @@ DEVICE_MAPPING = {
                 },
                 "set_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
                 "stepnum": {
@@ -639,7 +639,7 @@ DEVICE_MAPPING = {
                 },
                 "remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
-                    "unit_of_measurement": UnitOfTime.SECONDS,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             }
