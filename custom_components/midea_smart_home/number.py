@@ -68,7 +68,8 @@ class MideaNumberEntity(MideaBaseEntity, NumberEntity):
     def native_value(self) -> float | None:
         if not self.coordinator.data:
             return None
-        value = self.coordinator.data.get(self._entity_key)
+        status_key = self._config.get("status_key")
+        value = self.coordinator.data.get(status_key or self._entity_key)
 
         if value is None:
             return None
