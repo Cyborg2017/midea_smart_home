@@ -308,12 +308,10 @@ def discover_devices(
             len(devices),
         )
         if target_addresses is not None:
-            local_networks = []
-            explicit_address = scan_address.strip()
-            if explicit_address.rsplit(".", 1)[-1] in ("1", "255"):
-                explicit_network = IPv4Network(
-                    f"{explicit_address}/24", strict=False
-                )
+            # Reuse the normalized address from _parse_scan_address.
+            target = target_addresses[0]
+            if target.endswith(".255"):
+                explicit_network = IPv4Network(f"{target}/24", strict=False)
                 unicast_targets = [
                     str(host_ip) for host_ip in explicit_network.hosts()
                 ]
