@@ -63,6 +63,7 @@ class DeviceController(threading.Thread):
         self._buffer = b""
         self._updates: list[Callable[[dict[str, Any]], None]] = []
         self._is_run = False
+        self._stop_event = threading.Event()
         self._available = False
         self._previous_heartbeat: float = 0.0
         self._pending_poll_location: Optional[int] = None
@@ -110,10 +111,12 @@ class DeviceController(threading.Thread):
     def open(self) -> None:
         if not self._is_run:
             self._is_run = True
+            self._stop_event.clear()
             threading.Thread.start(self)
 
     def close(self) -> None:
         self._is_run = False
+        self._stop_event.set()
         self._close_socket()
 
     def _close_socket(self) -> None:
@@ -315,7 +318,8 @@ class DeviceController(threading.Thread):
                 break
             self._close_socket()
             _LOGGER.warning("[%s] Unable to connect, sleep %.1f seconds (errors: %d)", self._device_id, self._retry_delay, self._connection_errors)
-            time.sleep(self._retry_delay)
+            # Interruptible wait so close() can stop the thread immediately
+            self._stop_event.wait(self._retry_delay)
 
     def run(self) -> None:
         while self._is_run:
@@ -352,12 +356,16 @@ class DeviceController(threading.Thread):
                         break
 
                 except (socket.error, OSError, ConnectionResetError) as e:
+                    if not self._is_run:
+                        break
                     _LOGGER.debug("[%s] Connection error: %s", self._device_id, e)
                     self._close_socket()
                     self.set_available(False)
                     break
 
                 except AttributeError as e:
+                    if not self._is_run:
+                        break
                     _LOGGER.debug("[%s] Socket closed: %s", self._device_id, e)
                     self._close_socket()
                     self.set_available(False)

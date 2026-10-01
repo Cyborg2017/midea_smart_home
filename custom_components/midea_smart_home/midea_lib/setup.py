@@ -1,6 +1,7 @@
 """Midea device setup and validation helpers."""
 import logging
 import socket
+import time
 from typing import Optional, Tuple
 
 from .device import DeviceController
@@ -60,9 +61,21 @@ async def validate_device(
                 protocol=protocol,
             )
 
+            got_status = False
+
+            def status_callback(status, poll_location=None):
+                nonlocal got_status
+                # Ignore availability-only updates (e.g. {"available":
+                # false} after a connection error) and metadata-only
+                # payloads (e.g. {"version": 0}); require real status
+                # data parsed from the device reply
+                if status and set(status) - {"available", "version"}:
+                    got_status = True
+
+            controller.register_update(status_callback)
+
             try:
                 controller.open()
-                import time
                 start = time.time()
                 while not controller.available and (time.time() - start < 10):
                     time.sleep(0.5)
@@ -75,19 +88,6 @@ async def validate_device(
 
                 # Wait for status
                 start = time.time()
-                got_status = False
-
-                def status_callback(status, poll_location=None):
-                    nonlocal got_status
-                    # Ignore availability-only updates (e.g. {"available":
-                    # false} after a connection error) and metadata-only
-                    # payloads (e.g. {"version": 0}); require real status
-                    # data parsed from the device reply
-                    if status and set(status) - {"available", "version"}:
-                        got_status = True
-
-                controller.register_update(status_callback)
-
                 while not got_status and (time.time() - start < 5):
                     time.sleep(0.5)
 
@@ -97,6 +97,13 @@ async def validate_device(
                 return True, None
             finally:
                 controller.close()
+                if controller.is_alive():
+                    controller.join(timeout=3.0)
+                    if controller.is_alive():
+                        _LOGGER.warning(
+                            "Device %s controller thread did not stop within 3s",
+                            device_id,
+                        )
 
         return await hass.async_add_executor_job(_test_connection)
 
