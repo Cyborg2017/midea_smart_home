@@ -12,8 +12,6 @@
   "issue_tracker": "https://github.com/Cyborg2017/midea_smart_home/issues",
   "requirements": [
     "lupa>=2.0",
-    "ifaddr>=0.2.0",
-    "aiohttp>=3.8.0",
     "pycryptodome>=3.15.0"
   ],
   "version": "26.9.4"
