@@ -402,6 +402,121 @@
       },
       "storage_zone": {
         "name": "温控器(冷藏)"
+      },
+      "thermostat_1": {
+        "name": "温控器(子设备1)",
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "自动",
+              "high": "高速",
+              "low": "低速",
+              "medium": "中速"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "cool": "制冷",
+              "fan_only": "送风",
+              "ground": "地暖",
+              "heat": "制热",
+              "heat_ground": "制热+地暖",
+              "none": "无"
+            }
+          }
+        }
+      },
+      "thermostat_2": {
+        "name": "温控器(子设备2)",
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "自动",
+              "high": "高速",
+              "low": "低速",
+              "medium": "中速"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "cool": "制冷",
+              "fan_only": "送风",
+              "ground": "地暖",
+              "heat": "制热",
+              "heat_ground": "制热+地暖",
+              "none": "无"
+            }
+          }
+        }
+      },
+      "thermostat_3": {
+        "name": "温控器(子设备3)",
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "自动",
+              "high": "高速",
+              "low": "低速",
+              "medium": "中速"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "cool": "制冷",
+              "fan_only": "送风",
+              "ground": "地暖",
+              "heat": "制热",
+              "heat_ground": "制热+地暖",
+              "none": "无"
+            }
+          }
+        }
+      },
+      "thermostat_4": {
+        "name": "温控器(子设备4)",
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "自动",
+              "high": "高速",
+              "low": "低速",
+              "medium": "中速"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "cool": "制冷",
+              "fan_only": "送风",
+              "ground": "地暖",
+              "heat": "制热",
+              "heat_ground": "制热+地暖",
+              "none": "无"
+            }
+          }
+        }
+      },
+      "thermostat_5": {
+        "name": "温控器(子设备5)",
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "自动",
+              "high": "高速",
+              "low": "低速",
+              "medium": "中速"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "cool": "制冷",
+              "fan_only": "送风",
+              "ground": "地暖",
+              "heat": "制热",
+              "heat_ground": "制热+地暖",
+              "none": "无"
+            }
+          }
+        }
       }
     },
     "cover": {
@@ -2559,6 +2674,21 @@
       "mode": {
         "name": "运行模式"
       },
+      "mode_set1": {
+        "name": "模式(子设备1)"
+      },
+      "mode_set2": {
+        "name": "模式(子设备2)"
+      },
+      "mode_set3": {
+        "name": "模式(子设备3)"
+      },
+      "mode_set4": {
+        "name": "模式(子设备4)"
+      },
+      "mode_set5": {
+        "name": "模式(子设备5)"
+      },
       "mouthfeel": {
         "name": "口感"
       },
@@ -2639,6 +2769,21 @@
       "room_aqi_value": {
         "name": "空气质量指数"
       },
+      "room_temp1": {
+        "name": "室温(子设备1)"
+      },
+      "room_temp2": {
+        "name": "室温(子设备2)"
+      },
+      "room_temp3": {
+        "name": "室温(子设备3)"
+      },
+      "room_temp4": {
+        "name": "室温(子设备4)"
+      },
+      "room_temp5": {
+        "name": "室温(子设备5)"
+      },
       "running_status": {
         "name": "运行状态"
       },
@@ -2686,6 +2831,21 @@
       },
       "temp_set": {
         "name": "目标温度"
+      },
+      "temp_set1": {
+        "name": "目标温度(子设备1)"
+      },
+      "temp_set2": {
+        "name": "目标温度(子设备2)"
+      },
+      "temp_set3": {
+        "name": "目标温度(子设备3)"
+      },
+      "temp_set4": {
+        "name": "目标温度(子设备4)"
+      },
+      "temp_set5": {
+        "name": "目标温度(子设备5)"
       },
       "temperature_bottom": {
         "name": "底部温度"
@@ -2935,6 +3095,21 @@
       "eco_dry_switch": {
         "name": "节能干燥开关"
       },
+      "energysaving_state1": {
+        "name": "节能状态(子设备1)"
+      },
+      "energysaving_state2": {
+        "name": "节能状态(子设备2)"
+      },
+      "energysaving_state3": {
+        "name": "节能状态(子设备3)"
+      },
+      "energysaving_state4": {
+        "name": "节能状态(子设备4)"
+      },
+      "energysaving_state5": {
+        "name": "节能状态(子设备5)"
+      },
       "eplus": {
         "name": "大水量"
       },
@@ -3105,6 +3280,21 @@
       },
       "silent_mode": {
         "name": "超智能降噪"
+      },
+      "sleep_state1": {
+        "name": "睡眠状态(子设备1)"
+      },
+      "sleep_state2": {
+        "name": "睡眠状态(子设备2)"
+      },
+      "sleep_state3": {
+        "name": "睡眠状态(子设备3)"
+      },
+      "sleep_state4": {
+        "name": "睡眠状态(子设备4)"
+      },
+      "sleep_state5": {
+        "name": "睡眠状态(子设备5)"
       },
       "smart_sterilize": {
         "name": "智能杀菌"

@@ -402,6 +402,121 @@
       },
       "storage_zone": {
         "name": "Thermostat (Refrigerator)"
+      },
+      "thermostat_1": {
+        "name": "Thermostat (Zone 1)",
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "Auto",
+              "high": "High",
+              "low": "Low",
+              "medium": "Medium"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "cool": "Cool",
+              "fan_only": "Fan Only",
+              "ground": "Ground",
+              "heat": "Heat",
+              "heat_ground": "Heat+Ground",
+              "none": "None"
+            }
+          }
+        }
+      },
+      "thermostat_2": {
+        "name": "Thermostat (Zone 2)",
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "Auto",
+              "high": "High",
+              "low": "Low",
+              "medium": "Medium"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "cool": "Cool",
+              "fan_only": "Fan Only",
+              "ground": "Ground",
+              "heat": "Heat",
+              "heat_ground": "Heat+Ground",
+              "none": "None"
+            }
+          }
+        }
+      },
+      "thermostat_3": {
+        "name": "Thermostat (Zone 3)",
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "Auto",
+              "high": "High",
+              "low": "Low",
+              "medium": "Medium"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "cool": "Cool",
+              "fan_only": "Fan Only",
+              "ground": "Ground",
+              "heat": "Heat",
+              "heat_ground": "Heat+Ground",
+              "none": "None"
+            }
+          }
+        }
+      },
+      "thermostat_4": {
+        "name": "Thermostat (Zone 4)",
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "Auto",
+              "high": "High",
+              "low": "Low",
+              "medium": "Medium"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "cool": "Cool",
+              "fan_only": "Fan Only",
+              "ground": "Ground",
+              "heat": "Heat",
+              "heat_ground": "Heat+Ground",
+              "none": "None"
+            }
+          }
+        }
+      },
+      "thermostat_5": {
+        "name": "Thermostat (Zone 5)",
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "Auto",
+              "high": "High",
+              "low": "Low",
+              "medium": "Medium"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "cool": "Cool",
+              "fan_only": "Fan Only",
+              "ground": "Ground",
+              "heat": "Heat",
+              "heat_ground": "Heat+Ground",
+              "none": "None"
+            }
+          }
+        }
       }
     },
     "cover": {
@@ -2559,6 +2674,21 @@
       "mode": {
         "name": "Running Mode"
       },
+      "mode_set1": {
+        "name": "Mode (Zone 1)"
+      },
+      "mode_set2": {
+        "name": "Mode (Zone 2)"
+      },
+      "mode_set3": {
+        "name": "Mode (Zone 3)"
+      },
+      "mode_set4": {
+        "name": "Mode (Zone 4)"
+      },
+      "mode_set5": {
+        "name": "Mode (Zone 5)"
+      },
       "mouthfeel": {
         "name": "Mouthfeel"
       },
@@ -2639,6 +2769,21 @@
       "room_aqi_value": {
         "name": "Room AQI"
       },
+      "room_temp1": {
+        "name": "Room Temperature (Zone 1)"
+      },
+      "room_temp2": {
+        "name": "Room Temperature (Zone 2)"
+      },
+      "room_temp3": {
+        "name": "Room Temperature (Zone 3)"
+      },
+      "room_temp4": {
+        "name": "Room Temperature (Zone 4)"
+      },
+      "room_temp5": {
+        "name": "Room Temperature (Zone 5)"
+      },
       "running_status": {
         "name": "Running Status"
       },
@@ -2686,6 +2831,21 @@
       },
       "temp_set": {
         "name": "Target Temperature"
+      },
+      "temp_set1": {
+        "name": "Target Temperature (Zone 1)"
+      },
+      "temp_set2": {
+        "name": "Target Temperature (Zone 2)"
+      },
+      "temp_set3": {
+        "name": "Target Temperature (Zone 3)"
+      },
+      "temp_set4": {
+        "name": "Target Temperature (Zone 4)"
+      },
+      "temp_set5": {
+        "name": "Target Temperature (Zone 5)"
       },
       "temperature_bottom": {
         "name": "Bottom Temperature"
@@ -2935,6 +3095,21 @@
       "eco_dry_switch": {
         "name": "Eco Dry Switch"
       },
+      "energysaving_state1": {
+        "name": "Energy Saving State (Zone 1)"
+      },
+      "energysaving_state2": {
+        "name": "Energy Saving State (Zone 2)"
+      },
+      "energysaving_state3": {
+        "name": "Energy Saving State (Zone 3)"
+      },
+      "energysaving_state4": {
+        "name": "Energy Saving State (Zone 4)"
+      },
+      "energysaving_state5": {
+        "name": "Energy Saving State (Zone 5)"
+      },
       "eplus": {
         "name": "Large Flow"
       },
@@ -3105,6 +3280,21 @@
       },
       "silent_mode": {
         "name": "Silent Mode"
+      },
+      "sleep_state1": {
+        "name": "Sleep State (Zone 1)"
+      },
+      "sleep_state2": {
+        "name": "Sleep State (Zone 2)"
+      },
+      "sleep_state3": {
+        "name": "Sleep State (Zone 3)"
+      },
+      "sleep_state4": {
+        "name": "Sleep State (Zone 4)"
+      },
+      "sleep_state5": {
+        "name": "Sleep State (Zone 5)"
       },
       "smart_sterilize": {
         "name": "Smart Sterilization"

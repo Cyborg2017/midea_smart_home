@@ -381,6 +381,8 @@ class DeviceLogicHandler:
         centralized: Optional[list] = None
     ) -> dict:
         """Prepare control data with device-specific requirements."""
+        if self.device_type == 0xCF:
+            control["control_type"] = "0x11"
         if self.device_type == 0xD9:
             # Determine drum prefix from location field
             if "da_location" in control:
