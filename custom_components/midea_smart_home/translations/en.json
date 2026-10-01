@@ -3007,6 +3007,9 @@
       "move_clean": {
         "name": "Move Clean"
       },
+      "mute": {
+        "name": "Mute"
+      },
       "nightly": {
         "name": "Night Mode"
       },

@@ -3007,6 +3007,9 @@
       "move_clean": {
         "name": "移动清洗"
       },
+      "mute": {
+        "name": "静音"
+      },
       "nightly": {
         "name": "夜间模式"
       },
