@@ -1050,6 +1050,16 @@
           "shower": "淋浴洗"
         }
       },
+      "fan_set": {
+        "name": "风速",
+        "state": {
+          "auto": "自动",
+          "high": "高速",
+          "low": "低速",
+          "medium": "中速",
+          "off": "关闭"
+        }
+      },
       "fire_power": {
         "name": "微波挡位",
         "state": {
@@ -1322,6 +1332,17 @@
           "stewing": "蒸煮",
           "stop": "停止",
           "warm_porridge": "适温粥"
+        }
+      },
+      "mode_state": {
+        "name": "模式",
+        "state": {
+          "auto": "自动",
+          "energy_save": "节能",
+          "manual": "手动",
+          "passby": "旁通",
+          "sleep": "睡眠",
+          "ultimate": "强劲"
         }
       },
       "moisturizing": {
@@ -2614,6 +2635,9 @@
       },
       "rice_type": {
         "name": "米种类"
+      },
+      "room_aqi_value": {
+        "name": "空气质量指数"
       },
       "running_status": {
         "name": "运行状态"

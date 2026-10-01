@@ -1050,6 +1050,16 @@
           "shower": "Shower"
         }
       },
+      "fan_set": {
+        "name": "Fan Speed",
+        "state": {
+          "auto": "Auto",
+          "high": "High",
+          "low": "Low",
+          "medium": "Medium",
+          "off": "Off"
+        }
+      },
       "fire_power": {
         "name": "Microwave Power",
         "state": {
@@ -1322,6 +1332,17 @@
           "stewing": "Stewing",
           "stop": "Stop",
           "warm_porridge": "Warm Porridge"
+        }
+      },
+      "mode_state": {
+        "name": "Mode",
+        "state": {
+          "auto": "Auto",
+          "energy_save": "Energy Saving",
+          "manual": "Manual",
+          "passby": "Passby",
+          "sleep": "Sleep",
+          "ultimate": "Ultimate"
         }
       },
       "moisturizing": {
@@ -2614,6 +2635,9 @@
       },
       "rice_type": {
         "name": "Rice Type"
+      },
+      "room_aqi_value": {
+        "name": "Room AQI"
       },
       "running_status": {
         "name": "Running Status"
