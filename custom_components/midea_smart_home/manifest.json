@@ -14,5 +14,5 @@
     "lupa>=2.0",
     "pycryptodome>=3.15.0"
   ],
-  "version": "26.9.4"
+  "version": "26.10.0-b0"
 }
