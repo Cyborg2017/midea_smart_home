@@ -90,7 +90,7 @@ class MideaDeviceStatusSensorEntity(MideaBaseEntity, BinarySensorEntity):
         data = self.coordinator.data or {}
         device_type_int = int(self._device_type, 16) if isinstance(self._device_type, str) else 0
         device_type_str = f"T0x{device_type_int:02X}" if device_type_int else self._device_type
-        attributes = {
+        base_attrs = {
             "device_id": str(self._device_id),
             "sn": self._sn,
             "sn8": self._sn8,
@@ -98,17 +98,31 @@ class MideaDeviceStatusSensorEntity(MideaBaseEntity, BinarySensorEntity):
             "device_type": device_type_str,
         }
 
-        current_size = len(json.dumps(attributes, default=str))
         other_attrs = {}
         for key, value in data.items():
-            if value is not None:
-                if isinstance(value, (str, int, float, bool)):
-                    other_attrs[key] = value
-                elif isinstance(value, dict):
-                    for sub_key, sub_value in value.items():
-                        if sub_value is not None and isinstance(sub_value, (str, int, float, bool)):
-                            other_attrs[f"{key}_{sub_key}"] = sub_value
+            if value is None:
+                continue
+            if isinstance(value, (str, int, float, bool)):
+                other_attrs[key] = value
+            elif isinstance(value, dict):
+                for sub_key, sub_value in value.items():
+                    if sub_value is not None and isinstance(sub_value, (str, int, float, bool)):
+                        other_attrs[f"{key}_{sub_key}"] = sub_value
 
+        # Fast path: add all attributes and validate the total size with a
+        # single json.dumps. Only when the limit is exceeded do we fall back
+        # to the original per-pair measurement, avoiding N+1 serializations
+        # on the common (under-limit) path.
+        attributes = dict(base_attrs)
+        for key in sorted(other_attrs.keys()):
+            attributes[key] = other_attrs[key]
+        if len(json.dumps(attributes, default=str)) <= MAX_ATTRIBUTES_BYTES:
+            return attributes
+
+        # Over the limit: rebuild incrementally, measuring each pair so we
+        # stop as soon as adding the next key would exceed the cap.
+        attributes = dict(base_attrs)
+        current_size = len(json.dumps(attributes, default=str))
         for key in sorted(other_attrs.keys()):
             pair_size = len(json.dumps({key: other_attrs[key]}, default=str))
             if current_size + pair_size > MAX_ATTRIBUTES_BYTES:
