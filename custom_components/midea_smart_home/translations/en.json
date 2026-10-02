@@ -347,7 +347,10 @@
         "state_attributes": {
           "fan_mode": {
             "state": {
+              "silent": "Silent",
               "soft_wind": "Soft Wind",
+              "standard": "Standard",
+              "storm": "Storm",
               "strong": "Strong"
             }
           },

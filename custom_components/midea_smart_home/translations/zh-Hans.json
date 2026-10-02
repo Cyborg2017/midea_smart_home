@@ -347,7 +347,10 @@
         "state_attributes": {
           "fan_mode": {
             "state": {
+              "silent": "静音",
               "soft_wind": "弱风",
+              "standard": "标准",
+              "storm": "暴风",
               "strong": "强风"
             }
           },
