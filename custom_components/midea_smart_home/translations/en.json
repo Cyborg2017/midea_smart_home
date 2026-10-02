@@ -32,7 +32,7 @@
         "title": "Device Authentication {progress}"
       },
       "select_device": {
-        "description": "Found {device_count} addable devices (including new types). Select an action:",
+        "description": "Select an action:",
         "menu_options": {
           "select_device_continue": "✅ Continue with selected devices",
           "select_device_rescan": "🔄 Rescan for devices"
@@ -3550,7 +3550,7 @@
         "title": "Select New Devices"
       },
       "select_device_option": {
-        "description": "Found {device_count} new addable devices (including new types). Select an action:",
+        "description": "Select an action:",
         "menu_options": {
           "select_device_continue_option": "✅ Continue with selected devices",
           "select_device_rescan_option": "🔄 Rescan for devices"
