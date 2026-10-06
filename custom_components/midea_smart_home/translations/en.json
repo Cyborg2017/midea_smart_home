@@ -8,11 +8,33 @@
     },
     "error": {
       "all_devices_added": "All discovered devices have already been added",
+      "cannot_connect": "Cannot connect to device. Check the IP address and port",
       "connection_failed": "Failed to connect to device",
+      "invalid_device_id": "Invalid device ID. Enter digits only",
+      "invalid_device_type": "Invalid device type. Enter a hex value (e.g. 0xac)",
+      "invalid_ip": "Invalid IP address",
+      "invalid_protocol": "Invalid protocol version",
       "lua_error": "Device validation failed",
-      "no_devices_found": "No devices found on local network"
+      "missing_lua_file": "Lua file path is required",
+      "missing_token_key": "Token and Key are required for V3 protocol",
+      "no_devices_found": "No devices found on local network",
+      "unknown": "Unknown error, check the logs"
     },
     "step": {
+      "auto_add_device": {
+        "data": {
+          "account": "Account",
+          "password": "Password",
+          "scan_address": "Scan Address",
+          "scan_mode": "Scan Mode"
+        },
+        "data_description": {
+          "scan_address": "Enter router address (e.g., 192.168.1.1) to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
+          "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
+        },
+        "description": "Enter your Midea Meiju account credentials to download necessary resource files",
+        "title": "Auto Add Devices (Account Login)"
+      },
       "discover": {
         "description": "Searching for Midea devices on your local network...",
         "title": "Discovering Devices"
@@ -31,6 +53,71 @@
         "description": "Device Name: {device_name}\nDevice Model: {device_model}\nDevice ID: {device_id}\nIP Address: {ip_address}\nSN8: {sn8}\nProtocol Version: {protocol_version}\n{error}{unsupported_protocol}",
         "title": "Device Authentication {progress}"
       },
+      "manual_add_device": {
+        "data": {
+          "scan_address": "Scan Address",
+          "scan_mode": "Scan Mode"
+        },
+        "data_description": {
+          "scan_address": "Enter router address to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
+          "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
+        },
+        "description": "Step 1: scan your local network for device info (no account login, no cloud). Discovered device ID, IP, type and protocol will be prefilled in the next form.",
+        "title": "Manual Add Device - Scan"
+      },
+      "manual_device": {
+        "data": {
+          "device_id": "Device ID",
+          "ip": "IP Address",
+          "port": "Port",
+          "device_type": "Device Type",
+          "protocol": "Protocol Version",
+          "device_name": "Device Name",
+          "sn": "SN",
+          "sn8": "SN8",
+          "token": "Token",
+          "key": "Key",
+          "lua_file": "Lua File Path"
+        },
+        "data_description": {
+          "device_id": "Device ID (digits only, prefilled)",
+          "ip": "Device LAN IP address (prefilled)",
+          "port": "Default 6444",
+          "device_type": "Hex device type (e.g. 0xac, prefilled)",
+          "protocol": "Protocol version (prefilled). V3 devices require Token and Key",
+          "device_name": "Custom device name (optional)",
+          "sn": "Serial number (optional, prefilled)",
+          "sn8": "Last 8 chars of SN (optional, prefilled)",
+          "token": "Required for V3, leave empty for V1/V2",
+          "key": "Required for V3, leave empty for V1/V2",
+          "lua_file": "Full path to the device protocol file (.lua)"
+        },
+        "description": "Known parameters discovered on the LAN have been prefilled. Verify them and enter the Token/Key and Lua file path.",
+        "title": "Device Info {progress}"
+      },
+      "manual_device_added": {
+        "description": "✅ Device added! {device_count} device(s) in total.\n\nContinue adding more devices manually, or finish.",
+        "menu_options": {
+          "manual_add_device": "➕ Add another device (rescan)",
+          "manual_finish": "✅ Finish"
+        },
+        "title": "Manual Add Device"
+      },
+      "manual_scan": {
+        "description": "Found {device_count} device(s) (already added devices are filtered out).\n\nAdd from the scan results, or enter everything by hand.",
+        "menu_options": {
+          "manual_direct_entry": "✍️ Direct entry (device not discoverable)",
+          "manual_select_device": "✅ Select a discovered device"
+        },
+        "title": "Manual Add Device"
+      },
+      "manual_select_device": {
+        "data": {
+          "devices": "Devices"
+        },
+        "description": "Select the device(s) to add manually. Their device ID, IP, type and protocol will be prefilled in the next form.",
+        "title": "Select Devices"
+      },
       "select_device": {
         "description": "Select an action:",
         "menu_options": {
@@ -47,17 +134,11 @@
         "title": "Select Devices"
       },
       "user": {
-        "data": {
-          "account": "Account",
-          "password": "Password",
-          "scan_address": "Scan Address",
-          "scan_mode": "Scan Mode"
+        "description": "Choose how to add devices:",
+        "menu_options": {
+          "auto_add_device": "🔎 Auto Add Devices (account login, LAN scan)",
+          "manual_add_device": "✍️ Manual Add Device (no account, enter Token/Key and Lua file manually)"
         },
-        "data_description": {
-          "scan_address": "Enter router address (e.g., 192.168.1.1) to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
-          "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
-        },
-        "description": "Enter your Midea Meiju account credentials to download necessary resource files",
         "title": "Midea Smart Home Setup"
       }
     }
@@ -3442,14 +3523,23 @@
     "error": {
       "all_devices_added": "All discovered devices have already been added",
       "backup_build_failed": "Failed to build the backup archive. Check the Home Assistant logs for details.",
+      "cannot_connect": "Cannot connect to device. Check the IP address and port",
       "diagnostics_build_failed": "Failed to build the diagnostics archive. Check the Home Assistant logs for details.",
+      "invalid_device_id": "Invalid device ID. Enter digits only",
+      "invalid_device_type": "Invalid device type. Enter a hex value (e.g. 0xac)",
+      "invalid_ip": "Invalid IP address",
+      "invalid_protocol": "Invalid protocol version",
+      "lua_error": "Device validation failed",
+      "missing_lua_file": "Lua file path is required",
+      "missing_token_key": "Token and Key are required for V3 protocol",
       "no_account_password": "Please configure account and password first",
       "no_cache_found": "No local configuration files found, no need to clean",
       "no_configurable_devices": "No devices with polling attributes found",
-      "no_devices_found": "No new devices found on local network"
+      "no_devices_found": "No new devices found on local network",
+      "unknown": "Unknown error, check the logs"
     },
     "step": {
-      "add_device": {
+      "add_device_auto": {
         "data": {
           "scan_address": "Scan Address",
           "scan_mode": "Scan Mode"
@@ -3459,7 +3549,19 @@
           "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
         },
         "description": "Search for new devices on local network (already added devices will be filtered out)",
-        "title": "Add New Device"
+        "title": "Auto Add New Device"
+      },
+      "add_device_manual": {
+        "data": {
+          "scan_address": "Scan Address",
+          "scan_mode": "Scan Mode"
+        },
+        "data_description": {
+          "scan_address": "Enter router address to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
+          "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
+        },
+        "description": "Step 1: scan your local network for device info (no account login, no cloud). Discovered device ID, IP, type and protocol will be prefilled in the next form.",
+        "title": "Manual Add Device - Scan"
       },
       "backup_config": {
         "data": {
@@ -3530,7 +3632,8 @@
       },
       "init": {
         "menu_options": {
-          "add_device": "➕ Add New Device",
+          "add_device_auto": "🔎 Auto Add Device (LAN scan)",
+          "add_device_manual": "✍️ Manual Add Device (no account)",
           "backup_config": "📦 Backup & Download Local Configuration",
           "clear_cache": "🗑️ Clear local configuration files",
           "configure_notifications": "🔔 Configure Device Notifications",
@@ -3541,6 +3644,59 @@
           "update_account": "🔑 Update Midea Account/Password"
         },
         "title": "Midea Smart Home Options"
+      },
+      "manual_device_added_option": {
+        "description": "✅ Device added! {device_count} device(s) in total.\n\nContinue adding more devices manually, or finish.",
+        "menu_options": {
+          "add_device_manual": "➕ Add another device (rescan)",
+          "manual_finish_option": "✅ Finish"
+        },
+        "title": "Manual Add Device"
+      },
+      "manual_device_option": {
+        "data": {
+          "device_id": "Device ID",
+          "ip": "IP Address",
+          "port": "Port",
+          "device_type": "Device Type",
+          "protocol": "Protocol Version",
+          "device_name": "Device Name",
+          "sn": "SN",
+          "sn8": "SN8",
+          "token": "Token",
+          "key": "Key",
+          "lua_file": "Lua File Path"
+        },
+        "data_description": {
+          "device_id": "Device ID (digits only, prefilled)",
+          "ip": "Device LAN IP address (prefilled)",
+          "port": "Default 6444",
+          "device_type": "Hex device type (e.g. 0xac, prefilled)",
+          "protocol": "Protocol version (prefilled). V3 devices require Token and Key",
+          "device_name": "Custom device name (optional)",
+          "sn": "Serial number (optional, prefilled)",
+          "sn8": "Last 8 chars of SN (optional, prefilled)",
+          "token": "Required for V3, leave empty for V1/V2",
+          "key": "Required for V3, leave empty for V1/V2",
+          "lua_file": "Full path to the device protocol file (.lua)"
+        },
+        "description": "Known parameters discovered on the LAN have been prefilled. Verify them and enter the Token/Key and Lua file path.",
+        "title": "Device Info {progress}"
+      },
+      "manual_scan_option": {
+        "description": "Found {device_count} device(s) (already added devices are filtered out).\n\nAdd from the scan results, or enter everything by hand.",
+        "menu_options": {
+          "manual_direct_entry_option": "✍️ Direct entry (device not discoverable)",
+          "manual_select_device_option": "✅ Select a discovered device"
+        },
+        "title": "Manual Add Device"
+      },
+      "manual_select_device_option": {
+        "data": {
+          "devices": "Devices"
+        },
+        "description": "Select the device(s) to add manually. Their device ID, IP, type and protocol will be prefilled in the next form.",
+        "title": "Select Devices"
       },
       "select_device_continue_option": {
         "data": {

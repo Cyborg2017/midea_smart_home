@@ -43,6 +43,8 @@ from .const import (
     LUA_CUSTOM_PATH,
     LUA_DEVICE_PATH,
     ProtocolVersion,
+    SETUP_MODE_AUTO,
+    SETUP_MODE_MANUAL,
 )
 from .midea_lib.packet_builder import PacketBuilder
 from .midea_lib.discovery import discover_devices, DISCOVERY_TIMEOUT
@@ -52,7 +54,7 @@ from .midea_lib.cloud import download_lua_file
 
 _LOGGER = logging.getLogger(__name__)
 
-STEP_USER_DATA_SCHEMA = vol.Schema({
+STEP_AUTO_ADD_SCHEMA = vol.Schema({
     vol.Required(CONF_ACCOUNT): str,
     vol.Required(CONF_PASSWORD): str,
     vol.Optional("scan_address", default="auto"): str,
@@ -64,6 +66,276 @@ STEP_USER_DATA_SCHEMA = vol.Schema({
         )
     )
 })
+
+_PROTOCOL_SELECTOR = SelectSelector(
+    SelectSelectorConfig(
+        options=[
+            {"value": str(ProtocolVersion.V1), "label": "V1"},
+            {"value": str(ProtocolVersion.V2), "label": "V2"},
+            {"value": str(ProtocolVersion.V3), "label": "V3"},
+        ],
+        mode=SelectSelectorMode.DROPDOWN,
+    )
+)
+
+def _build_manual_device_schema(
+    device_id: str = "",
+    ip_address: str = "",
+    device_type: str = "",
+    protocol: str = str(ProtocolVersion.V3),
+    device_name: str = "",
+    sn: str = "",
+    sn8: str = "",
+    token: str = "",
+    key: str = "",
+    lua_file: str = "",
+) -> vol.Schema:
+    """Build the manual device entry form schema (no cloud login required)."""
+    return vol.Schema({
+        vol.Required(
+            CONF_DEVICE_ID,
+            description={"suggested_value": device_id},
+        ): str,
+        vol.Required(
+            CONF_IP,
+            description={"suggested_value": ip_address},
+        ): str,
+        vol.Optional(
+            CONF_PORT,
+            default=DEFAULT_PORT,
+            description={"suggested_value": DEFAULT_PORT},
+        ): int,
+        vol.Required(
+            CONF_DEVICE_TYPE,
+            description={"suggested_value": device_type},
+        ): str,
+        vol.Required(
+            CONF_PROTOCOL,
+            default=protocol,
+        ): _PROTOCOL_SELECTOR,
+        vol.Optional(
+            CONF_DEVICE_NAME,
+            description={"suggested_value": device_name},
+        ): str,
+        vol.Optional(
+            CONF_SN,
+            description={"suggested_value": sn},
+        ): str,
+        vol.Optional(
+            CONF_SN8,
+            description={"suggested_value": sn8},
+        ): str,
+        vol.Optional(
+            CONF_TOKEN,
+            description={"suggested_value": token},
+        ): str,
+        vol.Optional(
+            CONF_KEY,
+            description={"suggested_value": key},
+        ): str,
+        vol.Required(
+            CONF_LUA_FILE,
+            description={"suggested_value": lua_file},
+        ): str,
+    })
+
+def _parse_manual_device_input(user_input: dict) -> tuple[dict | None, str]:
+    """Parse and normalize manual device input.
+
+    Returns (device_info, error) where device_info contains normalized
+    int/str values, or (None, error_key) on invalid input.
+    """
+    device_id_raw = str(user_input.get(CONF_DEVICE_ID, "")).strip()
+    if not device_id_raw.isdigit():
+        return None, "invalid_device_id"
+    device_id = int(device_id_raw)
+
+    ip_address = str(user_input.get(CONF_IP, "")).strip()
+    if not ip_address:
+        return None, "invalid_ip"
+
+    device_type_raw = str(user_input.get(CONF_DEVICE_TYPE, "")).strip()
+    try:
+        device_type = int(device_type_raw, 16)
+    except ValueError:
+        return None, "invalid_device_type"
+
+    protocol_raw = str(user_input.get(CONF_PROTOCOL, str(ProtocolVersion.V3)))
+    try:
+        protocol = int(protocol_raw)
+    except ValueError:
+        return None, "invalid_protocol"
+    if protocol not in (ProtocolVersion.V1, ProtocolVersion.V2, ProtocolVersion.V3):
+        return None, "invalid_protocol"
+
+    is_v3 = protocol == ProtocolVersion.V3
+    token = str(user_input.get(CONF_TOKEN, "") or "").strip()
+    key = str(user_input.get(CONF_KEY, "") or "").strip()
+    if is_v3 and (not token or not key):
+        return None, "missing_token_key"
+
+    lua_file = str(user_input.get(CONF_LUA_FILE, "") or "").strip()
+    if not lua_file:
+        return None, "missing_lua_file"
+
+    try:
+        port = int(user_input.get(CONF_PORT, DEFAULT_PORT))
+    except (TypeError, ValueError):
+        port = DEFAULT_PORT
+
+    info = {
+        CONF_DEVICE_ID: device_id,
+        CONF_IP: ip_address,
+        CONF_PORT: port,
+        CONF_DEVICE_TYPE: device_type,
+        CONF_PROTOCOL: protocol,
+        CONF_DEVICE_NAME: str(user_input.get(CONF_DEVICE_NAME, "") or "").strip(),
+        CONF_SN: str(user_input.get(CONF_SN, "") or "").strip(),
+        CONF_SN8: str(user_input.get(CONF_SN8, "") or "").strip(),
+        CONF_TOKEN: token if is_v3 else "",
+        CONF_KEY: key if is_v3 else "",
+        CONF_LUA_FILE: lua_file,
+    }
+    return info, ""
+
+_SCAN_FORM_SCHEMA = vol.Schema({
+    vol.Optional("scan_address", default="auto"): str,
+    vol.Optional("scan_mode", default="broadcast"): SelectSelector(
+        SelectSelectorConfig(
+            options=["broadcast", "unicast"],
+            translation_key="scan_mode",
+            mode=SelectSelectorMode.DROPDOWN,
+        )
+    )
+})
+
+def _build_manual_device_selector_options(discovered: dict) -> dict[str, str]:
+    """Build the device options map for the manual-mode multi-select form."""
+    return {str(did): _device_label({}, info) for did, info in discovered.items()}
+
+def _get_configured_device_ids(hass) -> set:
+    """Collect device IDs already present in ANY config entry of this domain."""
+    ids: set = set()
+    for entry in hass.config_entries.async_entries(DOMAIN):
+        for device in entry.data.get("devices", []):
+            ids.add(device.get(CONF_DEVICE_ID))
+    return ids
+
+async def _process_manual_device(flow, user_input: dict) -> dict | None:
+    """Validate a manual device form submission and store it on success.
+
+    Appends/updates the device in flow._devices_data and saves the JSON cache.
+    Returns None on success, or an errors dict to show on the form.
+    """
+    info, error = _parse_manual_device_input(user_input)
+    if info is None:
+        return {"base": error}
+
+    lua_common_dir = get_lua_common_path(flow.hass.config.config_dir)
+    await flow._download_common_lua_files(lua_common_dir)
+
+    valid, error_msg = await validate_device(
+        flow.hass,
+        info[CONF_DEVICE_ID],
+        info[CONF_IP],
+        info[CONF_PORT],
+        info[CONF_TOKEN],
+        info[CONF_KEY],
+        info[CONF_LUA_FILE],
+        info[CONF_PROTOCOL],
+        sn=info[CONF_SN],
+        sn8=info[CONF_SN8],
+        device_type=info[CONF_DEVICE_TYPE],
+    )
+    if not valid:
+        return {"base": error_msg or "cannot_connect"}
+
+    device_data = {
+        CONF_DEVICE_ID: info[CONF_DEVICE_ID],
+        CONF_IP: info[CONF_IP],
+        CONF_PORT: info[CONF_PORT],
+        CONF_DEVICE_TYPE: hex(info[CONF_DEVICE_TYPE]),
+        CONF_SN: info[CONF_SN],
+        CONF_SN8: info[CONF_SN8],
+        CONF_PRODUCT_MODEL: "",
+        CONF_MODEL_NUMBER: "",
+        CONF_DEVICE_NAME: info[CONF_DEVICE_NAME],
+        CONF_MANUFACTURER_CODE: info[CONF_SN][:4] or "0000",
+        CONF_CATEGORY: "",
+        CONF_TOKEN: info[CONF_TOKEN],
+        CONF_KEY: info[CONF_KEY],
+        CONF_LUA_FILE: info[CONF_LUA_FILE],
+        CONF_PROTOCOL: info[CONF_PROTOCOL],
+        CONF_HOME_NAME: "",
+        CONF_ROOM_NAME: "",
+    }
+
+    existing_index = next(
+        (i for i, d in enumerate(flow._devices_data)
+         if d.get(CONF_DEVICE_ID) == info[CONF_DEVICE_ID]),
+        None
+    )
+    if existing_index is not None:
+        flow._devices_data[existing_index] = device_data
+    else:
+        flow._devices_data.append(device_data)
+
+    await flow.hass.async_add_executor_job(flow._save_device_to_json, device_data)
+    return None
+
+def _apply_manual_user_input(prefill: dict, user_input: dict) -> None:
+    """Keep user-entered values on the form after a validation error."""
+    prefill.update({
+        "device_id": str(user_input.get(CONF_DEVICE_ID, "") or ""),
+        "ip_address": str(user_input.get(CONF_IP, "") or ""),
+        "device_type": str(user_input.get(CONF_DEVICE_TYPE, "") or ""),
+        "protocol": str(user_input.get(CONF_PROTOCOL, ProtocolVersion.V3)),
+        "device_name": str(user_input.get(CONF_DEVICE_NAME, "") or ""),
+        "sn": str(user_input.get(CONF_SN, "") or ""),
+        "sn8": str(user_input.get(CONF_SN8, "") or ""),
+        "token": str(user_input.get(CONF_TOKEN, "") or ""),
+        "key": str(user_input.get(CONF_KEY, "") or ""),
+        "lua_file": str(user_input.get(CONF_LUA_FILE, "") or ""),
+    })
+
+async def _manual_device_prefill(flow, info: dict) -> dict:
+    """Build suggested values for the manual device form.
+
+    Fills everything known from LAN discovery (device id, IP, type, protocol,
+    SN/SN8); additionally prefills token/key from the local JSON cache and
+    the Lua file path if the file already exists on disk.
+    """
+    device_type = info.get(CONF_DEVICE_TYPE)
+    device_id = info.get(CONF_DEVICE_ID)
+    token = key = ""
+    lua_file = ""
+
+    if device_id is not None and device_type:
+        try:
+            token, key = await flow._load_cached_token_key(
+                device_id, device_type, info.get(CONF_SN8, "")
+            )
+        except Exception as err:
+            _LOGGER.debug("Failed to load cached token/key: %s", err)
+        lua_path = get_lua_file_path(
+            flow.hass.config.config_dir, device_id, device_type,
+            info.get(CONF_SN8, ""),
+        )
+        if lua_path.exists():
+            lua_file = str(lua_path)
+
+    return {
+        "device_id": str(device_id) if device_id is not None else "",
+        "ip_address": info.get(CONF_IP, "") or "",
+        "device_type": f"0x{device_type:X}" if device_type else "",
+        "protocol": str(info.get(CONF_PROTOCOL) or ProtocolVersion.V3),
+        "device_name": info.get(CONF_DEVICE_NAME, "") or "",
+        "sn": info.get(CONF_SN, "") or "",
+        "sn8": info.get(CONF_SN8, "") or "",
+        "token": token,
+        "key": key,
+        "lua_file": lua_file,
+    }
 
 def get_lua_storage_path(hass_config_dir: str) -> Path:
     return Path(hass_config_dir) / LUA_DEVICE_PATH
@@ -362,6 +634,14 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
+        return self.async_show_menu(
+            step_id="user",
+            menu_options=["auto_add_device", "manual_add_device"],
+        )
+
+    async def async_step_auto_add_device(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
         errors = {}
 
         if user_input is not None:
@@ -381,11 +661,144 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return await self.async_step_discover()
 
         return self.async_show_form(
-            step_id="user",
-            data_schema=STEP_USER_DATA_SCHEMA,
+            step_id="auto_add_device",
+            data_schema=STEP_AUTO_ADD_SCHEMA,
             errors=errors,
             description_placeholders={
                 "note": "Please enter Meiju Cloud account and password to download device Lua files"
+            },
+        )
+
+    async def async_step_manual_add_device(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manual mode step 1: local network scan (no cloud login)."""
+        if user_input is not None:
+            self._scan_address = user_input.get("scan_address", "auto")
+            self._scan_mode = user_input.get("scan_mode", "broadcast")
+            return await self.async_step_manual_scan()
+
+        return self.async_show_form(
+            step_id="manual_add_device",
+            data_schema=_SCAN_FORM_SCHEMA,
+        )
+
+    async def async_step_manual_scan(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manual mode step 2: discover devices locally (no cloud login)."""
+        self._discovered_devices = await self.hass.async_add_executor_job(
+            discover_devices, DISCOVERY_TIMEOUT, self._scan_address, self._scan_mode
+        )
+
+        existing_device_ids = _get_configured_device_ids(self.hass) | {
+            d.get(CONF_DEVICE_ID) for d in self._devices_data
+        }
+        self._discovered_devices = {
+            did: info for did, info in self._discovered_devices.items()
+            if did not in existing_device_ids
+        }
+
+        if not self._discovered_devices:
+            # Nothing discovered (or all already added): fall back to direct entry
+            return await self.async_step_manual_direct_entry()
+
+        return self.async_show_menu(
+            step_id="manual_scan",
+            menu_options=["manual_select_device", "manual_direct_entry"],
+            description_placeholders={
+                "device_count": str(len(self._discovered_devices)),
+            },
+        )
+
+    async def async_step_manual_select_device(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        if user_input is not None:
+            selected = [int(did) for did in user_input.get("devices", [])]
+            if selected:
+                self._selected_devices = [
+                    self._discovered_devices[did] for did in selected
+                ]
+                self._current_device_index = 0
+                return await self.async_step_manual_device()
+
+        options = _build_manual_device_selector_options(self._discovered_devices)
+        return self.async_show_form(
+            step_id="manual_select_device",
+            data_schema=vol.Schema({
+                vol.Required(
+                    "devices",
+                    description={"suggested_value": list(options.keys())},
+                ): cv.multi_select(options),
+            }),
+        )
+
+    async def async_step_manual_direct_entry(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Direct manual entry for devices that cannot be discovered."""
+        self._selected_devices = [{}]
+        self._current_device_index = 0
+        return await self.async_step_manual_device()
+
+    async def async_step_manual_device(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manual mode step 3: per-device form with prefilled known info."""
+        if self._current_device_index >= len(self._selected_devices):
+            return await self.async_step_manual_device_added()
+
+        current_device = self._selected_devices[self._current_device_index]
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            errors = await _process_manual_device(self, user_input)
+            if errors is None:
+                self._current_device_index += 1
+                return await self.async_step_manual_device()
+
+        prefill = await _manual_device_prefill(self, current_device)
+        if user_input is not None:
+            _apply_manual_user_input(prefill, user_input)
+
+        return self.async_show_form(
+            step_id="manual_device",
+            data_schema=_build_manual_device_schema(**prefill),
+            errors=errors or None,
+            description_placeholders={
+                "progress": f"({self._current_device_index + 1}/{len(self._selected_devices)})",
+            },
+        )
+
+    async def async_step_manual_device_added(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        return self.async_show_menu(
+            step_id="manual_device_added",
+            menu_options=["manual_add_device", "manual_finish"],
+            description_placeholders={
+                "device_count": str(len(self._devices_data)),
+            },
+        )
+
+    async def async_step_manual_finish(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        await self._cleanup_session()
+
+        if not self._devices_data:
+            return self.async_abort(reason="no_devices")
+
+        device_names = [
+            d.get(CONF_DEVICE_NAME) or f"Device {d.get(CONF_DEVICE_ID)}"
+            for d in self._devices_data
+        ]
+        return self.async_create_entry(
+            title=f"Midea | Manual | {', '.join(device_names)}",
+            data={
+                "devices": self._devices_data,
+                "setup_mode": SETUP_MODE_MANUAL,
             },
         )
 
@@ -745,6 +1158,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         "devices": self._devices_data,
                         CONF_ACCOUNT: self._account,
                         CONF_PASSWORD: self._password,
+                        "setup_mode": SETUP_MODE_AUTO,
                     },
                 )
             return self.async_abort(reason="no_devices")
@@ -1163,10 +1577,10 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     ) -> FlowResult:
         return self.async_show_menu(
             step_id="init",
-            menu_options=["add_device", "update_account", "sync_cloud", "backup_config", "fetch_diagnostics", "clear_cache", "configure_polling", "configure_notifications", "configure_update_check"],
+            menu_options=["add_device_auto", "add_device_manual", "update_account", "sync_cloud", "backup_config", "fetch_diagnostics", "clear_cache", "configure_polling", "configure_notifications", "configure_update_check"],
         )
 
-    async def async_step_add_device(
+    async def async_step_add_device_auto(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         if user_input is not None:
@@ -1175,7 +1589,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             return await self._discover_devices(scan_address, self._scan_mode)
 
         return self.async_show_form(
-            step_id="add_device",
+            step_id="add_device_auto",
             data_schema=vol.Schema({
                 vol.Optional("scan_address", default="auto"): str,
                 vol.Optional("scan_mode", default="broadcast"): SelectSelector(
@@ -1188,6 +1602,152 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             }),
         )
 
+    async def async_step_add_device_manual(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manual mode step 1 (options flow): local network scan, no cloud."""
+        if user_input is not None:
+            scan_address = user_input.get("scan_address", "auto")
+            self._scan_mode = user_input.get("scan_mode", "broadcast")
+            return await self._manual_discover_devices(scan_address, self._scan_mode)
+
+        return self.async_show_form(
+            step_id="add_device_manual",
+            data_schema=_SCAN_FORM_SCHEMA,
+        )
+
+    async def _manual_discover_devices(
+        self, scan_address: str = "auto", scan_mode: str = "broadcast"
+    ) -> FlowResult:
+        """Discover devices locally for manual mode (no cloud login)."""
+        self._discovered_devices = await self.hass.async_add_executor_job(
+            discover_devices, DISCOVERY_TIMEOUT, scan_address, scan_mode
+        )
+
+        existing_device_ids = _get_configured_device_ids(self.hass) | {
+            d.get(CONF_DEVICE_ID) for d in self._devices_data
+        }
+        self._discovered_devices = {
+            did: info for did, info in self._discovered_devices.items()
+            if did not in existing_device_ids
+        }
+
+        if not self._discovered_devices:
+            return await self.async_step_manual_direct_entry_option()
+
+        return await self.async_step_manual_scan_option()
+
+    async def async_step_manual_scan_option(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Show the post-scan menu (must exist as a real step for menu validation)."""
+        return self.async_show_menu(
+            step_id="manual_scan_option",
+            menu_options=["manual_select_device_option", "manual_direct_entry_option"],
+            description_placeholders={
+                "device_count": str(len(self._discovered_devices)),
+            },
+        )
+
+    async def async_step_manual_select_device_option(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        if user_input is not None:
+            selected = [int(did) for did in user_input.get("devices", [])]
+            if selected:
+                self._selected_devices = [
+                    self._discovered_devices[did] for did in selected
+                ]
+                self._current_device_index = 0
+                return await self.async_step_manual_device_option()
+
+        options = _build_manual_device_selector_options(self._discovered_devices)
+        return self.async_show_form(
+            step_id="manual_select_device_option",
+            data_schema=vol.Schema({
+                vol.Required(
+                    "devices",
+                    description={"suggested_value": list(options.keys())},
+                ): cv.multi_select(options),
+            }),
+        )
+
+    async def async_step_manual_direct_entry_option(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Direct manual entry for devices that cannot be discovered."""
+        self._selected_devices = [{}]
+        self._current_device_index = 0
+        return await self.async_step_manual_device_option()
+
+    async def async_step_manual_device_option(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manual mode (options flow): per-device form with prefilled info."""
+        if self._current_device_index >= len(self._selected_devices):
+            return await self.async_step_manual_device_added_option()
+
+        current_device = self._selected_devices[self._current_device_index]
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            errors = await _process_manual_device(self, user_input)
+            if errors is None:
+                self._current_device_index += 1
+                return await self.async_step_manual_device_option()
+
+        prefill = await _manual_device_prefill(self, current_device)
+        if user_input is not None:
+            _apply_manual_user_input(prefill, user_input)
+
+        return self.async_show_form(
+            step_id="manual_device_option",
+            data_schema=_build_manual_device_schema(**prefill),
+            errors=errors or None,
+            description_placeholders={
+                "progress": f"({self._current_device_index + 1}/{len(self._selected_devices)})",
+            },
+        )
+
+    async def async_step_manual_device_added_option(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        return self.async_show_menu(
+            step_id="manual_device_added_option",
+            menu_options=["add_device_manual", "manual_finish_option"],
+            description_placeholders={
+                "device_count": str(len(self._devices_data)),
+            },
+        )
+
+    async def async_step_manual_finish_option(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        await self._cleanup_session()
+
+        if self._devices_data:
+            new_data = dict(self._config_entry.data)
+            new_data["devices"] = self._devices_data
+
+            self.hass.config_entries.async_update_entry(
+                self._config_entry,
+                data=new_data,
+            )
+
+            import asyncio
+
+            async def reload_in_background():
+                try:
+                    await self.hass.config_entries.async_reload(self._config_entry.entry_id)
+                    _LOGGER.info("Background reload completed successfully")
+                except Exception as e:
+                    _LOGGER.error("Background reload failed: %s", e)
+
+            asyncio.create_task(reload_in_background())
+
+            return self.async_create_entry(title="", data={})
+        return self.async_abort(reason="no_devices")
+
     async def _discover_devices(
         self, scan_address: str = "auto", scan_mode: str = "broadcast"
     ) -> FlowResult:
@@ -1197,7 +1757,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
 
         if not self._discovered_devices:
             return self.async_show_form(
-                step_id="add_device",
+                step_id="add_device_auto",
                 errors={"base": "no_devices_found"},
                 description_placeholders={"note": "No devices found in LAN"},
             )
@@ -1210,7 +1770,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
 
         if not self._discovered_devices:
             return self.async_show_form(
-                step_id="add_device",
+                step_id="add_device_auto",
                 errors={"base": "all_devices_added"},
                 description_placeholders={"note": "All discovered devices have already been added"},
             )

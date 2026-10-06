@@ -33,6 +33,10 @@ CONF_PROTOCOL = "protocol"
 CONF_CATEGORY = "category"
 CONF_UPDATE_CHECK_INTERVAL = "update_check_interval"
 
+# Setup mode: "auto" (account login + LAN discovery) or "manual" (no cloud)
+SETUP_MODE_AUTO = "auto"
+SETUP_MODE_MANUAL = "manual"
+
 DEFAULT_PORT = 6444
 
 UPDATE_CHECK_OFF = "off"

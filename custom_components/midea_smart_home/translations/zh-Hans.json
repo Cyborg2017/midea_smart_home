@@ -8,11 +8,33 @@
     },
     "error": {
       "all_devices_added": "所有发现的设备都已添加过了",
+      "cannot_connect": "无法连接设备，请检查 IP 地址和端口",
       "connection_failed": "连接设备失败",
+      "invalid_device_id": "设备 ID 无效，请输入纯数字 ID",
+      "invalid_device_type": "设备类型无效，请输入十六进制值（如 0xac）",
+      "invalid_ip": "IP 地址无效",
+      "invalid_protocol": "协议版本无效",
       "lua_error": "此设备验证出错，请尝试其他设备",
-      "no_devices_found": "局域网中未发现设备"
+      "missing_lua_file": "请填写 Lua 文件路径",
+      "missing_token_key": "V3 协议需要填写 Token 和 Key",
+      "no_devices_found": "局域网中未发现设备",
+      "unknown": "未知错误，请查看日志"
     },
     "step": {
+      "auto_add_device": {
+        "data": {
+          "account": "账号",
+          "password": "密码",
+          "scan_address": "扫描地址",
+          "scan_mode": "扫描模式"
+        },
+        "data_description": {
+          "scan_address": "[1] 输入路由器地址（如 192.168.1.1）扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）",
+          "scan_mode": "说明：广播模式下，若多次出现搜索出的设备列表显示不全，请尝试使用单播模式 (该模式下扫描时间可能会延长，需耐心等待)。"
+        },
+        "description": "输入美的美居账号密码，下载必要的资源文件",
+        "title": "自动添加设备（账号登录）"
+      },
       "discover": {
         "description": "正在局域网中搜索美的设备...",
         "title": "发现设备"
@@ -31,6 +53,71 @@
         "description": "设备名称: {device_name}\n设备型号: {device_model}\n设备 ID: {device_id}\nIP 地址: {ip_address}\nSN8: {sn8}\n协议版本: {protocol_version}\n{error}{unsupported_protocol}",
         "title": "设备认证 {progress}"
       },
+      "manual_add_device": {
+        "data": {
+          "scan_address": "扫描地址",
+          "scan_mode": "扫描模式"
+        },
+        "data_description": {
+          "scan_address": "[1] 输入路由器地址扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）",
+          "scan_mode": "说明：广播模式下，若多次出现搜索出的设备列表显示不全，请尝试使用单播模式 (该模式下扫描时间可能会延长，需耐心等待)。"
+        },
+        "description": "第一步：扫描局域网获取设备信息（无需登录账号、不依赖云端）。扫描到的设备 ID、IP、类型、协议等信息将自动填入后续表单。",
+        "title": "手动添加设备 - 扫描"
+      },
+      "manual_device": {
+        "data": {
+          "device_id": "设备 ID",
+          "ip": "IP 地址",
+          "port": "端口",
+          "device_type": "设备类型",
+          "protocol": "协议版本",
+          "device_name": "设备名称",
+          "sn": "SN 序列号",
+          "sn8": "SN8",
+          "token": "Token",
+          "key": "Key",
+          "lua_file": "Lua 文件路径"
+        },
+        "data_description": {
+          "device_id": "设备 ID（纯数字，已自动填充）",
+          "ip": "设备局域网 IP 地址（已自动填充）",
+          "port": "默认 6444",
+          "device_type": "十六进制设备类型（如 0xac，已自动填充）",
+          "protocol": "协议版本（已自动填充），V3 设备需要填写 Token 和 Key",
+          "device_name": "自定义设备名称（可选）",
+          "sn": "序列号（可选，已自动填充）",
+          "sn8": "SN 后 8 位（可选，已自动填充）",
+          "token": "V3 协议必填，V1/V2 可留空",
+          "key": "V3 协议必填，V1/V2 可留空",
+          "lua_file": "设备协议文件（.lua）的完整路径"
+        },
+        "description": "已自动填入扫描到的已知参数，请核对并补填 Token/Key 与 Lua 文件路径。",
+        "title": "设备信息 {progress}"
+      },
+      "manual_device_added": {
+        "description": "✅ 设备添加成功！当前共 {device_count} 台设备。\n\n可选择继续手动添加，或完成配置。",
+        "menu_options": {
+          "manual_add_device": "➕ 继续添加其他设备（重新扫描）",
+          "manual_finish": "✅ 完成"
+        },
+        "title": "手动添加设备"
+      },
+      "manual_scan": {
+        "description": "扫描到 {device_count} 台设备（已添加的设备已自动过滤）。\n\n可选择从扫描结果中添加，或直接手动填写。",
+        "menu_options": {
+          "manual_direct_entry": "✍️ 直接手动填写（设备无法扫描到时）",
+          "manual_select_device": "✅ 选择扫描到的设备"
+        },
+        "title": "手动添加设备"
+      },
+      "manual_select_device": {
+        "data": {
+          "devices": "设备"
+        },
+        "description": "选择要手动添加的设备，选中后其设备 ID、IP、类型、协议等信息将自动填入后续表单。",
+        "title": "选择设备"
+      },
       "select_device": {
         "description": "请选择操作：",
         "menu_options": {
@@ -47,17 +134,11 @@
         "title": "选择设备"
       },
       "user": {
-        "data": {
-          "account": "账号",
-          "password": "密码",
-          "scan_address": "扫描地址",
-          "scan_mode": "扫描模式"
+        "description": "请选择添加设备的方式：",
+        "menu_options": {
+          "auto_add_device": "🔎 自动添加设备（登录账号，扫描局域网）",
+          "manual_add_device": "✍️ 手动添加设备（无需账号，手动输入 Token/Key 及 Lua 文件）"
         },
-        "data_description": {
-          "scan_address": "[1] 输入路由器地址（如 192.168.1.1）扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）",
-          "scan_mode": "说明：广播模式下，若多次出现搜索出的设备列表显示不全，请尝试使用单播模式 (该模式下扫描时间可能会延长，需耐心等待)。"
-        },
-        "description": "输入美的美居账号密码，下载必要的资源文件",
         "title": "Midea Smart Home 设置"
       }
     }
@@ -3442,14 +3523,23 @@
     "error": {
       "all_devices_added": "所有发现的设备都已添加过了",
       "backup_build_failed": "生成备份压缩包失败，请查看 Home Assistant 日志。",
+      "cannot_connect": "无法连接设备，请检查 IP 地址和端口",
       "diagnostics_build_failed": "生成诊断压缩包失败，请查看 Home Assistant 日志。",
+      "invalid_device_id": "设备 ID 无效，请输入纯数字 ID",
+      "invalid_device_type": "设备类型无效，请输入十六进制值（如 0xac）",
+      "invalid_ip": "IP 地址无效",
+      "invalid_protocol": "协议版本无效",
+      "lua_error": "此设备验证出错，请尝试其他设备",
+      "missing_lua_file": "请填写 Lua 文件路径",
+      "missing_token_key": "V3 协议需要填写 Token 和 Key",
       "no_account_password": "请先配置账号密码",
       "no_cache_found": "未发现本地配置文件，无需清理",
       "no_configurable_devices": "没有找到需要轮询的设备",
-      "no_devices_found": "局域网中未发现新设备"
+      "no_devices_found": "局域网中未发现新设备",
+      "unknown": "未知错误，请查看日志"
     },
     "step": {
-      "add_device": {
+      "add_device_auto": {
         "data": {
           "scan_address": "扫描地址",
           "scan_mode": "扫描模式"
@@ -3459,7 +3549,19 @@
           "scan_mode": "说明：广播模式下，若多次出现搜索出的设备列表显示不全，请尝试使用单播模式 (该模式下扫描时间可能会延长，需耐心等待)。"
         },
         "description": "搜索局域网中的新设备（已添加的设备将自动过滤）",
-        "title": "添加新设备"
+        "title": "自动添加新设备"
+      },
+      "add_device_manual": {
+        "data": {
+          "scan_address": "扫描地址",
+          "scan_mode": "扫描模式"
+        },
+        "data_description": {
+          "scan_address": "[1] 输入路由器地址扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）",
+          "scan_mode": "说明：广播模式下，若多次出现搜索出的设备列表显示不全，请尝试使用单播模式 (该模式下扫描时间可能会延长，需耐心等待)。"
+        },
+        "description": "第一步：扫描局域网获取设备信息（无需登录账号、不依赖云端）。扫描到的设备 ID、IP、类型、协议等信息将自动填入后续表单。",
+        "title": "手动添加设备 - 扫描"
       },
       "backup_config": {
         "data": {
@@ -3530,7 +3632,8 @@
       },
       "init": {
         "menu_options": {
-          "add_device": "➕ 继续添加其他设备",
+          "add_device_auto": "🔎 自动添加设备（扫描局域网）",
+          "add_device_manual": "✍️ 手动添加设备（无需账号）",
           "backup_config": "📦 备份本地配置文件",
           "clear_cache": "🗑️ 清理本地配置文件",
           "configure_notifications": "🔔 配置设备上下线通知",
@@ -3541,6 +3644,59 @@
           "update_account": "🔑 更新美的账号密码"
         },
         "title": "Midea Smart Home 选项"
+      },
+      "manual_device_added_option": {
+        "description": "✅ 设备添加成功！当前共 {device_count} 台设备。\n\n可选择继续手动添加，或完成配置。",
+        "menu_options": {
+          "add_device_manual": "➕ 继续添加其他设备（重新扫描）",
+          "manual_finish_option": "✅ 完成"
+        },
+        "title": "手动添加设备"
+      },
+      "manual_device_option": {
+        "data": {
+          "device_id": "设备 ID",
+          "ip": "IP 地址",
+          "port": "端口",
+          "device_type": "设备类型",
+          "protocol": "协议版本",
+          "device_name": "设备名称",
+          "sn": "SN 序列号",
+          "sn8": "SN8",
+          "token": "Token",
+          "key": "Key",
+          "lua_file": "Lua 文件路径"
+        },
+        "data_description": {
+          "device_id": "设备 ID（纯数字，已自动填充）",
+          "ip": "设备局域网 IP 地址（已自动填充）",
+          "port": "默认 6444",
+          "device_type": "十六进制设备类型（如 0xac，已自动填充）",
+          "protocol": "协议版本（已自动填充），V3 设备需要填写 Token 和 Key",
+          "device_name": "自定义设备名称（可选）",
+          "sn": "序列号（可选，已自动填充）",
+          "sn8": "SN 后 8 位（可选，已自动填充）",
+          "token": "V3 协议必填，V1/V2 可留空",
+          "key": "V3 协议必填，V1/V2 可留空",
+          "lua_file": "设备协议文件（.lua）的完整路径"
+        },
+        "description": "已自动填入扫描到的已知参数，请核对并补填 Token/Key 与 Lua 文件路径。",
+        "title": "设备信息 {progress}"
+      },
+      "manual_scan_option": {
+        "description": "扫描到 {device_count} 台设备（已添加的设备已自动过滤）。\n\n可选择从扫描结果中添加，或直接手动填写。",
+        "menu_options": {
+          "manual_direct_entry_option": "✍️ 直接手动填写（设备无法扫描到时）",
+          "manual_select_device_option": "✅ 选择扫描到的设备"
+        },
+        "title": "手动添加设备"
+      },
+      "manual_select_device_option": {
+        "data": {
+          "devices": "设备"
+        },
+        "description": "选择要手动添加的设备，选中后其设备 ID、IP、类型、协议等信息将自动填入后续表单。",
+        "title": "选择设备"
       },
       "select_device_continue_option": {
         "data": {
