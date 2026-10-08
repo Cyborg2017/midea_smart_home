@@ -792,5 +792,103 @@ DEVICE_MAPPING = {
                 }
             }
         }
+    },
+    "310A1233": {
+        "rationale": ["off", "on"],
+        "entities": {
+            Platform.CLIMATE: {
+                "storage_zone": {
+                    "power": "storage_power",
+                    "hvac_modes": {
+                        "off": {"storage_power": "off"},
+                        "cool": {"storage_power": "on"}
+                    },
+                    "target_temperature": "storage_temperature",
+                    "current_temperature": "refrigeration_real_temperature",
+                    "min_temp": 2,
+                    "max_temp": 8,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE
+                },
+                "freezing_zone": {
+                    "power": "freezing_power",
+                    "hvac_modes": {
+                        "off": {"freezing_power": "off"},
+                        "cool": {"freezing_power": "on"}
+                    },
+                    "target_temperature": "freezing_temperature",
+                    "current_temperature": "freezing_real_temperature",
+                    "min_temp": -24,
+                    "max_temp": -16,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": PRECISION_WHOLE
+                }
+            },
+            Platform.SWITCH: {
+                "storage_power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "freezing_power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "storage_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "freezing_mode": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                }
+            },
+            Platform.SELECT: {
+                "temp_humidity_precision_control": {
+                    "options": {
+                        "fruits_vegetables": {"left_flexzone_temperature": "6", "right_flexzone_temperature": "6"},
+                        "treasures": {"left_flexzone_temperature": "2", "right_flexzone_temperature": "2"},
+                        "cold_drinks": {"left_flexzone_temperature": "-3", "right_flexzone_temperature": "-3"}
+                    }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "storage_door_state": {
+                    "device_class": BinarySensorDeviceClass.DOOR,
+                },
+                "storage_door_open_overtime": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                }
+            },
+            Platform.SENSOR: {
+                "storage_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "freezing_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "refrigeration_real_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "freezing_real_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "left_flexzone_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "flexzone_temperature"
+                },
+                "left_variable_real_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "flexzone_real_temperature"
+                }
+            }
+        }
     }
 }

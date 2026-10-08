@@ -257,6 +257,7 @@
             "sweep_mop_mode": { "default": "mdi:robot-vacuum" },
             "taste": { "default": "mdi:food-variant" },
             "tea_temperature": { "default": "mdi:tea" },
+            "temp_humidity_precision_control": { "default": "mdi:thermometer-water" },
             "temperature": { "default": "mdi:thermometer" },
             "ud_swing": { "default": "mdi:arrow-up-down" },
             "updown": { "default": "mdi:arrow-up-down" },

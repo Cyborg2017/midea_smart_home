@@ -2094,6 +2094,14 @@
           "95": "95°C"
         }
       },
+      "temp_humidity_precision_control": {
+        "name": "Temp & Humidity Precision Control",
+        "state": {
+          "cold_drinks": "Cold Drinks",
+          "fruits_vegetables": "Fruits & Vegetables",
+          "treasures": "Treasures"
+        }
+      },
       "temperature": {
         "name": "Temperature",
         "state": {

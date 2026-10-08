@@ -2094,6 +2094,14 @@
           "95": "95°C"
         }
       },
+      "temp_humidity_precision_control": {
+        "name": "温湿精控",
+        "state": {
+          "cold_drinks": "冰饮",
+          "fruits_vegetables": "果蔬",
+          "treasures": "珍品"
+        }
+      },
       "temperature": {
         "name": "温度设定",
         "state": {
