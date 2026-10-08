@@ -405,5 +405,46 @@ DEVICE_MAPPING = {
                 }
             }
         }
+    },
+    "73000J25": {
+        "rationale": ["off", "on"],
+        "centralized": ["lightness"],
+        "entities": {
+            Platform.LIGHT: {
+                "common_light": {
+                    "power": "light",
+                    "brightness": {"lightness": [10, 100]},
+                    "command": {
+                        "electronic_control_version": 2,
+                        "type": "b6",
+                        "b6_action": "setting",
+                        "setting": "light"
+                    }
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "aidry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "command": {
+                        "electronic_control_version": 2,
+                        "type": "b6",
+                        "b6_action": "control"
+                    }
+                }
+            },
+            Platform.SELECT: {
+                "gear": {
+                    "options": {
+                        "off": {"gear": 0},
+                        "low": {"gear": 1},
+                        "high": {"gear": 2},
+                        "extreme": {"gear": 3}
+                    }
+                }
+            }
+        }
     }
 }
