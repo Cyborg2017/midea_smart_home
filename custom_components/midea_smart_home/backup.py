@@ -27,7 +27,7 @@ def _sweep_expired(backup_dir: Path) -> None:
             if stale.stat().st_mtime < cutoff:
                 stale.unlink()
         except OSError as err:
-            _LOGGER.warning("Failed to remove stale backup %s: %s", stale, err)
+            _LOGGER.warning("[backup] stale archive removal failed: path=%s error=%s", stale, err)
 
 def _write_backup(zip_path: Path, json_dir: Path) -> None:
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as archive:
@@ -54,10 +54,10 @@ def build_backup_archive(hass: HomeAssistant) -> tuple[str | None, int]:
     try:
         _write_backup(zip_path, json_dir)
     except OSError as err:
-        _LOGGER.error("Failed to build backup archive: %s", err)
+        _LOGGER.error("[backup] archive build failed: error=%s", err)
         return None, file_count
 
-    _LOGGER.info("Backup archive written to %s", zip_path)
+    _LOGGER.info("[backup] archive written: path=%s", zip_path)
     return f"/local/{BACKUP_DIR}/{zip_path.name}", file_count
 
 def schedule_backup_cleanup(hass: HomeAssistant, web_path: str) -> None:
