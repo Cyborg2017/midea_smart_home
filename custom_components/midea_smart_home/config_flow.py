@@ -51,6 +51,7 @@ from .midea_lib.discovery import discover_devices, DISCOVERY_TIMEOUT
 from .midea_lib.lua import write_file, decrypt_lua_code, ensure_lua_files
 from .midea_lib.setup import validate_device
 from .midea_lib.cloud import download_lua_file
+from .midea_lib.exceptions import CloudLoginError, MideaError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -670,10 +671,40 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
             return await self.async_step_discover()
 
+        return self._show_auto_add_form()
+
+    def _show_auto_add_form(self, error_key: str = "") -> FlowResult:
+        """Show the account form, optionally with an error.
+
+        Keeps already-entered values prefilled when re-shown after a
+        cloud login failure (e.g. wrong password, account locked).
+        """
+        schema = vol.Schema({
+            vol.Required(
+                CONF_ACCOUNT, description={"suggested_value": self._account}
+            ): str,
+            vol.Required(
+                CONF_PASSWORD, description={"suggested_value": self._password}
+            ): str,
+            vol.Optional(
+                "scan_address",
+                default="auto",
+                description={"suggested_value": self._scan_address or "auto"},
+            ): str,
+            vol.Optional(
+                "scan_mode", default=self._scan_mode or "broadcast"
+            ): SelectSelector(
+                SelectSelectorConfig(
+                    options=["broadcast", "unicast"],
+                    translation_key="scan_mode",
+                    mode=SelectSelectorMode.DROPDOWN,
+                )
+            ),
+        })
         return self.async_show_form(
             step_id="auto_add_device",
-            data_schema=STEP_AUTO_ADD_SCHEMA,
-            errors=errors,
+            data_schema=schema,
+            errors={"base": error_key} if error_key else None,
             description_placeholders={
                 "note": "Please enter Meiju Cloud account and password to download device Lua files"
             },
@@ -852,10 +883,17 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     password=self._password,
                 )
 
-                if not await self._user_cloud.login():
-                    _LOGGER.warning("User account login failed")
+                try:
+                    login_ok = await self._user_cloud.login()
+                except CloudLoginError as err:
+                    _LOGGER.warning("User account login failed: %s", err)
                     await self._cleanup_session()
-                    return self.async_abort(reason="auth_failed")
+                    return self._show_auto_add_form(err.error_key)
+
+                if not login_ok:
+                    _LOGGER.warning("User account login failed: no response from cloud")
+                    await self._cleanup_session()
+                    return self._show_auto_add_form("cannot_connect")
 
                 _LOGGER.info("Cloud login success")
 
@@ -1799,12 +1837,16 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                         password=self._password,
                     )
 
-                    if not await self._user_cloud.login():
-                        _LOGGER.warning("User account login failed")
+                    try:
+                        cloud_login_ok = await self._user_cloud.login()
+                    except CloudLoginError as err:
+                        _LOGGER.warning("User account login failed: %s", err)
+                        cloud_login_ok = False
 
-                    _LOGGER.info("Cloud login success")
-                    self._cloud_devices = await self._user_cloud.list_appliances(home_id=None) or {}
-                    _LOGGER.info("Cloud devices list: %s", self._cloud_devices)
+                    if cloud_login_ok:
+                        _LOGGER.info("Cloud login success")
+                        self._cloud_devices = await self._user_cloud.list_appliances(home_id=None) or {}
+                        _LOGGER.info("Cloud devices list: %s", self._cloud_devices)
 
                 lua_common_dir = get_lua_common_path(self.hass.config.config_dir)
                 await self._download_common_lua_files(lua_common_dir)
@@ -2442,7 +2484,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                             CONF_ROOM_NAME: device.get("room_name", ""),
                         }
                 _LOGGER.info("Refreshed device info from cloud for %d devices", len(cloud_device_info))
-        except (socket.error, OSError, ValueError, json.JSONDecodeError) as err:
+        except (socket.error, OSError, ValueError, json.JSONDecodeError, MideaError) as err:
             _LOGGER.warning("Failed to refresh device info from cloud: %s", err)
         finally:
             await session.close()

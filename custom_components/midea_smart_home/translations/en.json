@@ -7,9 +7,14 @@
       "no_devices": "No devices selected"
     },
     "error": {
+      "account_locked": "Too many failed login attempts. The account is temporarily locked (about 5 minutes)",
       "all_devices_added": "All discovered devices have already been added",
       "cannot_connect": "Cannot connect to device. Check the IP address and port",
+      "cloud_error": "Cloud error, check the logs or try again later",
+      "cloud_session_expired": "Login session expired, please try again",
       "connection_failed": "Failed to connect to device",
+      "invalid_auth": "Invalid account or password",
+      "invalid_cloud_server": "Invalid cloud app key",
       "invalid_device_id": "Invalid device ID. Enter digits only",
       "invalid_device_type": "Invalid device type. Enter a hex value (e.g. 0xac)",
       "invalid_ip": "Invalid IP address",
@@ -18,6 +23,7 @@
       "missing_lua_file": "Lua file path is required",
       "missing_token_key": "Token and Key are required for V3 protocol",
       "no_devices_found": "No devices found on local network",
+      "too_many_logged_in_devices": "Too many devices logged in. Sign out from other devices first",
       "unknown": "Unknown error, check the logs"
     },
     "step": {

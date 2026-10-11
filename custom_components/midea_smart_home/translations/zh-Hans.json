@@ -7,9 +7,14 @@
       "no_devices": "没有选择设备"
     },
     "error": {
+      "account_locked": "登录失败次数过多，账号已被临时锁定（约 5 分钟）",
       "all_devices_added": "所有发现的设备都已添加过了",
       "cannot_connect": "无法连接设备，请检查 IP 地址和端口",
+      "cloud_error": "云端错误，请查看日志或稍后重试",
+      "cloud_session_expired": "登录会话已过期，请重试",
       "connection_failed": "连接设备失败",
+      "invalid_auth": "账号或密码错误",
+      "invalid_cloud_server": "云端 app key 无效",
       "invalid_device_id": "设备 ID 无效，请输入纯数字 ID",
       "invalid_device_type": "设备类型无效，请输入十六进制值（如 0xac）",
       "invalid_ip": "IP 地址无效",
@@ -18,6 +23,7 @@
       "missing_lua_file": "请填写 Lua 文件路径",
       "missing_token_key": "V3 协议需要填写 Token 和 Key",
       "no_devices_found": "局域网中未发现设备",
+      "too_many_logged_in_devices": "同时登录的设备过多，请先在其他设备退出登录",
       "unknown": "未知错误，请查看日志"
     },
     "step": {

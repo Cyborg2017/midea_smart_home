@@ -1,5 +1,6 @@
 """Midea Smart Home Cloud API client."""
 
+import asyncio
 import hashlib
 import hmac
 import json
@@ -12,7 +13,11 @@ from typing import Any, cast
 
 from aiohttp import ClientConnectionError, ClientSession, ClientTimeout
 
-from .exceptions import ElementMissing
+from .exceptions import (
+    TRANSIENT_CLOUD_ERROR_CODES,
+    CloudLoginError,
+    ElementMissing,
+)
 from .security import CloudSecurity, MeijuCloudSecurity, MideaAirSecurity
 
 SN8_MIN_SERIAL_LENGTH = 17
@@ -74,6 +79,8 @@ class MideaCloud:
         self._access_token: str | None = None
         self._uid: str | None = None
         self._login_id = ""
+        # (code, msg) of the last non-zero cloud response, None on success
+        self._last_error: tuple[int, str] | None = None
 
     def _make_general_data(self) -> dict[str, Any]:
         return {}
@@ -108,7 +115,7 @@ class MideaCloud:
         if self._access_token is not None:
             header.update({"accessToken": self._access_token})
         response: dict = {"code": -1}
-        for _ in range(3):
+        for attempt in range(3):
             try:
                 with self._api_lock:
                     r = await self._session.request(
@@ -120,11 +127,27 @@ class MideaCloud:
                     )
                     raw = await r.read()
                     response = json.loads(raw)
+                    code = int(response.get("code", -1))
+                    if code in TRANSIENT_CLOUD_ERROR_CODES and attempt < 2:
+                        _LOGGER.warning(
+                            "Midea cloud transient error (code=%s) from %s, retrying...",
+                            code, url,
+                        )
+                        await asyncio.sleep(1.0 * (attempt + 1))
+                        continue
                     break
             except (TimeoutError, ClientConnectionError, json.JSONDecodeError) as e:
                 _LOGGER.warning("Midea cloud API error, url: %s, error: %s", url, repr(e))
-        if int(response["code"]) == 0 and "data" in response:
+        code = int(response.get("code", -1))
+        if code == 0 and "data" in response:
+            self._last_error = None
             return cast(dict, response["data"])
+        if code != -1:
+            msg = str(response.get("msg") or "")
+            self._last_error = (code, msg)
+            _LOGGER.warning(
+                "Midea cloud API error, url: %s, code: %s, msg: %s", url, code, msg
+            )
         return None
 
     async def _get_login_id(self) -> str | None:
@@ -248,6 +271,8 @@ class MeijuCloud(MideaCloud):
                     b"0",
                 )
                 return True
+        if self._last_error:
+            raise CloudLoginError(self._last_error[0], self._last_error[1])
         _LOGGER.warning("Meiju Cloud login failed for device %s", self._device_id)
         return False
 
@@ -409,7 +434,7 @@ class MideaAirCloud(MideaCloud):
         if self._access_token is not None:
             header.update({"accessToken": self._access_token})
         response: dict = {"errorCode": -1}
-        for _ in range(3):
+        for attempt in range(3):
             try:
                 with self._api_lock:
                     r = await self._session.request(
@@ -421,11 +446,27 @@ class MideaAirCloud(MideaCloud):
                     )
                     raw = await r.read()
                     response = json.loads(raw)
+                    code = int(response.get("errorCode", -1))
+                    if code in TRANSIENT_CLOUD_ERROR_CODES and attempt < 2:
+                        _LOGGER.warning(
+                            "Midea cloud transient error (code=%s) from %s, retrying...",
+                            code, url,
+                        )
+                        await asyncio.sleep(1.0 * (attempt + 1))
+                        continue
                     break
             except (TimeoutError, ClientConnectionError, json.JSONDecodeError) as e:
                 _LOGGER.warning("Midea cloud API error, url: %s, error: %s", url, repr(e))
-        if int(response["errorCode"]) == 0 and "result" in response:
+        code = int(response.get("errorCode", -1))
+        if code == 0 and "result" in response:
+            self._last_error = None
             return cast(dict[str, Any], response["result"])
+        if code != -1:
+            msg = str(response.get("msg") or "")
+            self._last_error = (code, msg)
+            _LOGGER.warning(
+                "Midea cloud API error, url: %s, errorCode: %s, msg: %s", url, code, msg
+            )
         return None
 
     async def login(self) -> bool:
@@ -449,6 +490,8 @@ class MideaAirCloud(MideaCloud):
                 self._uid = response["userId"]
                 self._session_id = response["sessionId"]
                 return True
+        if self._last_error:
+            raise CloudLoginError(self._last_error[0], self._last_error[1])
         _LOGGER.warning("Midea Air Cloud login failed for device %s", self._device_id)
         return False
 
