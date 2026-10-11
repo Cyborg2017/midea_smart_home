@@ -50,7 +50,7 @@ def write_file(file_path: Union[str, Path], content: str) -> bool:
             fp.write(content)
         return True
     except OSError as e:
-        _LOGGER.error("Failed to create %s: %s", file_path, e)
+        _LOGGER.error("[lua] write file failed: path=%s error=%s", file_path, e)
         return False
 
 def ensure_lua_files(lua_path: str) -> tuple:
@@ -115,7 +115,7 @@ end
         try:
             self._runtime.execute('cjson = require "cjson"')
         except lupa.lua51.LuaError as e:
-            _LOGGER.warning("Failed to load cjson: %s", e)
+            _LOGGER.warning("[lua] cjson load failed: %s", e)
             try:
                 def lua_json_encode(obj):
                     return json.dumps(obj)
@@ -135,15 +135,15 @@ _G.cjson = cjson
                 self._runtime.globals()['lua_json_encode'] = lua_json_encode
                 self._runtime.globals()['lua_json_decode'] = lua_json_decode
                 self._runtime.execute(cjson_lib)
-                _LOGGER.info("Using Python json module as fallback for cjson")
+                _LOGGER.info("[lua] using python json fallback for cjson")
             except (json.JSONDecodeError, TypeError) as e2:
-                _LOGGER.warning("Failed to set up fallback json: %s", e2)
+                _LOGGER.error("[lua] cjson fallback setup failed: %s", e2)
 
         try:
             self._runtime.execute('bit = require "bit"')
-            _LOGGER.info("Using bit.lua file")
+            _LOGGER.debug("[lua] bit library loaded from file")
         except lupa.lua51.LuaError as e:
-            _LOGGER.warning("Failed to load bit: %s", e)
+            _LOGGER.warning("[lua] bit load failed: %s", e)
 
         try:
             with open(file_path, "r", encoding="utf-8") as f:
@@ -173,15 +173,15 @@ _G.cjson = cjson
             try:
                 return self._json_to_data(json_value)
             except lupa.lua51.LuaError as e:
-                _LOGGER.error("Lua json_to_data error: %s", e)
-                _LOGGER.debug("Failed json value (first 200 chars): %s", str(json_value)[:200])
+                _LOGGER.error("[lua] json_to_data failed: %s", e)
+                _LOGGER.debug("[lua] json_to_data input (first 200 chars): %s", str(json_value)[:200])
                 return ""
 
     def data_to_json(self, data_value: str) -> str:
         with self._lock:
             try:
                 result = self._data_to_json(data_value)
-                _LOGGER.debug("data_to_json input length: %d", len(data_value) if data_value else 0)
+                _LOGGER.debug("[lua] data_to_json input length: %d", len(data_value) if data_value else 0)
 
                 # Handle None or empty result from Lua function
                 if not result:
@@ -209,15 +209,15 @@ _G.cjson = cjson
                 )
                 if is_nil_value_issue:
                     _LOGGER.debug(
-                        "Lua data_to_json skipped (nil value in device data): %s. "
-                        "Data length: %d",
+                        "[lua] data_to_json skipped (nil value in device data): %s "
+                        "data_length=%d",
                         error_msg.split("\n")[0],  # Only first line to keep logs clean
                         len(data_value) if data_value else 0
                     )
                     return '{"status":{"version":0}}'
                 else:
-                    _LOGGER.error("Lua data_to_json error: %s", e)
-                    _LOGGER.debug("Failed data value (first 200 chars): %s", str(data_value)[:200])
+                    _LOGGER.error("[lua] data_to_json failed: %s", e)
+                    _LOGGER.debug("[lua] data_to_json input (first 200 chars): %s", str(data_value)[:200])
                     return ""
 
 
@@ -247,7 +247,7 @@ class MideaCodec(LuaRuntime):
             }))
             return result or ""
         except (json.JSONEncodeError, TypeError) as e:
-            _LOGGER.error("build_query error: %s", e)
+            _LOGGER.error("[lua] build_query failed: %s", e)
             return ""
 
     def build_control(
@@ -263,7 +263,7 @@ class MideaCodec(LuaRuntime):
             }))
             return result or ""
         except (json.JSONEncodeError, TypeError) as e:
-            _LOGGER.error("build_control error: %s", e)
+            _LOGGER.error("[lua] build_control failed: %s", e)
             return ""
 
     def decode_status(
@@ -283,8 +283,8 @@ class MideaCodec(LuaRuntime):
                 return status
             return None
         except json.JSONDecodeError as e:
-            _LOGGER.error("decode_status JSON parse error: %s", e)
+            _LOGGER.error("[lua] decode_status json parse failed: %s", e)
             return None
         except lupa.lua51.LuaError as e:
-            _LOGGER.error("decode_status Lua error: %s", e)
+            _LOGGER.error("[lua] decode_status lua execution failed: %s", e)
             return None
