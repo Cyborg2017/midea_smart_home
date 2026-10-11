@@ -174,8 +174,8 @@ def _parse_0110_response(data: bytes, addr: tuple) -> dict | None:
                 pass
 
         _LOGGER.warning(
-            "Device %s (type=0x%02X) at %s uses V2 protocol variant 0x0110. "
-            "This format is recognized but TCP communication is not yet supported.",
+            "[discovery] unsupported protocol 0x0110: ssid=%s type=0x%02X ip=%s "
+            "(TCP communication not supported)",
             ssid, device_type, addr[0]
         )
 
@@ -197,7 +197,7 @@ def _parse_scan_address(scan_address: str) -> list:
 
     parts = scan_address.strip().split(".")
     if len(parts) != 4:
-        _LOGGER.warning("Invalid scan address format: %s, using auto detection", scan_address)
+        _LOGGER.warning("[discovery] invalid scan address %r, using auto detection", scan_address)
         return None
 
     try:
@@ -224,10 +224,10 @@ def discover_devices(
         nets = target_addresses
 
     if not nets:
-        _LOGGER.warning("No valid network interfaces found for discovery")
+        _LOGGER.warning("[discovery] no valid network interfaces found")
         return {}
 
-    _LOGGER.info("Discovery target addresses: %s", nets)
+    _LOGGER.debug("[discovery] target addresses: %s", nets)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -245,7 +245,7 @@ def discover_devices(
                 try:
                     sock.sendto(BROADCAST_MSG, (addr, port))
                 except (socket.error, OSError) as e:
-                    _LOGGER.debug("Send to %s:%d failed: %s", addr, port, e)
+                    _LOGGER.debug("[discovery] send to %s:%d failed: %s", addr, port, e)
 
     def receive_responses():
         while True:
@@ -277,7 +277,7 @@ def discover_devices(
                 else:
                     protocol_name = "V3"
                 _LOGGER.debug(
-                    "Found device %d (%s) at %s, type=0x%x",
+                    "[discovery] found device: id=%d protocol=%s ip=%s type=0x%x",
                     device_id, protocol_name, addr[0], device_info[CONF_DEVICE_TYPE]
                 )
                 devices[device_id] = device_info
@@ -303,7 +303,7 @@ def discover_devices(
     is_auto = not scan_address or scan_address.lower() == "auto"
     if is_unicast or (not devices and is_auto):
         _LOGGER.info(
-            "Using unicast subnet scan (mode=%s, broadcast_devices=%d)",
+            "[discovery] unicast fallback scan: mode=%s broadcast_found=%d",
             scan_mode,
             len(devices),
         )
@@ -326,13 +326,13 @@ def discover_devices(
 
         if unicast_targets:
             if target_addresses is not None:
-                _LOGGER.info(
-                    "Unicast scanning %d explicit target IPs",
+                _LOGGER.debug(
+                    "[discovery] unicast scanning %d explicit target IPs",
                     len(unicast_targets),
                 )
             else:
-                _LOGGER.info(
-                    "Unicast scanning %d IPs across %d subnets",
+                _LOGGER.debug(
+                    "[discovery] unicast scanning %d IPs across %d subnets",
                     len(unicast_targets),
                     len(local_networks),
                 )
@@ -348,5 +348,5 @@ def discover_devices(
                 receive_responses()
 
     sock.close()
-    _LOGGER.info("Discovery completed, found %d devices", len(devices))
+    _LOGGER.info("[discovery] completed: found %d devices", len(devices))
     return devices
