@@ -29,7 +29,7 @@ def load_device_mappings():
     mapping_dir = Path(__file__).parent
 
     if not mapping_dir.exists():
-        _LOGGER.error("Device mapping directory does not exist: %s", mapping_dir)
+        _LOGGER.error("[mapping] mapping directory not found: path=%s", mapping_dir)
         return
 
     try:
@@ -44,14 +44,14 @@ def load_device_mappings():
                     if hasattr(module, 'DEVICE_MAPPING'):
                         device_type = int(file.stem.replace('T0x', ''), 16)
                         DEVICE_MAPPINGS[device_type] = module.DEVICE_MAPPING
-                        _LOGGER.info(
-                            "Loaded device mapping: %s -> device type: 0x%X",
+                        _LOGGER.debug(
+                            "[mapping] loaded: file=%s device_type=0x%X",
                             file.stem, device_type
                         )
                 except (ImportError, ValueError, AttributeError) as e:
-                    _LOGGER.error("Failed to load device mapping file %s: %s", file.name, e)
+                    _LOGGER.error("[mapping] load failed: file=%s error=%s", file.name, e)
     except OSError as e:
-        _LOGGER.error("Failed to iterate device mapping directory: %s", e)
+        _LOGGER.error("[mapping] directory iterate failed: error=%s", e)
 
 load_device_mappings()
 
