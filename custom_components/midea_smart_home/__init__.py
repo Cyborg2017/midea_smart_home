@@ -55,12 +55,12 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     if not os.path.exists(cjson):
         success = await hass.async_add_executor_job(write_file, cjson, cjson_lua)
         if success:
-            _LOGGER.info("Created cjson.lua at %s", cjson)
+            _LOGGER.info("[init] created cjson.lua: path=%s", cjson)
 
     if not os.path.exists(bit):
         success = await hass.async_add_executor_job(write_file, bit, bit_lua)
         if success:
-            _LOGGER.info("Created bit.lua at %s", bit)
+            _LOGGER.info("[init] created bit.lua: path=%s", bit)
 
     return True
 
@@ -120,19 +120,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         ]:
             if path.exists():
                 lua_file = str(path)
-                _LOGGER.info("Using Lua file from %s: %s", source, lua_file)
+                _LOGGER.info("[init] using lua file: source=%s path=%s", source, lua_file)
                 break
 
         if not lua_file:
             entry_lua = device_data.get(CONF_LUA_FILE, "")
             if entry_lua and Path(entry_lua).exists():
                 lua_file = entry_lua
-                _LOGGER.info("Using Lua file from entry data: %s", lua_file)
+                _LOGGER.info("[init] using lua file: source=entry_data path=%s", lua_file)
 
         if not lua_file:
             _LOGGER.warning(
-                "No Lua file found for device %s (type=0x%s, sn8=%s), "
-                "checked: %s, %s, %s",
+                "[init] no lua file found: device_id=%s type=0x%s sn8=%s "
+                "checked=%s, %s, %s",
                 device_id, hex(device_type_int)[2:].upper(), sn8,
                 custom_lua_path, storage_lua_path_new, legacy_storage_path
             )
@@ -169,7 +169,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Only enable polling if both device_mapping supports it AND user has enabled it
         effective_polling = enable_polling and polling_enabled
         _LOGGER.debug(
-            "Device %s: polling_supported=%s, polling_interval=%s, polling_query=%s",
+            "[init] polling config: device_id=%s supported=%s interval=%s query=%s",
             device_id,
             enable_polling,
             polling_interval,
@@ -224,7 +224,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             device = await hass.async_add_executor_job(init_device)
 
             if not device.available:
-                _LOGGER.warning("Device %s failed to connect after 5 seconds, will retry in background", device_id)
+                _LOGGER.warning("[init] device connect failed, will retry in background: device_id=%s", device_id)
 
             coordinator = MideaCoordinator(
                 hass,
@@ -257,7 +257,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     await asyncio.sleep(0.3)
 
                 if coordinator.data is None:
-                    _LOGGER.warning("Device %s did not receive initial data after 3 seconds, will retry in background", device_id)
+                    _LOGGER.warning("[init] no initial data, will retry in background: device_id=%s", device_id)
 
             return {
                 "coordinator": coordinator,
@@ -273,7 +273,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 CONF_CATEGORY: category,
             }
         except Exception as e:
-            _LOGGER.error("Failed to initialize device %s: %s", device_id, e)
+            _LOGGER.error("[init] device initialization failed: device_id=%s error=%s", device_id, e)
             return None
 
     import asyncio
@@ -283,7 +283,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     for i, result in enumerate(results):
         if isinstance(result, Exception):
-            _LOGGER.error("Error initializing device %d: %s", i, result)
+            _LOGGER.error("[init] device initialization task failed: index=%d error=%s", i, result)
         elif result is not None:
             device_id = result[CONF_DEVICE_ID]
             hass.data[DOMAIN][entry.entry_id][str(device_id)] = result
@@ -291,7 +291,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     try:
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     except (ValueError, KeyError, OSError) as e:
-        _LOGGER.error("Failed to set up platforms: %s", e)
+        _LOGGER.error("[init] platform setup failed: error=%s", e)
         return False
 
     entry.async_on_unload(entry.add_update_listener(async_update_options))
@@ -329,7 +329,7 @@ async def async_remove_config_entry_device(
             break
 
     if device_id is None:
-        _LOGGER.error("Device identifier not found for removal")
+        _LOGGER.error("[init] device identifier not found: action=remove")
         return False
 
     entry_data = hass.data[DOMAIN].get(config_entry.entry_id, {})
@@ -354,5 +354,5 @@ async def async_remove_config_entry_device(
         data=new_data,
     )
 
-    _LOGGER.info("Removed device %s from config entry", device_id)
+    _LOGGER.info("[init] device removed from config entry: device_id=%s", device_id)
     return True
