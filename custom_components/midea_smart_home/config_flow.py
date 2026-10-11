@@ -401,11 +401,21 @@ async def _get_flow_strings(hass) -> dict[str, str]:
 def _device_fields(cloud_devices: dict, info: dict) -> tuple[str, str, str]:
     """Resolve the common display fields (name, model, protocol) of a device."""
     cloud_device = cloud_devices.get(info[CONF_DEVICE_ID], {})
-    device_name = cloud_device.get(
-        "name",
-        DEVICE_TYPES.get(info[CONF_DEVICE_TYPE], f"T0x{info[CONF_DEVICE_TYPE]:02X}"),
+    if cloud_device.get("name"):
+        device_name = cloud_device["name"]
+    elif info.get("unsupported_protocol") and info.get(CONF_IP):
+        # V2 0x0110 devices have no cloud entry; identify them by LAN IP.
+        device_name = f"{info[CONF_IP]}"
+    else:
+        device_name = DEVICE_TYPES.get(
+            info[CONF_DEVICE_TYPE], f"T0x{info[CONF_DEVICE_TYPE]:02X}"
+        )
+    model = (
+        cloud_device.get("model")
+        or info.get(CONF_PRODUCT_MODEL)
+        or (info.get(CONF_SN8) if info.get("unsupported_protocol") else "")
+        or "-"
     )
-    model = cloud_device.get("model") or info.get(CONF_PRODUCT_MODEL) or "-"
     if info.get("unsupported_protocol"):
         protocol = "V2 0x0110"
     else:
