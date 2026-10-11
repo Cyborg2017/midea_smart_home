@@ -317,7 +317,7 @@ async def _manual_device_prefill(flow, info: dict) -> dict:
                 device_id, device_type, info.get(CONF_SN8, "")
             )
         except Exception as err:
-            _LOGGER.debug("Failed to load cached token/key: %s", err)
+            _LOGGER.warning("[config_flow] cached token/key load failed: error=%s", err)
         lua_path = get_lua_file_path(
             flow.hass.config.config_dir, device_id, device_type,
             info.get(CONF_SN8, ""),
@@ -502,7 +502,7 @@ async def _probe_device_resources(flow, info: dict) -> str:
                     sn8=info.get(CONF_SN8, ""),
                 )
             except (socket.error, OSError, ValueError, json.JSONDecodeError) as err:
-                _LOGGER.error("Failed to get token/key for device %s: %s", device_id, err)
+                _LOGGER.error("[config_flow] get token/key failed: device_id=%s error=%s", device_id, err)
                 token = key = ""
             info[CONF_TOKEN] = token
             info[CONF_KEY] = key
@@ -548,9 +548,9 @@ async def _probe_device_resources(flow, info: dict) -> str:
 
                     await flow.hass.async_add_executor_job(write_file, lua_path, downloaded_lua)
                     lua_file = str(lua_path)
-                    _LOGGER.info("Downloaded Lua file to %s", lua_file)
+                    _LOGGER.info("[config_flow] lua file downloaded: path=%s", lua_file)
         except (socket.error, OSError, ValueError, json.JSONDecodeError) as err:
-            _LOGGER.error("Failed to get Lua for device %s: %s", device_id, err)
+            _LOGGER.error("[config_flow] lua download failed: device_id=%s error=%s", device_id, err)
 
         if not lua_file:
             lua_path = get_lua_file_path(
@@ -581,7 +581,7 @@ async def _probe_device_resources(flow, info: dict) -> str:
     )
     if not success:
         _LOGGER.warning(
-            "Initialization query failed for device %s: %s", device_id, error
+            "[config_flow] initial query failed: device_id=%s error=%s", device_id, error
         )
         return "no_status"
 
@@ -886,25 +886,25 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 try:
                     login_ok = await self._user_cloud.login()
                 except CloudLoginError as err:
-                    _LOGGER.warning("User account login failed: %s", err)
+                    _LOGGER.warning("[config_flow] cloud login failed: error=%s", err)
                     await self._cleanup_session()
                     return self._show_auto_add_form(err.error_key)
 
                 if not login_ok:
-                    _LOGGER.warning("User account login failed: no response from cloud")
+                    _LOGGER.warning("[config_flow] cloud login failed: reason=no_response")
                     await self._cleanup_session()
                     return self._show_auto_add_form("cannot_connect")
 
-                _LOGGER.info("Cloud login success")
+                _LOGGER.info("[config_flow] cloud login success: account=%s", self._account)
 
                 self._cloud_devices = await self._user_cloud.list_appliances(home_id=None) or {}
-                _LOGGER.info("Cloud devices list: %s", self._cloud_devices)
+                _LOGGER.debug("[config_flow] cloud devices listed: count=%d", len(self._cloud_devices))
 
                 lua_common_dir = get_lua_common_path(self.hass.config.config_dir)
                 await self._download_common_lua_files(lua_common_dir)
 
             except (json.JSONDecodeError, OSError) as err:
-                _LOGGER.error("Failed to login to cloud: %s", err)
+                _LOGGER.error("[config_flow] cloud login setup failed: error=%s", err)
                 await self._cleanup_session()
                 return self.async_abort(reason="auth_failed")
 
@@ -989,7 +989,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             try:
                 device_type = int(device_type_str, 16)
             except ValueError:
-                _LOGGER.error("Invalid device type format: %s", device_type_str)
+                _LOGGER.error("[config_flow] invalid device type format: value=%s", device_type_str)
                 return
 
             json_path = get_device_json_path(self.hass.config.config_dir, device_id, device_type, sn8)
@@ -1001,7 +1001,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     with open(json_path, 'r', encoding='utf-8') as f:
                         existing_data = json.load(f)
                 except (json.JSONDecodeError, OSError) as e:
-                    _LOGGER.error("Failed to read existing JSON file: %s", e)
+                    _LOGGER.error("[config_flow] existing json read failed: error=%s", e)
 
             # Update with new data
             existing_data.update(device_data)
@@ -1010,9 +1010,9 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             with open(json_path, 'w', encoding='utf-8') as f:
                 json.dump(existing_data, f, indent=2, ensure_ascii=False)
 
-            _LOGGER.info("Saved device data to JSON file: %s", json_path)
+            _LOGGER.info("[config_flow] device data saved: path=%s", json_path)
         except (json.JSONEncodeError, OSError) as e:
-            _LOGGER.error("Failed to save device data to JSON file: %s", e)
+            _LOGGER.error("[config_flow] device data save failed: error=%s", e)
 
     async def _validate_token_key(
         self,
@@ -1042,16 +1042,17 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 sock.close()
                 if len(response) < 72:
                     _LOGGER.debug(
-                        "[%s] Token/key validation failed: response too short (%d bytes): %s",
+                        "[config_flow] token/key validation failed: device_id=%s "
+                        "reason=response_too_short bytes=%d response=%s",
                         device_id, len(response), response.hex(),
                     )
                     return False
                 auth_data = response[8:72]
                 security.tcp_key(auth_data, bytes.fromhex(key))
-                _LOGGER.debug("[%s] Token/key validation passed", device_id)
+                _LOGGER.debug("[config_flow] token/key validation passed: device_id=%s", device_id)
                 return True
             except Exception as e:
-                _LOGGER.debug("[%s] Token/key validation error: %s", device_id, e)
+                _LOGGER.debug("[config_flow] token/key validation error: device_id=%s error=%s", device_id, e)
                 return False
 
         return await self.hass.async_add_executor_job(_try_auth)
@@ -1085,10 +1086,10 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     token = data.get(CONF_TOKEN, "") or ""
                     key = data.get(CONF_KEY, "") or ""
                     if token and key:
-                        _LOGGER.debug("[%d] Found cached token/key in %s", device_id, json_path)
+                        _LOGGER.debug("[config_flow] cached token/key found: device_id=%s path=%s", device_id, json_path)
                         return token, key
                 except (json.JSONDecodeError, OSError) as e:
-                    _LOGGER.warning("Failed to read cached JSON %s: %s", json_path, e)
+                    _LOGGER.warning("[config_flow] cached json read failed: path=%s error=%s", json_path, e)
             return "", ""
 
         return await self.hass.async_add_executor_job(_load)
@@ -1129,16 +1130,17 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         device_id, ip_address, port, cached_token, cached_key
                     ):
                         _LOGGER.info(
-                            "[%d] Got token/key from local cache",
+                            "[config_flow] got token/key from local cache: device_id=%s",
                             device_id,
                         )
                         return cached_token, cached_key, "local_cache"
                     _LOGGER.debug(
-                        "[%d] Local cached token/key failed TCP validation, fall back to cloud",
+                        "[config_flow] cached token/key validation failed, "
+                        "falling back to cloud: device_id=%s",
                         device_id,
                     )
             except Exception as e:
-                _LOGGER.debug("[%d] Failed to load local cached token/key: %s", device_id, e)
+                _LOGGER.debug("[config_flow] cached token/key load failed: device_id=%s error=%s", device_id, e)
 
         # Prefer the user's own cloud (Meiju Cloud /v2, supports real udpid for new modules)
         if self._user_cloud is not None:
@@ -1151,15 +1153,16 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         device_id, ip_address, port, token, key
                     ):
                         _LOGGER.info(
-                            "[%d][user:%s] Got token/key (method=%d)",
+                            "[config_flow] got token/key from user cloud: "
+                            "device_id=%s account=%s method=%d",
                             device_id, self._account, method,
                         )
                         return token, key, f"user:{self._account}"
-                _LOGGER.debug("[%d] User cloud token/key failed TCP validation", device_id)
+                _LOGGER.debug("[config_flow] user cloud token/key validation failed: device_id=%s", device_id)
             except Exception as e:
-                _LOGGER.debug("[%d] User cloud get token error: %s", device_id, e)
+                _LOGGER.debug("[config_flow] user cloud token/key fetch failed: device_id=%s error=%s", device_id, e)
 
-        _LOGGER.warning("[%d] No valid token/key found", device_id)
+        _LOGGER.warning("[config_flow] no valid token/key found: device_id=%s", device_id)
         return "", "", "manual"
 
     async def async_step_get_token(
@@ -1188,9 +1191,9 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     async def reload_in_background():
                         try:
                             await self.hass.config_entries.async_reload(self._existing_entry.entry_id)
-                            _LOGGER.info("Background reload completed successfully")
+                            _LOGGER.info("[config_flow] background reload completed")
                         except Exception as e:
-                            _LOGGER.error("Background reload failed: %s", e)
+                            _LOGGER.error("[config_flow] background reload failed: error=%s", e)
 
                     asyncio.create_task(reload_in_background())
 
@@ -1305,7 +1308,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 sn8=current_device.get(CONF_SN8, ""),
             )
             if token and key:
-                _LOGGER.info("Using token/key from %s for device %s", key_source, device_id)
+                _LOGGER.info("[config_flow] using token/key: source=%s device_id=%s", key_source, device_id)
 
             if self._user_cloud:
                 cloud_device = self._cloud_devices.get(device_id, {})
@@ -1347,10 +1350,10 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                     await self.hass.async_add_executor_job(write_file, lua_file_path, downloaded_lua)
                     lua_file = str(lua_file_path)
-                    _LOGGER.info("Downloaded Lua file to %s", lua_file)
+                    _LOGGER.info("[config_flow] lua file downloaded: path=%s", lua_file)
 
         except (socket.error, OSError, ValueError, json.JSONDecodeError) as err:
-            _LOGGER.error("Failed to get token/key or lua: %s", err)
+            _LOGGER.error("[config_flow] get token/key or lua failed: error=%s", err)
 
         device_type = current_device.get(CONF_DEVICE_TYPE)
         sn8 = current_device.get(CONF_SN8, "")
@@ -1433,18 +1436,18 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
             for file_path, content in files_to_check:
                 if file_path.exists():
-                    _LOGGER.info("Common Lua file already exists: %s", file_path)
+                    _LOGGER.debug("[config_flow] common lua file already exists: path=%s", file_path)
                     continue
 
                 success = await self.hass.async_add_executor_job(
                     write_file, file_path, content
                 )
                 if success:
-                    _LOGGER.info("Created common Lua file: %s", file_path.name)
+                    _LOGGER.info("[config_flow] common lua file created: name=%s", file_path.name)
 
             return True
         except OSError as err:
-            _LOGGER.error("Failed to create common Lua files: %s", err)
+            _LOGGER.error("[config_flow] common lua files creation failed: error=%s", err)
             return False
 
     @staticmethod
@@ -1500,16 +1503,17 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 sock.close()
                 if len(response) < 72:
                     _LOGGER.debug(
-                        "[%s] Token/key validation failed: response too short (%d bytes): %s",
+                        "[config_flow] token/key validation failed: device_id=%s "
+                        "reason=response_too_short bytes=%d response=%s",
                         device_id, len(response), response.hex(),
                     )
                     return False
                 auth_data = response[8:72]
                 security.tcp_key(auth_data, bytes.fromhex(key))
-                _LOGGER.debug("[%s] Token/key validation passed", device_id)
+                _LOGGER.debug("[config_flow] token/key validation passed: device_id=%s", device_id)
                 return True
             except Exception as e:
-                _LOGGER.debug("[%s] Token/key validation error: %s", device_id, e)
+                _LOGGER.debug("[config_flow] token/key validation error: device_id=%s error=%s", device_id, e)
                 return False
 
         return await self.hass.async_add_executor_job(_try_auth)
@@ -1543,10 +1547,10 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                     token = data.get(CONF_TOKEN, "") or ""
                     key = data.get(CONF_KEY, "") or ""
                     if token and key:
-                        _LOGGER.debug("[%d] Found cached token/key in %s", device_id, json_path)
+                        _LOGGER.debug("[config_flow] cached token/key found: device_id=%s path=%s", device_id, json_path)
                         return token, key
                 except (json.JSONDecodeError, OSError) as e:
-                    _LOGGER.warning("Failed to read cached JSON %s: %s", json_path, e)
+                    _LOGGER.warning("[config_flow] cached json read failed: path=%s error=%s", json_path, e)
             return "", ""
 
         return await self.hass.async_add_executor_job(_load)
@@ -1587,16 +1591,17 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                         device_id, ip_address, port, cached_token, cached_key
                     ):
                         _LOGGER.info(
-                            "[%d] Got token/key from local cache",
+                            "[config_flow] got token/key from local cache: device_id=%s",
                             device_id,
                         )
                         return cached_token, cached_key, "local_cache"
                     _LOGGER.debug(
-                        "[%d] Local cached token/key failed TCP validation, fall back to cloud",
+                        "[config_flow] cached token/key validation failed, "
+                        "falling back to cloud: device_id=%s",
                         device_id,
                     )
             except Exception as e:
-                _LOGGER.debug("[%d] Failed to load local cached token/key: %s", device_id, e)
+                _LOGGER.debug("[config_flow] cached token/key load failed: device_id=%s error=%s", device_id, e)
 
         # Prefer the user's own cloud (Meiju Cloud /v2, supports real udpid for new modules)
         if self._user_cloud is not None:
@@ -1609,15 +1614,16 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                         device_id, ip_address, port, token, key
                     ):
                         _LOGGER.info(
-                            "[%d][user:%s] Got token/key (method=%d)",
+                            "[config_flow] got token/key from user cloud: "
+                            "device_id=%s account=%s method=%d",
                             device_id, self._account, method,
                         )
                         return token, key, f"user:{self._account}"
-                _LOGGER.debug("[%d] User cloud token/key failed TCP validation", device_id)
+                _LOGGER.debug("[config_flow] user cloud token/key validation failed: device_id=%s", device_id)
             except Exception as e:
-                _LOGGER.debug("[%d] User cloud get token error: %s", device_id, e)
+                _LOGGER.debug("[config_flow] user cloud token/key fetch failed: device_id=%s error=%s", device_id, e)
 
-        _LOGGER.warning("[%d] No valid token/key found", device_id)
+        _LOGGER.warning("[config_flow] no valid token/key found: device_id=%s", device_id)
         return "", "", "manual"
 
     async def async_step_init(
@@ -1787,9 +1793,9 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             async def reload_in_background():
                 try:
                     await self.hass.config_entries.async_reload(self._config_entry.entry_id)
-                    _LOGGER.info("Background reload completed successfully")
+                    _LOGGER.info("[config_flow] background reload completed")
                 except Exception as e:
-                    _LOGGER.error("Background reload failed: %s", e)
+                    _LOGGER.error("[config_flow] background reload failed: error=%s", e)
 
             asyncio.create_task(reload_in_background())
 
@@ -1840,19 +1846,19 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                     try:
                         cloud_login_ok = await self._user_cloud.login()
                     except CloudLoginError as err:
-                        _LOGGER.warning("User account login failed: %s", err)
+                        _LOGGER.warning("[config_flow] cloud login failed: error=%s", err)
                         cloud_login_ok = False
 
                     if cloud_login_ok:
-                        _LOGGER.info("Cloud login success")
+                        _LOGGER.info("[config_flow] cloud login success: account=%s", self._account)
                         self._cloud_devices = await self._user_cloud.list_appliances(home_id=None) or {}
-                        _LOGGER.info("Cloud devices list: %s", self._cloud_devices)
+                        _LOGGER.debug("[config_flow] cloud devices listed: count=%d", len(self._cloud_devices))
 
                 lua_common_dir = get_lua_common_path(self.hass.config.config_dir)
                 await self._download_common_lua_files(lua_common_dir)
 
             except (json.JSONDecodeError, OSError) as err:
-                _LOGGER.error("Failed to login to cloud: %s", err)
+                _LOGGER.error("[config_flow] cloud login setup failed: error=%s", err)
                 await self._cleanup_session()
 
         return await self.async_step_select_device_option()
@@ -1940,9 +1946,9 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 async def reload_in_background():
                     try:
                         await self.hass.config_entries.async_reload(self._config_entry.entry_id)
-                        _LOGGER.info("Background reload completed successfully")
+                        _LOGGER.info("[config_flow] background reload completed")
                     except Exception as e:
-                        _LOGGER.error("Background reload failed: %s", e)
+                        _LOGGER.error("[config_flow] background reload failed: error=%s", e)
 
                 asyncio.create_task(reload_in_background())
 
@@ -2042,7 +2048,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 sn8=current_device.get(CONF_SN8, ""),
             )
             if token and key:
-                _LOGGER.info("Using token/key from %s for device %s", key_source, device_id)
+                _LOGGER.info("[config_flow] using token/key: source=%s device_id=%s", key_source, device_id)
 
             if self._user_cloud:
                 cloud_device = self._cloud_devices.get(device_id, {})
@@ -2082,10 +2088,10 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
 
                     await self.hass.async_add_executor_job(write_file, lua_file_path, downloaded_lua)
                     lua_file = str(lua_file_path)
-                    _LOGGER.info("Downloaded Lua file to %s", lua_file)
+                    _LOGGER.info("[config_flow] lua file downloaded: path=%s", lua_file)
 
         except (socket.error, OSError, ValueError, json.JSONDecodeError) as err:
-            _LOGGER.error("Failed to get token/key or lua: %s", err)
+            _LOGGER.error("[config_flow] get token/key or lua failed: error=%s", err)
 
         device_type = current_device.get(CONF_DEVICE_TYPE)
         sn8 = current_device.get(CONF_SN8, "")
@@ -2171,7 +2177,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             try:
                 device_type = int(device_type_str, 16)
             except ValueError:
-                _LOGGER.error("Invalid device type format: %s", device_type_str)
+                _LOGGER.error("[config_flow] invalid device type format: value=%s", device_type_str)
                 return
 
             json_path = get_device_json_path(self.hass.config.config_dir, device_id, device_type, sn8)
@@ -2182,16 +2188,16 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                     with open(json_path, 'r', encoding='utf-8') as f:
                         existing_data = json.load(f)
                 except (json.JSONDecodeError, OSError) as e:
-                    _LOGGER.error("Failed to read existing JSON file: %s", e)
+                    _LOGGER.error("[config_flow] existing json read failed: error=%s", e)
 
             existing_data.update(device_data)
 
             with open(json_path, 'w', encoding='utf-8') as f:
                 json.dump(existing_data, f, indent=2, ensure_ascii=False)
 
-            _LOGGER.info("Saved device data to JSON file: %s", json_path)
+            _LOGGER.info("[config_flow] device data saved: path=%s", json_path)
         except (json.JSONEncodeError, OSError) as e:
-            _LOGGER.error("Failed to save device data to JSON file: %s", e)
+            _LOGGER.error("[config_flow] device data save failed: error=%s", e)
 
     async def _download_common_lua_files(
         self, storage_dir: Path
@@ -2210,18 +2216,18 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
 
             for file_path, content in files_to_check:
                 if file_path.exists():
-                    _LOGGER.info("Common Lua file already exists: %s", file_path)
+                    _LOGGER.debug("[config_flow] common lua file already exists: path=%s", file_path)
                     continue
 
                 success = await self.hass.async_add_executor_job(
                     write_file, file_path, content
                 )
                 if success:
-                    _LOGGER.info("Created common Lua file: %s", file_path.name)
+                    _LOGGER.info("[config_flow] common lua file created: name=%s", file_path.name)
 
             return True
         except OSError as err:
-            _LOGGER.error("Failed to create common Lua files: %s", err)
+            _LOGGER.error("[config_flow] common lua files creation failed: error=%s", err)
             return False
 
     async def async_step_update_account(
@@ -2483,9 +2489,9 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                             CONF_HOME_NAME: device.get("home_name", ""),
                             CONF_ROOM_NAME: device.get("room_name", ""),
                         }
-                _LOGGER.info("Refreshed device info from cloud for %d devices", len(cloud_device_info))
+                _LOGGER.info("[config_flow] device info refreshed from cloud: count=%d", len(cloud_device_info))
         except (socket.error, OSError, ValueError, json.JSONDecodeError, MideaError) as err:
-            _LOGGER.warning("Failed to refresh device info from cloud: %s", err)
+            _LOGGER.warning("[config_flow] device info refresh failed: error=%s", err)
         finally:
             await session.close()
 
@@ -2670,7 +2676,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                                 # Polling disabled
                                 device["polling_enabled"] = False
                                 _LOGGER.debug(
-                                    "Disabled polling for device %s (%s)",
+                                    "[config_flow] polling disabled: device=%s device_id=%s",
                                     device_info['device_name'],
                                     device_id
                                 )
@@ -2683,14 +2689,14 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                                     device["polling_enabled"] = True
                                     device["polling_interval"] = interval
                                     _LOGGER.debug(
-                                        "Set polling interval for device %s (%s) to %s seconds",
+                                        "[config_flow] polling interval set: device=%s device_id=%s interval=%ss",
                                         device_info['device_name'],
                                         device_id,
                                         interval
                                     )
                                 except (ValueError, TypeError):
                                     _LOGGER.warning(
-                                        "Invalid polling value '%s' for device %s (%s)",
+                                        "[config_flow] invalid polling value: value=%s device=%s device_id=%s",
                                         selected_value,
                                         device_info['device_name'],
                                         device_id
@@ -2705,7 +2711,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 data=new_data,
             )
 
-            _LOGGER.info("Polling configuration saved, updated=%s", updated)
+            _LOGGER.info("[config_flow] polling config saved: updated=%s", updated)
 
             if updated:
                 # Reload to apply changes
