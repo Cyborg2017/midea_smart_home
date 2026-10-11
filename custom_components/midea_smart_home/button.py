@@ -60,4 +60,4 @@ class MideaButtonEntity(MideaBaseEntity, ButtonEntity):
         if command and isinstance(command, dict):
             await self.coordinator.async_set_control(command)
         else:
-            _LOGGER.warning("Button %s has no command configured", self._entity_key)
+            _LOGGER.warning("[entity] button has no command: entity=%s", self._entity_key)

@@ -77,7 +77,7 @@ class MideaNumberEntity(MideaBaseEntity, NumberEntity):
         try:
             return float(value)
         except (ValueError, TypeError):
-            _LOGGER.warning("Failed to convert value '%s' to float for number entity %s", value, self._entity_key)
+            _LOGGER.warning("[entity] value conversion failed: value=%s entity=%s", value, self._entity_key)
             return None
 
     async def async_set_native_value(self, value: float) -> None:

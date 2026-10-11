@@ -84,7 +84,7 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
             if status == 'delay_off':
                 return False
             _LOGGER.warning(
-                "The value of attribute %s ('%s') is not in rationale %s",
+                "[entity] status value not in rationale: attribute=%s value=%s rationale=%s",
                 attribute_key, status, self._rationale
             )
         return False

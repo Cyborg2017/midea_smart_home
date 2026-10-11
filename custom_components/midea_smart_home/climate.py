@@ -333,7 +333,7 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             tem_dec = self._get_nested_value(self._key_target_temperature[1])
         except IndexError as e:
             _LOGGER.error(
-                "target_temperature list index error: _key_target_temperature=%s, len=%d",
+                "[entity] target temperature index error: keys=%s len=%d",
                 self._key_target_temperature,
                 len(self._key_target_temperature)
             )
@@ -554,29 +554,29 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             # Grouped mode: find corresponding options based on current preset mode
             current_mode = self.preset_mode
             if current_mode is None:
-                _LOGGER.warning("Cannot set fan mode: preset_mode is None")
+                _LOGGER.warning("[entity] set fan mode failed: reason=preset_mode_is_none")
                 return
             mode_config = self._fan_modes_config.get(current_mode)
             if not (mode_config and isinstance(mode_config, dict)):
-                _LOGGER.warning("No fan config for preset mode %s", current_mode)
+                _LOGGER.warning("[entity] fan config missing: preset_mode=%s", current_mode)
                 return
             options = mode_config.get("options")
             if not options:
                 return
             fan_config = options.get(fan_mode)
             if not fan_config:
-                _LOGGER.warning("Fan mode %s not found for preset %s", fan_mode, current_mode)
+                _LOGGER.warning("[entity] fan mode not found: fan_mode=%s preset_mode=%s", fan_mode, current_mode)
                 return
 
             # Use unified control builder if device needs full control
             if self._needs_full_control_for_mode(current_mode):
                 speed_key = mode_config.get("key")
                 if not speed_key:
-                    _LOGGER.warning("No speed key found for fan mode config")
+                    _LOGGER.warning("[entity] fan config missing: field=speed_key")
                     return
                 speed_value = fan_config.get(speed_key)
                 if speed_value is None:
-                    _LOGGER.warning("No speed value found in fan config")
+                    _LOGGER.warning("[entity] fan config missing value: field=speed_value")
                     return
 
                 # Get direction configuration
@@ -646,11 +646,11 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             # Get direction key and value
             dir_key = mode_config.get("key")
             if not dir_key:
-                _LOGGER.warning("No direction key found for swing mode config")
+                _LOGGER.warning("[entity] swing config missing: field=direction_key")
                 return
             dir_value = swing_config.get(dir_key)
             if dir_value is None:
-                _LOGGER.warning("No direction value found in swing config")
+                _LOGGER.warning("[entity] swing config missing value: field=direction_value")
                 return
 
             # Get current speed
