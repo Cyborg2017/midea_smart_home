@@ -30,6 +30,11 @@ DEVICE_MAPPING = {
             ]
         },
         "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.NUMBER: {
                 "temperature": {
                     "min": 0,
@@ -200,6 +205,11 @@ DEVICE_MAPPING = {
             ]
         },
         "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
             Platform.NUMBER: {
                 "temperature": {
                     "min": 0,
