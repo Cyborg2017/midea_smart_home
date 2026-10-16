@@ -14,6 +14,7 @@ DEVICE_MAPPING = {
             "work_second",
             "weight"
         ],
+        "initial_control": [{"lock": "on"}, {"lock": "off"}],
         "calculate": {
             "get": [
                 {
@@ -183,6 +184,7 @@ DEVICE_MAPPING = {
             "work_second",
             "weight"
         ],
+        "initial_control": [{"lock": "on"}, {"lock": "off"}],
         "calculate": {
             "get": [
                 {

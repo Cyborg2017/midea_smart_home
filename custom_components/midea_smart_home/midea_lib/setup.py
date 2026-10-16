@@ -46,8 +46,13 @@ async def validate_device(
     try:
         from ..const import LUA_COMMON_PATH
         from pathlib import Path
+        from ..device_mapping import get_device_mapping
 
         lua_common_dir = Path(hass.config.config_dir) / LUA_COMMON_PATH
+
+        # Init controls (e.g. lock off) used as a fallback to fetch full
+        # status when the initial status query returns no data
+        initial_control = get_device_mapping(device_type, "", sn8, "").get("initial_control")
 
         def _test_connection():
             codec = MideaCodec(lua_file, str(lua_common_dir), sn=sn, subtype=0, device_type=device_type, sn8=sn8)
@@ -90,6 +95,17 @@ async def validate_device(
                 start = time.time()
                 while not got_status and (time.time() - start < 5):
                     time.sleep(0.5)
+
+                # Fallback: if the init query returned no data, send init
+                # controls (e.g. lock off) to fetch full status
+                if not got_status and initial_control:
+                    for control in initial_control:
+                        if isinstance(control, dict) and control:
+                            controller.send_control(control, current_status={})
+                            time.sleep(0.3)
+                    start = time.time()
+                    while not got_status and (time.time() - start < 5):
+                        time.sleep(0.5)
 
                 if not got_status:
                     return False, "lua_error"

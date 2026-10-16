@@ -155,6 +155,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         default_values = dict(device_mapping.get("default_values", {}))
         initial_query = device_mapping.get("initial_query")
         polling_query = device_mapping.get("polling_query")
+        initial_control = device_mapping.get("initial_control")
         # Check if polling is supported (based on existence of polling_query,
         # or the dedicated poll thread for D9 polling devices)
         d9_polling = is_d9_polling_device(device_type_int, device_mapping)
@@ -256,7 +257,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                         break
                     await asyncio.sleep(0.3)
 
-                if coordinator.data is None:
+                # Fallback: if the init query returned no real data, send init
+                # controls (e.g. lock on→off) to trigger a full status push.
+                # Use truthiness so an availability-only {} doesn't mask the
+                # missing status (availability update leaves _data empty).
+                if not coordinator.data and initial_control and isinstance(initial_control, list):
+                    for control in initial_control:
+                        if isinstance(control, dict) and control:
+                            device.set_attributes(control)
+                            await asyncio.sleep(0.3)
+                    for _ in range(10):
+                        if coordinator.data:
+                            break
+                        await asyncio.sleep(0.3)
+
+                if not coordinator.data:
                     _LOGGER.warning("[init] no initial data, will retry in background: device_id=%s", device_id)
 
             return {
