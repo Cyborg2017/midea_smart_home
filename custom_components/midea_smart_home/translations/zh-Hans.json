@@ -615,6 +615,18 @@
       }
     },
     "fan": {
+      "air_purifier": {
+        "name": "空气净化器",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "fast": "快速",
+              "manual": "手动",
+              "sleep": "睡眠"
+            }
+          }
+        }
+      },
       "exhaust_fan": {
         "name": "排风风机"
       },
@@ -2843,6 +2855,9 @@
           "weight": "称重中"
         }
       },
+      "purifying_rate": {
+        "name": "净化率"
+      },
       "refrigeration_real_temperature": {
         "name": "冷藏实际温度"
       },
@@ -3249,6 +3264,9 @@
       },
       "holiday_mode": {
         "name": "假日模式"
+      },
+      "hosting": {
+        "name": "智能托管"
       },
       "human_sensing_switch": {
         "name": "感应亮屏"

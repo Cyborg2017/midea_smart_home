@@ -218,5 +218,95 @@ DEVICE_MAPPING = {
                 }
             }
         }
+    },
+    "571Z306N": {
+        "rationale": ["off", "on"],
+        "entities": {
+            Platform.FAN: {
+                "fan": {
+                    "translation_key": "air_purifier",
+                    "power": "power",
+                    "speeds": list({"wind_speed": value + 1} for value in range(0, 99)),
+                    "preset_modes": {
+                        "sleep": {
+                            "mode": "sleep",
+                            "speeds": [{"wind_speed": 23}]
+                        },
+                        "fast": {
+                            "mode": "fast",
+                            "speeds": [{"wind_speed": 99}]
+                        },
+                        "manual": {
+                            "mode": "manual",
+                            "speeds": list({"wind_speed": value + 1} for value in range(0, 12))
+                        }
+                    }
+                }
+            },
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
+            Platform.NUMBER: {
+                "hosting_upper": {
+                    "min": 10,
+                    "max": 75,
+                    "step": 1,
+                    "mode": "box"
+                },
+                "hosting_lower": {
+                    "min": 10,
+                    "max": 75,
+                    "step": 1,
+                    "mode": "box"
+                }
+            },
+            Platform.SWITCH: {
+                "power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "buzzer": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "waterions":{
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "anion"
+                },
+                "hosting": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.SELECT: {
+                "bright": {
+                    "options": {
+                        "full": {"bright": 0},
+                        "half": {"bright": 6},
+                        "off": {"bright": 7}
+                    }
+                }
+            },
+            Platform.SENSOR: {
+                "deep_filter_percent": {
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "pm25":{
+                    "device_class": SensorDeviceClass.PM25,
+                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "purifying_rate":{
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "tvoc":{
+                    "device_class": SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
+                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "tvoc_density"
+                }
+            }
+        }
     }
 }

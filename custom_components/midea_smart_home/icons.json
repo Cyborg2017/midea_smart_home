@@ -88,6 +88,7 @@
             "updown": { "default": "mdi:arrow-up-down" }
         },
         "fan": {
+            "air_purifier": { "default": "mdi:air-purifier" },
             "exhaust_fan": { "default": "mdi:weather-windy" },
             "fan": { "default": "mdi:fan" },
             "fresh_air_fan": { "default": "mdi:air-filter" },
@@ -402,6 +403,7 @@
             "power_statistics": { "default": "mdi:flash" },
             "pre_regeneration_days": { "default": "mdi:calendar-clock" },
             "progress": { "default": "mdi:progress-check" },
+            "purifying_rate": { "default": "mdi:air-purifier" },
             "refrigeration_real_temperature": { "default": "mdi:thermometer" },
             "regeneration_count": { "default": "mdi:refresh" },
             "regeneration_left_seconds": { "default": "mdi:timer-sand" },
@@ -535,6 +537,7 @@
             "gesture": { "default": "mdi:hand-wave" },
             "heat": { "default": "mdi:fire" },
             "holiday_mode": { "default": "mdi:palmtree" },
+            "hosting": { "default": "mdi:auto-fix" },
             "human_sensing_switch": { "default": "mdi:motion-sensor" },
             "humidification": { "default": "mdi:air-humidifier" },
             "humidify": { "default": "mdi:air-humidifier" },

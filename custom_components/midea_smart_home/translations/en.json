@@ -615,6 +615,18 @@
       }
     },
     "fan": {
+      "air_purifier": {
+        "name": "Air Purifier",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "fast": "Fast",
+              "manual": "Manual",
+              "sleep": "Sleep"
+            }
+          }
+        }
+      },
       "exhaust_fan": {
         "name": "Exhaust Fan"
       },
@@ -2843,6 +2855,9 @@
           "weight": "Weight"
         }
       },
+      "purifying_rate": {
+        "name": "Purification Rate"
+      },
       "refrigeration_real_temperature": {
         "name": "Refrigerator Actual Temperature"
       },
@@ -3249,6 +3264,9 @@
       },
       "holiday_mode": {
         "name": "Holiday Mode"
+      },
+      "hosting": {
+        "name": "Hosting"
       },
       "human_sensing_switch": {
         "name": "Motion Screen Wake"
