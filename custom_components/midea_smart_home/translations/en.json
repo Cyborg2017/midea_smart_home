@@ -620,6 +620,8 @@
         "state_attributes": {
           "preset_mode": {
             "state": {
+              "air_dry": "Air Dry",
+              "auto": "Auto",
               "fast": "Fast",
               "manual": "Manual",
               "sleep": "Sleep"

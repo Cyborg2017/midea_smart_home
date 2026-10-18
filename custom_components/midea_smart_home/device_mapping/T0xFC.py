@@ -4,6 +4,31 @@ DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.FAN: {
+                "fan": {
+                    "translation_key": "air_purifier",
+                    "power": "power",
+                    "speeds": list({"wind_speed": value + 1} for value in range(0, 3)),
+                    "preset_modes": {
+                        "auto": {
+                            "mode": "auto"
+                        },
+                        "air_dry": {
+                            "mode": "air_dry"
+                        },
+                        "fast": {
+                            "mode": "fast"
+                        },
+                        "manual": {
+                            "mode": "manual",
+                            "speeds": list({"wind_speed": value + 1} for value in range(0, 3))
+                        },
+                        "sleep": {
+                            "mode": "sleep"
+                        }
+                    }
+                }
+            },
             Platform.LOCK: {
                 "lock": {
                     "translation_key": "child_lock"
@@ -34,17 +59,12 @@ DEVICE_MAPPING = {
                 },
                 "waterions":{
                     "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "hosting": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SELECT: {
-                "mode": {
-                    "options": {
-                        "manual": {"mode": "manual"},
-                        "sleep": {"mode": "sleep"},
-                        "auto": {"mode": "auto"},
-                        "air_dry": {"mode": "air_dry"}
-                    }
-                },
                 "bias_gear":{
                     "options": {
                         "none": {"bias_gear": 4},
@@ -61,13 +81,6 @@ DEVICE_MAPPING = {
                         "full": {"bright": 0},
                         "half": {"bright": 6},
                         "off": {"bright": 7}
-                    }
-                },
-                "gear": {
-                    "options": {
-                        "low": {"wind_speed": 1},
-                        "medium": {"wind_speed": 2},
-                        "high": {"wind_speed": 3}
                     }
                 }
             },
@@ -107,6 +120,16 @@ DEVICE_MAPPING = {
                     "device_class": SensorDeviceClass.PM10,
                     "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
+                },
+                "purifying_rate":{
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "tvoc":{
+                    "device_class": SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
+                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "tvoc_density"
                 }
             }
         }
@@ -114,6 +137,31 @@ DEVICE_MAPPING = {
     "default_air_purifier": {
         "rationale": ["off", "on"],
         "entities": {
+            Platform.FAN: {
+                "fan": {
+                    "translation_key": "air_purifier",
+                    "power": "power",
+                    "speeds": list({"wind_speed": value + 1} for value in range(0, 3)),
+                    "preset_modes": {
+                        "auto": {
+                            "mode": "auto",
+                        },
+                        "air_dry": {
+                            "mode": "air_dry"
+                        },
+                        "fast": {
+                            "mode": "fast"
+                        },
+                        "manual": {
+                            "mode": "manual",
+                            "speeds": list({"wind_speed": value + 1} for value in range(0, 3))
+                        },
+                        "sleep": {
+                            "mode": "sleep"
+                        }
+                    }
+                }
+            },
             Platform.LOCK: {
                 "lock": {
                     "translation_key": "child_lock"
@@ -142,17 +190,12 @@ DEVICE_MAPPING = {
                 },
                 "waterions":{
                     "device_class": SwitchDeviceClass.SWITCH,
+                },
+                "hosting": {
+                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SELECT: {
-                "mode": {
-                    "options": {
-                        "manual": {"mode": "manual"},
-                        "sleep": {"mode": "sleep"},
-                        "auto": {"mode": "auto"},
-                        "air_dry": {"mode": "air_dry"}
-                    }
-                },
                 "bias_gear":{
                     "options": {
                         "none": {"bias_gear": 4},
@@ -169,13 +212,6 @@ DEVICE_MAPPING = {
                         "full": {"bright": 0},
                         "half": {"bright": 6},
                         "off": {"bright": 7}
-                    }
-                },
-                "gear": {
-                    "options": {
-                        "low": {"wind_speed": 1},
-                        "medium": {"wind_speed": 2},
-                        "high": {"wind_speed": 3}
                     }
                 }
             },
@@ -214,7 +250,16 @@ DEVICE_MAPPING = {
                 "pm10":{
                     "device_class": SensorDeviceClass.PM10,
                     "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
+                },
+                "purifying_rate":{
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "tvoc":{
+                    "device_class": SensorDeviceClass.VOLATILE_ORGANIC_COMPOUNDS,
+                    "unit_of_measurement": CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
                     "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "tvoc_density"
                 }
             }
         }
@@ -229,12 +274,10 @@ DEVICE_MAPPING = {
                     "speeds": list({"wind_speed": value + 1} for value in range(0, 99)),
                     "preset_modes": {
                         "sleep": {
-                            "mode": "sleep",
-                            "speeds": [{"wind_speed": 23}]
+                            "mode": "sleep"
                         },
                         "fast": {
-                            "mode": "fast",
-                            "speeds": [{"wind_speed": 99}]
+                            "mode": "fast"
                         },
                         "manual": {
                             "mode": "manual",

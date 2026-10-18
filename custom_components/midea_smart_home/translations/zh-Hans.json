@@ -620,6 +620,8 @@
         "state_attributes": {
           "preset_mode": {
             "state": {
+              "air_dry": "风芯",
+              "auto": "托管",
               "fast": "快速",
               "manual": "手动",
               "sleep": "睡眠"
