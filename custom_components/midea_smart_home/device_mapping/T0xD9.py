@@ -4,63 +4,149 @@ DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
         "initial_query": [
-            {"db"}
+            {"db"},
+            {"dc"}
         ],
         "entities": {
             Platform.LOCK: {
                 "db_baby_lock": {
                     "rationale": [0, 1],
-                    "translation_key": "child_lock"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_baby_lock_b"
+                },
+                "dc_baby_lock": {
+                    "rationale": [0, 1],
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_baby_lock_t"
                 }
             },
             Platform.SWITCH: {
                 "db_power": {
                     "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "power"
+                    "rationale": ["off", "on"],
+                    "command": {"db_location": 2},
+                    "translation_key": "db_power_b"
                 },
                 "db_control_status": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["pause", "start"],
-                    "translation_key": "control_status"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_control_status_b"
                 },
                 "db_voice_not_disturb_switch": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1],
-                    "translation_key": "nightly"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_voice_not_disturb_switch_b"
                 },
                 "db_cycle_memory": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1],
-                    "translation_key": "cycle_memory"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_cycle_memory_b"
+                },
+                "dc_power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["off", "on"],
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_power_t"
+                },
+                "dc_control_status": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["pause", "start"],
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_control_status_t"
+                },
+                "dc_sterilize": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_sterilize_t"
+                },
+                "dc_prevent_wrinkle": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_prevent_wrinkle_t"
                 }
             },
             Platform.SELECT: {
-                "db_location": {
-                    "options": {
-                        "left": {"db_location": 1},
-                        "right": {"db_location": 2}
-                    }
-                },
                 "db_program": {
                     "options": {
-                        "baby_clothes": {"db_program": "baby_clothes"},
-                        "baby_clothes_dry": {"db_program": 151},
-                        "clean_stains": {"db_program": "clean_stains"},
-                        "cold_wash": {"db_program": "cold_wash"},
-                        "cook_wash": {"db_program": "cook_wash"},
-                        "fast_wash": {"db_program": 137},
-                        "hot_wind_dry": {"db_program": 153},
-                        "rinsing_dehydration": {"db_program": "rinsing_dehydration"},
-                        "self_wash_5": {"db_program": "self_wash_5"},
+                        "mixed_wash": {"db_program": "mixed_wash"},
+                        "fast_wash": {"db_program": "fast_wash"},
                         "single_dehytration": {"db_program": "single_dehytration"},
-                        "single_drying": {"db_program": "single_drying"},
-                        "small_wash_dry": {"db_program": 138},
-                        "socks": {"db_program": 148},
-                        "standard": {"db_program": "standard"},
-                        "underpants": {"db_program": 156},
+                        "rinsing_dehydration": {"db_program": "rinsing_dehydration"},
+                        "fast_wash_30": {"db_program": "fast_wash_30"},
+                        "eco": {"db_program": "eco"},
+                        "down_jacket": {"db_program": "down_jacket"},
+                        "ssp": {"db_program": "ssp"},
+                        "cotton": {"db_program": "cotton"},
+                        "steep": {"db_program": "steep"},
+                        "big": {"db_program": "big"},
+                        "enzyme": {"db_program": "enzyme"},
+                        "baby_clothes": {"db_program": "baby_clothes"},
+                        "remove_mite_wash": {"db_program": "remove_mite_wash"},
+                        "shirt": {"db_program": "shirt"},
+                        "wool": {"db_program": "green_wool"},
+                        "steam_sterilize_wash": {"db_program": "steam_sterilize_wash"},
+                        "outdoor": {"db_program": "outdoor"},
+                        "towel": {"db_program": "bath_towel"},
+                        "jean": {"db_program": "jean"},
+                        "fiber": {"db_program": "fiber"},
+                        "sport_clothes": {"db_program": "sport_clothes"},
+                        "color": {"db_program": "color"},
+                        "intelligent": {"db_program": "intelligent"},
+                        "quick_wash": {"db_program": "quick_wash"},
                         "underwear": {"db_program": "underwear"},
-                        "water_ssp": {"db_program": "water_ssp"}
-                   }
+                        "air_wash": {"db_program": "air_wash"},
+                        "kids": {"db_program": "kids"},
+                        "water_baby_clothes": {"db_program": "water_baby_clothes"},
+                        "water_shirt": {"db_program": "water_shirt"},
+                        "water_mixed_wash": {"db_program": "water_mixed_wash"},
+                        "water_fiber": {"db_program": "water_fiber"},
+                        "water_kids": {"db_program": "water_kids"},
+                        "water_underwear": {"db_program": "water_underwear"},
+                        "specialist": {"db_program": "specialist"},
+                        "love": {"db_program": "love"},
+                        "water_intelligent": {"db_program": "water_intelligent"},
+                        "water_steep": {"db_program": "water_steep"},
+                        "water_fast_wash_30": {"db_program": "water_fast_wash_30"},
+                        "new_water_cotton": {"db_program": "new_water_cotton"},
+                        "water_eco": {"db_program": "water_eco"},
+                        "self_wash_5": {"db_program": "self_wash_5"},
+                        "fast_wash_min": {"db_program": "fast_wash_min"},
+                        "mixed_wash_min": {"db_program": "mixed_wash_min"},
+                        "dehydration_min": {"db_program": "dehydration_min"},
+                        "self_wash_min": {"db_program": "self_wash_min"},
+                        "baby_clothes_min": {"db_program": "baby_clothes_min"},
+                        "silk_wash": {"db_program": "silk_wash"},
+                        "prevent_allergy": {"db_program": "prevent_allergy"},
+                        "cold_wash": {"db_program": "cold_wash"},
+                        "soft_wash": {"db_program": "soft_wash"},
+                        "water_intense_wash": {"db_program": "water_intense_wash"},
+                        "water_outdoor": {"db_program": "water_outdoor"},
+                        "spring_autumn_wash": {"db_program": "spring_autumn_wash"},
+                        "summer_wash": {"db_program": "summer_wash"},
+                        "winter_wash": {"db_program": "winter_wash"},
+                        "new_clothes_wash": {"db_program": "new_clothes_wash"},
+                        "silk": {"db_program": "silk"},
+                        "insight_wash": {"db_program": "insight_wash"},
+                        "fitness_clothes": {"db_program": "fitness_clothes"},
+                        "mink": {"db_program": "mink"},
+                        "fresh_air": {"db_program": "fresh_air"},
+                        "jacket": {"db_program": "jacket"},
+                        "night_fresh_wash": {"db_program": "night_fresh_wash"},
+                        "heart_wash": {"db_program": "heart_wash"},
+                        "water_cold_wash": {"db_program": "water_cold_wash"},
+                        "water_prevent_allergy": {"db_program": "water_prevent_allergy"},
+                        "water_remove_mite_wash": {"db_program": "water_remove_mite_wash"},
+                        "water_ssp": {"db_program": "water_ssp"},
+                        "standard": {"db_program": "standard"},
+                        "cook_wash": {"db_program": "cook_wash"},
+                        "fresh_remove_wrinkle": {"db_program": "fresh_remove_wrinkle"},
+                        "sterilize_wash": {"db_program": "sterilize_wash"},
+                    },
                 },
                 "db_temperature": {
                     "options": {
@@ -68,26 +154,30 @@ DEVICE_MAPPING = {
                         "30c": {"db_temperature": 3},
                         "40c": {"db_temperature": 4},
                         "60c": {"db_temperature": 5},
-                        "95c": {"db_temperature": 6}
+                        "95c": {"db_temperature": 6},
                     },
-                    "translation_key": "temperature"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_temperature_b"
                 },
                 "db_detergent": {
                     "options": {
                         "off": {"db_detergent": 0},
                         "l1": {"db_detergent": 1},
                         "l2": {"db_detergent": 2},
-                        "l3": {"db_detergent": 3}
+                        "l3": {"db_detergent": 3},
+                        "l4": {"db_detergent": 4},
                     },
-                    "translation_key": "detergent"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_detergent_b"
                 },
                 "db_dehydration_speed": {
                     "options": {
                         "no_spin": {"db_dehydration_speed": 0},
                         "800rpm": {"db_dehydration_speed": 3},
-                        "1000rpm": {"db_dehydration_speed": 4}
+                        "1000rpm": {"db_dehydration_speed": 4},
                     },
-                    "translation_key": "dehydration_speed"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_dehydration_speed_b"
                 },
                 "db_rinse_count": {
                     "options": {
@@ -95,63 +185,106 @@ DEVICE_MAPPING = {
                         "2_times": {"db_rinse_count": 2},
                         "3_times": {"db_rinse_count": 3},
                         "4_times": {"db_rinse_count": 4},
-                        "5_times": {"db_rinse_count": 5}
+                        "5_times": {"db_rinse_count": 5},
                     },
-                    "translation_key": "soak_count"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_rinse_count_b"
                 },
-                "db_dry": {
+                "dc_program": {
                     "options": {
-                        "off": {"db_dry": 0},
-                        "smart": {"db_dry": 1},
-                        "timer_240": {"db_dry": 12},
-                        "timer_180": {"db_dry": 11},
-                        "timer_120": {"db_dry": 7},
-                        "timer_60": {"db_dry": 5},
-                        "timer_30": {"db_dry": 4}
-                    }
+                        "mixed_dry": {"dc_program": "mixed_wash"},
+                        "quick_dry": {"dc_program": "quick_dry"},
+                        "big_dry": {"dc_program": "big"},
+                        "sterilize_dry": {"dc_program": "degerm"},
+                        "air_wash": {"dc_program": "air_wash"},
+                        "fixed_time_dry": {"dc_program": "fixed_time_dry"},
+                        "shirt": {"dc_program": "shirt"},
+                        "wool_care": {"dc_program": "wool_care"},
+                        "jean": {"dc_program": "jean"},
+                        "baby_clothes": {"dc_program": "baby_clothes"},
+                        "cotton": {"dc_program": "cotton"},
+                        "outdoor": {"dc_program": "outdoor"},
+                        "hot_wind_dry": {"dc_program": "hot_air_dry"},
+                        "fresh_air": {"dc_program": "cold_air_fresh_air"},
+                        "towel": {"dc_program": "towel"},
+                        "down_jacket": {"dc_program": "down_jacket"},
+                        "fiber": {"dc_program": "fiber"},
+                        "bedsheet": {"dc_program": "bedsheet"},
+                        "plush": {"dc_program": "plush"},
+                        "wool": {"dc_program": "wool"},
+                        "dehumidify": {"dc_program": "dehumidify"},
+                        "sport_clothes": {"dc_program": "sport_clothes"},
+                        "underwear": {"dc_program": "underwear"},
+                        "standard": {"dc_program": "standard"},
+                        "low_temp_dry": {"dc_program": "low_temp_dry"},
+                        "eco_dry": {"dc_program": "eco_dry"},
+                        "intelligent_dry": {"dc_program": "intelligent_dry"},
+                        "steam_care": {"dc_program": "steam_care"},
+                        "night_dry": {"dc_program": "night_dry"},
+                        "bracket_dry": {"dc_program": "bracket_dry"},
+                        "western_trouser": {"dc_program": "western_trouser"},
+                        "dehumidification": {"dc_program": "dehumidification"},
+                        "silk": {"dc_program": "silk"},
+                    },
+                },
+                "dc_intensity": {
+                    "options": {
+                        "iron_now": {"dc_intensity": 1},
+                        "wear_now": {"dc_intensity": 2},
+                        "store": {"dc_intensity": 3},
+                    },
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_intensity_t"
                 }
             },
             Platform.BINARY_SENSOR: {
-                "db_detergent_needed_l": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "db_detergent_needed_r": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
+                "db_detergent_needed": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                    "translation_key": "db_detergent_needed_b"
                 }
             },
             Platform.SENSOR: {
-                "db_error_code_l": {
-                    "device_class": SensorDeviceClass.ENUM
+                "db_error_code": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "db_error_code_b"
                 },
-                "db_remain_time_l": {
+                "db_remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.MINUTES,
-                    "state_class": SensorStateClass.MEASUREMENT
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "db_remain_time_b"
                 },
-                "db_progress_l": {
-                    "device_class": SensorDeviceClass.ENUM
+                "db_progress": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "db_progress_b"
                 },
-                "db_running_status_l": {
-                    "device_class": SensorDeviceClass.ENUM
+                "db_running_status": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "db_running_status_b"
                 },
-                "db_error_code_r": {
-                    "device_class": SensorDeviceClass.ENUM
+                "dc_error_code": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "dc_error_code_t"
                 },
-                "db_remain_time_r": {
+                "dc_remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.MINUTES,
-                    "state_class": SensorStateClass.MEASUREMENT
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "dc_remain_time_t"
                 },
-                "db_progress_r": {
-                    "device_class": SensorDeviceClass.ENUM
+                "dc_dry_status": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "dc_dry_status_t"
                 },
-                "db_running_status_r": {
-                    "device_class": SensorDeviceClass.ENUM
+                "dc_running_status": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "dc_running_status_t"
                 },
-                "db_remain_time_long": {
+                "dc_dry_time": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.MINUTES,
-                    "state_class": SensorStateClass.MEASUREMENT
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "dc_dry_time_t"
                 }
             }
         }
@@ -159,63 +292,149 @@ DEVICE_MAPPING = {
     "default_compound_washer": {
         "rationale": ["off", "on"],
         "initial_query": [
-            {"db"}
+            {"db"},
+            {"dc"}
         ],
         "entities": {
             Platform.LOCK: {
                 "db_baby_lock": {
                     "rationale": [0, 1],
-                    "translation_key": "child_lock"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_baby_lock_b"
+                },
+                "dc_baby_lock": {
+                    "rationale": [0, 1],
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_baby_lock_t"
                 }
             },
             Platform.SWITCH: {
                 "db_power": {
                     "device_class": SwitchDeviceClass.SWITCH,
-                    "translation_key": "power"
+                    "rationale": ["off", "on"],
+                    "command": {"db_location": 2},
+                    "translation_key": "db_power_b"
                 },
                 "db_control_status": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": ["pause", "start"],
-                    "translation_key": "control_status"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_control_status_b"
                 },
                 "db_voice_not_disturb_switch": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1],
-                    "translation_key": "nightly"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_voice_not_disturb_switch_b"
                 },
                 "db_cycle_memory": {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1],
-                    "translation_key": "cycle_memory"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_cycle_memory_b"
+                },
+                "dc_power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["off", "on"],
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_power_t"
+                },
+                "dc_control_status": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["pause", "start"],
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_control_status_t"
+                },
+                "dc_sterilize": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_sterilize_t"
+                },
+                "dc_prevent_wrinkle": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_prevent_wrinkle_t"
                 }
             },
             Platform.SELECT: {
-                "db_location": {
-                    "options": {
-                        "left": {"db_location": 1},
-                        "right": {"db_location": 2}
-                    }
-                },
                 "db_program": {
                     "options": {
-                        "baby_clothes": {"db_program": "baby_clothes"},
-                        "baby_clothes_dry": {"db_program": 151},
-                        "clean_stains": {"db_program": "clean_stains"},
-                        "cold_wash": {"db_program": "cold_wash"},
-                        "cook_wash": {"db_program": "cook_wash"},
-                        "fast_wash": {"db_program": 137},
-                        "hot_wind_dry": {"db_program": 153},
-                        "rinsing_dehydration": {"db_program": "rinsing_dehydration"},
-                        "self_wash_5": {"db_program": "self_wash_5"},
+                        "mixed_wash": {"db_program": "mixed_wash"},
+                        "fast_wash": {"db_program": "fast_wash"},
                         "single_dehytration": {"db_program": "single_dehytration"},
-                        "single_drying": {"db_program": "single_drying"},
-                        "small_wash_dry": {"db_program": 138},
-                        "socks": {"db_program": 148},
-                        "standard": {"db_program": "standard"},
-                        "underpants": {"db_program": 156},
+                        "rinsing_dehydration": {"db_program": "rinsing_dehydration"},
+                        "fast_wash_30": {"db_program": "fast_wash_30"},
+                        "eco": {"db_program": "eco"},
+                        "down_jacket": {"db_program": "down_jacket"},
+                        "ssp": {"db_program": "ssp"},
+                        "cotton": {"db_program": "cotton"},
+                        "steep": {"db_program": "steep"},
+                        "big": {"db_program": "big"},
+                        "enzyme": {"db_program": "enzyme"},
+                        "baby_clothes": {"db_program": "baby_clothes"},
+                        "remove_mite_wash": {"db_program": "remove_mite_wash"},
+                        "shirt": {"db_program": "shirt"},
+                        "wool": {"db_program": "green_wool"},
+                        "steam_sterilize_wash": {"db_program": "steam_sterilize_wash"},
+                        "outdoor": {"db_program": "outdoor"},
+                        "towel": {"db_program": "bath_towel"},
+                        "jean": {"db_program": "jean"},
+                        "fiber": {"db_program": "fiber"},
+                        "sport_clothes": {"db_program": "sport_clothes"},
+                        "color": {"db_program": "color"},
+                        "intelligent": {"db_program": "intelligent"},
+                        "quick_wash": {"db_program": "quick_wash"},
                         "underwear": {"db_program": "underwear"},
-                        "water_ssp": {"db_program": "water_ssp"}
-                   }
+                        "air_wash": {"db_program": "air_wash"},
+                        "kids": {"db_program": "kids"},
+                        "water_baby_clothes": {"db_program": "water_baby_clothes"},
+                        "water_shirt": {"db_program": "water_shirt"},
+                        "water_mixed_wash": {"db_program": "water_mixed_wash"},
+                        "water_fiber": {"db_program": "water_fiber"},
+                        "water_kids": {"db_program": "water_kids"},
+                        "water_underwear": {"db_program": "water_underwear"},
+                        "specialist": {"db_program": "specialist"},
+                        "love": {"db_program": "love"},
+                        "water_intelligent": {"db_program": "water_intelligent"},
+                        "water_steep": {"db_program": "water_steep"},
+                        "water_fast_wash_30": {"db_program": "water_fast_wash_30"},
+                        "new_water_cotton": {"db_program": "new_water_cotton"},
+                        "water_eco": {"db_program": "water_eco"},
+                        "self_wash_5": {"db_program": "self_wash_5"},
+                        "fast_wash_min": {"db_program": "fast_wash_min"},
+                        "mixed_wash_min": {"db_program": "mixed_wash_min"},
+                        "dehydration_min": {"db_program": "dehydration_min"},
+                        "self_wash_min": {"db_program": "self_wash_min"},
+                        "baby_clothes_min": {"db_program": "baby_clothes_min"},
+                        "silk_wash": {"db_program": "silk_wash"},
+                        "prevent_allergy": {"db_program": "prevent_allergy"},
+                        "cold_wash": {"db_program": "cold_wash"},
+                        "soft_wash": {"db_program": "soft_wash"},
+                        "water_intense_wash": {"db_program": "water_intense_wash"},
+                        "water_outdoor": {"db_program": "water_outdoor"},
+                        "spring_autumn_wash": {"db_program": "spring_autumn_wash"},
+                        "summer_wash": {"db_program": "summer_wash"},
+                        "winter_wash": {"db_program": "winter_wash"},
+                        "new_clothes_wash": {"db_program": "new_clothes_wash"},
+                        "silk": {"db_program": "silk"},
+                        "insight_wash": {"db_program": "insight_wash"},
+                        "fitness_clothes": {"db_program": "fitness_clothes"},
+                        "mink": {"db_program": "mink"},
+                        "fresh_air": {"db_program": "fresh_air"},
+                        "jacket": {"db_program": "jacket"},
+                        "night_fresh_wash": {"db_program": "night_fresh_wash"},
+                        "heart_wash": {"db_program": "heart_wash"},
+                        "water_cold_wash": {"db_program": "water_cold_wash"},
+                        "water_prevent_allergy": {"db_program": "water_prevent_allergy"},
+                        "water_remove_mite_wash": {"db_program": "water_remove_mite_wash"},
+                        "water_ssp": {"db_program": "water_ssp"},
+                        "standard": {"db_program": "standard"},
+                        "cook_wash": {"db_program": "cook_wash"},
+                        "fresh_remove_wrinkle": {"db_program": "fresh_remove_wrinkle"},
+                        "sterilize_wash": {"db_program": "sterilize_wash"},
+                    },
                 },
                 "db_temperature": {
                     "options": {
@@ -223,26 +442,30 @@ DEVICE_MAPPING = {
                         "30c": {"db_temperature": 3},
                         "40c": {"db_temperature": 4},
                         "60c": {"db_temperature": 5},
-                        "95c": {"db_temperature": 6}
+                        "95c": {"db_temperature": 6},
                     },
-                    "translation_key": "temperature"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_temperature_b"
                 },
                 "db_detergent": {
                     "options": {
                         "off": {"db_detergent": 0},
                         "l1": {"db_detergent": 1},
                         "l2": {"db_detergent": 2},
-                        "l3": {"db_detergent": 3}
+                        "l3": {"db_detergent": 3},
+                        "l4": {"db_detergent": 4},
                     },
-                    "translation_key": "detergent"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_detergent_b"
                 },
                 "db_dehydration_speed": {
                     "options": {
                         "no_spin": {"db_dehydration_speed": 0},
                         "800rpm": {"db_dehydration_speed": 3},
-                        "1000rpm": {"db_dehydration_speed": 4}
+                        "1000rpm": {"db_dehydration_speed": 4},
                     },
-                    "translation_key": "dehydration_speed"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_dehydration_speed_b"
                 },
                 "db_rinse_count": {
                     "options": {
@@ -250,68 +473,111 @@ DEVICE_MAPPING = {
                         "2_times": {"db_rinse_count": 2},
                         "3_times": {"db_rinse_count": 3},
                         "4_times": {"db_rinse_count": 4},
-                        "5_times": {"db_rinse_count": 5}
+                        "5_times": {"db_rinse_count": 5},
                     },
-                    "translation_key": "soak_count"
+                    "command": {"db_location": 2},
+                    "translation_key": "db_rinse_count_b"
                 },
-                "db_dry": {
+                "dc_program": {
                     "options": {
-                        "off": {"db_dry": 0},
-                        "smart": {"db_dry": 1},
-                        "timer_240": {"db_dry": 12},
-                        "timer_180": {"db_dry": 11},
-                        "timer_120": {"db_dry": 7},
-                        "timer_60": {"db_dry": 5},
-                        "timer_30": {"db_dry": 4}
-                    }
+                        "mixed_dry": {"dc_program": "mixed_wash"},
+                        "quick_dry": {"dc_program": "quick_dry"},
+                        "big_dry": {"dc_program": "big"},
+                        "sterilize_dry": {"dc_program": "degerm"},
+                        "air_wash": {"dc_program": "air_wash"},
+                        "fixed_time_dry": {"dc_program": "fixed_time_dry"},
+                        "shirt": {"dc_program": "shirt"},
+                        "wool_care": {"dc_program": "wool_care"},
+                        "jean": {"dc_program": "jean"},
+                        "baby_clothes": {"dc_program": "baby_clothes"},
+                        "cotton": {"dc_program": "cotton"},
+                        "outdoor": {"dc_program": "outdoor"},
+                        "hot_wind_dry": {"dc_program": "hot_air_dry"},
+                        "fresh_air": {"dc_program": "cold_air_fresh_air"},
+                        "towel": {"dc_program": "towel"},
+                        "down_jacket": {"dc_program": "down_jacket"},
+                        "fiber": {"dc_program": "fiber"},
+                        "bedsheet": {"dc_program": "bedsheet"},
+                        "plush": {"dc_program": "plush"},
+                        "wool": {"dc_program": "wool"},
+                        "dehumidify": {"dc_program": "dehumidify"},
+                        "sport_clothes": {"dc_program": "sport_clothes"},
+                        "underwear": {"dc_program": "underwear"},
+                        "standard": {"dc_program": "standard"},
+                        "low_temp_dry": {"dc_program": "low_temp_dry"},
+                        "eco_dry": {"dc_program": "eco_dry"},
+                        "intelligent_dry": {"dc_program": "intelligent_dry"},
+                        "steam_care": {"dc_program": "steam_care"},
+                        "night_dry": {"dc_program": "night_dry"},
+                        "bracket_dry": {"dc_program": "bracket_dry"},
+                        "western_trouser": {"dc_program": "western_trouser"},
+                        "dehumidification": {"dc_program": "dehumidification"},
+                        "silk": {"dc_program": "silk"},
+                    },
+                },
+                "dc_intensity": {
+                    "options": {
+                        "iron_now": {"dc_intensity": 1},
+                        "wear_now": {"dc_intensity": 2},
+                        "store": {"dc_intensity": 3},
+                    },
+                    "command": {"dc_location": 1},
+                    "translation_key": "dc_intensity_t"
                 }
             },
             Platform.BINARY_SENSOR: {
-                "db_detergent_needed_l": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
-                },
-                "db_detergent_needed_r": {
-                    "device_class": BinarySensorDeviceClass.PROBLEM
+                "db_detergent_needed": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                    "translation_key": "db_detergent_needed_b"
                 }
             },
             Platform.SENSOR: {
-                "db_error_code_l": {
-                    "device_class": SensorDeviceClass.ENUM
+                "db_error_code": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "db_error_code_b"
                 },
-                "db_remain_time_l": {
+                "db_remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.MINUTES,
-                    "state_class": SensorStateClass.MEASUREMENT
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "db_remain_time_b"
                 },
-                "db_progress_l": {
-                    "device_class": SensorDeviceClass.ENUM
+                "db_progress": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "db_progress_b"
                 },
-                "db_running_status_l": {
-                    "device_class": SensorDeviceClass.ENUM
+                "db_running_status": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "db_running_status_b"
                 },
-                "db_error_code_r": {
-                    "device_class": SensorDeviceClass.ENUM
+                "dc_error_code": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "dc_error_code_t"
                 },
-                "db_remain_time_r": {
+                "dc_remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.MINUTES,
-                    "state_class": SensorStateClass.MEASUREMENT
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "dc_remain_time_t"
                 },
-                "db_progress_r": {
-                    "device_class": SensorDeviceClass.ENUM
+                "dc_dry_status": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "dc_dry_status_t"
                 },
-                "db_running_status_r": {
-                    "device_class": SensorDeviceClass.ENUM
+                "dc_running_status": {
+                    "device_class": SensorDeviceClass.ENUM,
+                    "translation_key": "dc_running_status_t"
                 },
-                "db_remain_time_long": {
+                "dc_dry_time": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.MINUTES,
-                    "state_class": SensorStateClass.MEASUREMENT
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "dc_dry_time_t"
                 }
             }
         }
     },
-    ("38208002", "38209227"): {
+    "38208002": {
         "rationale": ["off", "on"],
         "initial_query": [
             {"db"},
@@ -529,6 +795,161 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "dc_dry_time_t"
+                }
+            }
+        }
+    },
+    "384L1181": {
+        "rationale": ["off", "on"],
+        "initial_query": [
+            {"db"}
+        ],
+        "entities": {
+            Platform.LOCK: {
+                "db_baby_lock": {
+                    "rationale": [0, 1],
+                    "translation_key": "child_lock"
+                }
+            },
+            Platform.SWITCH: {
+                "db_power": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "power"
+                },
+                "db_control_status": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["pause", "start"],
+                    "translation_key": "control_status"
+                },
+                "db_voice_not_disturb_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "nightly"
+                },
+                "db_cycle_memory": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "cycle_memory"
+                }
+            },
+            Platform.SELECT: {
+                "db_location": {
+                    "options": {
+                        "left": {"db_location": 1},
+                        "right": {"db_location": 2}
+                    }
+                },
+                "db_program": {
+                    "options": {
+                        "baby_clothes": {"db_program": "baby_clothes"},
+                        "baby_clothes_dry": {"db_program": 151},
+                        "clean_stains": {"db_program": "clean_stains"},
+                        "cold_wash": {"db_program": "cold_wash"},
+                        "cook_wash": {"db_program": "cook_wash"},
+                        "fast_wash": {"db_program": 137},
+                        "hot_wind_dry": {"db_program": 153},
+                        "rinsing_dehydration": {"db_program": "rinsing_dehydration"},
+                        "self_wash_5": {"db_program": "self_wash_5"},
+                        "single_dehytration": {"db_program": "single_dehytration"},
+                        "single_drying": {"db_program": "single_drying"},
+                        "small_wash_dry": {"db_program": 138},
+                        "socks": {"db_program": 148},
+                        "standard": {"db_program": "standard"},
+                        "underpants": {"db_program": 156},
+                        "underwear": {"db_program": "underwear"},
+                        "water_ssp": {"db_program": "water_ssp"}
+                   }
+                },
+                "db_temperature": {
+                    "options": {
+                        "cold_water": {"db_temperature": 1},
+                        "30c": {"db_temperature": 3},
+                        "40c": {"db_temperature": 4},
+                        "60c": {"db_temperature": 5},
+                        "95c": {"db_temperature": 6}
+                    },
+                    "translation_key": "temperature"
+                },
+                "db_detergent": {
+                    "options": {
+                        "off": {"db_detergent": 0},
+                        "l1": {"db_detergent": 1},
+                        "l2": {"db_detergent": 2},
+                        "l3": {"db_detergent": 3}
+                    },
+                    "translation_key": "detergent"
+                },
+                "db_dehydration_speed": {
+                    "options": {
+                        "no_spin": {"db_dehydration_speed": 0},
+                        "800rpm": {"db_dehydration_speed": 3},
+                        "1000rpm": {"db_dehydration_speed": 4}
+                    },
+                    "translation_key": "dehydration_speed"
+                },
+                "db_rinse_count": {
+                    "options": {
+                        "1_time": {"db_rinse_count": 1},
+                        "2_times": {"db_rinse_count": 2},
+                        "3_times": {"db_rinse_count": 3},
+                        "4_times": {"db_rinse_count": 4},
+                        "5_times": {"db_rinse_count": 5}
+                    },
+                    "translation_key": "soak_count"
+                },
+                "db_dry": {
+                    "options": {
+                        "off": {"db_dry": 0},
+                        "smart": {"db_dry": 1},
+                        "timer_240": {"db_dry": 12},
+                        "timer_180": {"db_dry": 11},
+                        "timer_120": {"db_dry": 7},
+                        "timer_60": {"db_dry": 5},
+                        "timer_30": {"db_dry": 4}
+                    }
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "db_detergent_needed_l": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                },
+                "db_detergent_needed_r": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                }
+            },
+            Platform.SENSOR: {
+                "db_error_code_l": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "db_remain_time_l": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "db_progress_l": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "db_running_status_l": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "db_error_code_r": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "db_remain_time_r": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "db_progress_r": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "db_running_status_r": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "db_remain_time_long": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             }
         }
