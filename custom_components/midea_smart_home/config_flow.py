@@ -1467,6 +1467,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         self._selected_devices: list = []
         self._current_device_index: int = 0
         self._devices_data: list = list(config_entry.data.get("devices", []))
+        self._scan_address: str = "auto"
         self._scan_mode: str = "broadcast"
         self._session: ClientSession = None
         self._user_cloud = None
@@ -1639,22 +1640,109 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     ) -> FlowResult:
         if user_input is not None:
             scan_address = user_input.get("scan_address", "auto")
+            self._scan_address = scan_address
             self._scan_mode = user_input.get("scan_mode", "broadcast")
+
+            account = str(user_input.get(CONF_ACCOUNT, "") or "").strip()
+            password = str(user_input.get(CONF_PASSWORD, "") or "").strip()
+            if account and password:
+                self._account = account
+                self._password = password
+
+            # Validate the current account/password via cloud login before
+            # scanning, so a wrong/expired credential is reported instead of
+            # silently continuing without cloud resources.
+            error_key = await self._login_for_auto_add()
+            if error_key:
+                return self._show_add_device_auto_form(error_key=error_key)
+
             return await self._discover_devices(scan_address, self._scan_mode)
 
+        return self._show_add_device_auto_form()
+
+    def _show_add_device_auto_form(self, error_key: str = "") -> FlowResult:
+        """Render the options auto-add form.
+
+        Account/password are prefilled with the stored credentials so the user
+        can confirm or correct them; values are kept when re-shown after a
+        cloud login failure.
+        """
+        schema = vol.Schema({
+            vol.Required(
+                CONF_ACCOUNT, description={"suggested_value": self._account}
+            ): str,
+            vol.Required(
+                CONF_PASSWORD, description={"suggested_value": self._password}
+            ): str,
+            vol.Optional(
+                "scan_address",
+                default=self._scan_address or "auto",
+                description={"suggested_value": self._scan_address or "auto"},
+            ): str,
+            vol.Optional(
+                "scan_mode", default=self._scan_mode or "broadcast"
+            ): SelectSelector(
+                SelectSelectorConfig(
+                    options=["broadcast", "unicast"],
+                    translation_key="scan_mode",
+                    mode=SelectSelectorMode.DROPDOWN,
+                )
+            ),
+        })
         return self.async_show_form(
             step_id="add_device_auto",
-            data_schema=vol.Schema({
-                vol.Optional("scan_address", default="auto"): str,
-                vol.Optional("scan_mode", default="broadcast"): SelectSelector(
-                    SelectSelectorConfig(
-                        options=["broadcast", "unicast"],
-                        translation_key="scan_mode",
-                        mode=SelectSelectorMode.DROPDOWN,
-                    )
-                ),
-            }),
+            data_schema=schema,
+            errors={"base": error_key} if error_key else None,
         )
+
+    async def _login_for_auto_add(self) -> str | None:
+        """Log in to Meiju Cloud for auto-add.
+
+        Returns ``None`` on success (session/cloud prepared), or a translated
+        error key when the current account/password is missing or rejected.
+        """
+        if not (self._account and self._password):
+            return "no_account_password"
+
+        if self._session is None:
+            self._session = ClientSession()
+
+        try:
+            from .midea_lib.cloud import get_midea_cloud
+
+            self._user_cloud = get_midea_cloud(
+                cloud_name="Meiju Cloud",
+                session=self._session,
+                account=self._account,
+                password=self._password,
+            )
+
+            try:
+                login_ok = await self._user_cloud.login()
+            except CloudLoginError as err:
+                _LOGGER.warning("[config_flow] add_device_auto login failed: error=%s", err)
+                await self._cleanup_session()
+                self._user_cloud = None
+                return err.error_key
+
+            if not login_ok:
+                _LOGGER.warning("[config_flow] add_device_auto login failed: reason=no_response")
+                await self._cleanup_session()
+                self._user_cloud = None
+                return "cannot_connect"
+
+            _LOGGER.info("[config_flow] add_device_auto login success: account=%s", self._account)
+            self._cloud_devices = await self._user_cloud.list_appliances(home_id=None) or {}
+            _LOGGER.debug("[config_flow] cloud devices listed: count=%d", len(self._cloud_devices))
+
+            lua_common_dir = get_lua_common_path(self.hass.config.config_dir)
+            await self._download_common_lua_files(lua_common_dir)
+            return None
+        except (json.JSONDecodeError, OSError) as err:
+            _LOGGER.error("[config_flow] add_device_auto cloud setup failed: error=%s", err)
+            await self._cleanup_session()
+            self._user_cloud = None
+            return "cannot_connect"
 
     async def async_step_add_device_manual(
         self, user_input: dict[str, Any] | None = None

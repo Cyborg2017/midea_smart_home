@@ -3626,10 +3626,16 @@
       "no_configurable_devices": "No devices with polling attributes found"
     },
     "error": {
+      "account_locked": "Too many failed login attempts. The account is temporarily locked (about 5 minutes)",
       "all_devices_added": "All discovered devices have already been added",
       "backup_build_failed": "Failed to build the backup archive. Check the Home Assistant logs for details.",
       "cannot_connect": "Cannot connect to device. Check the IP address and port",
+      "cloud_error": "Cloud error, check the logs or try again later",
+      "cloud_session_expired": "Login session expired, please try again",
+      "device_not_registered": "Device is not bound to the current account",
       "diagnostics_build_failed": "Failed to build the diagnostics archive. Check the Home Assistant logs for details.",
+      "invalid_auth": "Invalid account or password",
+      "invalid_cloud_server": "Invalid cloud app key",
       "invalid_device_id": "Invalid device ID. Enter digits only",
       "invalid_device_type": "Invalid device type. Enter a hex value (e.g. 0xac)",
       "invalid_ip": "Invalid IP address",
@@ -3641,15 +3647,19 @@
       "no_cache_found": "No local configuration files found, no need to clean",
       "no_configurable_devices": "No devices with polling attributes found",
       "no_devices_found": "No new devices found on local network",
+      "too_many_logged_in_devices": "Too many devices logged in. Sign out from other devices first",
       "unknown": "Unknown error, check the logs"
     },
     "step": {
       "add_device_auto": {
         "data": {
+          "account": "Account",
+          "password": "Password",
           "scan_address": "Scan Address",
           "scan_mode": "Scan Mode"
         },
         "data_description": {
+          "account": "The current Meiju Cloud account and password are verified before adding devices",
           "scan_address": "Enter router address to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
           "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
         },
