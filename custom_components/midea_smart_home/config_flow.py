@@ -2234,11 +2234,64 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         if user_input is not None:
+            new_account = str(user_input.get(CONF_ACCOUNT, "") or "").strip()
+            new_password = str(user_input.get(CONF_PASSWORD, "") or "").strip()
+
+            if not new_account or not new_password:
+                return self._show_update_account_form(
+                    new_account, new_password, error_key="no_account_password"
+                )
+
+            # Validate credentials via cloud login only when they actually
+            # changed; otherwise we would block saving on every reopen.
+            credentials_changed = (
+                new_account != self._account or new_password != self._password
+            )
+            if credentials_changed:
+                session = ClientSession()
+                try:
+                    from .midea_lib.cloud import get_midea_cloud
+
+                    cloud = get_midea_cloud(
+                        cloud_name="Meiju Cloud",
+                        session=session,
+                        account=new_account,
+                        password=new_password,
+                    )
+                    try:
+                        login_ok = await cloud.login()
+                    except CloudLoginError as err:
+                        _LOGGER.warning(
+                            "[config_flow] update_account login failed: error=%s", err
+                        )
+                        return self._show_update_account_form(
+                            new_account, new_password, error_key=err.error_key
+                        )
+                    if not login_ok:
+                        _LOGGER.warning(
+                            "[config_flow] update_account login failed: reason=no_response"
+                        )
+                        return self._show_update_account_form(
+                            new_account, new_password, error_key="cannot_connect"
+                        )
+                except Exception as err:
+                    _LOGGER.error(
+                        "[config_flow] update_account cloud setup failed: error=%s", err
+                    )
+                    return self._show_update_account_form(
+                        new_account, new_password, error_key="cannot_connect"
+                    )
+                finally:
+                    await session.close()
+
             new_data = dict(self._config_entry.data)
-            if user_input.get(CONF_ACCOUNT):
-                new_data[CONF_ACCOUNT] = user_input[CONF_ACCOUNT]
-            if user_input.get(CONF_PASSWORD):
-                new_data[CONF_PASSWORD] = user_input[CONF_PASSWORD]
+            new_data[CONF_ACCOUNT] = new_account
+            new_data[CONF_PASSWORD] = new_password
+
+            # Keep in-memory copy in sync so subsequent options steps (sync_cloud,
+            # add_device_auto, ...) use the refreshed credentials.
+            self._account = new_account
+            self._password = new_password
 
             self.hass.config_entries.async_update_entry(
                 self._config_entry,
@@ -2246,18 +2299,27 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             )
             return self.async_create_entry(title="", data={})
 
+        return self._show_update_account_form(self._account, self._password)
+
+    def _show_update_account_form(
+        self,
+        account: str = "",
+        password: str = "",
+        error_key: str = "",
+    ) -> FlowResult:
         return self.async_show_form(
             step_id="update_account",
             data_schema=vol.Schema({
                 vol.Optional(
                     CONF_ACCOUNT,
-                    default=self._account,
+                    default=account,
                 ): str,
                 vol.Optional(
                     CONF_PASSWORD,
-                    default=self._password,
+                    default=password,
                 ): str,
             }),
+            errors={"base": error_key} if error_key else None,
         )
 
     async def async_step_sync_cloud(
