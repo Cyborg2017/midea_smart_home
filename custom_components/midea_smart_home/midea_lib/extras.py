@@ -187,6 +187,15 @@ class DeviceLogicHandler:
         if running_status == "end" and not self._validate_end_status(raw_status):
             return False
 
+        # When db is powered off, the device may keep reporting a stale
+        # running status for a drum. Force this bucket to standby so that the
+        # running status, control status, progress and remain time are all
+        # reset consistently below.
+        if data.get("db_power") in ("off", 0):
+            running_status = "standby"
+            data[status_key] = running_status
+            self.adjust_control_status(data, running_status, prefix="db")
+
         # Handle common (non-suffixed) fields from the first poll response
         if raw_status and raw_status.get('db_position') == 1:
             self._d9_polling_device_running_status_for_power_off(data)
