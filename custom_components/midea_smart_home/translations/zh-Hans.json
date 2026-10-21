@@ -412,7 +412,8 @@
               "drying": "干燥",
               "heating": "取暖",
               "soft_wind": "柔风感",
-              "ventilation": "换气"
+              "ventilation": "换气",
+              "ventilation_blowing": "换气+吹风"
             }
           },
           "swing_mode": {

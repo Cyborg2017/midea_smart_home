@@ -412,7 +412,8 @@
               "drying": "Drying",
               "heating": "Heating",
               "soft_wind": "Soft Wind",
-              "ventilation": "Ventilation"
+              "ventilation": "Ventilation",
+              "ventilation_blowing": "Ventilation + Blowing"
             }
           },
           "swing_mode": {

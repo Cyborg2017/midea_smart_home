@@ -531,7 +531,8 @@ DEVICE_MAPPING = {
                         "bath": {"mode": "bath"},
                         "ventilation": {"mode": "ventilation"},
                         "drying": {"mode": "drying"},
-                        "blowing": {"mode": "blowing"}
+                        "blowing": {"mode": "blowing"},
+                        "ventilation_blowing": {"mode": "ventilation,blowing"}
                     },
                     "target_temperature": {
                         "heating": "heating_temperature",
@@ -566,6 +567,19 @@ DEVICE_MAPPING = {
                             }
                         },
                         "blowing": {
+                            "key": "blowing_direction",
+                            "options": {
+                                "60": {"blowing_direction": "60"},
+                                "70": {"blowing_direction": "70"},
+                                "80": {"blowing_direction": "80"},
+                                "90": {"blowing_direction": "90"},
+                                "100": {"blowing_direction": "100"},
+                                "110": {"blowing_direction": "110"},
+                                "120": {"blowing_direction": "120"},
+                                "swing": {"blowing_direction": "253"}
+                            }
+                        },
+                        "ventilation_blowing": {
                             "key": "blowing_direction",
                             "options": {
                                 "60": {"blowing_direction": "60"},
@@ -665,7 +679,8 @@ DEVICE_MAPPING = {
                         "bath": {"mode": "bath"},
                         "ventilation": {"mode": "ventilation"},
                         "drying": {"mode": "drying"},
-                        "blowing": {"mode": "blowing"}
+                        "blowing": {"mode": "blowing"},
+                        "ventilation_blowing": {"mode": "ventilation,blowing"}
                     },
                     "target_temperature": {
                         "heating": "heating_temperature",
@@ -684,6 +699,16 @@ DEVICE_MAPPING = {
                             }
                         },
                         "blowing": {
+                            "key": "blowing_speed",
+                            "options": {
+                                "silent": {"blowing_speed": "42"},
+                                "soft_wind": {"blowing_speed": "53"},
+                                "standard": {"blowing_speed": "70"},
+                                "strong": {"blowing_speed": "81"},
+                                "storm": {"blowing_speed": "88"}
+                            }
+                        },
+                        "ventilation_blowing": {
                             "key": "blowing_speed",
                             "options": {
                                 "silent": {"blowing_speed": "42"},
@@ -719,6 +744,19 @@ DEVICE_MAPPING = {
                                 "110": {"bath_direction": "110"},
                                 "120": {"bath_direction": "120"},
                                 "swing": {"bath_direction": "253"}
+                            }
+                        },
+                        "ventilation_blowing": {
+                            "key": "blowing_direction",
+                            "options": {
+                                "60": {"blowing_direction": "60"},
+                                "70": {"blowing_direction": "70"},
+                                "80": {"blowing_direction": "80"},
+                                "90": {"blowing_direction": "90"},
+                                "100": {"blowing_direction": "100"},
+                                "110": {"blowing_direction": "110"},
+                                "120": {"blowing_direction": "120"},
+                                "swing": {"blowing_direction": "253"}
                             }
                         },
                         "blowing": {
