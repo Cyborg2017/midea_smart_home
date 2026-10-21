@@ -140,8 +140,20 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             _, default_dir = self._get_default_speed_and_direction(speed_key, dir_key)
             dir_value = default_dir
 
+        # Translate the preset_mode key to the actual device mode value.
+        # Most presets use the same string for both (e.g., "blowing" -> mode
+        # "blowing"), but combined presets like "ventilation_blowing" map to a
+        # different device value (e.g., "ventilation,blowing"). Sending the
+        # preset key with the underscore makes the device reject the command
+        # and revert on the next poll, which surfaces as a UI jump.
+        actual_mode = preset_mode
+        if preset_mode and self._key_preset_modes:
+            preset_config = self._key_preset_modes.get(preset_mode)
+            if isinstance(preset_config, dict) and "mode" in preset_config:
+                actual_mode = preset_config["mode"]
+
         # Build full control command
-        control = {"mode": preset_mode}
+        control = {"mode": actual_mode}
         if speed_key and speed_value is not None:
             control[speed_key] = speed_value
         if dir_key and dir_value is not None:
@@ -268,6 +280,7 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             "drying": HVACMode.DRY,
             "ventilation": HVACMode.AUTO,
             "blowing": HVACMode.FAN_ONLY,
+            "ventilation_blowing": HVACMode.FAN_ONLY
         }
 
         return mode_mapping.get(current_mode, HVACMode.AUTO)
