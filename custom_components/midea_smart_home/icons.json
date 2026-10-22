@@ -85,6 +85,7 @@
             "thermostat_5": { "default": "mdi:thermostat" }
         },
         "cover": {
+            "curtain": { "default": "mdi:curtains" },
             "updown": { "default": "mdi:arrow-up-down" }
         },
         "fan": {
@@ -171,6 +172,7 @@
             "cold_water_conservation": { "default": "mdi:water-thermometer-outline" },
             "cooling_time_start_hour": { "default": "mdi:weather-sunset-down" },
             "cur_quantify": { "default": "mdi:cup-water" },
+            "curtain_direction": { "default": "mdi:arrow-expand-horizontal" },
             "db_dehydration_speed": { "default": "mdi:speedometer" },
             "db_dehydration_speed_b": { "default": "mdi:speedometer" },
             "db_detergent": { "default": "mdi:water" },
@@ -319,6 +321,8 @@
             "current_heat_set_temperature": { "default": "mdi:thermometer" },
             "current_temperature": { "default": "mdi:thermometer" },
             "current_time_power": { "default": "mdi:flash" },
+            "curtain_position": { "default": "mdi:curtains" },
+            "curtain_status": { "default": "mdi:eye-outline" },
             "days_since_last_regeneration": { "default": "mdi:calendar-clock" },
             "db_error_code_b": { "default": "mdi:alert-circle" },
             "db_error_code_l": { "default": "mdi:alert-circle" },

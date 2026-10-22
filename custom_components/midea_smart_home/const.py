@@ -52,6 +52,7 @@ class ProtocolVersion:
 
 DEVICE_TYPES = {
     0x13: "Smart Light / Fan Light",
+    0x14: "Electric Curtain",
     0x17: "Laundry Machine",
     0x26: "Bath Heater",
     0x40: "Cooling Fan",

@@ -611,6 +611,9 @@
       }
     },
     "cover": {
+      "curtain": {
+        "name": "窗帘"
+      },
       "updown": {
         "name": "晾衣架"
       }
@@ -1057,6 +1060,13 @@
           "off_quantify": "关定量(连续出水)",
           "small_amount": "小量用水",
           "small_cup": "小杯"
+        }
+      },
+      "curtain_direction": {
+        "name": "窗帘开合方向",
+        "state": {
+          "positive": "正向",
+          "reverse": "反向"
         }
       },
       "db_dehydration_speed_b": {
@@ -2598,6 +2608,17 @@
       },
       "current_time_power": {
         "name": "实时功率"
+      },
+      "curtain_position": {
+        "name": "窗帘开合度"
+      },
+      "curtain_status": {
+        "name": "窗帘状态",
+        "state": {
+          "close": "关闭中",
+          "open": "开启中",
+          "stop": "暂停"
+        }
       },
       "days_since_last_regeneration": {
         "name": "距上次再生天数"

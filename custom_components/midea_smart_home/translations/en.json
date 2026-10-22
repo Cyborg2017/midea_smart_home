@@ -611,6 +611,9 @@
       }
     },
     "cover": {
+      "curtain": {
+        "name": "Curtain"
+      },
       "updown": {
         "name": "Laundry Rack"
       }
@@ -1057,6 +1060,13 @@
           "off_quantify": "Off",
           "small_amount": "Small Amount",
           "small_cup": "Small Cup"
+        }
+      },
+      "curtain_direction": {
+        "name": "Curtain Direction",
+        "state": {
+          "positive": "Positive",
+          "reverse": "Reverse"
         }
       },
       "db_dehydration_speed_b": {
@@ -2598,6 +2608,17 @@
       },
       "current_time_power": {
         "name": "Real-time Power"
+      },
+      "curtain_position": {
+        "name": "Curtain Position"
+      },
+      "curtain_status": {
+        "name": "Curtain Status",
+        "state": {
+          "close": "Closing",
+          "open": "Opening",
+          "stop": "Stopped"
+        }
       },
       "days_since_last_regeneration": {
         "name": "Days Since Last Regeneration"

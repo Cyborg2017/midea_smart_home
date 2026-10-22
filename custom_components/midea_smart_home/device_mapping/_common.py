@@ -33,6 +33,7 @@ from homeassistant.const import (
     UnitOfVolumeFlowRate,
 )
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
+from homeassistant.components.cover import CoverDeviceClass
 from homeassistant.components.humidifier import HumidifierDeviceClass
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.components.switch import SwitchDeviceClass
@@ -72,6 +73,7 @@ __all__ = [
     "UnitOfVolumeFlowRate",
     # homeassistant.components.*
     "BinarySensorDeviceClass",
+    "CoverDeviceClass",
     "HumidifierDeviceClass",
     "SensorDeviceClass",
     "SensorStateClass",
