@@ -1148,6 +1148,12 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Prefer the user's own cloud (Meiju Cloud /v2, supports real udpid for new modules)
         if self._user_cloud is not None:
             try:
+                _LOGGER.debug(
+                    "[config_flow] acquiring cloud token: device_id=%s "
+                    "udpid=%s source=%s",
+                    device_id, udpid or "(derived)",
+                    "real_broadcast" if udpid else "derived_fallback",
+                )
                 keys = await self._user_cloud.get_cloud_keys(device_id, udpid)
                 for method, data in keys.items():
                     token = data["token"]
@@ -1613,6 +1619,12 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         # Prefer the user's own cloud (Meiju Cloud /v2, supports real udpid for new modules)
         if self._user_cloud is not None:
             try:
+                _LOGGER.debug(
+                    "[config_flow] acquiring cloud token: device_id=%s "
+                    "udpid=%s source=%s",
+                    device_id, udpid or "(derived)",
+                    "real_broadcast" if udpid else "derived_fallback",
+                )
                 keys = await self._user_cloud.get_cloud_keys(device_id, udpid)
                 for method, data in keys.items():
                     token = data["token"]

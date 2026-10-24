@@ -277,8 +277,9 @@ def discover_devices(
                 else:
                     protocol_name = "V3"
                 _LOGGER.debug(
-                    "[discovery] found device: id=%d protocol=%s ip=%s type=0x%x",
-                    device_id, protocol_name, addr[0], device_info[CONF_DEVICE_TYPE]
+                    "[discovery] found device: id=%d protocol=%s ip=%s type=0x%x udpid=%s",
+                    device_id, protocol_name, addr[0], device_info[CONF_DEVICE_TYPE],
+                    device_info.get(CONF_UDPID, "-"),
                 )
                 devices[device_id] = device_info
             except (socket.error, OSError):
