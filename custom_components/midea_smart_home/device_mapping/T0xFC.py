@@ -394,6 +394,10 @@ DEVICE_MAPPING = {
                         "fast": {
                             "mode": "fast"
                         },
+                        "auto": {
+                            "mode": "auto",
+                            "hosting": "on"
+                        },
                         "manual": {
                             "mode": "manual",
                             "speeds": list({"wind_speed": value + 1} for value in range(0, 12))
@@ -430,9 +434,6 @@ DEVICE_MAPPING = {
                 "waterions":{
                     "device_class": SwitchDeviceClass.SWITCH,
                     "translation_key": "anion"
-                },
-                "hosting": {
-                    "device_class": SwitchDeviceClass.SWITCH
                 }
             },
             Platform.SELECT: {
