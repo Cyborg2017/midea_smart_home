@@ -53,6 +53,8 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
             coordinator, device_id, device_type, sn, sn8, device_name, fan_id, model,
             platform_name="fan", config=config
         )
+        self._device_type = int(self._device_type, 16) if isinstance(self._device_type, str) else self._device_type
+
         self._fan_id = fan_id
         self._key_power = self._config.get("power")
         self._power_rationale = self._config.get("rationale")
@@ -79,13 +81,45 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
         self._current_speeds = self._key_speeds
 
     @property
+    def is_air_purifier(self) -> bool:
+        return self._device_type == 0xFC
+
+    def _sync_speeds(self):
+        """Refresh the gear list of the mode reported by the device.
+
+        Purifier modes without speeds (auto/fast/sleep) report a sentinel
+        speed instead of a gear, so they are handled as one fixed gear.
+        """
+        if not self._key_preset_modes:
+            return
+
+        current_mode = self._dict_get_selected(self._key_preset_modes)
+        if not current_mode:
+            return
+
+        mode_config = self._key_preset_modes.get(current_mode, {})
+        if "speeds" in mode_config:
+            self._current_speeds = mode_config["speeds"]
+        elif self.is_air_purifier:
+            self._current_speeds = []
+        else:
+            self._current_speeds = self._key_speeds
+
+        if self._current_speeds:
+            self._attr_speed_count = len(self._current_speeds)
+        elif self.is_air_purifier:
+            self._attr_speed_count = 1
+        else:
+            self._attr_speed_count = 0
+
+    @property
     def supported_features(self):
         features = FanEntityFeature(0)
         features |= FanEntityFeature.TURN_ON
         features |= FanEntityFeature.TURN_OFF
         if self._key_preset_modes:
             features |= FanEntityFeature.PRESET_MODE
-        if self._current_speeds:
+        if self._key_speeds:
             features |= FanEntityFeature.SET_SPEED
         if self._key_oscillate:
             features |= FanEntityFeature.OSCILLATE
@@ -110,14 +144,7 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
 
         current_mode = self._dict_get_selected(self._key_preset_modes)
 
-        if current_mode:
-            mode_config = self._key_preset_modes.get(current_mode, {})
-            if "speeds" in mode_config:
-                self._current_speeds = mode_config["speeds"]
-                self._attr_speed_count = len(self._current_speeds)
-            else:
-                self._current_speeds = self._key_speeds
-                self._attr_speed_count = len(self._current_speeds) if self._current_speeds else 0
+        self._sync_speeds()
 
         return current_mode
 
@@ -128,12 +155,19 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
             mode_config = self._key_preset_modes.get(current_mode, {})
             if "speeds" in mode_config:
                 return len(mode_config["speeds"])
+            if self.is_air_purifier:
+                return 1
         return len(self._key_speeds) if self._key_speeds else 0
 
     @property
     def percentage(self):
         if not self.is_on:
             return 0
+
+        self._sync_speeds()
+
+        if self.is_air_purifier and not self._current_speeds:
+            return 100
 
         index = self._list_get_selected(self._current_speeds)
         if index is None:
@@ -171,6 +205,9 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
                     self._attr_speed_count = len(self._current_speeds)
                     if len(self._current_speeds) >= 1:
                         new_status.update(self._current_speeds[0])
+                elif self.is_air_purifier:
+                    self._current_speeds = []
+                    self._attr_speed_count = 1
                 else:
                     self._current_speeds = self._key_speeds
                     self._attr_speed_count = len(self._current_speeds) if self._current_speeds else 0
@@ -219,6 +256,9 @@ class MideaFanEntity(MideaBaseEntity, FanEntity):
             if "speeds" in mode_config:
                 self._current_speeds = mode_config["speeds"]
                 self._attr_speed_count = len(self._current_speeds)
+            elif self.is_air_purifier:
+                self._current_speeds = []
+                self._attr_speed_count = 1
             else:
                 self._current_speeds = self._key_speeds
                 self._attr_speed_count = len(self._current_speeds) if self._current_speeds else 0
