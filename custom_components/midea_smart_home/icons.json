@@ -239,6 +239,7 @@
             "quantify_1": { "default": "mdi:cup-water" },
             "quantify_2": { "default": "mdi:cup-water" },
             "quantify_3": { "default": "mdi:cup-water" },
+            "quantify_extra_cup": { "default": "mdi:cup" },
             "quantify_large_cup": { "default": "mdi:cup" },
             "quantify_medium_cup": { "default": "mdi:cup" },
             "quantify_small_cup": { "default": "mdi:cup" },

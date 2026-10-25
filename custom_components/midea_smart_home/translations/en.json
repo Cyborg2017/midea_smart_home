@@ -1053,6 +1053,7 @@
       "cur_quantify": {
         "name": "Quantitative Water",
         "state": {
+          "extra_cup": "Extra Cup",
           "large_amount": "Large Amount",
           "large_cup": "Large Cup",
           "medium_cup": "Medium Cup",
@@ -1955,9 +1956,28 @@
           "700": "700mL"
         }
       },
+      "quantify_extra_cup": {
+        "name": "Extra Cup Volume",
+        "state": {
+          "500": "500mL",
+          "550": "550mL",
+          "600": "600mL",
+          "650": "650mL",
+          "700": "700mL",
+          "750": "750mL",
+          "800": "800mL",
+          "850": "850mL",
+          "900": "900mL",
+          "950": "950mL"
+        }
+      },
       "quantify_large_cup": {
         "name": "Large Cup Volume",
         "state": {
+          "300": "300mL",
+          "350": "350mL",
+          "400": "400mL",
+          "450": "450mL",
           "500": "500mL",
           "550": "550mL",
           "600": "600mL"
@@ -1966,6 +1986,9 @@
       "quantify_medium_cup": {
         "name": "Medium Cup Volume",
         "state": {
+          "150": "150mL",
+          "200": "200mL",
+          "250": "250mL",
           "300": "300mL",
           "350": "350mL",
           "400": "400mL",
@@ -2856,6 +2879,9 @@
       },
       "left_salt": {
         "name": "Salt Remaining"
+      },
+      "life_fcb": {
+        "name": "FCB Filter Remaining Quantity"
       },
       "life_pcb": {
         "name": "PCB Filter Remaining Quantity"

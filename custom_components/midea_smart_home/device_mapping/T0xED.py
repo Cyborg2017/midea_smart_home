@@ -1056,6 +1056,236 @@ DEVICE_MAPPING = {
             ],
         },
         "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
+            Platform.NUMBER: {
+                "custom_temperature_1": {
+                    "min": 86,
+                    "max": 98,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "translation_key": "boiling_water_temperature"
+                },
+                "milk_temperature": {
+                    "min": 40,
+                    "max": 85,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "translation_key": "warm_water_temperature"
+                }
+            },
+            Platform.SWITCH: {
+                "cool": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "ice": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "autoclean_remind": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "include_current": ["autoclean_remind_cycle"]
+                },
+                "drainage": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "autoclean_ctrl": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "sleep": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["on", "off"],
+                    "translation_key": "display_on_off"
+                },
+                "germicidal": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "set_germicidal_countdown": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "antifreeze": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "human_sensing_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "wash": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.SELECT: {
+                "cur_quantify": {
+                    "options": {
+                        "off_quantify": {"cur_quantify": 0},
+                        "small_cup": {"cur_quantify": 3},
+                        "medium_cup": {"cur_quantify": 4},
+                        "large_cup": {"cur_quantify": 5}
+                    }
+                },
+                "quantify_3": {
+                    "options": {
+                        "100": {"quantify_3": 10},
+                        "150": {"quantify_3": 15},
+                        "200": {"quantify_3": 20},
+                        "250": {"quantify_3": 25}
+                    },
+                    "translation_key": "quantify_small_cup"
+                },
+                "quantify_4": {
+                    "options": {
+                        "300": {"quantify_4": 30},
+                        "350": {"quantify_4": 35},
+                        "400": {"quantify_4": 40},
+                        "450": {"quantify_4": 45}
+                    },
+                    "translation_key": "quantify_medium_cup"
+                },
+                "quantify_5": {
+                    "options": {
+                        "500": {"quantify_5": 50},
+                        "550": {"quantify_5": 55},
+                        "600": {"quantify_5": 60}
+                    },
+                    "translation_key": "quantify_large_cup"
+                },
+                "screenout_time": {
+                    "options": {
+                        "10": {"screenout_time": 10},
+                        "30": {"screenout_time": 30},
+                        "60": {"screenout_time": 60},
+                        "120": {"screenout_time": 120},
+                        "180": {"screenout_time": 180},
+                        "300": {"screenout_time": 300}
+                    }
+                },
+                "autoclean_remind_cycle": {
+                    "options": {
+                        "7": {"autoclean_remind_cycle": 7},
+                        "15": {"autoclean_remind_cycle": 15},
+                        "30": {"autoclean_remind_cycle": 30},
+                        "60": {"autoclean_remind_cycle": 60},
+                        "90": {"autoclean_remind_cycle": 90}
+                    },
+                    "command": {"autoclean_remind": "on"}
+                },
+                "autoclean_time": {
+                    "options": {
+                        "5": {"autoclean_time": 5},
+                        "10": {"autoclean_time": 10},
+                        "15": {"autoclean_time": 15}
+                    }
+                },
+                "set_germicidal_countdown_days": {
+                    "options": {
+                        "7": {"set_germicidal_countdown_days": 7},
+                        "10": {"set_germicidal_countdown_days": 10},
+                        "15": {"set_germicidal_countdown_days": 15},
+                        "20": {"set_germicidal_countdown_days": 20},
+                        "25": {"set_germicidal_countdown_days": 25},
+                        "30": {"set_germicidal_countdown_days": 30}
+                    },
+                    "command": {"set_germicidal_countdown": "on"}
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "sleep": {
+                    "device_class": BinarySensorDeviceClass.OPENING,
+                    "rationale": ["on", "off"],
+                    "translation_key": "screen_status"
+                },
+                "lack_water": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                    "translation_key": "pure_water_status"
+                },
+                "out_water": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "out_ice": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "ice_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "ice_gall_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "filter": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "high_float_type": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM
+                }
+            },
+            Platform.SENSOR: {
+                "out_tds": {
+                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "life_1": {
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "life_pcb"
+                },
+                "life_2": {
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "life_ro"
+                },
+                "water_consumption_l": {
+                    "device_class": SensorDeviceClass.WATER,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.TOTAL
+                },
+                "autoclean_remind_cycle_remainder": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.DAYS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "autoclean_time_remainder": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "input_temperature_Sensing": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "in_water_tem"
+                },
+                "env_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "indoor_temperature"
+                },
+                "germicidal_left_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "germicidal_countdown": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.DAYS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
+    },
+    "631A079W": {
+        "rationale": ["off", "on"],
+        "calculate": {
+            "get": [
+                {
+                    "lvalue": "[water_consumption_l]",
+                    "rvalue": "float([water_consumption] / 1000.0)"
+                }
+            ],
+        },
+        "entities": {
             Platform.NUMBER: {
                 "custom_temperature_1": {
                     "min": 86,
@@ -1230,6 +1460,192 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT,
                     "translation_key": "indoor_temperature"
+                }
+            }
+        }
+    },
+    "63100009": {
+        "rationale": ["off", "on"],
+        "calculate": {
+            "get": [
+                {
+                    "lvalue": "[water_consumption_l]",
+                    "rvalue": "float([water_consumption] / 1000.0)"
+                }
+            ],
+        },
+        "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
+            Platform.NUMBER: {
+                "custom_temperature_1": {
+                    "min": 86,
+                    "max": 98,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "translation_key": "temperature"
+                }
+            },
+            Platform.SWITCH: {
+                "cool": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "ice": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "drainage": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "sleep": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": ["on", "off"],
+                    "translation_key": "display_on_off"
+                },
+                "germicidal": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "set_germicidal_countdown": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "antifreeze": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "human_sensing_switch": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                },
+                "wash": {
+                    "device_class": SwitchDeviceClass.SWITCH
+                }
+            },
+            Platform.SELECT: {
+                "cur_quantify": {
+                    "options": {
+                        "off_quantify": {"cur_quantify": 0},
+                        "medium_cup": {"cur_quantify": 1},
+                        "large_cup": {"cur_quantify": 2},
+                        "extra_cup": {"cur_quantify": 3}
+                    }
+                },
+                "quantify_1": {
+                    "options": {
+                        "150": {"quantify_1": 15},
+                        "200": {"quantify_1": 20},
+                        "250": {"quantify_1": 25}
+                    },
+                    "translation_key": "quantify_medium_cup"
+                },
+                "quantify_2": {
+                    "options": {
+                        "300": {"quantify_2": 30},
+                        "350": {"quantify_2": 35},
+                        "400": {"quantify_2": 40},
+                        "450": {"quantify_2": 45},
+                        "500": {"quantify_2": 50}
+                    },
+                    "translation_key": "quantify_large_cup"
+                },
+                "quantify_3": {
+                    "options": {
+                        "500": {"quantify_3": 50},
+                        "550": {"quantify_3": 55},
+                        "600": {"quantify_3": 60},
+                        "650": {"quantify_3": 65},
+                        "700": {"quantify_3": 70},
+                        "750": {"quantify_3": 75},
+                        "800": {"quantify_3": 80},
+                        "850": {"quantify_3": 85},
+                        "900": {"quantify_3": 90},
+                        "950": {"quantify_3": 95}
+                    },
+                    "translation_key": "quantify_extra_cup"
+                },
+                "screenout_time": {
+                    "options": {
+                        "10": {"screenout_time": 10},
+                        "30": {"screenout_time": 30},
+                        "60": {"screenout_time": 60},
+                        "120": {"screenout_time": 120},
+                        "180": {"screenout_time": 180},
+                        "300": {"screenout_time": 300}
+                    }
+                },
+                "set_germicidal_countdown_days": {
+                    "options": {
+                        "7": {"set_germicidal_countdown_days": 7},
+                        "10": {"set_germicidal_countdown_days": 10},
+                        "15": {"set_germicidal_countdown_days": 15},
+                        "20": {"set_germicidal_countdown_days": 20},
+                        "25": {"set_germicidal_countdown_days": 25},
+                        "30": {"set_germicidal_countdown_days": 30}
+                    },
+                    "command": {"set_germicidal_countdown": "on"}
+                }
+            },
+            Platform.BINARY_SENSOR: {
+                "sleep": {
+                    "device_class": BinarySensorDeviceClass.OPENING,
+                    "rationale": ["on", "off"],
+                    "translation_key": "screen_status"
+                },
+                "lack_water": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                    "translation_key": "pure_water_status"
+                },
+                "out_water": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "out_ice": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "ice_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "ice_gall_status": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                },
+                "filter": {
+                    "device_class": BinarySensorDeviceClass.RUNNING
+                }
+            },
+            Platform.SENSOR: {
+                "out_tds": {
+                    "unit_of_measurement": CONCENTRATION_PARTS_PER_MILLION,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "life_1": {
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "life_fcb"
+                },
+                "life_2": {
+                    "unit_of_measurement": PERCENTAGE,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "life_ro"
+                },
+                "water_consumption_l": {
+                    "device_class": SensorDeviceClass.WATER,
+                    "unit_of_measurement": UnitOfVolume.LITERS,
+                    "state_class": SensorStateClass.TOTAL
+                },
+                "env_temperature": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "indoor_temperature"
+                },
+                "germicidal_left_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "germicidal_countdown": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.DAYS,
+                    "state_class": SensorStateClass.MEASUREMENT
                 }
             }
         }
