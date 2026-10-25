@@ -44,6 +44,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS
                 },
                 "work_hour": {
+                    "status_key": "hour_set",
                     "min": 0,
                     "max": 23,
                     "step": 1,
@@ -51,6 +52,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTime.HOURS
                 },
                 "work_minute": {
+                    "status_key": "minute_set",
                     "min": 0,
                     "max": 59,
                     "step": 1,
@@ -58,6 +60,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTime.MINUTES
                 },
                 "work_second": {
+                    "status_key": "second_set",
                     "min": 0,
                     "max": 59,
                     "step": 1,
@@ -228,6 +231,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS
                 },
                 "work_hour": {
+                    "status_key": "hour_set",
                     "min": 0,
                     "max": 23,
                     "step": 1,
@@ -235,6 +239,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTime.HOURS
                 },
                 "work_minute": {
+                    "status_key": "minute_set",
                     "min": 0,
                     "max": 59,
                     "step": 1,
@@ -242,6 +247,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTime.MINUTES
                 },
                 "work_second": {
+                    "status_key": "second_set",
                     "min": 0,
                     "max": 59,
                     "step": 1,
@@ -413,6 +419,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS
                 },
                 "work_hour": {
+                    "status_key": "hour_set",
                     "min": 0,
                     "max": 23,
                     "step": 1,
@@ -420,6 +427,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTime.HOURS
                 },
                 "work_minute": {
+                    "status_key": "minute_set",
                     "min": 0,
                     "max": 59,
                     "step": 1,
@@ -427,6 +435,7 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTime.MINUTES
                 },
                 "work_second": {
+                    "status_key": "second_set",
                     "min": 0,
                     "max": 59,
                     "step": 1,
