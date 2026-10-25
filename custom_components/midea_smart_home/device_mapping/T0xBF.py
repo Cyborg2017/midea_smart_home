@@ -18,7 +18,7 @@ DEVICE_MAPPING = {
         "calculate": {
             "get": [
                 {
-                    "lvalue": "[work_time]",
+                    "lvalue": "[remain_time]",
                     "rvalue": "int(([work_second] + 60 * [work_minute] + 3600 * [work_hour] + 59) / 60)"
                 },
                 {
@@ -127,14 +127,14 @@ DEVICE_MAPPING = {
             },
             Platform.BINARY_SENSOR: {
                 "lack_water": {
-                    "device_class": BinarySensorDeviceClass.RUNNING,
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
                     "rationale": [0, 1]
                 },
                 "door_open": {
-                    "device_class": BinarySensorDeviceClass.RUNNING,
+                    "device_class": BinarySensorDeviceClass.OPENING
                 },
                 "change_water": {
-                    "device_class": BinarySensorDeviceClass.RUNNING,
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
                     "rationale": [0, 1]
                 }
             },
@@ -157,13 +157,22 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
+                "stepnum": {
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "totalstep": {
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "execute": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
                 "work_mode": {
                     "device_class": SensorDeviceClass.ENUM
                 },
                 "fire_power": {
                     "device_class": SensorDeviceClass.ENUM
                 },
-                "work_time": {
+                "remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
@@ -193,7 +202,7 @@ DEVICE_MAPPING = {
         "calculate": {
             "get": [
                 {
-                    "lvalue": "[work_time]",
+                    "lvalue": "[remain_time]",
                     "rvalue": "int(([work_second] + 60 * [work_minute] + 3600 * [work_hour] + 59) / 60)"
                 },
                 {
@@ -302,14 +311,14 @@ DEVICE_MAPPING = {
             },
             Platform.BINARY_SENSOR: {
                 "lack_water": {
-                    "device_class": BinarySensorDeviceClass.RUNNING,
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
                     "rationale": [0, 1]
                 },
                 "door_open": {
-                    "device_class": BinarySensorDeviceClass.RUNNING,
+                    "device_class": BinarySensorDeviceClass.OPENING
                 },
                 "change_water": {
-                    "device_class": BinarySensorDeviceClass.RUNNING,
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
                     "rationale": [0, 1]
                 }
             },
@@ -332,13 +341,208 @@ DEVICE_MAPPING = {
                     "unit_of_measurement": UnitOfTemperature.CELSIUS,
                     "state_class": SensorStateClass.MEASUREMENT
                 },
+                "stepnum": {
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "totalstep": {
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "execute": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
                 "work_mode": {
                     "device_class": SensorDeviceClass.ENUM
                 },
                 "fire_power": {
                     "device_class": SensorDeviceClass.ENUM
                 },
-                "work_time": {
+                "remain_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "set_time": {
+                    "device_class": SensorDeviceClass.DURATION,
+                    "unit_of_measurement": UnitOfTime.MINUTES,
+                    "state_class": SensorStateClass.MEASUREMENT
+                }
+            }
+        }
+    },
+    "700006DJ": {
+        "rationale": ["off", "on"],
+        "centralized": [
+            "work_mode",
+            "fire_power",
+            "pre_heat",
+            "steam_quantity",
+            "mouthfeel",
+            "temperature",
+            "work_hour",
+            "work_minute",
+            "work_second",
+            "weight"
+        ],
+        "initial_control": [{"lock": "on"}, {"lock": "off"}],
+        "calculate": {
+            "get": [
+                {
+                    "lvalue": "[remain_time]",
+                    "rvalue": "int(([work_second] + 60 * [work_minute] + 3600 * [work_hour] + 59) / 60)"
+                },
+                {
+                    "lvalue": "[set_time]",
+                    "rvalue": "int(([second_set] + 60 * [minute_set] + 3600 * [hour_set] + 59) / 60)"
+                }
+            ],
+            "set": [
+            ]
+        },
+        "entities": {
+            Platform.LOCK: {
+                "lock": {
+                    "translation_key": "child_lock"
+                }
+            },
+            Platform.NUMBER: {
+                "temperature": {
+                    "min": 0,
+                    "max": 250,
+                    "step": 5,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS
+                },
+                "work_hour": {
+                    "min": 0,
+                    "max": 23,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTime.HOURS
+                },
+                "work_minute": {
+                    "min": 0,
+                    "max": 59,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTime.MINUTES
+                },
+                "work_second": {
+                    "min": 0,
+                    "max": 59,
+                    "step": 1,
+                    "mode": "box",
+                    "unit_of_measurement": UnitOfTime.SECONDS
+                },
+                "weight": {
+                    "min": 0,
+                    "max": 2000,
+                    "step": 100,
+                    "mode": "box",
+                    "unit_of_measurement": "g"
+                }
+            },
+            Platform.SELECT: {
+                "work_mode": {
+                    "options": {
+                        "microwave_1": {"work_mode": "microwave_1"},
+                        "unfreeze_1": {"work_mode": "unfreeze_1"},
+                        "pure_steam_2": {"work_mode": "pure_steam_2"},
+                        "pure_steam_1": {"work_mode": "pure_steam_1"},
+                        "pure_steam_7": {"work_mode": "pure_steam_7"},
+                        "steam_hot_wind_tube_fan_2": {"work_mode": "steam_hot_wind_tube_fan_2"},
+                        "pure_steam_5": {"work_mode": "pure_steam_5"},
+                        "pure_preheat": {"work_mode": "pure_preheat"},
+                        "upper_lower_tube": {"work_mode": "double_tube_1"},
+                        "double_tube_fan": {"work_mode": "double_tube_fan"},
+                        "above_tube_fan_2": {"work_mode": "above_tube_fan_2"},
+                        "humidity_control_roast": {"work_mode": "humidity_control_roast"},
+                        "double_tube_8": {"work_mode": "double_tube_8"},
+                        "underside_tube_1": {"work_mode": "underside_tube_1"},
+                        "above_inside_outside_tube": {"work_mode": "above_inside_outside_tube"},
+                        "above_inside_outside_tube_fan": {"work_mode": "above_inside_outside_tube_fan"},
+                        "underside_tube_hot_wind_tube_fan": {"work_mode": "underside_tube_hot_wind_tube_fan"},
+                        "microwave_steam_2": {"work_mode": "microwave_steam_2"},
+                        "hot_wind_tube_fan_4": {"work_mode": "hot_wind_tube_fan_4"},
+                        "hot_wind_tube_fan_5": {"work_mode": "hot_wind_tube_fan_5"},
+                        "hot_wind_tube_fan_1": {"work_mode": "hot_wind_tube_fan_1"},
+                        "scale_clean": {"work_mode": "scale_clean"},
+                        "hot_wind_tube_fan_3": {"work_mode": "hot_wind_tube_fan_3"},
+                        "pure_steam_3": {"work_mode": "pure_steam_3"},
+                        "clean": {"work_mode": "clean"},
+                        "stop": {"work_status": "standby"},
+                        "pause": {"work_status": "pause"},
+                        "work": {"work_status": "work"},
+                        "none": {"work_mode": "ff"}
+                    }
+                },
+                "fire_power": {
+                    "options": {
+                        "high": {"fire_power": "fire_power_10"},
+                        "medium_high": {"fire_power": "fire_power_8"},
+                        "medium": {"fire_power": "fire_power_5"},
+                        "medium_low": {"fire_power": "fire_power_2"},
+                        "low": {"fire_power": "fire_power_1"},
+                        "none": {"fire_power": "fire_power_0"}
+                    }
+                },
+                "steam_quantity": {
+                    "options": {
+                        "off": {"steam_quantity": 0},
+                        "low": {"steam_quantity": 1},
+                        "middle": {"steam_quantity": 2},
+                        "high": {"steam_quantity": 3},
+                    }
+                },
+                "mouthfeel": {
+                    "options": {
+                        "fresh": {"mouthfeel": "fresh"},
+                        "crisp": {"mouthfeel": "crisp"},
+                    }
+                },
+            },
+            Platform.BINARY_SENSOR: {
+                "lack_water": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                    "rationale": [0, 1]
+                },
+                "door_open": {
+                    "device_class": BinarySensorDeviceClass.OPENING
+                },
+                "change_water": {
+                    "device_class": BinarySensorDeviceClass.OCCUPANCY,
+                    "rationale": [0, 1]
+                }
+            },
+            Platform.SENSOR: {
+                "work_status": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "cur_temperature_above": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "cur_temperature_underside": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "stepnum": {
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "totalstep": {
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "execute": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "work_mode": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "fire_power": {
+                    "device_class": SensorDeviceClass.ENUM
+                },
+                "remain_time": {
                     "device_class": SensorDeviceClass.DURATION,
                     "unit_of_measurement": UnitOfTime.MINUTES,
                     "state_class": SensorStateClass.MEASUREMENT
