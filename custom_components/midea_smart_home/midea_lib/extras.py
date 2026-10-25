@@ -187,21 +187,21 @@ class DeviceLogicHandler:
 
         running_status = data[status_key]
 
-        if running_status == "end" and not self._validate_end_status(raw_status):
-            return False
-
         # When db is powered off, the device may keep reporting a stale
-        # running status for a drum. Force this bucket to standby so that the
-        # running status, control status, progress and remain time are all
-        # reset consistently below.
+        # running status for a drum (including 'end'). Handle power-off before
+        # the end validation below so a stale 'end' cannot abort the update and
+        # leave the entity stuck. Also reset the shared db_running_status here
+        # so it stays consistent regardless of db_position.
         if data.get("db_power") in ("off", 0):
             running_status = "standby"
             data[status_key] = running_status
+            self._d9_polling_device_running_status_for_power_off(data)
             self.adjust_control_status(data, running_status, prefix="db")
+        elif running_status == "end" and not self._validate_end_status(raw_status):
+            return False
 
         # Handle common (non-suffixed) fields from the first poll response
         if raw_status and raw_status.get('db_position') == 1:
-            self._d9_polling_device_running_status_for_power_off(data)
             if "db_running_status" in data:
                 self.adjust_control_status(data, data["db_running_status"], prefix="db")
             self.process_progress(data, "db_running_status", "db_progress")
