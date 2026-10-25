@@ -151,6 +151,9 @@ class DeviceLogicHandler:
                 self.adjust_ac_humidity(data, status)
                 self.adjust_ac_compressor_current(data, status)
 
+        elif self.device_type in (0x9B, 0xBF):
+            self.adjust_set_time_without_work_mode(data)
+
         elif self.device_type == 0x9C:
             self.adjust_b3_function_control(data)
 
@@ -420,6 +423,21 @@ class DeviceLogicHandler:
             # to prevent Lua arithmetic errors (e.g., weight="ff").
             control = {k: v for k, v in control.items() if k == "work_mode" or v != "ff"}
         return control
+
+    def adjust_set_time_without_work_mode(self, data: dict) -> None:
+        """For T0x9B/T0xBF devices, zero the set time when no work mode is active.
+
+        When work_mode carries the "ff" sentinel (no mode selected), the device
+        may still report stale hour_set/minute_set/second_set values. Force
+        these keys to 0 so the derived set_time and the cooking time number
+        entities stay consistent with an idle device.
+        """
+        if data.get("work_mode") != "ff":
+            return
+
+        for key in ("hour_set", "minute_set", "second_set"):
+            if key in data:
+                data[key] = 0
 
     def adjust_b3_function_control(self, data: dict) -> None:
         """For T0x9C devices, map b3_upstair_status to b3_function_control."""
