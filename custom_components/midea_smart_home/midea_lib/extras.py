@@ -291,6 +291,29 @@ class DeviceLogicHandler:
             if "db_running_status" in data:
                 data["db_running_status"] = "standby"
 
+    def reset_d9_status_for_power_off(self, data: dict) -> None:
+        """Reset db drum status fields when power turns off.
+
+        Used by the 04db push path in Device._on_device_update: alternate
+        polling stops as soon as db_power goes off, so the reset in
+        apply_special_handling_for_poll never runs and entities would
+        otherwise stay stuck at their stale pre-power-off values.
+        """
+        for key in ("db_running_status", "db_running_status_l", "db_running_status_r"):
+            if key in data:
+                data[key] = "standby"
+        for key in ("db_progress", "db_progress_l", "db_progress_r"):
+            if key in data:
+                data[key] = "idle"
+        for key in (
+            "db_remain_time", "db_remain_time_l", "db_remain_time_r",
+            "db_remain_time_long"
+        ):
+            if key in data:
+                data[key] = None
+        if "db_control_status" in data:
+            data["db_control_status"] = "pause"
+
     def _adjust_remain_time(self, data: dict) -> None:
         if "remain_time" in data and "running_status" in data:
             self._adjust_remain_time_by_status(data, "remain_time", data["running_status"])

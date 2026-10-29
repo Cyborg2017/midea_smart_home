@@ -250,8 +250,15 @@ class DeviceController(threading.Thread):
                             if status:
                                 device_type_hex = hex(self._codec._device_type) if hasattr(self._codec, '_device_type') else 'unknown'
                                 _LOGGER.debug("[device] status received: type=%s time=%.3f %s", device_type_hex, receive_time, status)
-                                poll_location = self._pending_poll_location
-                                self._pending_poll_location = None
+                                # Only 03db poll responses consume the pending
+                                # poll location; a 04db push arriving between
+                                # query and response must not steal it (it
+                                # would be dropped by the data_type check and
+                                # the real response would lose its location).
+                                poll_location = None
+                                if status.get('data_type') == '03db':
+                                    poll_location = self._pending_poll_location
+                                    self._pending_poll_location = None
                                 self.update_all(status, poll_location=poll_location)
             return True
         except Exception as e:
@@ -729,7 +736,13 @@ class MideaDevice:
                     if status.get('data_type') == '04db':
                         power = status.get('db_power')
                         if power is not None and self._data.get('db_power') != power:
-                            self._data = {**self._data, 'db_power': power}
+                            new_data = {**self._data, 'db_power': power}
+                            if power in ('off', 0):
+                                # Polling stops while the drum is powered off,
+                                # so the reset in apply_special_handling_for_poll
+                                # never runs; reset stale status fields here.
+                                self._logic_handler.reset_d9_status_for_power_off(new_data)
+                            self._data = new_data
                             self._notify_update()
                         self._update_d9_alternate_polling(status)
                     return
