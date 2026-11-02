@@ -21,6 +21,18 @@ DEVICE_MAPPING = {
                     }
                 }
             },
+            Platform.NUMBER: {
+                "voice_level": {
+                    "min": 1,
+                    "max": 100,
+                    "step": 1,
+                    "mode": "box",
+                    "command": {
+                        "work_status": "voice",
+                        "voice_level": "{value}"
+                    }
+                }
+            },
             Platform.SELECT: {
                 "sweep_mop_mode": {
                     "status_key": "work_mode",
@@ -74,6 +86,18 @@ DEVICE_MAPPING = {
                         "stop": "stop",
                         "pause": "pause",
                         "return": "charge"
+                    }
+                }
+            },
+            Platform.NUMBER: {
+                "voice_level": {
+                    "min": 1,
+                    "max": 100,
+                    "step": 1,
+                    "mode": "box",
+                    "command": {
+                        "work_status": "voice",
+                        "voice_level": "{value}"
                     }
                 }
             },

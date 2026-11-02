@@ -873,6 +873,9 @@
       "timing_regeneration_min": {
         "name": "Timed Regeneration Minute"
       },
+      "voice_level": {
+        "name": "Voice Volume"
+      },
       "warm_water_temperature": {
         "name": "Warm Water Set Temperature"
       },

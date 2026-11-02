@@ -873,6 +873,9 @@
       "timing_regeneration_min": {
         "name": "定时再生分钟"
       },
+      "voice_level": {
+        "name": "语音音量"
+      },
       "warm_water_temperature": {
         "name": "温水设定温度"
       },
