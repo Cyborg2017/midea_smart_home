@@ -56,7 +56,7 @@
           "lua_file": "Device protocol file path",
           "token": "{token_required}"
         },
-        "description": "Device Name: {device_name}\nDevice Model: {device_model}\nDevice ID: {device_id}\nIP Address: {ip_address}\nSN8: {sn8}\nProtocol Version: {protocol_version}\n{error}{unsupported_protocol}",
+        "description": "Device Name: {device_name}\nDevice Model: {device_model}\nDevice ID: {device_id}\nIP Address: {ip_address}\nSN: {sn}\nSN8: {sn8}\nProtocol Version: {protocol_version}\n{error}{unsupported_protocol}",
         "title": "Device Authentication {progress}"
       },
       "manual_add_device": {
@@ -3830,7 +3830,7 @@
           "lua_file": "Device protocol file path",
           "token": "{token_required}"
         },
-        "description": "Device Name: {device_name}\nDevice Model: {device_model}\nDevice ID: {device_id}\nIP Address: {ip_address}\nSN8: {sn8}\nProtocol Version: {protocol_version}\n{error}{unsupported_protocol}",
+        "description": "Device Name: {device_name}\nDevice Model: {device_model}\nDevice ID: {device_id}\nIP Address: {ip_address}\nSN: {sn}\nSN8: {sn8}\nProtocol Version: {protocol_version}\n{error}{unsupported_protocol}",
         "title": "Device Authentication {progress}"
       },
       "init": {

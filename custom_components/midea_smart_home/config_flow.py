@@ -1389,6 +1389,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         unsupported = current_device.get("unsupported_protocol", False)
         device_type = current_device.get(CONF_DEVICE_TYPE)
         sn8 = current_device.get(CONF_SN8, "")
+        sn = current_device.get(CONF_SN, "")
 
         protocol_name = f"V{protocol} 0x0110 (New Protocol)" if unsupported else f"V{protocol}"
         device_name = current_device.get(CONF_DEVICE_NAME, "")
@@ -1418,6 +1419,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "device_model": model if model else "Unknown",
                 "device_id": str(device_id),
                 "ip_address": current_device[CONF_IP],
+                "sn": sn if sn else "Unknown",
                 "sn8": sn8 if sn8 else "Unknown",
                 "protocol_version": protocol_name,
                 "error": f"\n{error}" if error else "",
@@ -2224,6 +2226,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         unsupported = current_device.get("unsupported_protocol", False)
         device_type = current_device.get(CONF_DEVICE_TYPE)
         sn8 = current_device.get(CONF_SN8, "")
+        sn = current_device.get(CONF_SN, "")
 
         protocol_name = f"V{protocol} 0x0110 (New Protocol)" if unsupported else f"V{protocol}"
         device_name = current_device.get(CONF_DEVICE_NAME, "")
@@ -2253,6 +2256,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 "device_model": model if model else "Unknown",
                 "device_id": str(device_id),
                 "ip_address": current_device[CONF_IP],
+                "sn": sn if sn else "Unknown",
                 "sn8": sn8 if sn8 else "Unknown",
                 "protocol_version": protocol_name,
                 "error": f"\n{error}" if error else "",
