@@ -131,7 +131,9 @@ Home Assistant 美的设备本地控制集成，无需云端即可控制您的�
 | 华凌 神机二代Pro(部分批次) | 空调 | KFR-35G/N8HE1 II Pro |
 | 美的 小西梅 PRO（X7） | 油烟机 | CXW-140-AK11 PRO |
 | 美的 蒸汽洗 AK7 MAX | 油烟机 | CXW-140-AK7 MAX |
+| 美的 M20 | 油烟机 | CXW-140-M20 |
 | 美的 无冷感 M10S Ultra | 燃气热水器 | JSLQ27-M10S Ultra |
+| COLMO CTE816 | 燃气热水器 | JSLQ27-CTE816 |
 | COLMO 净矿厨下净水机 | 净水器 | CWRCM1000-A1 |
 
 > 新协议的适配正在研究中。如果您的设备也在上表中，或发现其他无法控制的设备，欢迎提交 [Issue](https://github.com/Cyborg2017/midea_smart_home/issues/59) 并附上设备信息。
