@@ -9,7 +9,13 @@ from homeassistant.components.climate import (
     HVACAction,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature, Platform
+from homeassistant.const import (
+    ATTR_TEMPERATURE,
+    MAJOR_VERSION,
+    MINOR_VERSION,
+    UnitOfTemperature,
+    Platform,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -17,6 +23,15 @@ from .coordinator import MideaCoordinator
 from .entity import MideaBaseEntity, iter_midea_device_configs
 
 _LOGGER = logging.getLogger(__name__)
+
+# HA 2026.11 split ClimateEntity into its own module and switched the
+# temperature attributes to the `native_*` naming (`_attr_native_temperature_unit`,
+# `native_current_temperature`, ...), while keeping the old names working as
+# deprecation shims. Older HA versions (e.g. 2026.10.x) don't know about
+# `native_*` at all - `_attr_temperature_unit` is a bare annotation with no
+# default value and `temperature_unit`/`current_temperature` read it directly,
+# so writing only `native_*` there raises AttributeError.
+_USE_NATIVE_TEMPERATURE = (MAJOR_VERSION, MINOR_VERSION) >= (2026, 11)
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -80,9 +95,13 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
         self._fan_modes_grouped = False
         self._fan_modes_config = {}
 
-        self._attr_native_temperature_unit = self._config.get(
+        temperature_unit_value = self._config.get(
             "temperature_unit", UnitOfTemperature.CELSIUS
         )
+        if _USE_NATIVE_TEMPERATURE:
+            self._attr_native_temperature_unit = temperature_unit_value
+        else:
+            self._attr_temperature_unit = temperature_unit_value
         self._attr_precision = self._config.get("precision", 1.0)
         self._attr_target_temperature_step = self._config.get("precision", 1.0)
         self._attr_min_temp = float(self._key_min_temp)
@@ -287,8 +306,7 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
 
         return mode_mapping.get(current_mode, HVACMode.AUTO)
 
-    @property
-    def native_current_temperature(self) -> Optional[float]:
+    def _get_current_temperature_value(self) -> Optional[float]:
         if isinstance(self._key_current_temperature, list):
             temp_int = self._get_nested_value(self._key_current_temperature[0])
             tem_dec = self._get_nested_value(self._key_current_temperature[1])
@@ -312,8 +330,7 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             self._get_nested_value(self._key_current_humidity)
         )
 
-    @property
-    def native_target_temperature(self) -> Optional[float]:
+    def _get_target_temperature_value(self) -> Optional[float]:
         if isinstance(self._key_target_temperature, dict):
             if self.is_bath_heater:
                 return self._get_bath_heater_target_temp()
@@ -325,6 +342,26 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
         return self._safe_convert_to_float(
             self._get_nested_value(self._key_target_temperature)
         )
+
+    if _USE_NATIVE_TEMPERATURE:
+
+        @property
+        def native_current_temperature(self) -> Optional[float]:
+            return self._get_current_temperature_value()
+
+        @property
+        def native_target_temperature(self) -> Optional[float]:
+            return self._get_target_temperature_value()
+
+    else:
+
+        @property
+        def current_temperature(self) -> Optional[float]:
+            return self._get_current_temperature_value()
+
+        @property
+        def target_temperature(self) -> Optional[float]:
+            return self._get_target_temperature_value()
 
     def _get_bath_heater_target_temp(self) -> Optional[float]:
         current_mode = self.preset_mode
@@ -457,8 +494,8 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             return HVACAction.DRYING
 
         # Get current and target temperatures
-        current_temp = self.native_current_temperature
-        target_temp = self.native_target_temperature
+        current_temp = self._get_current_temperature_value()
+        target_temp = self._get_target_temperature_value()
 
         # If we have both temperatures, use them to determine action
         if current_temp is not None and target_temp is not None:
