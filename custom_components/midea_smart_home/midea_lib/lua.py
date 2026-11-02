@@ -187,6 +187,19 @@ _G.cjson = cjson
                 if not result:
                     return '{"status":{"version":0}}'
 
+                # Some cloud Lua scripts return a Lua table (not a JSON string)
+                # for certain messages, e.g. control command ACKs. lupa surfaces
+                # that as a _LuaTable object, which breaks the string-only regex
+                # and json.loads handling below and would crash decode_status
+                # ("expected string or bytes-like object, got '_LuaTable'").
+                # Treat any non-string result as an empty status payload.
+                if not isinstance(result, str):
+                    _LOGGER.debug(
+                        "[lua] data_to_json returned non-string (%s), skipping parse",
+                        type(result).__name__
+                    )
+                    return '{"status":{"version":0}}'
+
                 # Clean trailing commas in JSON string values
                 # Lua files often concatenate strings with ", " separator but use string.sub(str, 1, -2)
                 # which only removes 1 character, leaving a trailing comma in the JSON output
