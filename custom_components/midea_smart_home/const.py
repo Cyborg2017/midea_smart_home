@@ -55,6 +55,7 @@ DEVICE_TYPES = {
     0x14: "Electric Curtain",
     0x17: "Laundry Machine",
     0x26: "Bath Heater",
+    0x32: "Electric Steamer",
     0x40: "Cooling Fan",
     0x9B: "Steam Oven",
     0x9C: "Integrated Stove",

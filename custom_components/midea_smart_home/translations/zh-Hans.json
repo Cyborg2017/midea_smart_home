@@ -780,6 +780,9 @@
       "air_set_hour": {
         "name": "抑菌存储时间"
       },
+      "appoint_time_minutes": {
+        "name": "预约时间"
+      },
       "boiling_water_temperature": {
         "name": "沸水设定温度"
       },
@@ -812,6 +815,9 @@
       },
       "hosting_upper": {
         "name": "PM2.5上限(自动净化)"
+      },
+      "keep_warm_time_minutes": {
+        "name": "保温时间"
       },
       "leak_water_protection_value": {
         "name": "漏水保护值"
@@ -902,6 +908,9 @@
       },
       "work_second": {
         "name": "设定秒"
+      },
+      "work_time_minutes": {
+        "name": "工作时间设定"
       }
     },
     "select": {
@@ -2206,6 +2215,25 @@
           "off": "关闭"
         }
       },
+      "steamer_control": {
+        "name": "运行控制",
+        "state": {
+          "pause": "暂停",
+          "resume": "继续",
+          "standby": "停止/待机"
+        }
+      },
+      "steamer_start": {
+        "name": "启动",
+        "state": {
+          "schedule_kuaidun": "预约快炖",
+          "schedule_kuaizheng": "预约快蒸",
+          "schedule_now": "预约启动（上次模式）",
+          "start_kuaidun": "快炖",
+          "start_kuaizheng": "快蒸",
+          "start_now": "立即启动（上次模式）"
+        }
+      },
       "sweep_mop_mode": {
         "name": "扫拖模式",
         "state": {
@@ -2501,6 +2529,9 @@
       "air_left_hour": {
         "name": "烘干存储剩余时间"
       },
+      "appoint_time_min": {
+        "name": "预约时间"
+      },
       "appointment_time": {
         "name": "预约时间"
       },
@@ -2642,11 +2673,17 @@
       "cur_temperature_underside": {
         "name": "下管温度"
       },
+      "curr_work_step": {
+        "name": "当前步骤"
+      },
       "current_bath_set_temperature": {
         "name": "卫浴设定温度"
       },
       "current_heat_set_temperature": {
         "name": "采暖设定温度"
+      },
+      "current_temperature": {
+        "name": "当前温度"
       },
       "current_time_power": {
         "name": "实时功率"
@@ -2851,6 +2888,9 @@
       "flushing_days": {
         "name": "冲洗天数"
       },
+      "food_type": {
+        "name": "食材类型"
+      },
       "freezing_real_temperature": {
         "name": "冷冻实际温度"
       },
@@ -2901,6 +2941,9 @@
       },
       "input_temperature_sensing": {
         "name": "进水温度"
+      },
+      "keep_warm_time_min": {
+        "name": "保温时间"
       },
       "lan_ip": {
         "name": "局域网IP"
@@ -3015,8 +3058,17 @@
       "regeneration_left_seconds": {
         "name": "再生剩余时间"
       },
+      "remain_appoint_time_min": {
+        "name": "剩余预约时间"
+      },
+      "remain_keep_warm_time_min": {
+        "name": "剩余保温时间"
+      },
       "remain_time": {
         "name": "剩余时间"
+      },
+      "remain_work_time_min": {
+        "name": "剩余工作时间"
       },
       "remind_maintenance_days": {
         "name": "提醒维护天数"
@@ -3044,6 +3096,9 @@
       },
       "room_temp5": {
         "name": "室温(子设备5)"
+      },
+      "run_mode": {
+        "name": "运行模式"
       },
       "running_status": {
         "name": "运行状态"
@@ -3089,6 +3144,9 @@
       },
       "target_indoor_fan_speed": {
         "name": "室内机目标转速"
+      },
+      "target_temperature": {
+        "name": "目标温度"
       },
       "temp_set": {
         "name": "目标温度"
@@ -3192,6 +3250,9 @@
       "water_gage_bar": {
         "name": "水压"
       },
+      "water_shortage_state": {
+        "name": "缺水状态"
+      },
       "water_status": {
         "name": "水盒状态",
         "state": {
@@ -3231,6 +3292,9 @@
       },
       "work_time": {
         "name": "工作时间"
+      },
+      "work_time_min": {
+        "name": "设定工作时间"
       }
     },
     "switch": {
