@@ -80,7 +80,9 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
         self._fan_modes_grouped = False
         self._fan_modes_config = {}
 
-        self._attr_temperature_unit = self._config.get("temperature_unit", UnitOfTemperature.CELSIUS)
+        self._attr_native_temperature_unit = self._config.get(
+            "temperature_unit", UnitOfTemperature.CELSIUS
+        )
         self._attr_precision = self._config.get("precision", 1.0)
         self._attr_target_temperature_step = self._config.get("precision", 1.0)
         self._attr_min_temp = float(self._key_min_temp)
@@ -286,7 +288,7 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
         return mode_mapping.get(current_mode, HVACMode.AUTO)
 
     @property
-    def current_temperature(self) -> Optional[float]:
+    def native_current_temperature(self) -> Optional[float]:
         if isinstance(self._key_current_temperature, list):
             temp_int = self._get_nested_value(self._key_current_temperature[0])
             tem_dec = self._get_nested_value(self._key_current_temperature[1])
@@ -311,7 +313,7 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
         )
 
     @property
-    def target_temperature(self) -> Optional[float]:
+    def native_target_temperature(self) -> Optional[float]:
         if isinstance(self._key_target_temperature, dict):
             if self.is_bath_heater:
                 return self._get_bath_heater_target_temp()
@@ -455,8 +457,8 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             return HVACAction.DRYING
 
         # Get current and target temperatures
-        current_temp = self.current_temperature
-        target_temp = self.target_temperature
+        current_temp = self.native_current_temperature
+        target_temp = self.native_target_temperature
 
         # If we have both temperatures, use them to determine action
         if current_temp is not None and target_temp is not None:
