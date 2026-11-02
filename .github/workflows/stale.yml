@@ -14,6 +14,29 @@ jobs:
     name: Close stale issues and PRs
     runs-on: ubuntu-latest
     steps:
+      - name: Exempt issues and PRs authored by maintainers
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          # 需要豁免的作者（不执行 stale/close），逗号分隔
+          EXEMPT_AUTHORS: Cyborg2017
+        run: |
+          # 确保豁免标签存在（已存在则忽略报错）
+          gh api -X POST "repos/$REPO/labels" \
+            -f name=no-stale -f color=ededed \
+            -f description="Do not auto-close as stale" || true
+
+          IFS=',' read -ra AUTHORS <<< "$EXEMPT_AUTHORS"
+
+          # 逐个作者收集其名下 open Issue 与 PR（/issues 同时包含两者），打上豁免标签
+          for author in "${AUTHORS[@]}"; do
+            NUMBERS="$(gh api --paginate "repos/$REPO/issues?state=open&per_page=100" \
+              --jq ".[] | select(.user.login==\"$author\") | .number")"
+            for n in $NUMBERS; do
+              gh api -X POST "repos/$REPO/issues/$n/labels" -f "labels[]=no-stale" || true
+            done
+          done
+
       - uses: actions/stale@v9
         with:
           # 7 天无更新 -> 标记 stale 并提示，再过 3 天仍无更新 -> 关闭
@@ -41,9 +64,9 @@ jobs:
             此 PR 因标记为 stale 后 3 天内无更新，已被自动关闭。
             如仍需合并，可在解决冲突后重新打开。
 
-          # 只处理 Issue 和 PR，排除被打上特定标签的条目
-          exempt-issue-labels: pinned,security
-          exempt-pr-labels: pinned,wip
+          # 只处理 Issue 和 PR，排除被打上特定标签的条目（no-stale 为维护者豁免标签）
+          exempt-issue-labels: pinned,security,no-stale
+          exempt-pr-labels: pinned,wip,no-stale
           # 有任何活动则撤销 stale 标记
           remove-issue-stale-when-updated: true
           remove-pr-stale-when-updated: true
