@@ -125,7 +125,6 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.device_name = device_name
         self.area = area
         self.device_type = device.device_id
-        self.config_entry = config_entry
         self._was_available: bool | None = None
         self._initialized: bool = False
         self._active: bool = True
@@ -133,6 +132,7 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         super().__init__(
             hass,
             _LOGGER,
+            config_entry=config_entry,
             name=f"Midea Smart Home {device_name}",
             update_interval=None,
         )
