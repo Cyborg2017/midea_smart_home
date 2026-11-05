@@ -8,9 +8,16 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class DeviceLogicHandler:
-    def __init__(self, device_type: int, device_name: str):
+    def __init__(self, device_type: int, device_name: str, drum_locations: Optional[dict] = None):
         self.device_type = device_type
         self.device_name = device_name
+        # D9 raw drum ids per model (most: left=1/right=2, some: 3/4).
+        # Canonical 1 (left) / 2 (right) is translated to raw on control.
+        loc_map = drum_locations or {}
+        self._drum_locations = {
+            "left": int(loc_map.get("left", 1)),
+            "right": int(loc_map.get("right", 2)),
+        }
         self._last_standby_status: Any = None
         self._last_high_float_type: Any = None
         self._last_valid_humidity: Any = None
@@ -428,6 +435,19 @@ class DeviceLogicHandler:
                 control["bucket"] = "db"
                 if "db_location" not in control and current_data and "db_location" in current_data:
                     control["db_location"] = current_data["db_location"]
+                # Compat fallback: if a control still carries canonical ids
+                # 1/2 on a device whose drums are 3/4, translate them to the
+                # raw ids. Raw values (3/4 or 1/2 matching the device) pass
+                # through unchanged.
+                if "db_location" in control:
+                    try:
+                        loc_value = int(control["db_location"])
+                    except (TypeError, ValueError):
+                        loc_value = None
+                    if loc_value == 1:
+                        control["db_location"] = self._drum_locations["left"]
+                    elif loc_value == 2:
+                        control["db_location"] = self._drum_locations["right"]
         if self.device_type in (0x9B, 0xBF):
             # Cooking parameters are only bundled with a cooking-start
             # command (work_mode); lock and work_status controls must stay

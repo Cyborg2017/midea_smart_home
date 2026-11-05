@@ -156,6 +156,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         initial_query = device_mapping.get("initial_query")
         polling_query = device_mapping.get("polling_query")
         initial_control = device_mapping.get("initial_control")
+        # D9 drum location ids (default: left=1/right=2; some models use 3/4)
+        drum_locations = device_mapping.get("drum_locations")
         # Check if polling is supported (based on existence of polling_query,
         # or the dedicated poll thread for D9 polling devices)
         d9_polling = is_d9_polling_device(device_type_int, device_mapping)
@@ -212,6 +214,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 polling_interval=polling_interval,
                 initial_query=initial_query,
                 polling_query=polling_query,
+                drum_locations=drum_locations,
             )
             device.open()
             import time

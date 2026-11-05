@@ -432,6 +432,7 @@ class MideaDevice:
         polling_interval: int = 30,
         initial_query: Optional[list] = None,
         polling_query: Optional[list] = None,
+        drum_locations: Optional[dict] = None,
     ):
         self._device_id = device_id
         self._device_type = device_type
@@ -450,6 +451,14 @@ class MideaDevice:
         self._polling_query = polling_query or []
         # D9 polling device flag (only meaningful for T0xD9)
         self._d9_polling_device = False
+        # D9 drum location ids: raw values differ per model (most use 1/2,
+        # some use 3/4). Internally 1 (left) / 2 (right) are canonical;
+        # translation happens on the wire boundary only.
+        loc_map = drum_locations or {}
+        self._d9_drum_locations = {
+            "left": int(loc_map.get("left", 1)),
+            "right": int(loc_map.get("right", 2)),
+        }
         # D9 alternate polling toggled by db_power from 04db push / 03db poll.
         # Defaults to True so the first poll cycle queries both drums and
         # populates initial status for the right drum; corrected by db_power
@@ -457,7 +466,9 @@ class MideaDevice:
         self._d9_alternate_polling = True
 
         # Initialize Logic Handler
-        self._logic_handler = DeviceLogicHandler(device_type, device_name)
+        self._logic_handler = DeviceLogicHandler(
+            device_type, device_name, drum_locations=self._d9_drum_locations
+        )
 
         # Initialize Expression Evaluator
         self._expression_evaluator = ExpressionEvaluator(calculate_config)
@@ -575,11 +586,11 @@ class MideaDevice:
                         # Power on: alternate between two drums per cycle
                         interval = float(self._polling_interval)
                         gap = interval / 2
-                        self._controller.send_poll_query(1)
+                        self._controller.send_poll_query(self._d9_drum_locations["left"])
                         time.sleep(gap)
                         if not self._poll_run:
                             break
-                        self._controller.send_poll_query(2)
+                        self._controller.send_poll_query(self._d9_drum_locations["right"])
                         time.sleep(gap)
                     else:
                         # Power off: device pushes 04db on power change,
@@ -752,11 +763,13 @@ class MideaDevice:
                     return
 
                 db_location = status.get("db_location")
-                if db_location not in (1, 2) or db_location != poll_location:
+                left_loc = self._d9_drum_locations["left"]
+                right_loc = self._d9_drum_locations["right"]
+                if db_location not in (left_loc, right_loc) or db_location != poll_location:
                     return
 
                 db_position = status.get('db_position')
-                suffix = "_l" if db_location == 1 else "_r"
+                suffix = "_l" if db_location == left_loc else "_r"
                 poll_keys = (
                     "db_detergent_needed", "db_remain_time", "db_progress",
                     "db_running_status", "db_error_code"
@@ -770,6 +783,9 @@ class MideaDevice:
                         if key not in _SKIP_KEYS:
                             new_data[key] = value
                             updated_keys.append(key)
+                    # Keep db_location as the raw value reported by the device
+                    # (1/2 or 3/4): entity option mappings are written with
+                    # the raw ids declared in drum_locations.
 
                 for key in poll_keys:
                     if key in status:

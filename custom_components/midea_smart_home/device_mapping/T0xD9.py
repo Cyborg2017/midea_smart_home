@@ -801,6 +801,12 @@ DEVICE_MAPPING = {
     },
     "384L1181": {
         "rationale": ["off", "on"],
+        # Physical drum ids used by polling D9 devices. Most models report
+        # left=1 / right=2, but some use left=3 / right=4 instead. The poll
+        # thread and 03db parsing read this mapping; entity db_location
+        # options must be written with the same raw ids (1/2 here, 3/4 on
+        # such models).
+        "drum_locations": {"left": 1, "right": 2},
         "initial_query": [
             {"db"}
         ],
