@@ -463,7 +463,7 @@ DEVICE_MAPPING = {
             }
         }
     },
-    ("310A1700", "310A2245"): {
+    ("310A1700", "310A2115", "310A2245"): {
         "rationale": ["off", "on"],
         "polling_query": [
             {"temperature"}
