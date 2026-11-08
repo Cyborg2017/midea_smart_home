@@ -2720,7 +2720,7 @@
           "anti-wrinkle": "防皱中",
           "cold_air": "吹冷风中",
           "dry": "烘干中",
-          "idle": "待机中",
+          "idle": "空闲中",
           "pre-wash": "预洗中",
           "rinse": "漂洗中",
           "soak": "浸泡中",
@@ -2737,7 +2737,7 @@
           "anti-wrinkle": "防皱中",
           "cold_air": "吹冷风中",
           "dry": "烘干中",
-          "idle": "待机中",
+          "idle": "空闲中",
           "pre-wash": "预洗中",
           "rinse": "漂洗中",
           "soak": "浸泡中",
@@ -2754,7 +2754,7 @@
           "anti-wrinkle": "防皱中",
           "cold_air": "吹冷风中",
           "dry": "烘干中",
-          "idle": "待机中",
+          "idle": "空闲中",
           "pre-wash": "预洗中",
           "rinse": "漂洗中",
           "soak": "浸泡中",
@@ -2778,13 +2778,40 @@
         "name": "剩余时间(右筒)"
       },
       "db_running_status_b": {
-        "name": "运行状态(下筒)"
+        "name": "运行状态(下筒)",
+        "state": {
+          "delay": "延时",
+          "end": "结束",
+          "fault": "故障",
+          "idle": "空闲",
+          "pause": "暂停",
+          "standby": "待机",
+          "start": "运行"
+        }
       },
       "db_running_status_l": {
-        "name": "运行状态(左筒)"
+        "name": "运行状态(左筒)",
+        "state": {
+          "delay": "延时",
+          "end": "结束",
+          "fault": "故障",
+          "idle": "空闲",
+          "pause": "暂停",
+          "standby": "待机",
+          "start": "运行"
+        }
       },
       "db_running_status_r": {
-        "name": "运行状态(右筒)"
+        "name": "运行状态(右筒)",
+        "state": {
+          "delay": "延时",
+          "end": "结束",
+          "fault": "故障",
+          "idle": "空闲",
+          "pause": "暂停",
+          "standby": "待机",
+          "start": "运行"
+        }
       },
       "dc_dry_status_t": {
         "name": "烘干状态(上筒)",
@@ -2806,7 +2833,16 @@
         "name": "剩余时间(上筒)"
       },
       "dc_running_status_t": {
-        "name": "运行状态(上筒)"
+        "name": "运行状态(上筒)",
+        "state": {
+          "delay": "延时",
+          "end": "结束",
+          "fault": "故障",
+          "idle": "空闲",
+          "pause": "暂停",
+          "standby": "待机",
+          "start": "运行"
+        }
       },
       "deep_filter_percent": {
         "name": "滤芯剩余寿命"
@@ -3032,7 +3068,7 @@
           "anti-wrinkle": "防皱中",
           "cold_air": "吹冷风中",
           "dry": "烘干中",
-          "idle": "待机中",
+          "idle": "空闲中",
           "pre-wash": "预洗中",
           "rinse": "漂洗中",
           "soak": "浸泡中",
@@ -3086,7 +3122,16 @@
         "name": "室温(子设备5)"
       },
       "running_status": {
-        "name": "运行状态"
+        "name": "运行状态",
+        "state": {
+          "delay": "延时",
+          "end": "结束",
+          "fault": "故障",
+          "idle": "空闲",
+          "pause": "暂停",
+          "standby": "待机",
+          "start": "运行"
+        }
       },
       "salt_alarm_threshold": {
         "name": "盐报警阈值"

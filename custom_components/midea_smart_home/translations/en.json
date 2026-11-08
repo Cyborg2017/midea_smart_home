@@ -2778,13 +2778,40 @@
         "name": "Right Bucket Remaining Time"
       },
       "db_running_status_b": {
-        "name": "Bottom Drum Running Status"
+        "name": "Bottom Drum Running Status",
+        "state": {
+          "delay": "Delayed",
+          "end": "Finished",
+          "fault": "Fault",
+          "idle": "Idle",
+          "pause": "Paused",
+          "standby": "Standby",
+          "start": "Running"
+        }
       },
       "db_running_status_l": {
-        "name": "Left Bucket Running Status"
+        "name": "Left Bucket Running Status",
+        "state": {
+          "delay": "Delayed",
+          "end": "Finished",
+          "fault": "Fault",
+          "idle": "Idle",
+          "pause": "Paused",
+          "standby": "Standby",
+          "start": "Running"
+        }
       },
       "db_running_status_r": {
-        "name": "Right Bucket Running Status"
+        "name": "Right Bucket Running Status",
+        "state": {
+          "delay": "Delayed",
+          "end": "Finished",
+          "fault": "Fault",
+          "idle": "Idle",
+          "pause": "Paused",
+          "standby": "Standby",
+          "start": "Running"
+        }
       },
       "dc_dry_status_t": {
         "name": "Top Drum Dry Status",
@@ -2806,7 +2833,16 @@
         "name": "Top Drum Remaining Time"
       },
       "dc_running_status_t": {
-        "name": "Top Drum Running Status"
+        "name": "Top Drum Running Status",
+        "state": {
+          "delay": "Delayed",
+          "end": "Finished",
+          "fault": "Fault",
+          "idle": "Idle",
+          "pause": "Paused",
+          "standby": "Standby",
+          "start": "Running"
+        }
       },
       "deep_filter_percent": {
         "name": "Filter Life Remaining"
@@ -3086,7 +3122,16 @@
         "name": "Room Temperature (Zone 5)"
       },
       "running_status": {
-        "name": "Running Status"
+        "name": "Running Status",
+        "state": {
+          "delay": "Delayed",
+          "end": "Finished",
+          "fault": "Fault",
+          "idle": "Idle",
+          "pause": "Paused",
+          "standby": "Standby",
+          "start": "Running"
+        }
       },
       "salt_alarm_threshold": {
         "name": "Salt Alarm Threshold"
