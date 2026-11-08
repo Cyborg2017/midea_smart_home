@@ -147,6 +147,7 @@ class DeviceLogicHandler:
                 self.adjust_control_status(data, data["running_status"], prefix="")
             self.process_progress(data, "running_status", "progress")
             self._adjust_remain_time(data)
+            self.adjust_wdb_time_values_for_power_off(data)
 
         elif self.device_type == 0xEA:
             self.adjust_work_switch(data)
@@ -324,6 +325,17 @@ class DeviceLogicHandler:
     def _adjust_remain_time(self, data: dict) -> None:
         if "remain_time" in data and "running_status" in data:
             self._adjust_remain_time_by_status(data, "remain_time", data["running_status"])
+
+    def adjust_wdb_time_values_for_power_off(self, data: dict) -> None:
+        """For T0xDB devices, treat wash/dehydration time values as unknown when powered off."""
+        if self.device_type != 0xDB:
+            return
+
+        power = data.get("power")
+        if power == "off" or power == 0:
+            for key in ("wash_time_value", "dehydration_time_value"):
+                if key in data:
+                    data[key] = None
 
     def _d9_polling_device_remain_time(self, data: dict) -> None:
         if "db_remain_time" in data and "db_running_status" in data:
