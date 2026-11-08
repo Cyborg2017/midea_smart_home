@@ -1296,6 +1296,16 @@
           "no_spin": "No Spin"
         }
       },
+      "dehydration_time": {
+        "name": "Dehydration Time Setting",
+        "state": {
+          "8_mins": "8 min",
+          "9_mins": "9 min",
+          "10_mins": "10 min",
+          "11_mins": "11 min",
+          "12_mins": "12 min"
+        }
+      },
       "detergent": {
         "name": "Detergent (Smart)",
         "state": {
@@ -1324,6 +1334,19 @@
           "low": "Low",
           "medium": "Medium",
           "off": "Off"
+        }
+      },
+      "dry_time": {
+        "name": "Dry Time Setting",
+        "state": {
+          "min_30": "30 min",
+          "min_60": "60 min",
+          "min_90": "90 min",
+          "min_120": "120 min",
+          "min_150": "150 min",
+          "off": "Off",
+          "smart_small": "Smart Dry (Small Load)",
+          "smart_standard": "Smart Dry (Standard)"
         }
       },
       "dryer": {
@@ -1862,6 +1885,7 @@
           "cold_wash": "Cold Wash",
           "cotton": "Cotton",
           "deep_ssp": "Deep Self-Clean",
+          "deep_tub_clean": "Deep Tub Clean",
           "dehumidification": "Dehumidification",
           "down_jacket": "Down Jacket",
           "eco": "Eco Wash",
@@ -1876,8 +1900,10 @@
           "fresh_air": "Fresh Air",
           "hanfu_autumn_winter": "Hanfu Autumn/Winter",
           "hanfu_spring_summer": "Hanfu Spring/Summer",
+          "high_temp_wash": "High Temp Wash",
           "intelligent": "Intelligent",
           "jacket": "Jacket",
+          "jacket_wash": "Jacket Fine Wash",
           "jean": "Jeans",
           "memory": "Memory",
           "mixed_wash": "Mixed",
@@ -1886,6 +1912,7 @@
           "polar_fleece": "Polar Fleece",
           "quick_dry": "Quick Dry",
           "quick_dry_20": "Quick Dry 20min",
+          "quick_wash": "Quick Wash",
           "remove_mite_wash": "Mite Removal",
           "rinsing_dehydration": "Rinse+Spin",
           "shirt": "Shirt",
@@ -1893,6 +1920,7 @@
           "single_dehytration": "Spin Only",
           "single_drying": "Dry Only",
           "small_piece_dry": "Small Piece Dry",
+          "soak_stain": "Soak Stain Removal",
           "sport_clothes": "Sportswear",
           "spring_autumn_wash": "Spring/Autumn",
           "ssp": "Self Clean",
@@ -1907,10 +1935,12 @@
           "underwear": "Underwear",
           "uniforms": "Uniforms",
           "warm_clothes": "Warm Clothes",
+          "wash_drying_60": "Wash+Dry 60min",
           "windbreaker": "Windbreaker",
           "windcoat": "Windcoat",
           "winter_wash": "Winter",
-          "wool": "Wool"
+          "wool": "Wool",
+          "yoga_clothes": "Yoga Clothes"
         }
       },
       "ptc": {
@@ -2301,6 +2331,16 @@
           "soak_wash": "Soak Wash",
           "standard_wash": "Standard Wash",
           "strong_wash": "Strong Wash"
+        }
+      },
+      "wash_time": {
+        "name": "Wash Level Setting",
+        "state": {
+          "l1": "L1",
+          "l2": "L2",
+          "l3": "L3",
+          "l4": "L4",
+          "l5": "L5"
         }
       },
       "water_gear": {
@@ -2772,7 +2812,7 @@
         "name": "Filter Life Remaining"
       },
       "dehydration_time_value": {
-        "name": "Dehydration Time"
+        "name": "Dehydration Time Value"
       },
       "discharge_pipe_temperature": {
         "name": "Discharge Pipe Temperature"
@@ -3163,7 +3203,7 @@
         }
       },
       "wash_time_value": {
-        "name": "Wash Time"
+        "name": "Wash Time Value"
       },
       "water_consumption_average": {
         "name": "Average Water Consumption"

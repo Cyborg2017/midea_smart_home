@@ -1296,6 +1296,16 @@
           "no_spin": "免脱水"
         }
       },
+      "dehydration_time": {
+        "name": "脱水时间设定",
+        "state": {
+          "8_mins": "8分钟",
+          "9_mins": "9分钟",
+          "10_mins": "10分钟",
+          "11_mins": "11分钟",
+          "12_mins": "12分钟"
+        }
+      },
       "detergent": {
         "name": "洗衣液(智投)",
         "state": {
@@ -1324,6 +1334,19 @@
           "low": "低档",
           "medium": "中档",
           "off": "空档"
+        }
+      },
+      "dry_time": {
+        "name": "烘干时间设定",
+        "state": {
+          "min_30": "30分",
+          "min_60": "60分",
+          "min_90": "90分",
+          "min_120": "120分",
+          "min_150": "150分",
+          "off": "关闭",
+          "smart_small": "少量智烘",
+          "smart_standard": "标准智烘"
         }
       },
       "dryer": {
@@ -1862,6 +1885,7 @@
           "cold_wash": "冷水洗",
           "cotton": "棉麻",
           "deep_ssp": "深度筒自洁",
+          "deep_tub_clean": "深度筒清洁",
           "dehumidification": "除螨除潮",
           "down_jacket": "羽绒服",
           "eco": "节能洗",
@@ -1876,8 +1900,10 @@
           "fresh_air": "清新",
           "hanfu_autumn_winter": "汉服秋冬洗",
           "hanfu_spring_summer": "汉服春夏洗",
+          "high_temp_wash": "高温净洗",
           "intelligent": "智能洗",
           "jacket": "冲锋衣",
+          "jacket_wash": "冲锋衣精洗",
           "jean": "牛仔",
           "memory": "记忆",
           "mixed_wash": "混合",
@@ -1886,6 +1912,7 @@
           "polar_fleece": "摇粒绒",
           "quick_dry": "快烘",
           "quick_dry_20": "快烘20分钟",
+          "quick_wash": "快速",
           "remove_mite_wash": "除螨洗",
           "rinsing_dehydration": "漂+脱",
           "shirt": "衬衫",
@@ -1893,6 +1920,7 @@
           "single_dehytration": "单脱水",
           "single_drying": "单烘干",
           "small_piece_dry": "小件烘",
+          "soak_stain": "浸泡去污",
           "sport_clothes": "运动服",
           "spring_autumn_wash": "春秋洗",
           "ssp": "筒自洁",
@@ -1907,10 +1935,12 @@
           "underwear": "内衣",
           "uniforms": "校服",
           "warm_clothes": "暖衣",
+          "wash_drying_60": "洗烘60分",
           "windbreaker": "风衣",
           "windcoat": "冲锋衣",
           "winter_wash": "冬季洗",
-          "wool": "羊毛"
+          "wool": "羊毛",
+          "yoga_clothes": "瑜伽服"
         }
       },
       "ptc": {
@@ -2301,6 +2331,16 @@
           "soak_wash": "预冲洗",
           "standard_wash": "标准洗",
           "strong_wash": "超强洗"
+        }
+      },
+      "wash_time": {
+        "name": "洗涤档位设定",
+        "state": {
+          "l1": "L1",
+          "l2": "L2",
+          "l3": "L3",
+          "l4": "L4",
+          "l5": "L5"
         }
       },
       "water_gear": {
@@ -2772,7 +2812,7 @@
         "name": "滤芯剩余寿命"
       },
       "dehydration_time_value": {
-        "name": "脱水时间"
+        "name": "脱水时间设定值"
       },
       "discharge_pipe_temperature": {
         "name": "排气管温度"
@@ -3163,7 +3203,7 @@
         }
       },
       "wash_time_value": {
-        "name": "洗涤时间"
+        "name": "洗涤时间设定值"
       },
       "water_consumption_average": {
         "name": "平均用水量"
