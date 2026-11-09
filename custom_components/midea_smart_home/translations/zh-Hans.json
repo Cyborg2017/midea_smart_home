@@ -353,6 +353,9 @@
       },
       "water_pump_running": {
         "name": "水泵运行状态"
+      },
+      "water_temperature_state": {
+        "name": "水温异常"
       }
     },
     "button": {
@@ -821,6 +824,9 @@
       "detergent": {
         "name": "洗衣液"
       },
+      "feed_cycle": {
+        "name": "投喂周期"
+      },
       "honey_temperature": {
         "name": "蜂蜜水设定温度"
       },
@@ -907,6 +913,12 @@
       },
       "water_hardness": {
         "name": "进水硬度"
+      },
+      "water_temperature_max": {
+        "name": "水温上限"
+      },
+      "water_temperature_min": {
+        "name": "水温下限"
       },
       "weight": {
         "name": "重量"
@@ -2403,6 +2415,12 @@
           "off": "空档"
         }
       },
+      "water_pump_disconnect_delay_time": {
+        "name": "水泵断连延时"
+      },
+      "water_pump_pause_time": {
+        "name": "水泵暂停时长"
+      },
       "whirl_wind": {
         "name": "旋流风",
         "state": {
@@ -2708,6 +2726,9 @@
       "current_time_power": {
         "name": "实时功率"
       },
+      "current_water_temperature": {
+        "name": "当前水温"
+      },
       "curtain_position": {
         "name": "窗帘开合度"
       },
@@ -2919,6 +2940,24 @@
       },
       "fan_type": {
         "name": "风机模式"
+      },
+      "filter_install_time_slot1": {
+        "name": "滤材1安装时间"
+      },
+      "filter_install_time_slot2": {
+        "name": "滤材2安装时间"
+      },
+      "filter_remaining_days_slot1": {
+        "name": "滤材1剩余天数"
+      },
+      "filter_remaining_days_slot2": {
+        "name": "滤材2剩余天数"
+      },
+      "filter_remaining_percent_slot1": {
+        "name": "滤材1剩余百分比"
+      },
+      "filter_remaining_percent_slot2": {
+        "name": "滤材2剩余百分比"
       },
       "filter_use_per": {
         "name": "滤芯使用率"
@@ -3213,6 +3252,9 @@
       "temperature_bottom": {
         "name": "底部温度"
       },
+      "today_feed_count": {
+        "name": "今日投喂次数"
+      },
       "top_temperature": {
         "name": "顶部温度"
       },
@@ -3396,6 +3438,9 @@
       "change_litre_switch": {
         "name": "智能变频"
       },
+      "child_lock_switch": {
+        "name": "童锁"
+      },
       "cold_water": {
         "name": "零冷水单次循环"
       },
@@ -3492,6 +3537,9 @@
       "eplus": {
         "name": "大水量"
       },
+      "feed_protection_switch": {
+        "name": "防喂食保护"
+      },
       "fengguan_remove_odor": {
         "name": "除菌"
       },
@@ -3545,6 +3593,9 @@
       },
       "ice": {
         "name": "制冰"
+      },
+      "indicator_light_switch": {
+        "name": "指示灯"
       },
       "indoor_humidity": {
         "name": "室内湿度"
@@ -3663,6 +3714,9 @@
       "silent_mode": {
         "name": "超智能降噪"
       },
+      "silent_switch": {
+        "name": "静音模式"
+      },
       "sleep_state1": {
         "name": "睡眠状态(子设备1)"
       },
@@ -3735,6 +3789,12 @@
       "water_pump": {
         "name": "水泵开关"
       },
+      "water_pump_disconnect_alert_switch": {
+        "name": "水泵断连提醒"
+      },
+      "water_pump_switch": {
+        "name": "水泵"
+      },
       "waterions": {
         "name": "空气杀菌"
       },
@@ -3759,6 +3819,12 @@
       },
       "power_on_timer": {
         "name": "定时开机"
+      },
+      "silent_end_time": {
+        "name": "静音结束时间"
+      },
+      "silent_start_time": {
+        "name": "静音开始时间"
       },
       "work_time": {
         "name": "工作时间"

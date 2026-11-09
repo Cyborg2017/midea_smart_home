@@ -353,6 +353,9 @@
       },
       "water_pump_running": {
         "name": "Water Pump Running"
+      },
+      "water_temperature_state": {
+        "name": "Water Temperature Alert"
       }
     },
     "button": {
@@ -821,6 +824,9 @@
       "detergent": {
         "name": "Detergent"
       },
+      "feed_cycle": {
+        "name": "Feeding Cycle"
+      },
       "honey_temperature": {
         "name": "Honey Water Temperature"
       },
@@ -907,6 +913,12 @@
       },
       "water_hardness": {
         "name": "Water Hardness"
+      },
+      "water_temperature_max": {
+        "name": "Maximum Water Temperature"
+      },
+      "water_temperature_min": {
+        "name": "Minimum Water Temperature"
       },
       "weight": {
         "name": "Weight"
@@ -2403,6 +2415,12 @@
           "off": "Off"
         }
       },
+      "water_pump_disconnect_delay_time": {
+        "name": "Water Pump Disconnect Delay"
+      },
+      "water_pump_pause_time": {
+        "name": "Water Pump Pause Time"
+      },
       "whirl_wind": {
         "name": "Whirl Wind",
         "state": {
@@ -2708,6 +2726,9 @@
       "current_time_power": {
         "name": "Real-time Power"
       },
+      "current_water_temperature": {
+        "name": "Current Water Temperature"
+      },
       "curtain_position": {
         "name": "Curtain Position"
       },
@@ -2919,6 +2940,24 @@
       },
       "fan_type": {
         "name": "Fan Mode"
+      },
+      "filter_install_time_slot1": {
+        "name": "Filter 1 Installation Time"
+      },
+      "filter_install_time_slot2": {
+        "name": "Filter 2 Installation Time"
+      },
+      "filter_remaining_days_slot1": {
+        "name": "Filter 1 Remaining Days"
+      },
+      "filter_remaining_days_slot2": {
+        "name": "Filter 2 Remaining Days"
+      },
+      "filter_remaining_percent_slot1": {
+        "name": "Filter 1 Remaining Percentage"
+      },
+      "filter_remaining_percent_slot2": {
+        "name": "Filter 2 Remaining Percentage"
       },
       "filter_use_per": {
         "name": "Filter Usage"
@@ -3213,6 +3252,9 @@
       "temperature_bottom": {
         "name": "Bottom Temperature"
       },
+      "today_feed_count": {
+        "name": "Today's Feed Count"
+      },
       "top_temperature": {
         "name": "Top Temperature"
       },
@@ -3396,6 +3438,9 @@
       "change_litre_switch": {
         "name": "Variable Liter"
       },
+      "child_lock_switch": {
+        "name": "Child Lock"
+      },
       "cold_water": {
         "name": "Zero Cold Water Single Cycle"
       },
@@ -3492,6 +3537,9 @@
       "eplus": {
         "name": "Large Flow"
       },
+      "feed_protection_switch": {
+        "name": "Feed Protection"
+      },
       "fengguan_remove_odor": {
         "name": "Deodorization"
       },
@@ -3545,6 +3593,9 @@
       },
       "ice": {
         "name": "Ice Making"
+      },
+      "indicator_light_switch": {
+        "name": "Indicator Light"
       },
       "indoor_humidity": {
         "name": "Indoor Humidity"
@@ -3663,6 +3714,9 @@
       "silent_mode": {
         "name": "Silent Mode"
       },
+      "silent_switch": {
+        "name": "Silent Mode"
+      },
       "sleep_state1": {
         "name": "Sleep State (Zone 1)"
       },
@@ -3735,6 +3789,12 @@
       "water_pump": {
         "name": "Water Pump"
       },
+      "water_pump_disconnect_alert_switch": {
+        "name": "Water Pump Disconnect Alert"
+      },
+      "water_pump_switch": {
+        "name": "Water Pump"
+      },
       "waterions": {
         "name": "Air Sterilization"
       },
@@ -3759,6 +3819,12 @@
       },
       "power_on_timer": {
         "name": "Power On Timer"
+      },
+      "silent_end_time": {
+        "name": "Silence End Time"
+      },
+      "silent_start_time": {
+        "name": "Silence Start Time"
       },
       "work_time": {
         "name": "Work Time"
