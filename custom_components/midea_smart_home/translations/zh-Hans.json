@@ -365,6 +365,9 @@
       "left_stove_off": {
         "name": "关闭左灶"
       },
+      "manual_feed": {
+        "name": "手动投喂"
+      },
       "right_stove_off": {
         "name": "关闭右灶"
       },
@@ -768,6 +771,12 @@
               "film": "影院",
               "ledmanual": "自定义",
               "life": "生活",
+              "light_scene_0": "熔光炫日",
+              "light_scene_1": "银幕白璧",
+              "light_scene_2": "南极冰海",
+              "light_scene_3": "深海热泉",
+              "light_scene_4": "光合作用",
+              "light_scene_5": "彩虹流光",
               "manual": "自定义",
               "mild": "柔和",
               "moon": "夜晚",
@@ -2416,10 +2425,22 @@
         }
       },
       "water_pump_disconnect_delay_time": {
-        "name": "水泵断连延时"
+        "name": "水泵断连延时",
+        "state": {
+          "delay_1min": "1 分钟",
+          "delay_5min": "5 分钟",
+          "delay_10s": "10 秒",
+          "delay_30s": "30 秒"
+        }
       },
       "water_pump_pause_time": {
-        "name": "水泵暂停时长"
+        "name": "水泵暂停时长",
+        "state": {
+          "pause_3min": "3 分钟",
+          "pause_5min": "5 分钟",
+          "pause_10min": "10 分钟",
+          "pause_15min": "15 分钟"
+        }
       },
       "whirl_wind": {
         "name": "旋流风",

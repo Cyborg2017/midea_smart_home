@@ -64,6 +64,25 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
         self._key_color_temp = self._config.get("color_temp")
         self._command = self._config.get("command")
 
+        # cloud_v2 Thing-style light: raw thing keys for power/brightness and
+        # int scene indices for effects.
+        self._thing_light = "power_key" in self._config
+        self._key_power = self._key_power or self._config.get("power_key")
+        self._key_effect = self._config.get("effect_key")
+        self._scenes = list(self._config.get("scenes") or [])
+        self._scene_translation_keys = list(
+            self._config.get("scenes_translation_keys") or []
+        )
+        if self._thing_light and self._scenes:
+            self._key_brightness = self._config.get("brightness_key")
+        # display label -> scene index; label defaults to the translation key
+        if len(self._scene_translation_keys) == len(self._scenes):
+            self._scene_by_label = dict(zip(self._scene_translation_keys, self._scenes))
+            self._label_by_scene = dict(zip(self._scenes, self._scene_translation_keys))
+        else:
+            self._scene_by_label = {str(s): s for s in self._scenes}
+            self._label_by_scene = {s: str(s) for s in self._scenes}
+
         self._brightness_is_range = False
         self._brightness_min = 0
         self._brightness_max = 255
@@ -129,6 +148,8 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
     @property
     def supported_features(self):
         features = LightEntityFeature(0)
+        if self._thing_light and self._scenes:
+            features |= LightEntityFeature.EFFECT
         if self._key_preset_modes is not None and len(self._key_preset_modes) > 0:
             features |= LightEntityFeature.EFFECT
         return features
@@ -136,7 +157,9 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
     @property
     def supported_color_modes(self):
         modes = set()
-        if self._brightness_is_range and self._color_temp_is_range:
+        if self._thing_light and self._key_brightness:
+            modes.add(ColorMode.BRIGHTNESS)
+        elif self._brightness_is_range and self._color_temp_is_range:
             modes.add(ColorMode.COLOR_TEMP)
         elif self._brightness_is_range:
             modes.add(ColorMode.BRIGHTNESS)
@@ -148,6 +171,8 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
 
     @property
     def color_mode(self):
+        if self._thing_light and self._key_brightness:
+            return ColorMode.BRIGHTNESS
         if self._brightness_is_range and self._color_temp_is_range:
             return ColorMode.COLOR_TEMP
         elif self._brightness_is_range:
@@ -156,6 +181,46 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
             return ColorMode.COLOR_TEMP
         return ColorMode.ONOFF
 
+    async def async_added_to_hass(self) -> None:
+        """Load translated effect scene labels once the entity is added."""
+        await super().async_added_to_hass()
+        if not (self._thing_light and self._scenes and self._scene_translation_keys):
+            return
+        if len(self._scene_translation_keys) != len(self._scenes):
+            return
+        # Light effect states live under state_attributes.effect.state
+        translations = await self._load_effect_labels()
+        if not translations:
+            return
+        self._scene_by_label = {}
+        self._label_by_scene = {}
+        for key, scene in zip(self._scene_translation_keys, self._scenes):
+            label = translations.get(key, key)
+            self._scene_by_label[label] = scene
+            self._label_by_scene[scene] = label
+        self.async_write_ha_state()
+
+    async def _load_effect_labels(self) -> dict[str, str]:
+        """Load entity.light.<key>.state_attributes.effect.state labels."""
+        from homeassistant.helpers.translation import async_get_translations
+        from .const import DOMAIN
+
+        translation_key = self._config.get("translation_key")
+        if not translation_key:
+            return {}
+        translations = await async_get_translations(
+            self.hass, self.hass.config.language, "entity", {DOMAIN}
+        )
+        prefix = (
+            f"component.{DOMAIN}.entity.light.{translation_key}"
+            ".state_attributes.effect.state."
+        )
+        return {
+            key[len(prefix):]: value
+            for key, value in translations.items()
+            if key.startswith(prefix)
+        }
+
     @property
     def is_on(self) -> bool:
         if self._key_power is None:
@@ -163,6 +228,9 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
         value = self._get_nested_value(self._key_power)
         if value is None:
             return False
+        if self._thing_light:
+            # cloud_v2 power properties are real booleans
+            return bool(value)
         try:
             return bool(self._rationale.index(value))
         except ValueError:
@@ -174,18 +242,42 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
 
     @property
     def effect_list(self):
+        if self._thing_light:
+            return list(self._scene_by_label.keys()) if self._scenes else None
         if self._key_preset_modes:
             return list(self._key_preset_modes.keys())
         return None
 
     @property
     def effect(self):
+        if self._thing_light:
+            if not (self._scenes and self._key_effect):
+                return None
+            value = self._get_nested_value(self._key_effect)
+            if value is None:
+                return None
+            try:
+                return self._label_by_scene.get(int(value))
+            except (ValueError, TypeError):
+                return None
         if self._key_preset_modes:
             return self._dict_get_selected(self._key_preset_modes)
         return None
 
     @property
     def brightness(self):
+        if self._thing_light:
+            if not self._key_brightness:
+                return None
+            value = self._get_nested_value(self._key_brightness)
+            if value is None:
+                return None
+            try:
+                device_value = int(value)
+            except (ValueError, TypeError):
+                return None
+            # Device range 1-100 -> HA 1-255
+            return max(1, min(255, round(device_value * 255 / 100)))
         if not self._brightness_is_range:
             return None
 
@@ -254,6 +346,29 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
             **kwargs,
     ):
         new_status = {}
+
+        if self._thing_light:
+            # cloud_v2: power bool, brightness 1-100, effect scene index
+            if not self.is_on:
+                await self.coordinator.async_set_controls({self._key_power: True})
+            if effect is not None and self._key_effect:
+                scene = self._scene_by_label.get(effect)
+                if scene is not None:
+                    new_status[self._key_effect] = scene
+            target_brightness = None
+            if brightness is not None:
+                target_brightness = brightness
+            elif brightness_pct is not None:
+                target_brightness = round(brightness_pct * 255 / 100)
+            elif percentage is not None:
+                target_brightness = round(percentage * 255 / 100)
+            if target_brightness is not None and self._key_brightness:
+                device_value = max(1, min(100, round(target_brightness * 100 / 255)))
+                new_status[self._key_brightness] = device_value
+            for key, value in new_status.items():
+                await self.coordinator.async_set_controls({key: value})
+            return
+
         if effect is not None and self._key_preset_modes is not None:
             effect_config = self._key_preset_modes.get(effect, {})
             new_status.update(effect_config)
@@ -318,6 +433,10 @@ class MideaLightEntity(MideaBaseEntity, LightEntity):
                 await self.coordinator.async_set_controls(cmd)
 
     async def async_turn_off(self):
+        if self._thing_light:
+            if self._key_power:
+                await self.coordinator.async_set_controls({self._key_power: False})
+            return
         if self._key_power:
             new_status = {self._key_power: self._rationale[0]}
             if self._command and isinstance(self._command, dict):

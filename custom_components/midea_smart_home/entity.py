@@ -3,6 +3,7 @@ from typing import Any, Optional, Union, Generator
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.translation import async_get_translations
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
@@ -60,6 +61,25 @@ def iter_midea_device_configs(
             )
         yield coordinator, device_id, device_type, sn, sn8, device_name, model, device_mapping
 
+async def async_load_state_labels(
+    hass: HomeAssistant, platform: str, translation_key: str | None
+) -> dict[str, str]:
+    """Load entity.<platform>.<translation_key>.state option labels.
+
+    Returns {slug: label}; empty dict when translation_key is missing.
+    """
+    if not translation_key:
+        return {}
+    translations = await async_get_translations(
+        hass, hass.config.language, "entity", {DOMAIN}
+    )
+    prefix = f"component.{DOMAIN}.entity.{platform}.{translation_key}.state."
+    return {
+        key[len(prefix):]: value
+        for key, value in translations.items()
+        if key.startswith(prefix)
+    }
+
 
 class MideaBaseEntity(CoordinatorEntity[MideaCoordinator]):
     _attr_has_entity_name = True
@@ -116,6 +136,9 @@ class MideaBaseEntity(CoordinatorEntity[MideaCoordinator]):
             self.entity_id = f"{platform_name}.midea_{device_id}_{entity_key.lower()}"
 
         self._attr_translation_key = self._config.get("translation_key", entity_key)
+
+        if self._config.get("icon"):
+            self._attr_icon = self._config["icon"]
 
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, str(device_id))},

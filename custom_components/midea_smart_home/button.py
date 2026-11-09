@@ -55,6 +55,21 @@ class MideaButtonEntity(MideaBaseEntity, ButtonEntity):
         )
 
     async def async_press(self) -> None:
+        # cloud_v2 thing action (e.g. manual feed)
+        action_code = self._config.get("action_code")
+        if action_code:
+            device = self.coordinator.device
+            if hasattr(device, "trigger_thing_action"):
+                await self.hass.async_add_executor_job(
+                    device.trigger_thing_action,
+                    self._config.get("module_code"),
+                    action_code,
+                    self._config.get("body") or {},
+                )
+                return
+            _LOGGER.warning("[entity] device does not support thing actions: entity=%s", self._entity_key)
+            return
+
         command = self._config.get("command")
 
         if command and isinstance(command, dict):

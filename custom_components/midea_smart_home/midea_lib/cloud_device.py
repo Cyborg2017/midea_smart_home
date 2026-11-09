@@ -256,11 +256,21 @@ class CloudV2Device(BaseCloudDevice):
         # and attribute -> (module_code, action_code)
         self._attr_to_thing: dict[str, str] = {}
         self._attr_to_action: dict[str, tuple[str, str]] = {}
+        # attribute -> (thing_key, field) for nested object properties
+        self._attr_to_field: dict[str, tuple[str, str]] = {}
+        # attributes whose Thing property is a bool (switch platform)
+        self._bool_attrs: set[str] = set()
+        # (entity_key, section, field, list_match) for REST section sensors
+        self._section_sensors: list[tuple[str, str, str | None, dict | None]] = []
+        self._section_endpoints: dict[str, str] = dict(
+            self._mapping.get("specific_endpoints") or {}
+        )
         # attribute -> (module_code, actions, target_position_key)
         self._attr_to_cover: dict[
             str, tuple[str, dict[str, str], str | None]
         ] = {}
         self._collect_thing_maps(self._mapping.get("entities") or {})
+        self._collect_v2_extras(self._mapping.get("entities") or {})
 
     def _collect_thing_maps(self, entities: Any) -> None:
         """Walk entity configs collecting attribute to thing_key/action maps."""
@@ -303,6 +313,60 @@ class CloudV2Device(BaseCloudDevice):
 
         _walk(entities)
 
+    def _collect_v2_extras(self, entities: Any) -> None:
+        """Collect cloud_v2 specific maps: nested fields, bools, sections, lights."""
+        for platform, configs in (entities or {}).items():
+            plat = str(getattr(platform, "value", platform)).lower()
+            for entity_key, node in (configs or {}).items():
+                if not isinstance(node, dict):
+                    continue
+                attr = node.get("attribute")
+                if attr:
+                    thing_key = node.get("thing_key")
+                    field = node.get("field")
+                    if thing_key and field:
+                        self._attr_to_field[attr] = (thing_key, field)
+                    if plat == "switch":
+                        self._bool_attrs.add(attr)
+                if node.get("section") and entity_key:
+                    self._section_sensors.append(
+                        (
+                            str(entity_key),
+                            str(node["section"]),
+                            node.get("field"),
+                            node.get("list_match"),
+                        )
+                    )
+                # Thing-style light configs use raw thing keys directly.
+                for key_name in ("power_key", "brightness_key", "effect_key"):
+                    thing_key = node.get(key_name)
+                    if isinstance(thing_key, str):
+                        self._attr_to_thing[thing_key] = thing_key
+                        if key_name == "power_key":
+                            self._bool_attrs.add(thing_key)
+
+    @staticmethod
+    def _extract_rest_value(
+        raw: Any,
+        field: str | None,
+        list_match: dict | None,
+    ) -> Any:
+        """Extract a field from REST section data (dict or matched list item)."""
+        if not field:
+            return raw
+        if isinstance(raw, list):
+            if list_match:
+                for item in raw:
+                    if isinstance(item, dict) and all(
+                        item.get(k) == v for k, v in list_match.items()
+                    ):
+                        return item.get(field)
+                return None
+            return None
+        if isinstance(raw, dict):
+            return raw.get(field)
+        return None
+
     @staticmethod
     def _parse_thing_action(thing_action: Any) -> tuple[str, str] | None:
         """Parse a thing_action config into (module_code, action_code)."""
@@ -328,14 +392,65 @@ class CloudV2Device(BaseCloudDevice):
         status = await self._cloud.query_thing_properties(
             self._appliance_code, properties
         )
-        if status:
-            self._register_refresh_success(status)
-        else:
+        if status is None:
             self._register_refresh_failure()
+            return
+
+        # Fetch device-specific REST sections (e.g. fish-tank dashboards).
+        sections: dict[str, Any] = {}
+        for section, endpoint in self._section_endpoints.items():
+            try:
+                data = await self._cloud.get_specific_data(
+                    self._appliance_code, endpoint
+                )
+            except Exception as e:
+                _LOGGER.debug(
+                    "[cloud_device] specific endpoint failed: device_id=%s section=%s error=%s",
+                    self._device_id, section, e,
+                )
+                data = None
+            if data is not None:
+                sections[section] = data
+
+        # Flatten nested object properties into dotted keys so entities can
+        # read e.g. fishTank.silentTimeConfig.startTime directly.
+        flat: dict[str, Any] = {}
+        for key, value in status.items():
+            if isinstance(value, dict):
+                for sub_key, sub_value in value.items():
+                    if isinstance(sub_value, (str, int, float, bool)):
+                        flat[f"{key}.{sub_key}"] = sub_value
+
+        # Extract REST section sensor values into flat entity keys.
+        for entity_key, section, field, list_match in self._section_sensors:
+            raw = sections.get(section)
+            if raw is None:
+                continue
+            value = self._extract_rest_value(raw, field, list_match)
+            if value is not None:
+                flat[entity_key] = value
+
+        merged: dict[str, Any] = dict(status)
+        merged.update(flat)
+        merged.update(sections)
+        self._register_refresh_success(merged)
 
     def set_attribute(self, attr: str, value: Any) -> None:
         """Set a single attribute via the Thing Model API."""
         self.set_attributes({attr: value})
+
+    def trigger_thing_action(
+        self,
+        module_code: str,
+        action_code: str,
+        body: dict[str, Any] | None = None,
+    ) -> None:
+        """Trigger a Thing Model action (e.g. manual feed)."""
+        self._schedule_async(
+            self._cloud.perform_thing_action(
+                self._appliance_code, module_code, action_code, body
+            )
+        )
 
     def set_attributes(self, controls: dict[str, Any]) -> None:
         """Set multiple attributes; properties are merged into one request."""
@@ -366,11 +481,24 @@ class CloudV2Device(BaseCloudDevice):
                         value,
                     )
                 continue
+            nested = self._attr_to_field.get(attr)
+            if nested:
+                # Object property: merge the field into the current object
+                # so sibling fields (e.g. endTime) are preserved.
+                thing_key, field = nested
+                current = self._data.get(thing_key)
+                obj = dict(current) if isinstance(current, dict) else {}
+                obj[field] = value
+                properties[thing_key] = obj
+                optimistic[thing_key] = obj
+                optimistic[f"{thing_key}.{field}"] = value
+                continue
             thing_key = self._attr_to_thing.get(attr)
             if thing_key:
-                # TODO: some thing properties need structured payloads
-                # (e.g. {"mode": value} or list form); extend here when
-                # entity configs require them.
+                # Bool Thing properties need real booleans, not rationale
+                # strings like "on"/"off" sent by the generic switch layer.
+                if attr in self._bool_attrs and isinstance(value, str):
+                    value = value.lower() in ("on", "1", "true")
                 properties[thing_key] = value
                 optimistic[thing_key] = value
                 continue

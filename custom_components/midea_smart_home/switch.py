@@ -27,7 +27,6 @@ async def async_setup_entry(
 
         if switch_config:
             for switch_id, config in switch_config.items():
-                translation_key = config.get("translation_key")
                 switch_rationale = config.get("rationale", rationale)
                 condition = config.get("condition")
                 command = config.get("command")
@@ -35,7 +34,8 @@ async def async_setup_entry(
                 entities.append(
                     MideaSwitchEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        switch_id, translation_key, switch_rationale, condition, command, include_current, model
+                        switch_id, switch_rationale, condition, command, include_current, model,
+                        config
                     )
                 )
 
@@ -54,14 +54,13 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         sn8: str,
         device_name: str,
         switch_id: str,
-        translation_key: str = None,
         rationale: list = None,
         condition: dict = None,
         command: dict = None,
         include_current: list = None,
         model: str = None,
+        config: dict = None,
     ):
-        config = {"translation_key": translation_key} if translation_key else {}
         super().__init__(
             coordinator, device_id, device_type, sn, sn8, device_name, switch_id, model,
             platform_name="switch", config=config, rationale=rationale, condition=condition

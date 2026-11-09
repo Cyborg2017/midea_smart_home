@@ -7,8 +7,9 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
+from .const import CONNECTION_TYPE_CLOUD_V2
 from .coordinator import MideaCoordinator
-from .entity import MideaBaseEntity, iter_midea_device_configs
+from .entity import MideaBaseEntity, iter_midea_device_configs, async_load_state_labels
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -29,7 +30,6 @@ async def async_setup_entry(
             for select_id, config in select_config.items():
                 options = config.get("options", {})
                 command = config.get("command")
-                translation_key = config.get("translation_key")
                 condition = config.get("condition")
                 status_key = config.get("status_key")
                 ignore_values = config.get("ignore_values")
@@ -41,7 +41,8 @@ async def async_setup_entry(
                 entities.append(
                     MideaSelectEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        select_id, option_list, options, command, translation_key, condition, status_key, ignore_values, include_current, model
+                        select_id, option_list, options, command, condition, status_key,
+                        ignore_values, include_current, model, config
                     )
                 )
 
@@ -58,30 +59,53 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
         sn8: str,
         device_name: str,
         select_id: str,
-        options: list[str],
+        options: list,
         options_map: dict,
         command: dict | None,
-        translation_key: str = None,
         condition: dict = None,
         status_key: str = None,
         ignore_values: list = None,
         include_current: list = None,
         model: str = None,
+        config: dict = None,
     ):
-        config = {"translation_key": translation_key} if translation_key else {}
         super().__init__(
             coordinator, device_id, device_type, sn, sn8, device_name, select_id, model,
-            platform_name="select", config=config, condition=condition
+            platform_name="select", config=config or {}, condition=condition
         )
         self._select_id = select_id
-        self._options = options
+        # Raw option values as declared in the mapping (may be ints for
+        # cloud_v2 Thing properties); display options are their strings.
+        self._raw_options = list(options) if options else []
         self._options_map = options_map
         self._command = command
         self._status_key = status_key
         self._ignore_values = ignore_values or []
         self._include_current = include_current or []
-        self._attr_options = options
+        self._options_translation_keys = (config or {}).get("options_translation_keys")
+        if isinstance(self._options_map, dict):
+            self._attr_options = [str(o) for o in self._raw_options]
+        else:
+            self._attr_options = [str(o) for o in self._raw_options]
         self._last_option: str | None = None
+
+    async def async_added_to_hass(self) -> None:
+        """Replace option display labels with translated text once loaded."""
+        await super().async_added_to_hass()
+        keys = self._options_translation_keys
+        if not (
+            keys
+            and self._raw_options
+            and len(keys) == len(self._raw_options)
+        ):
+            return
+        labels = await async_load_state_labels(
+            self.hass, "select", self._config.get("translation_key")
+        )
+        if not labels:
+            return
+        self._attr_options = [labels.get(key, key) for key in keys]
+        self.async_write_ha_state()
 
     def _is_ignored_value(self, value: Any) -> bool:
         if value is None:
@@ -144,6 +168,13 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
             return value
         return None
 
+    def _match_raw_option(self, value: Any) -> str | None:
+        """Return the display option whose raw value equals value."""
+        for idx, raw in enumerate(self._raw_options):
+            if str(raw) == str(value):
+                return self._attr_options[idx]
+        return None
+
     @property
     def current_option(self) -> str | None:
         if isinstance(self._options_map, dict):
@@ -160,26 +191,31 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
         if value is not None:
             if self._is_ignored_value(value):
                 return self._last_option
+            # Raw value match first (cloud_v2 Thing values may be ints).
+            matched = self._match_raw_option(value)
+            if matched is not None:
+                self._last_option = matched
+                return matched
             if isinstance(value, str):
-                if value in self._options:
+                if value in self._attr_options:
                     self._last_option = value
                     return value
                 try:
                     index = int(value)
-                    if 0 <= index < len(self._options):
-                        self._last_option = self._options[index]
-                        return self._options[index]
+                    if 0 <= index < len(self._attr_options):
+                        self._last_option = self._attr_options[index]
+                        return self._attr_options[index]
                 except (TypeError, ValueError):
                     pass
             elif isinstance(value, int):
-                if 0 <= value < len(self._options):
-                    self._last_option = self._options[value]
-                    return self._options[value]
+                if 0 <= value < len(self._attr_options):
+                    self._last_option = self._attr_options[value]
+                    return self._attr_options[value]
 
         return self._last_option
 
     async def async_select_option(self, option: str) -> None:
-        if option not in self._options:
+        if option not in self._attr_options:
             return
 
         self._last_option = option
@@ -201,6 +237,15 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
 
         if merged_command:
             await self.coordinator.async_set_control(merged_command)
-        else:
-            index = self._options.index(option)
-            await self.coordinator.async_set_control(self._select_id, index)
+            return
+
+        if not isinstance(self._options_map, dict) and self._connection_type == CONNECTION_TYPE_CLOUD_V2:
+            # Map the display option back to the raw declared value
+            # (e.g. int Thing property values for cloud_v2 devices).
+            idx = self._attr_options.index(option)
+            if 0 <= idx < len(self._raw_options):
+                await self.coordinator.async_set_control(self._select_id, self._raw_options[idx])
+                return
+
+        index = self._attr_options.index(option)
+        await self.coordinator.async_set_control(self._select_id, index)

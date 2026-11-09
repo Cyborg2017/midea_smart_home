@@ -365,6 +365,9 @@
       "left_stove_off": {
         "name": "Turn Off Left Stove"
       },
+      "manual_feed": {
+        "name": "Manual Feed"
+      },
       "right_stove_off": {
         "name": "Turn Off Right Stove"
       },
@@ -768,6 +771,12 @@
               "film": "Cinema",
               "ledmanual": "Custom",
               "life": "Daily Life",
+              "light_scene_0": "Dazzling Sun",
+              "light_scene_1": "Silver Screen",
+              "light_scene_2": "Antarctic Ocean",
+              "light_scene_3": "Deep-sea Vent",
+              "light_scene_4": "Photosynthesis",
+              "light_scene_5": "Rainbow Flow",
               "manual": "Manual",
               "mild": "Soft",
               "moon": "Night",
@@ -2416,10 +2425,22 @@
         }
       },
       "water_pump_disconnect_delay_time": {
-        "name": "Water Pump Disconnect Delay"
+        "name": "Water Pump Disconnect Delay",
+        "state": {
+          "delay_1min": "1 min",
+          "delay_5min": "5 min",
+          "delay_10s": "10 s",
+          "delay_30s": "30 s"
+        }
       },
       "water_pump_pause_time": {
-        "name": "Water Pump Pause Time"
+        "name": "Water Pump Pause Time",
+        "state": {
+          "pause_3min": "3 min",
+          "pause_5min": "5 min",
+          "pause_10min": "10 min",
+          "pause_15min": "15 min"
+        }
       },
       "whirl_wind": {
         "name": "Whirl Wind",
