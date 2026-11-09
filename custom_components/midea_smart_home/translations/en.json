@@ -2971,22 +2971,22 @@
         "name": "Fan Mode"
       },
       "filter_install_time_slot1": {
-        "name": "Filter 1 Installation Time"
+        "name": "Physical Filter Last Replacement Time"
       },
       "filter_install_time_slot2": {
-        "name": "Filter 2 Installation Time"
+        "name": "Biological Filter Last Replacement Time"
       },
       "filter_remaining_days_slot1": {
-        "name": "Filter 1 Remaining Days"
+        "name": "Physical Filter Remaining Days"
       },
       "filter_remaining_days_slot2": {
-        "name": "Filter 2 Remaining Days"
+        "name": "Biological Filter Remaining Days"
       },
       "filter_remaining_percent_slot1": {
-        "name": "Filter 1 Remaining Percentage"
+        "name": "Physical Filter Remaining Percent"
       },
       "filter_remaining_percent_slot2": {
-        "name": "Filter 2 Remaining Percentage"
+        "name": "Biological Filter Remaining Percent"
       },
       "filter_use_per": {
         "name": "Filter Usage"

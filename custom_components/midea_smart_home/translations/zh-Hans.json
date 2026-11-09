@@ -2971,22 +2971,22 @@
         "name": "风机模式"
       },
       "filter_install_time_slot1": {
-        "name": "滤材1安装时间"
+        "name": "物理滤材最近更换时间"
       },
       "filter_install_time_slot2": {
-        "name": "滤材2安装时间"
+        "name": "生化滤材最近更换时间"
       },
       "filter_remaining_days_slot1": {
-        "name": "滤材1剩余天数"
+        "name": "物理滤材剩余天数"
       },
       "filter_remaining_days_slot2": {
-        "name": "滤材2剩余天数"
+        "name": "生化滤材剩余天数"
       },
       "filter_remaining_percent_slot1": {
-        "name": "滤材1剩余百分比"
+        "name": "物理滤材剩余比例"
       },
       "filter_remaining_percent_slot2": {
-        "name": "滤材2剩余百分比"
+        "name": "生化滤材剩余比例"
       },
       "filter_use_per": {
         "name": "滤芯使用率"
