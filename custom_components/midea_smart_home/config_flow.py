@@ -1120,7 +1120,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             ]
             if selected:
                 self._selected_devices = [
-                    self._discovered_devices[int(did)]
+                    self._supported_devices.get(int(did)) or self._discovered_devices[int(did)]
                     for did in selected
                 ]
                 self._current_device_index = 0
@@ -2196,7 +2196,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             ]
             if selected:
                 self._selected_devices = [
-                    self._discovered_devices[int(did)]
+                    self._supported_devices.get(int(did)) or self._discovered_devices[int(did)]
                     for did in selected
                 ]
                 self._current_device_index = 0
