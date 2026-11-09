@@ -10,6 +10,7 @@ from datetime import UTC, datetime
 from secrets import token_hex
 from threading import Lock
 from typing import Any, cast
+from uuid import uuid4
 
 from aiohttp import ClientConnectionError, ClientSession, ClientTimeout
 
@@ -21,6 +22,8 @@ from .exceptions import (
 from .security import CloudSecurity, MeijuCloudSecurity, MideaAirSecurity
 
 SN8_MIN_SERIAL_LENGTH = 17
+# Max automatic relogin attempts after a token-invalid response (40002 etc.)
+TOKEN_INVALID_RELOGIN_LIMIT = 3
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -81,15 +84,40 @@ class MideaCloud:
         self._login_id = ""
         # (code, msg) of the last non-zero cloud response, None on success
         self._last_error: tuple[int, str] | None = None
+        # Consecutive automatic relogins triggered by token-invalid responses
+        self._token_invalid_retry_count = 0
 
     def _make_general_data(self) -> dict[str, Any]:
         return {}
+
+    @staticmethod
+    def _is_login_endpoint(endpoint: str) -> bool:
+        """Check whether an endpoint belongs to the login flow (no relogin retry)."""
+        return "/user/login" in endpoint or "/unitcenter/router/" in endpoint
+
+    @staticmethod
+    def _is_token_invalid_response(response: dict) -> bool:
+        """Check whether a cloud response indicates an invalid access token."""
+        try:
+            code = int(response.get("code", -1))
+        except (TypeError, ValueError):
+            code = -1
+        if code == 40002:
+            return True
+        msg = str(response.get("msg") or response.get("message") or "")
+        msg_lower = msg.lower()
+        return (
+            "user token not exist" in msg_lower
+            or ("token" in msg_lower and "not exist" in msg_lower)
+            or "token校验不通过" in msg
+        )
 
     async def _api_request(
         self,
         endpoint: str,
         data: dict[str, Any],
         header: dict[str, Any] | None = None,
+        _retried_after_login: bool = False,
     ) -> dict | None:
         header = header or {}
         if not data.get("reqId"):
@@ -141,7 +169,40 @@ class MideaCloud:
         code = int(response.get("code", -1))
         if code == 0 and "data" in response:
             self._last_error = None
+            if _retried_after_login or not self._is_login_endpoint(endpoint):
+                self._token_invalid_retry_count = 0
             return cast(dict, response["data"])
+        if (
+            not _retried_after_login
+            and not self._is_login_endpoint(endpoint)
+            and self._is_token_invalid_response(response)
+        ):
+            if self._token_invalid_retry_count >= TOKEN_INVALID_RELOGIN_LIMIT:
+                _LOGGER.warning(
+                    "[cloud] token invalid relogin retries exhausted: endpoint=%s retry_count=%s",
+                    endpoint,
+                    self._token_invalid_retry_count,
+                )
+                return None
+            self._token_invalid_retry_count += 1
+            _LOGGER.warning(
+                "[cloud] token invalid, relogin and retry: endpoint=%s retry_count=%s",
+                endpoint,
+                self._token_invalid_retry_count,
+            )
+            self._access_token = None
+            try:
+                if await self.login():
+                    return await self._api_request(
+                        endpoint=endpoint,
+                        data=data,
+                        header=header,
+                        _retried_after_login=True,
+                    )
+            except CloudLoginError as e:
+                _LOGGER.warning(
+                    "[cloud] relogin failed: endpoint=%s error=%s", endpoint, e
+                )
         if code != -1:
             msg = str(response.get("msg") or "")
             self._last_error = (code, msg)
@@ -381,6 +442,186 @@ class MeijuCloud(MideaCloud):
                             self._home_group_map[appliance_id] = home_group_id
                         return home_group_id
         return None
+
+    @staticmethod
+    def _thing_headers() -> dict[str, str]:
+        """Headers required by Thing Model API endpoints."""
+        return {
+            "caller": "900",
+            "call-source": "mideaApp",
+            "call-module": "appPlugin",
+        }
+
+    @staticmethod
+    def _thing_endpoint(alias: str) -> str:
+        """Build a Thing Model endpoint with requestId and sync parameters."""
+        return f"{alias}?requestId={uuid4().hex}&sync=true"
+
+    async def _thing_api_request(
+        self,
+        endpoint: str,
+        data: dict[str, Any] | list[Any] | None,
+        header: dict[str, Any] | None = None,
+        method: str = "GET",
+        _retried_after_login: bool = False,
+    ) -> dict | None:
+        """Thing Model API request.
+
+        Unlike _api_request, no reqId/stamp is injected into the body and
+        the access token header is lowercase "accesstoken".
+        """
+        header = dict(header or {})
+        random = str(int(time.time()))
+        url = self._api_url + endpoint
+        dump_data = json.dumps(data) if data is not None else ""
+        sign = self._security.sign("", dump_data, random)
+        header.update(
+            {
+                "content-type": "application/json; charset=utf-8",
+                "secretVersion": "1",
+                "sign": sign,
+                "random": random,
+            },
+        )
+        if self._access_token is not None:
+            header.update({"accesstoken": self._access_token})
+        response: dict = {"code": -1}
+        try:
+            with self._api_lock:
+                r = await self._session.request(
+                    method,
+                    url,
+                    headers=header,
+                    data=dump_data if data is not None else None,
+                    timeout=ClientTimeout(10),
+                )
+                raw = await r.read()
+                _LOGGER.debug(
+                    "[cloud] thing api: endpoint=%s method=%s data=%s response=%s",
+                    endpoint,
+                    method,
+                    data,
+                    raw,
+                )
+                response = json.loads(raw)
+        except (TimeoutError, ClientConnectionError, json.JSONDecodeError) as e:
+            _LOGGER.warning(
+                "[cloud] thing api request failed: endpoint=%s error=%s",
+                endpoint,
+                repr(e),
+            )
+        try:
+            code = int(response.get("code", -1))
+        except (TypeError, ValueError):
+            code = -1
+        if code == 0:
+            if _retried_after_login:
+                self._token_invalid_retry_count = 0
+            return response
+        if (
+            not _retried_after_login
+            and self._is_token_invalid_response(response)
+        ):
+            if self._token_invalid_retry_count >= TOKEN_INVALID_RELOGIN_LIMIT:
+                _LOGGER.warning(
+                    "[cloud] thing api token invalid relogin retries exhausted: endpoint=%s retry_count=%s",
+                    endpoint,
+                    self._token_invalid_retry_count,
+                )
+                return None
+            self._token_invalid_retry_count += 1
+            _LOGGER.warning(
+                "[cloud] thing api token invalid, relogin and retry: endpoint=%s retry_count=%s",
+                endpoint,
+                self._token_invalid_retry_count,
+            )
+            self._access_token = None
+            try:
+                if await self.login():
+                    return await self._thing_api_request(
+                        endpoint=endpoint,
+                        data=data,
+                        header=header,
+                        method=method,
+                        _retried_after_login=True,
+                    )
+            except CloudLoginError as e:
+                _LOGGER.warning(
+                    "[cloud] relogin failed: endpoint=%s error=%s", endpoint, e
+                )
+            return None
+        if code != -1:
+            msg = str(response.get("msg") or "")
+            self._last_error = (code, msg)
+            _LOGGER.warning(
+                "[cloud] thing api error: endpoint=%s code=%s msg=%s",
+                endpoint,
+                code,
+                msg,
+            )
+        return None
+
+    async def query_thing_properties(
+        self,
+        appliance_code: int,
+        properties: list[str] | None = None,
+    ) -> dict[str, Any] | None:
+        """Query device Thing Model properties (GET all / POST for a list)."""
+        endpoint = self._thing_endpoint(f"/v1/thing/properties/{appliance_code}")
+        response = await self._thing_api_request(
+            endpoint=endpoint,
+            data=None if properties is None else properties,
+            header=self._thing_headers(),
+            method="GET" if properties is None else "POST",
+        )
+        if isinstance(response, dict):
+            data = response.get("data")
+            return data if isinstance(data, dict) else None
+        return None
+
+    async def set_thing_properties(
+        self, appliance_code: int, properties: dict[str, Any]
+    ) -> bool:
+        """Set device Thing Model properties (PUT)."""
+        endpoint = self._thing_endpoint(f"/v1/thing/properties/{appliance_code}")
+        response = await self._thing_api_request(
+            endpoint=endpoint,
+            data=properties,
+            header=self._thing_headers(),
+            method="PUT",
+        )
+        return isinstance(response, dict)
+
+    async def perform_thing_action(
+        self,
+        appliance_code: int,
+        module_code: str,
+        action_code: str,
+        body: dict[str, Any] | None = None,
+    ) -> dict | None:
+        """Trigger a Thing Model action (POST /v1/thing/action/{module}/{action}/{code})."""
+        alias = f"/v1/thing/action/{module_code}/{action_code}/{appliance_code}"
+        return await self._thing_api_request(
+            endpoint=self._thing_endpoint(alias),
+            data=body or {},
+            header=self._thing_headers(),
+            method="POST",
+        )
+
+    async def get_device_status(
+        self,
+        appliance_code: int,
+        query: dict[str, Any] | None = None,
+    ) -> dict | None:
+        """Query device status via the cloud Lua endpoint (/mjl/v1/device/status/lua/get)."""
+        data = {
+            "applianceCode": str(appliance_code),
+            "command": {"query": query or {}},
+        }
+        return await self._api_request(
+            endpoint="/mjl/v1/device/status/lua/get",
+            data=data,
+        )
 
 
 class MideaAirCloud(MideaCloud):
