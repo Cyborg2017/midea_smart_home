@@ -648,6 +648,31 @@ class MeijuCloud(MideaCloud):
             data=data,
         )
 
+    async def send_device_control(
+        self,
+        appliance_code: int,
+        control: dict[str, Any],
+        status: dict[str, Any] | None = None,
+    ) -> bool:
+        """Send a Lua control command (/mjl/v1/device/lua/control).
+
+        The cloud runs the same Lua script as the LAN device, so `control`
+        uses the LAN status keys. `status` carries the current state for the
+        script to apply before the control delta.
+        """
+        command: dict[str, Any] = {"control": control}
+        if status:
+            command["status"] = status
+        data = {
+            "applianceCode": str(appliance_code),
+            "command": command,
+        }
+        response = await self._api_request(
+            endpoint="/mjl/v1/device/lua/control",
+            data=data,
+        )
+        return response is not None
+
 
 class MideaAirCloud(MideaCloud):
     """Midea Air Cloud."""
