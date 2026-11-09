@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 from pathlib import Path
@@ -6,16 +7,21 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers import device_registry
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 import homeassistant.helpers.config_validation as cv
 
 from .const import (
+    CONF_ACCOUNT,
     CONF_CATEGORY,
+    CONF_CONNECTION_TYPE,
     CONF_DEVICE_ID,
     CONF_DEVICE_NAME,
     CONF_DEVICE_TYPE,
     CONF_IP,
     CONF_KEY,
     CONF_LUA_FILE,
+    CONF_MANUFACTURER_CODE,
+    CONF_PASSWORD,
     CONF_PRODUCT_MODEL,
     CONF_MODEL_NUMBER,
     CONF_PORT,
@@ -24,6 +30,10 @@ from .const import (
     CONF_SN,
     CONF_SN8,
     CONF_TOKEN,
+    CONNECTION_TYPE_CLOUD_V1,
+    CONNECTION_TYPE_CLOUD_V2,
+    CONNECTION_TYPE_LAN,
+    DEFAULT_CLOUD_SCAN_INTERVAL,
     DEFAULT_PORT,
     DEVICE_TYPES,
     DOMAIN,
@@ -34,9 +44,12 @@ from .const import (
 )
 from .config_flow import get_lua_custom_path, get_lua_file_path
 from .coordinator import MideaCoordinator
+from .midea_lib.cloud import MeijuCloud
+from .midea_lib.cloud_device import CloudV1Device, CloudV2Device
 from .midea_lib.device import MideaDevice
 from .midea_lib.lua import write_file, ensure_lua_files
 from .device_mapping import get_device_mapping, is_d9_polling_device
+from .device_mapping.cloud_v2 import get_cloud_v2_mapping
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -79,8 +92,50 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     language = hass.config.language or "en"
 
+    # Cloud clients are created lazily and cached per config entry so that
+    # all cloud devices of an entry share one logged-in session.
+    cloud_clients: dict[str, object | None] = hass.data[DOMAIN][
+        entry.entry_id
+    ].setdefault("cloud_clients", {})
+    cloud_client_tasks: dict[str, asyncio.Task] = {}
+
+    async def _create_cloud_client(cloud_kind: str):
+        account = entry.data.get(CONF_ACCOUNT) or ""
+        password = entry.data.get(CONF_PASSWORD) or ""
+        if not account or not password:
+            _LOGGER.error(
+                "[init] cloud credentials missing, cloud devices cannot be initialised: cloud=%s",
+                cloud_kind,
+            )
+            cloud_clients[cloud_kind] = None
+            return None
+        session = async_get_clientsession(hass)
+        client = MeijuCloud("Meiju Cloud", session, account, password)
+        try:
+            if await client.login():
+                _LOGGER.info("[init] cloud login ok: cloud=%s", cloud_kind)
+            else:
+                _LOGGER.warning("[init] cloud login failed: cloud=%s", cloud_kind)
+        except Exception as e:
+            _LOGGER.warning(
+                "[init] cloud login error: cloud=%s error=%s", cloud_kind, e
+            )
+        cloud_clients[cloud_kind] = client
+        return client
+
+    async def get_cloud_client(cloud_kind: str):
+        """Return the cached cloud client, logging in once per cloud kind."""
+        if cloud_kind in cloud_clients:
+            return cloud_clients[cloud_kind]
+        task = cloud_client_tasks.get(cloud_kind)
+        if task is None:
+            task = asyncio.create_task(_create_cloud_client(cloud_kind))
+            cloud_client_tasks[cloud_kind] = task
+        return await task
+
     async def init_single_device(device_data: dict) -> dict | None:
         device_id = device_data[CONF_DEVICE_ID]
+        connection_type = device_data.get(CONF_CONNECTION_TYPE, CONNECTION_TYPE_LAN)
         ip_address = device_data.get(CONF_IP, "")
         port = device_data.get(CONF_PORT, DEFAULT_PORT)
         token = device_data.get(CONF_TOKEN, "")
@@ -100,42 +155,43 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         else:
             device_type_int = 0
 
-        # Priority: use custom Lua file from integration's lua folder if it exists,
-        # otherwise fall back to the cloud-downloaded file (new name, then old name for compatibility)
-        component_dir = str(Path(__file__).parent)
-        custom_lua_path = get_lua_custom_path(component_dir, device_type_int, sn8)
-        storage_lua_path_new = get_lua_file_path(hass.config.config_dir, device_id, device_type_int, sn8)
-        # Legacy naming with device_id prefix (for backward compatibility)
-        legacy_storage_dir = Path(hass.config.config_dir) / ".storage" / DOMAIN / "lua_devices"
-        if sn8:
-            legacy_storage_path = legacy_storage_dir / f"{device_id}_T0x{hex(device_type_int)[2:].upper()}_{sn8}.lua"
-        else:
-            legacy_storage_path = legacy_storage_dir / f"{device_id}_T0x{hex(device_type_int)[2:].upper()}.lua"
-
         lua_file = ""
-        for path, source in [
-            (custom_lua_path, "custom"),
-            (storage_lua_path_new, "storage (new)"),
-            (legacy_storage_path, "storage (legacy)"),
-        ]:
-            if path.exists():
-                lua_file = str(path)
-                _LOGGER.info("[init] using lua file: source=%s path=%s", source, lua_file)
-                break
+        if connection_type == CONNECTION_TYPE_LAN:
+            # Priority: use custom Lua file from integration's lua folder if it exists,
+            # otherwise fall back to the cloud-downloaded file (new name, then old name for compatibility)
+            component_dir = str(Path(__file__).parent)
+            custom_lua_path = get_lua_custom_path(component_dir, device_type_int, sn8)
+            storage_lua_path_new = get_lua_file_path(hass.config.config_dir, device_id, device_type_int, sn8)
+            # Legacy naming with device_id prefix (for backward compatibility)
+            legacy_storage_dir = Path(hass.config.config_dir) / ".storage" / DOMAIN / "lua_devices"
+            if sn8:
+                legacy_storage_path = legacy_storage_dir / f"{device_id}_T0x{hex(device_type_int)[2:].upper()}_{sn8}.lua"
+            else:
+                legacy_storage_path = legacy_storage_dir / f"{device_id}_T0x{hex(device_type_int)[2:].upper()}.lua"
 
-        if not lua_file:
-            entry_lua = device_data.get(CONF_LUA_FILE, "")
-            if entry_lua and Path(entry_lua).exists():
-                lua_file = entry_lua
-                _LOGGER.info("[init] using lua file: source=entry_data path=%s", lua_file)
+            for path, source in [
+                (custom_lua_path, "custom"),
+                (storage_lua_path_new, "storage (new)"),
+                (legacy_storage_path, "storage (legacy)"),
+            ]:
+                if path.exists():
+                    lua_file = str(path)
+                    _LOGGER.info("[init] using lua file: source=%s path=%s", source, lua_file)
+                    break
 
-        if not lua_file:
-            _LOGGER.warning(
-                "[init] no lua file found: device_id=%s type=0x%s sn8=%s "
-                "checked=%s, %s, %s",
-                device_id, hex(device_type_int)[2:].upper(), sn8,
-                custom_lua_path, storage_lua_path_new, legacy_storage_path
-            )
+            if not lua_file:
+                entry_lua = device_data.get(CONF_LUA_FILE, "")
+                if entry_lua and Path(entry_lua).exists():
+                    lua_file = entry_lua
+                    _LOGGER.info("[init] using lua file: source=entry_data path=%s", lua_file)
+
+            if not lua_file:
+                _LOGGER.warning(
+                    "[init] no lua file found: device_id=%s type=0x%s sn8=%s "
+                    "checked=%s, %s, %s",
+                    device_id, hex(device_type_int)[2:].upper(), sn8,
+                    custom_lua_path, storage_lua_path_new, legacy_storage_path
+                )
 
         device_name = device_data.get(CONF_DEVICE_NAME, "")
         if not device_name:
@@ -149,7 +205,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
         lua_common_dir = str(Path(hass.config.config_dir) / LUA_COMMON_PATH)
 
-        device_mapping = get_device_mapping(device_type_int, model, sn8, category)
+        if connection_type == CONNECTION_TYPE_CLOUD_V2:
+            device_mapping = get_cloud_v2_mapping(device_type_int, model, sn8, category)
+        else:
+            device_mapping = get_device_mapping(device_type_int, model, sn8, category)
         calculate_config = device_mapping.get("calculate", {})
         centralized = list(device_mapping.get("centralized", []))
         default_values = dict(device_mapping.get("default_values", {}))
@@ -190,7 +249,55 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     attr_name = ecfg.get("attribute", entity_key)
                     default_values[attr_name] = ecfg["default_value"]
 
+        # Cloud devices need a logged-in cloud client; LAN devices do not.
+        # Both cloud_v2 and cloud_v1 use the Meiju account.
+        cloud_kind = {
+            CONNECTION_TYPE_CLOUD_V2: "meiju",
+            CONNECTION_TYPE_CLOUD_V1: "meiju",
+        }.get(connection_type)
+        cloud_client = None
+        if cloud_kind:
+            cloud_client = await get_cloud_client(cloud_kind)
+            if cloud_client is None:
+                _LOGGER.error(
+                    "[init] cloud device not initialised (no cloud client): "
+                    "device_id=%s name=%s connection_type=%s",
+                    device_id, device_name, connection_type,
+                )
+                return None
+
         def init_device():
+            if connection_type == CONNECTION_TYPE_CLOUD_V2:
+                device = CloudV2Device(
+                    hass,
+                    cloud_client,
+                    appliance_code=device_id,
+                    device_id=device_id,
+                    device_type=device_type_int,
+                    device_name=device_name,
+                    device_mapping=device_mapping,
+                    scan_interval=device_data.get("scan_interval", DEFAULT_CLOUD_SCAN_INTERVAL),
+                )
+                device.open()
+                return device
+            if connection_type == CONNECTION_TYPE_CLOUD_V1:
+                device = CloudV1Device(
+                    hass,
+                    cloud_client,
+                    appliance_code=device_id,
+                    device_id=device_id,
+                    device_type=device_type_int,
+                    device_name=device_name,
+                    device_mapping=device_mapping,
+                    scan_interval=device_data.get("scan_interval", DEFAULT_CLOUD_SCAN_INTERVAL),
+                    sn=sn,
+                    sn8=sn8,
+                    model_number=device_data.get(CONF_MODEL_NUMBER, 0),
+                    manufacturer_code=device_data.get(CONF_MANUFACTURER_CODE, "0000"),
+                    category=category,
+                )
+                device.open()
+                return device
             device = MideaDevice(
                 device_id=device_id,
                 device_type=device_type_int,
@@ -227,7 +334,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         try:
             device = await hass.async_add_executor_job(init_device)
 
-            if not device.available:
+            if connection_type == CONNECTION_TYPE_LAN and not device.available:
                 _LOGGER.warning("[init] device connect failed, will retry in background: device_id=%s", device_id)
 
             coordinator = MideaCoordinator(
@@ -236,46 +343,62 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 device_name,
                 area,
                 config_entry=entry,
+                connection_type=connection_type,
+                device_mapping=device_mapping,
             )
 
-            import asyncio
-            if initial_query and isinstance(initial_query, list):
-                for item in initial_query:
-                    if isinstance(item, dict):
-                        if len(item) == 0:
-                            device.refresh_status({})
-                        elif len(item) == 1:
-                            key = list(item.keys())[0]
+            if connection_type == CONNECTION_TYPE_LAN:
+                import asyncio
+                if initial_query and isinstance(initial_query, list):
+                    for item in initial_query:
+                        if isinstance(item, dict):
+                            if len(item) == 0:
+                                device.refresh_status({})
+                            elif len(item) == 1:
+                                key = list(item.keys())[0]
+                                device.refresh_status({"query_type": key})
+                        elif isinstance(item, set) and len(item) == 1:
+                            key = list(item)[0]
                             device.refresh_status({"query_type": key})
-                    elif isinstance(item, set) and len(item) == 1:
-                        key = list(item)[0]
-                        device.refresh_status({"query_type": key})
-                    await asyncio.sleep(0.3)
-            else:
-                device.refresh_status()
+                        await asyncio.sleep(0.3)
+                else:
+                    device.refresh_status()
 
-            if device.available:
-                for _ in range(10):
-                    if coordinator.data is not None:
-                        break
-                    await asyncio.sleep(0.3)
-
-                # Fallback: if the init query returned no real data, send init
-                # controls (e.g. lock on→off) to trigger a full status push.
-                # Use truthiness so an availability-only {} doesn't mask the
-                # missing status (availability update leaves _data empty).
-                if not coordinator.data and initial_control and isinstance(initial_control, list):
-                    for control in initial_control:
-                        if isinstance(control, dict) and control:
-                            device.set_attributes(control)
-                            await asyncio.sleep(0.3)
+                if device.available:
                     for _ in range(10):
-                        if coordinator.data:
+                        if coordinator.data is not None:
                             break
                         await asyncio.sleep(0.3)
 
+                    # Fallback: if the init query returned no real data, send init
+                    # controls (e.g. lock on→off) to trigger a full status push.
+                    # Use truthiness so an availability-only {} doesn't mask the
+                    # missing status (availability update leaves _data empty).
+                    if not coordinator.data and initial_control and isinstance(initial_control, list):
+                        for control in initial_control:
+                            if isinstance(control, dict) and control:
+                                device.set_attributes(control)
+                                await asyncio.sleep(0.3)
+                        for _ in range(10):
+                            if coordinator.data:
+                                break
+                            await asyncio.sleep(0.3)
+
+                    if not coordinator.data:
+                        _LOGGER.warning("[init] no initial data, will retry in background: device_id=%s", device_id)
+            else:
+                # Cloud polling runs in the device task; just wait briefly for
+                # the first status so entities can be created with data.
+                device.refresh_status()
+                for _ in range(10):
+                    if coordinator.data:
+                        break
+                    await asyncio.sleep(0.3)
                 if not coordinator.data:
-                    _LOGGER.warning("[init] no initial data, will retry in background: device_id=%s", device_id)
+                    _LOGGER.warning(
+                        "[init] no initial cloud data, will retry in background: device_id=%s",
+                        device_id,
+                    )
 
             return {
                 "coordinator": coordinator,
@@ -289,6 +412,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 CONF_DEVICE_NAME: device_name,
                 CONF_PROTOCOL: protocol,
                 CONF_CATEGORY: category,
+                CONF_CONNECTION_TYPE: connection_type,
             }
         except Exception as e:
             _LOGGER.error("[init] device initialization failed: device_id=%s error=%s", device_id, e)
