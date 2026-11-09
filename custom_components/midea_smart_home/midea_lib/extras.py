@@ -8,9 +8,11 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class DeviceLogicHandler:
-    def __init__(self, device_type: int, device_name: str, drum_locations: Optional[dict] = None):
+    def __init__(self, device_type: int, device_name: str, drum_locations: Optional[dict] = None, control_type: Optional[str] = None):
         self.device_type = device_type
         self.device_name = device_name
+        # Default control type declared by the device mapping.
+        self._control_type = control_type
         # D9 raw drum ids per model (most: left=1/right=2, some: 3/4).
         # Canonical 1 (left) / 2 (right) is translated to raw on control.
         loc_map = drum_locations or {}
@@ -435,8 +437,8 @@ class DeviceLogicHandler:
         centralized: Optional[list] = None
     ) -> dict:
         """Prepare control data with device-specific requirements."""
-        if self.device_type == 0xCF:
-            control["control_type"] = "0x11"
+        if self._control_type:
+            control.setdefault("control_type", self._control_type)
         if self.device_type == 0xD9:
             # Determine drum prefix from location field
             if "da_location" in control:

@@ -155,6 +155,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         default_values = dict(device_mapping.get("default_values", {}))
         initial_query = device_mapping.get("initial_query")
         polling_query = device_mapping.get("polling_query")
+        control_type = device_mapping.get("control_type")
         initial_control = device_mapping.get("initial_control")
         # D9 drum location ids (default: left=1/right=2; some models use 3/4)
         drum_locations = device_mapping.get("drum_locations")
@@ -215,6 +216,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 initial_query=initial_query,
                 polling_query=polling_query,
                 drum_locations=drum_locations,
+                control_type=control_type,
             )
             device.open()
             import time

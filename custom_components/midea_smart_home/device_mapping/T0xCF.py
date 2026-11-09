@@ -3,6 +3,7 @@ from custom_components.midea_smart_home.device_mapping._common import *
 DEVICE_MAPPING = {
     "default": {
         "rationale": ["off", "on"],
+        "control_type": "0x11",
         "initial_query": [{"0x11"}, {"0x12"}],
         "polling_query": [{"0x11"}, {"0x12"}],
         "entities": {
@@ -331,6 +332,7 @@ DEVICE_MAPPING = {
         "rationale": ["off", "on"],
         "initial_query": [{}],
         "polling_query": [{}],
+        "control_type": "1",
         "entities": {
             Platform.CLIMATE: {
                 "floor_heating": {
