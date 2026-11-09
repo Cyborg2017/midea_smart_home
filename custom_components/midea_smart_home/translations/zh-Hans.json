@@ -29,20 +29,21 @@
     "step": {
       "auto_add_device": {
         "data": {
-          "account": "账号",
-          "password": "密码",
+          "account": "美居账号",
+          "password": "美居密码",
           "scan_address": "扫描地址",
           "scan_mode": "扫描模式"
         },
         "data_description": {
+          "account": "与美的美居 App 登录使用相同的账号（手机号或邮箱）",
           "scan_address": "[1] 输入路由器地址（如 192.168.1.1）扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）",
           "scan_mode": "说明：广播模式下，若多次出现搜索出的设备列表显示不全，请尝试使用单播模式 (该模式下扫描时间可能会延长，需耐心等待)。"
         },
-        "description": "输入美的美居账号密码，下载必要的资源文件",
-        "title": "自动添加设备（账号登录）"
+        "description": "使用美的美居 App 的账号密码登录，下载必要的云端资源，再按 ☁️Cloud V2 → 🖥️Lan → ☁️Cloud V1 的优先级探测每台设备的可用接入方式。",
+        "title": "混合模式添加设备"
       },
       "discover": {
-        "description": "正在局域网中搜索美的设备...",
+        "description": "正在扫描并探测设备，请稍候...",
         "title": "发现设备"
       },
       "get_token": {
@@ -58,6 +59,21 @@
         },
         "description": "名称: {device_name}\n型号: {device_model}\nID: {device_id}\nIP: {ip_address}\nSN: {sn}\nSN8: {sn8}\n协议: {protocol_version}\n连接方式: {connection_type}\n{error}{unsupported_protocol}",
         "title": "设备认证 {progress}"
+      },
+      "local_add_device": {
+        "data": {
+          "account": "美居账号",
+          "password": "美居密码",
+          "scan_address": "扫描地址",
+          "scan_mode": "扫描模式"
+        },
+        "data_description": {
+          "account": "与美的美居 App 登录使用相同的账号（手机号或邮箱）",
+          "scan_address": "[1] 输入路由器地址（如 192.168.1.1）扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）",
+          "scan_mode": "说明：广播模式下，若多次出现搜索出的设备列表显示不全，请尝试使用单播模式 (该模式下扫描时间可能会延长，需耐心等待)。"
+        },
+        "description": "使用美的美居 App 的账号密码登录并下载必要的资源文件，仅通过局域网直连设备，不探测云端。",
+        "title": "局域网模式添加设备"
       },
       "manual_add_device": {
         "data": {
@@ -140,9 +156,10 @@
         "title": "选择设备"
       },
       "user": {
-        "description": "请选择添加设备的方式：",
+        "description": "请选择添加设备的方式。局域网模式仅本地直连；混合模式按 ☁️Cloud V2 → 🖥️Lan → ☁️Cloud V1 的优先级探测：",
         "menu_options": {
-          "auto_add_device": "🔎 自动添加设备（登录账号，扫描局域网）",
+          "auto_add_device": "☁️ 混合模式（云端 + 局域网自动探测）",
+          "local_add_device": "🖥️ 局域网模式（仅本地直连，不探测云端）",
           "manual_add_device": "✍️ 手动添加设备（无需账号，手动输入 Token/Key 及 Lua 文件）"
         },
         "title": "Midea Smart Home 设置"
@@ -3829,18 +3846,33 @@
     "step": {
       "add_device_auto": {
         "data": {
-          "account": "账号",
-          "password": "密码",
+          "account": "美居账号",
+          "password": "美居密码",
           "scan_address": "扫描地址",
           "scan_mode": "扫描模式"
         },
         "data_description": {
-          "account": "自动添加设备前会先校验当前美的美居账号密码",
+          "account": "与美的美居 App 登录使用相同的账号（手机号或邮箱）",
           "scan_address": "[1] 输入路由器地址扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）",
           "scan_mode": "说明：广播模式下，若多次出现搜索出的设备列表显示不全，请尝试使用单播模式 (该模式下扫描时间可能会延长，需耐心等待)。"
         },
-        "description": "搜索局域网中的新设备（已添加的设备将自动过滤）",
-        "title": "自动添加新设备"
+        "description": "扫描局域网，并按 ☁️Cloud V2 → 🖥️Lan → ☁️Cloud V1 的优先级探测每台设备的可用接入方式；已添加的设备将自动过滤。",
+        "title": "混合模式添加设备"
+      },
+      "add_device_local": {
+        "data": {
+          "account": "美居账号",
+          "password": "美居密码",
+          "scan_address": "扫描地址",
+          "scan_mode": "扫描模式"
+        },
+        "data_description": {
+          "account": "与美的美居 App 登录使用相同的账号（手机号或邮箱）",
+          "scan_address": "[1] 输入路由器地址扫描整个网段\n[2] 输入设备 IP 扫描指定设备\n[3] 输入「auto」自动检测（默认）",
+          "scan_mode": "说明：广播模式下，若多次出现搜索出的设备列表显示不全，请尝试使用单播模式 (该模式下扫描时间可能会延长，需耐心等待)。"
+        },
+        "description": "仅通过局域网直连设备，不探测云端（沿用原有接入方式）；已添加的设备将自动过滤。",
+        "title": "局域网模式添加设备"
       },
       "add_device_manual": {
         "data": {
@@ -3923,7 +3955,8 @@
       },
       "init": {
         "menu_options": {
-          "add_device_auto": "🔎 自动添加设备（扫描局域网）",
+          "add_device_auto": "☁️ 混合模式添加设备（云端 + 局域网自动探测）",
+          "add_device_local": "🖥️ 局域网模式添加设备（仅本地直连）",
           "add_device_manual": "✍️ 手动添加设备（无需账号）",
           "backup_config": "📦 备份本地配置文件",
           "clear_cache": "🗑️ 清理本地配置文件",

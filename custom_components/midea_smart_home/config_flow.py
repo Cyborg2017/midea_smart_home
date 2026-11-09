@@ -776,6 +776,8 @@ async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
     supported: dict = {}
     unsupported: dict = {}
     pending: dict = {}
+    # LAN-only mode keeps the original behaviour and skips the cloud probes.
+    hybrid = getattr(flow, "_hybrid", True)
 
     for did, info in flow._discovered_devices.items():
         if info.get("unsupported_protocol"):
@@ -783,7 +785,7 @@ async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
             continue
 
         # 1) cloud_v2 (Thing Model) takes priority over LAN
-        if await _probe_cloud_v2(flow, did, info):
+        if hybrid and await _probe_cloud_v2(flow, did, info):
             info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V2
             supported[did] = info
             continue
@@ -799,7 +801,7 @@ async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
             continue
 
         # 3) cloud_v1 fallback for devices the LAN path cannot handle
-        if await _probe_cloud_v1(flow, did, info):
+        if hybrid and await _probe_cloud_v1(flow, did, info):
             info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V1
             supported[did] = info
             continue
@@ -828,6 +830,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._supported_devices: dict = {}
         self._unsupported_devices: dict = {}
         self._pending_devices: dict = {}
+        self._hybrid: bool = True
 
     async def _cleanup_session(self):
         if self._session:
@@ -839,10 +842,24 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     ) -> FlowResult:
         return self.async_show_menu(
             step_id="user",
-            menu_options=["auto_add_device", "manual_add_device"],
+            menu_options=["local_add_device", "auto_add_device", "manual_add_device"],
         )
 
+    async def async_step_local_add_device(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """LAN-only mode: keep the original local-only behaviour."""
+        self._hybrid = False
+        return await self._async_auto_add(user_input)
+
     async def async_step_auto_add_device(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Hybrid mode: probe cloud_v2 > LAN > cloud_v1."""
+        self._hybrid = True
+        return await self._async_auto_add(user_input)
+
+    async def _async_auto_add(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         errors = {}
@@ -894,12 +911,9 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             ),
         })
         return self.async_show_form(
-            step_id="auto_add_device",
+            step_id="auto_add_device" if self._hybrid else "local_add_device",
             data_schema=schema,
             errors={"base": error_key} if error_key else None,
-            description_placeholders={
-                "note": "Please enter Meiju Cloud account and password to download device Lua files"
-            },
         )
 
     async def async_step_manual_add_device(
@@ -1046,7 +1060,6 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_show_form(
                 step_id="discover",
                 errors={"base": "no_devices_found"},
-                description_placeholders={"note": "No devices found in LAN"},
             )
 
         existing_device_ids = {d.get(CONF_DEVICE_ID) for d in self._devices_data}
@@ -1059,7 +1072,6 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_show_form(
                 step_id="discover",
                 errors={"base": "all_devices_added"},
-                description_placeholders={"note": "All discovered devices have already been added"},
             )
 
         shared_client = _shared_cloud_client(self.hass, self._account)
@@ -1704,6 +1716,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         self._supported_devices: dict = {}
         self._unsupported_devices: dict = {}
         self._pending_devices: dict = {}
+        self._hybrid: bool = True
 
     async def _validate_token_key(
         self,
@@ -1870,10 +1883,24 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     ) -> FlowResult:
         return self.async_show_menu(
             step_id="init",
-            menu_options=["add_device_auto", "add_device_manual", "update_account", "sync_cloud", "backup_config", "fetch_diagnostics", "clear_cache", "configure_polling", "configure_notifications", "configure_update_check"],
+            menu_options=["add_device_local", "add_device_auto", "add_device_manual", "update_account", "sync_cloud", "backup_config", "fetch_diagnostics", "clear_cache", "configure_polling", "configure_notifications", "configure_update_check"],
         )
 
+    async def async_step_add_device_local(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """LAN-only mode: keep the original local-only behaviour."""
+        self._hybrid = False
+        return await self._async_add_device_auto(user_input)
+
     async def async_step_add_device_auto(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Hybrid mode: probe cloud_v2 > LAN > cloud_v1."""
+        self._hybrid = True
+        return await self._async_add_device_auto(user_input)
+
+    async def _async_add_device_auto(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         if user_input is not None:
@@ -1928,7 +1955,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             ),
         })
         return self.async_show_form(
-            step_id="add_device_auto",
+            step_id="add_device_auto" if self._hybrid else "add_device_local",
             data_schema=schema,
             errors={"base": error_key} if error_key else None,
         )
@@ -2150,7 +2177,6 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             return self.async_show_form(
                 step_id="add_device_auto",
                 errors={"base": "no_devices_found"},
-                description_placeholders={"note": "No devices found in LAN"},
             )
 
         existing_device_ids = {d.get(CONF_DEVICE_ID) for d in self._devices_data}
@@ -2163,7 +2189,6 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             return self.async_show_form(
                 step_id="add_device_auto",
                 errors={"base": "all_devices_added"},
-                description_placeholders={"note": "All discovered devices have already been added"},
             )
 
         if self._user_cloud is None:

@@ -29,20 +29,21 @@
     "step": {
       "auto_add_device": {
         "data": {
-          "account": "Account",
-          "password": "Password",
+          "account": "Meiju Account",
+          "password": "Meiju Password",
           "scan_address": "Scan Address",
           "scan_mode": "Scan Mode"
         },
         "data_description": {
+          "account": "Same account as the Midea Meiju app (phone number or email)",
           "scan_address": "Enter router address (e.g., 192.168.1.1) to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
           "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
         },
-        "description": "Enter your Midea Meiju account credentials to download necessary resource files",
-        "title": "Auto Add Devices (Account Login)"
+        "description": "Sign in with the Midea Meiju app credentials, download the required cloud resources, then probe each device in the order ☁️Cloud V2 → 🖥️Lan → ☁️Cloud V1.",
+        "title": "Hybrid Add Devices"
       },
       "discover": {
-        "description": "Searching for Midea devices on your local network...",
+        "description": "Scanning and probing devices, please wait...",
         "title": "Discovering Devices"
       },
       "get_token": {
@@ -58,6 +59,21 @@
         },
         "description": "Name: {device_name}\nModel: {device_model}\nID: {device_id}\nIP: {ip_address}\nSN: {sn}\nSN8: {sn8}\nProtocol: {protocol_version}\nConnection: {connection_type}\n{error}{unsupported_protocol}",
         "title": "Device Authentication {progress}"
+      },
+      "local_add_device": {
+        "data": {
+          "account": "Meiju Account",
+          "password": "Meiju Password",
+          "scan_address": "Scan Address",
+          "scan_mode": "Scan Mode"
+        },
+        "data_description": {
+          "account": "Same account as the Midea Meiju app (phone number or email)",
+          "scan_address": "Enter router address (e.g., 192.168.1.1) to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
+          "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
+        },
+        "description": "Sign in with the Midea Meiju app credentials to download the required resource files, then connect to devices over the local network only (no cloud probing).",
+        "title": "LAN Add Devices"
       },
       "manual_add_device": {
         "data": {
@@ -140,9 +156,10 @@
         "title": "Select Devices"
       },
       "user": {
-        "description": "Choose how to add devices:",
+        "description": "Choose how to add devices. LAN mode connects locally only; hybrid mode probes ☁️Cloud V2 → 🖥️Lan → ☁️Cloud V1:",
         "menu_options": {
-          "auto_add_device": "🔎 Auto Add Devices (account login, LAN scan)",
+          "auto_add_device": "☁️ Hybrid Mode (cloud + LAN auto probe)",
+          "local_add_device": "🖥️ LAN Mode (local only, no cloud probing)",
           "manual_add_device": "✍️ Manual Add Device (no account, enter Token/Key and Lua file manually)"
         },
         "title": "Midea Smart Home Setup"
@@ -3829,18 +3846,33 @@
     "step": {
       "add_device_auto": {
         "data": {
-          "account": "Account",
-          "password": "Password",
+          "account": "Meiju Account",
+          "password": "Meiju Password",
           "scan_address": "Scan Address",
           "scan_mode": "Scan Mode"
         },
         "data_description": {
-          "account": "The current Meiju Cloud account and password are verified before adding devices",
+          "account": "Same account as the Midea Meiju app (phone number or email)",
           "scan_address": "Enter router address to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
           "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
         },
-        "description": "Search for new devices on local network (already added devices will be filtered out)",
-        "title": "Auto Add New Device"
+        "description": "Scan the local network and probe each device in the order ☁️Cloud V2 → 🖥️Lan → ☁️Cloud V1 (already added devices will be filtered out).",
+        "title": "Hybrid Add Device"
+      },
+      "add_device_local": {
+        "data": {
+          "account": "Meiju Account",
+          "password": "Meiju Password",
+          "scan_address": "Scan Address",
+          "scan_mode": "Scan Mode"
+        },
+        "data_description": {
+          "account": "Same account as the Midea Meiju app (phone number or email)",
+          "scan_address": "Enter router address to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
+          "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
+        },
+        "description": "Connect to devices over the local network only, without cloud probing (already added devices will be filtered out).",
+        "title": "LAN Add Device"
       },
       "add_device_manual": {
         "data": {
@@ -3923,7 +3955,8 @@
       },
       "init": {
         "menu_options": {
-          "add_device_auto": "🔎 Auto Add Device (LAN scan)",
+          "add_device_auto": "☁️ Hybrid Mode (cloud + LAN auto probe)",
+          "add_device_local": "🖥️ LAN Mode (local only)",
           "add_device_manual": "✍️ Manual Add Device (no account)",
           "backup_config": "📦 Backup & Download Local Configuration",
           "clear_cache": "🗑️ Clear local configuration files",
