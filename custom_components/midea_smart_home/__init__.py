@@ -92,22 +92,28 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     language = hass.config.language or "en"
 
-    # Cloud clients are created lazily and cached per config entry so that
-    # all cloud devices of an entry share one logged-in session.
-    cloud_clients: dict[str, object | None] = hass.data[DOMAIN][
-        entry.entry_id
-    ].setdefault("cloud_clients", {})
-    cloud_client_tasks: dict[str, asyncio.Task] = {}
+    # Cloud clients are cached globally (per account) rather than per config
+    # entry. The cloud allows one active token per account/device, so a second
+    # login invalidates the first one; per-entry clients would keep kicking
+    # each other out and trigger repeated "new device signed in" app alerts.
+    shared_cloud = hass.data[DOMAIN].setdefault("cloud_shared", {})
+    cloud_clients: dict[str, object | None] = shared_cloud.setdefault("clients", {})
+    cloud_client_tasks: dict[str, asyncio.Task] = shared_cloud.setdefault("tasks", {})
+
+    def _client_key(cloud_kind: str) -> str:
+        """Key the shared cloud client by cloud kind and account."""
+        return f"{cloud_kind}:{entry.data.get(CONF_ACCOUNT) or ''}"
 
     async def _create_cloud_client(cloud_kind: str):
         account = entry.data.get(CONF_ACCOUNT) or ""
         password = entry.data.get(CONF_PASSWORD) or ""
+        client_key = _client_key(cloud_kind)
         if not account or not password:
             _LOGGER.error(
                 "[init] cloud credentials missing, cloud devices cannot be initialised: cloud=%s",
                 cloud_kind,
             )
-            cloud_clients[cloud_kind] = None
+            cloud_clients[client_key] = None
             return None
         session = async_get_clientsession(hass)
         client = MeijuCloud("Meiju Cloud", session, account, password)
@@ -120,17 +126,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             _LOGGER.warning(
                 "[init] cloud login error: cloud=%s error=%s", cloud_kind, e
             )
-        cloud_clients[cloud_kind] = client
+        cloud_clients[_client_key(cloud_kind)] = client
         return client
 
     async def get_cloud_client(cloud_kind: str):
         """Return the cached cloud client, logging in once per cloud kind."""
-        if cloud_kind in cloud_clients:
-            return cloud_clients[cloud_kind]
-        task = cloud_client_tasks.get(cloud_kind)
+        client_key = _client_key(cloud_kind)
+        if client_key in cloud_clients:
+            return cloud_clients[client_key]
+        task = cloud_client_tasks.get(client_key)
         if task is None:
             task = asyncio.create_task(_create_cloud_client(cloud_kind))
-            cloud_client_tasks[cloud_kind] = task
+            cloud_client_tasks[client_key] = task
         return await task
 
     async def init_single_device(device_data: dict) -> dict | None:
