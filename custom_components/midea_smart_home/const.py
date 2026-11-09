@@ -46,7 +46,7 @@ CONNECTION_TYPE_CLOUD_V1 = "cloud_v1"
 # shown in the add-device list and next to the model in device info.
 CONNECTION_TYPE_BADGES = {
     CONNECTION_TYPE_CLOUD_V2: "☁️Cloud V2",
-    CONNECTION_TYPE_LAN: "🖥️Local",
+    CONNECTION_TYPE_LAN: "🖥️Lan",
     CONNECTION_TYPE_CLOUD_V1: "☁️Cloud V1",
 }
 
