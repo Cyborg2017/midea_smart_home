@@ -56,7 +56,7 @@
           "lua_file": "设备协议文件路径",
           "token": "{token_required}"
         },
-        "description": "名称: {device_name}\n型号: {device_model}\nID: {device_id}\nIP: {ip_address}\nSN: {sn}\nSN8: {sn8}\n协议: {protocol_version}\n{error}{unsupported_protocol}",
+        "description": "名称: {device_name}\n型号: {device_model}\nID: {device_id}\nIP: {ip_address}\nSN: {sn}\nSN8: {sn8}\n协议: {protocol_version}\n连接方式: {connection_type}\n{error}{unsupported_protocol}",
         "title": "设备认证 {progress}"
       },
       "manual_add_device": {
@@ -136,7 +136,7 @@
         "data": {
           "devices": "设备"
         },
-        "description": "选择要添加的设备，其中带 ⏳ 标记为新类型设备，如需支持请联系原作者进行适配。{unsupported_list}",
+        "description": "选择要添加的设备，图标表示连接方式（🖥️Local 局域网 / ☁️Cloud V2 云端 v2 / ☁️Cloud V1 云端 v1）。{pending_notice}{unsupported_list}",
         "title": "选择设备"
       },
       "user": {
@@ -3918,7 +3918,7 @@
           "lua_file": "设备协议文件路径",
           "token": "{token_required}"
         },
-        "description": "名称: {device_name}\n型号: {device_model}\nID: {device_id}\nIP: {ip_address}\nSN: {sn}\nSN8: {sn8}\n协议: {protocol_version}\n{error}{unsupported_protocol}",
+        "description": "名称: {device_name}\n型号: {device_model}\nID: {device_id}\nIP: {ip_address}\nSN: {sn}\nSN8: {sn8}\n协议: {protocol_version}\n连接方式: {connection_type}\n{error}{unsupported_protocol}",
         "title": "设备认证 {progress}"
       },
       "init": {
@@ -3993,7 +3993,7 @@
         "data": {
           "devices": "设备"
         },
-        "description": "选择要添加的设备，其中带 ⏳ 标记为新类型设备，如需支持请联系原作者进行适配。{unsupported_list}",
+        "description": "选择要添加的设备，图标表示连接方式（🖥️Local 局域网 / ☁️Cloud V2 云端 v2 / ☁️Cloud V1 云端 v1）。{pending_notice}{unsupported_list}",
         "title": "选择新设备"
       },
       "select_device_option": {

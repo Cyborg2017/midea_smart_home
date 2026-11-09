@@ -56,7 +56,7 @@
           "lua_file": "Device protocol file path",
           "token": "{token_required}"
         },
-        "description": "Name: {device_name}\nModel: {device_model}\nID: {device_id}\nIP: {ip_address}\nSN: {sn}\nSN8: {sn8}\nProtocol: {protocol_version}\n{error}{unsupported_protocol}",
+        "description": "Name: {device_name}\nModel: {device_model}\nID: {device_id}\nIP: {ip_address}\nSN: {sn}\nSN8: {sn8}\nProtocol: {protocol_version}\nConnection: {connection_type}\n{error}{unsupported_protocol}",
         "title": "Device Authentication {progress}"
       },
       "manual_add_device": {
@@ -136,7 +136,7 @@
         "data": {
           "devices": "Devices"
         },
-        "description": "Select devices to add, where devices marked with ⏳ are new device types; contact the original author to request support.{unsupported_list}",
+        "description": "Select devices to add. The badge shows how each device is connected (🖥️Local LAN / ☁️Cloud V2 / ☁️Cloud V1).{pending_notice}{unsupported_list}",
         "title": "Select Devices"
       },
       "user": {
@@ -3918,7 +3918,7 @@
           "lua_file": "Device protocol file path",
           "token": "{token_required}"
         },
-        "description": "Name: {device_name}\nModel: {device_model}\nID: {device_id}\nIP: {ip_address}\nSN: {sn}\nSN8: {sn8}\nProtocol: {protocol_version}\n{error}{unsupported_protocol}",
+        "description": "Name: {device_name}\nModel: {device_model}\nID: {device_id}\nIP: {ip_address}\nSN: {sn}\nSN8: {sn8}\nProtocol: {protocol_version}\nConnection: {connection_type}\n{error}{unsupported_protocol}",
         "title": "Device Authentication {progress}"
       },
       "init": {
@@ -3993,7 +3993,7 @@
         "data": {
           "devices": "Devices"
         },
-        "description": "Select devices to add, where devices marked with ⏳ are new device types; contact the original author to request support.{unsupported_list}",
+        "description": "Select devices to add. The badge shows how each device is connected (🖥️Local LAN / ☁️Cloud V2 / ☁️Cloud V1).{pending_notice}{unsupported_list}",
         "title": "Select New Devices"
       },
       "select_device_option": {
