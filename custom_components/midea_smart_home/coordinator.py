@@ -6,7 +6,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-from .const import DOMAIN
+from .const import CONNECTION_TYPE_LAN, DOMAIN
 from .midea_lib.device import MideaDevice
 
 _LOGGER = logging.getLogger(__name__)
@@ -120,10 +120,14 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         device_name: str,
         area: str = "",
         config_entry: ConfigEntry | None = None,
+        connection_type: str = CONNECTION_TYPE_LAN,
+        device_mapping: dict | None = None,
     ):
         self.device = device
         self.device_name = device_name
         self.area = area
+        self.connection_type = connection_type
+        self.device_mapping = device_mapping or {}
         self.device_type = device.device_id
         self._was_available: bool | None = None
         self._initialized: bool = False
