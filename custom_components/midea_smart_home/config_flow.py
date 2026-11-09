@@ -623,7 +623,6 @@ def _shared_cloud_client(hass, account: str):
     shared = hass.data.get(DOMAIN, {}).get("cloud_shared", {})
     return (shared.get("clients") or {}).get(f"meiju:{account}")
 
-
 async def _probe_cloud_v2(flow, device_id: int, info: dict) -> bool:
     """Probe whether a discovered device is usable through cloud_v2.
 
