@@ -13,6 +13,9 @@ from .const import (
     CONF_PRODUCT_MODEL,
     CONF_SN,
     CONF_SN8,
+    CONNECTION_TYPE_BADGES,
+    CONNECTION_TYPE_CLOUD_V2,
+    CONNECTION_TYPE_LAN,
     DOMAIN,
 )
 from .coordinator import MideaCoordinator, ControlValue
@@ -82,6 +85,19 @@ class MideaBaseEntity(CoordinatorEntity[MideaCoordinator]):
         device_display_name = device_name
         model_display = model if model else device_type_code
 
+        self._connection_type = getattr(
+            coordinator, "connection_type", CONNECTION_TYPE_LAN
+        )
+        badge = CONNECTION_TYPE_BADGES.get(self._connection_type)
+        if badge and not model_display.endswith(f"| {badge}"):
+            model_display = f"{model_display} | {badge}"
+
+        # Cloud V2 devices report Thing Model property names instead of the
+        # Lua status keys; resolve this entity's thing_key from the mapping.
+        self._thing_key: Optional[str] = None
+        if self._connection_type == CONNECTION_TYPE_CLOUD_V2:
+            self._thing_key = self._resolve_thing_key(coordinator, entity_key)
+
         self._attr_unique_id = f"{platform_name}.midea_{device_id}_{entity_key}" if platform_name else f"midea_{device_id}_{entity_key}"
 
         if platform_name:
@@ -112,7 +128,33 @@ class MideaBaseEntity(CoordinatorEntity[MideaCoordinator]):
 
         return self._check_condition(self._condition)
 
+    @staticmethod
+    def _resolve_thing_key(
+        coordinator: MideaCoordinator, entity_key: str
+    ) -> Optional[str]:
+        """Return the entity's Thing Model property name, if configured."""
+        mapping = getattr(coordinator, "device_mapping", None) or {}
+        for platform_cfg in (mapping.get("entities") or {}).values():
+            if not isinstance(platform_cfg, dict):
+                continue
+            cfg = platform_cfg.get(entity_key)
+            if isinstance(cfg, dict) and cfg.get("thing_key"):
+                return cfg["thing_key"]
+        return None
+
     def _get_nested_value(
+        self,
+        key: str | list[str]
+    ) -> Union[str, int, float, bool, None]:
+        # Cloud V2 devices expose Thing Model property names; prefer the
+        # entity's thing_key when it resolves to a value.
+        if self._thing_key:
+            value = self._lookup_nested_value(self._thing_key)
+            if value is not None:
+                return value
+        return self._lookup_nested_value(key)
+
+    def _lookup_nested_value(
         self,
         key: str | list[str]
     ) -> Union[str, int, float, bool, None]:
