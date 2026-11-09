@@ -59,6 +59,10 @@ class MideaTimeEntity(MideaBaseEntity, TimeEntity):
         )
         self._target_keys = config.get("target_keys", {})
         self._translation_key = config.get("translation_key")
+        # Thing mode: cloud_v2 time properties read/written via a single
+        # thing_key + field + value_format (e.g. minutes since midnight).
+        self._thing_mode = "thing_key" in config
+        self._value_format = config.get("value_format", "HHmm")
         # Determine time mode:
         # - "direct": device receives absolute time directly (user input -> device)
         # - "convert": device receives relative time/duration (user input -> convert to duration -> device)
@@ -66,11 +70,34 @@ class MideaTimeEntity(MideaBaseEntity, TimeEntity):
         # Check if using single duration field or separate hour/minute fields
         self._use_duration = "duration" in self._target_keys
 
+    def _parse_thing_time(self, raw: Any) -> time | None:
+        """Parse a cloud_v2 thing property value into a time object."""
+        if raw is None:
+            return None
+        try:
+            if self._value_format == "minutes":
+                total = int(raw)
+                if total == 0:
+                    return None
+                return time(hour=total // 60, minute=total % 60)
+            if self._value_format == "hh:mm":
+                parts = str(raw).split(":")
+                return time(hour=int(parts[0]), minute=int(parts[1]))
+            total = int(raw)
+            return time(hour=total // 100, minute=total % 100)
+        except (ValueError, TypeError, IndexError):
+            _LOGGER.warning("[entity] thing time parse failed: entity=%s value=%s", self._entity_key, raw)
+            return None
+
     @property
     def native_value(self) -> time | None:
         """Return the current time value."""
         if not self.coordinator.data:
             return None
+
+        if self._thing_mode:
+            # cloud_v2: flattened dotted keys hold the nested field value
+            return self._parse_thing_time(self.coordinator.data.get(self._entity_key))
 
         if self._use_duration:
             # Single duration field mode
@@ -139,7 +166,16 @@ class MideaTimeEntity(MideaBaseEntity, TimeEntity):
             # Get command configuration if exists
             command_config = self._config.get("command", {})
 
-            if self._use_duration:
+            if self._thing_mode:
+                # cloud_v2: write the formatted value into the nested field
+                if self._value_format == "minutes":
+                    formatted: Any = value.hour * 60 + value.minute
+                elif self._value_format == "hh:mm":
+                    formatted = value.strftime("%H:%M")
+                else:
+                    formatted = int(value.strftime("%H%M"))
+                command = {self._entity_key: formatted, **command_config}
+            elif self._use_duration:
                 # Single duration field mode
                 if "duration" not in self._target_keys:
                     _LOGGER.error("[entity] target_keys missing: key=duration entity=%s", self._entity_key)

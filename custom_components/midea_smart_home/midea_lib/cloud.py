@@ -617,6 +617,23 @@ class MeijuCloud(MideaCloud):
         )
         return isinstance(response, dict)
 
+    async def get_specific_data(
+        self, appliance_code: int, endpoint: str
+    ) -> dict[str, Any] | None:
+        """Fetch device-specific REST endpoint data (e.g. fish-tank sections)."""
+        home_group_id = self._home_group_map.get(int(appliance_code))
+        if not home_group_id:
+            home_group_id = await self._query_homegroup(int(appliance_code))
+        if not home_group_id:
+            return None
+        return await self._api_request(
+            endpoint=endpoint,
+            data={
+                "applianceCode": str(appliance_code),
+                "homegroupId": home_group_id,
+            },
+        )
+
     async def perform_thing_action(
         self,
         appliance_code: int,
