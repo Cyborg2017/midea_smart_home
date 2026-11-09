@@ -128,6 +128,9 @@ class BaseCloudDevice:
 
     async def _polling_loop(self) -> None:
         """Periodically refresh device state from the cloud."""
+        # Back off while the device is unavailable (e.g. cloud login failing) so
+        # repeated requests cannot turn into a login/relogin storm.
+        interval = self._scan_interval
         while True:
             try:
                 await self.async_refresh()
@@ -139,7 +142,11 @@ class BaseCloudDevice:
                     self._device_id,
                     e,
                 )
-            await asyncio.sleep(self._scan_interval)
+            if self._available:
+                interval = self._scan_interval
+            else:
+                interval = min(max(interval * 2, self._scan_interval), 300)
+            await asyncio.sleep(interval)
 
     def refresh_status(self, query: dict | None = None) -> None:
         """Schedule an async refresh; safe to call from any thread."""
