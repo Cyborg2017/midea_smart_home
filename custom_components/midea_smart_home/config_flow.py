@@ -41,6 +41,7 @@ from .const import (
     CONNECTION_TYPE_CLOUD_V1,
     CONNECTION_TYPE_CLOUD_V2,
     CONNECTION_TYPE_LAN,
+    DEFAULT_CLOUD_SCAN_INTERVAL,
     DEFAULT_PORT,
     DEVICE_TYPES,
     DOMAIN,
@@ -3005,12 +3006,41 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             "5": _translate("option_5s", "5s")
         }
 
+        # Cloud devices (cloud_v2/cloud_v1) refresh state via periodic
+        # cloud queries; offer longer intervals to avoid API pressure.
+        cloud_polling_options = {
+            "3": "3s",
+            "5": "5s",
+            "10": "10s",
+            "15": "15s",
+            "20": "20s",
+            "25": "25s",
+            "30": "30s",
+        }
+
         for device in devices:
             device_id = device.get(CONF_DEVICE_ID)
             device_type_str = device.get(CONF_DEVICE_TYPE, "0")
             model = device.get(CONF_PRODUCT_MODEL, "")
             sn8 = device.get(CONF_SN8, "")
             category = device.get(CONF_CATEGORY, "")
+
+            # Cloud devices are always periodically refreshed via the cloud
+            # API; configure their scan interval instead of LAN polling.
+            connection_type = device.get(CONF_CONNECTION_TYPE, CONNECTION_TYPE_LAN)
+            if connection_type in (CONNECTION_TYPE_CLOUD_V2, CONNECTION_TYPE_CLOUD_V1):
+                device_name = device.get(CONF_DEVICE_NAME, f"Device {device_id}")
+                current_interval = str(device.get("scan_interval", DEFAULT_CLOUD_SCAN_INTERVAL))
+                if current_interval not in cloud_polling_options:
+                    current_interval = "30"
+                configurable_devices.append({
+                    "device_id": device_id,
+                    "device_name": device_name,
+                    "current_selection": current_interval,
+                    "options": cloud_polling_options,
+                    "is_cloud": True,
+                })
+                continue
 
             try:
                 if isinstance(device_type_str, int):
@@ -3050,6 +3080,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                     "device_name": device_name,
                     "current_selection": current_selection,
                     "options": device_options,
+                    "is_cloud": False,
                 })
 
         if not configurable_devices:
@@ -3094,6 +3125,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             self._polling_device_mapping[base_key] = {
                 'device_id': device_id,
                 'device_name': device_name,
+                'is_cloud': device_info.get("is_cloud", False),
             }
 
             # Get display text for current selection
@@ -3124,8 +3156,29 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                         # Get selected value from dropdown
                         if base_key in user_input:
                             selected_value = user_input[base_key]
+                            is_cloud = device_info.get('is_cloud', False)
 
-                            if selected_value == "disabled":
+                            if is_cloud:
+                                # Cloud devices: save the scan interval
+                                try:
+                                    interval = float(selected_value)
+                                    if interval.is_integer():
+                                        interval = int(interval)
+                                    device["scan_interval"] = interval
+                                    _LOGGER.debug(
+                                        "[config_flow] cloud scan interval set: device=%s device_id=%s interval=%ss",
+                                        device_info['device_name'],
+                                        device_id,
+                                        interval
+                                    )
+                                except (ValueError, TypeError):
+                                    _LOGGER.warning(
+                                        "[config_flow] invalid cloud interval value: value=%s device=%s device_id=%s",
+                                        selected_value,
+                                        device_info['device_name'],
+                                        device_id
+                                    )
+                            elif selected_value == "disabled":
                                 # Polling disabled
                                 device["polling_enabled"] = False
                                 _LOGGER.debug(

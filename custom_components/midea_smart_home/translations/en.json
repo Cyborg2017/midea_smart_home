@@ -4017,7 +4017,7 @@
           "polling_device_switch": "{name} - Polling",
           "polling_device_interval": "{name} - Polling Interval"
         },
-        "description": "⚠️ The following devices have delayed status updates for some attributes. Configure auxiliary polling for real-time status updates:\n\n{device_info}\n\n💡 Tip: Select \"off\" to completely disable polling (won't affect device-initiated status updates)",
+        "description": "⚠️ The following devices have delayed status updates for some attributes. Configure auxiliary polling for real-time status updates:\n\n{device_info}\n\n💡 Tip: Select \"off\" to completely disable polling (won't affect device-initiated status updates)\n\n☁️ Cloud devices: the interval controls how often the integration queries the cloud API for state updates",
         "title": "Configure Polling Interval"
       },
       "configure_update_check": {

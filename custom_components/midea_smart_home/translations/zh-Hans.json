@@ -4017,7 +4017,7 @@
           "polling_device_switch": "{name} - 轮询开关",
           "polling_device_interval": "{name} - 轮询间隔时间"
         },
-        "description": "⚠️ 以下设备个别属性状态推送有延迟，请配置辅助轮询以获取实时状态更新数据：\n\n{device_info}\n\n💡 提示：选择「off」将完全禁用该设备的轮询（不影响设备主动上报）",
+        "description": "⚠️ 以下设备个别属性状态推送有延迟，请配置辅助轮询以获取实时状态更新数据：\n\n{device_info}\n\n💡 提示：选择「off」将完全禁用该设备的轮询（不影响设备主动上报）\n\n☁️ 云端设备：此间隔为集成向云端查询设备状态的刷新频率",
         "title": "配置轮询间隔时间"
       },
       "configure_update_check": {
