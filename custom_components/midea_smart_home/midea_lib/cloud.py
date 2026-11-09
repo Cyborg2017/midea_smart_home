@@ -89,7 +89,7 @@ class MideaCloud:
         self._last_error: tuple[int, str] | None = None
         # Consecutive automatic relogins triggered by token-invalid responses
         self._token_invalid_retry_count = 0
-        # Monotonic timestamp of the last successful login (rate limiting)
+        # Monotonic timestamp of the last login attempt (rate limiting)
         self._last_login_at = 0.0
 
     def _make_general_data(self) -> dict[str, Any]:
@@ -352,6 +352,9 @@ class MeijuCloud(MideaCloud):
                     b"0",
                 )
                 return True
+        # Count failed attempts as well, otherwise a rejected login would be
+        # retried on every poll and keep triggering app alerts.
+        self._last_login_at = time.monotonic()
         if self._last_error:
             raise CloudLoginError(self._last_error[0], self._last_error[1])
         _LOGGER.warning("[cloud] login failed: account=%s device_id=%s", self._account, self._device_id)
@@ -754,6 +757,9 @@ class MideaAirCloud(MideaCloud):
                 self._session_id = response["sessionId"]
                 self._last_login_at = time.monotonic()
                 return True
+        # Count failed attempts as well, otherwise a rejected login would be
+        # retried on every poll and keep triggering app alerts.
+        self._last_login_at = time.monotonic()
         if self._last_error:
             raise CloudLoginError(self._last_error[0], self._last_error[1])
         _LOGGER.warning("[cloud] login failed: account=%s device_id=%s", self._account, self._device_id)
