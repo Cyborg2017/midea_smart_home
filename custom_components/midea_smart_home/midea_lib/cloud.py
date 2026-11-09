@@ -8,7 +8,6 @@ import logging
 import time
 from datetime import UTC, datetime
 from secrets import token_hex
-from threading import Lock
 from typing import Any, cast
 from uuid import uuid4
 
@@ -73,7 +72,7 @@ class MideaCloud:
         self._device_id = CloudSecurity.get_deviceid(account)
         self._session = session
         self._security = security
-        self._api_lock = Lock()
+        self._api_lock = asyncio.Lock()
         self._app_id = app_id
         self._app_key = app_key
         self._account = account
@@ -145,7 +144,7 @@ class MideaCloud:
         response: dict = {"code": -1}
         for attempt in range(3):
             try:
-                with self._api_lock:
+                async with self._api_lock:
                     r = await self._session.request(
                         "POST",
                         url,
@@ -487,7 +486,7 @@ class MeijuCloud(MideaCloud):
             header.update({"accesstoken": self._access_token})
         response: dict = {"code": -1}
         try:
-            with self._api_lock:
+            async with self._api_lock:
                 r = await self._session.request(
                     method,
                     url,
@@ -677,7 +676,7 @@ class MideaAirCloud(MideaCloud):
         response: dict = {"errorCode": -1}
         for attempt in range(3):
             try:
-                with self._api_lock:
+                async with self._api_lock:
                     r = await self._session.request(
                         "POST",
                         url,
