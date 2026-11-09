@@ -32,6 +32,26 @@ CONF_ROOM_NAME = "room_name"
 CONF_PROTOCOL = "protocol"
 CONF_CATEGORY = "category"
 CONF_UPDATE_CHECK_INTERVAL = "update_check_interval"
+CONF_CONNECTION_TYPE = "connection_type"
+
+# Connection type per device: how it is reached at runtime.
+# cloud_v2: Midea ODM cloud (Thing Model V2 properties, ref: midea_odm_device)
+# lan: local TCP communication (existing behavior)
+# cloud_v1: Meiju cloud Lua status query (ref: midea_auto_cloud)
+CONNECTION_TYPE_CLOUD_V2 = "cloud_v2"
+CONNECTION_TYPE_LAN = "lan"
+CONNECTION_TYPE_CLOUD_V1 = "cloud_v1"
+
+# Icon + letter badges identifying the connection type of a device,
+# shown in the add-device list and next to the model in device info.
+CONNECTION_TYPE_BADGES = {
+    CONNECTION_TYPE_CLOUD_V2: "☁️Cloud V2",
+    CONNECTION_TYPE_LAN: "🖥️Local",
+    CONNECTION_TYPE_CLOUD_V1: "☁️Cloud V1",
+}
+
+# Default polling interval (seconds) for cloud-connected devices.
+DEFAULT_CLOUD_SCAN_INTERVAL = 30
 
 # Setup mode: "auto" (account login + LAN discovery) or "manual" (no cloud)
 SETUP_MODE_AUTO = "auto"
