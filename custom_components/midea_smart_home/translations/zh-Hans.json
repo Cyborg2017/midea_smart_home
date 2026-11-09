@@ -1725,6 +1725,14 @@
           "off": "关闭"
         }
       },
+      "motor_speed": {
+        "name": "电机速度",
+        "state": {
+          "motor_speed_fast": "快速",
+          "motor_speed_medium": "中速",
+          "motor_speed_silent": "静音"
+        }
+      },
       "mouthfeel": {
         "name": "口感",
         "state": {
@@ -3651,11 +3659,17 @@
       "maintenance_reminder_switch": {
         "name": "维护提醒开关"
       },
+      "manual_pull_mode": {
+        "name": "手动拉帘"
+      },
       "micro_leak_protection": {
         "name": "微漏保护"
       },
       "microbubble": {
         "name": "超微净泡"
+      },
+      "motor_reverse": {
+        "name": "电机反转"
       },
       "move_clean": {
         "name": "移动清洗"

@@ -1725,6 +1725,14 @@
           "off": "Off"
         }
       },
+      "motor_speed": {
+        "name": "Motor Speed",
+        "state": {
+          "motor_speed_fast": "Fast",
+          "motor_speed_medium": "Medium",
+          "motor_speed_silent": "Silent"
+        }
+      },
       "mouthfeel": {
         "name": "Mouthfeel",
         "state": {
@@ -3651,11 +3659,17 @@
       "maintenance_reminder_switch": {
         "name": "Maintenance Reminder Switch"
       },
+      "manual_pull_mode": {
+        "name": "Manual Pull"
+      },
       "micro_leak_protection": {
         "name": "Micro Leak Protection"
       },
       "microbubble": {
         "name": "Microbubble Soak"
+      },
+      "motor_reverse": {
+        "name": "Motor Reverse"
       },
       "move_clean": {
         "name": "Move Clean"

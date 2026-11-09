@@ -433,6 +433,17 @@ class CloudV2Device(BaseCloudDevice):
         merged: dict[str, Any] = dict(status)
         merged.update(flat)
         merged.update(sections)
+
+        # Alias thing keys back to attribute names so entities configured
+        # with attribute + thing_key can read values by their attribute name.
+        for attr, thing_key in self._attr_to_thing.items():
+            if thing_key in merged and attr not in merged:
+                merged[attr] = merged[thing_key]
+        for attr, (thing_key, field) in self._attr_to_field.items():
+            dotted = f"{thing_key}.{field}"
+            if dotted in merged and attr not in merged:
+                merged[attr] = merged[dotted]
+
         self._register_refresh_success(merged)
 
     def set_attribute(self, attr: str, value: Any) -> None:
