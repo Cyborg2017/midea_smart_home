@@ -415,11 +415,11 @@ class CloudV2Device(BaseCloudDevice):
 
 
 class CloudV1Device(BaseCloudDevice):
-    """Device backed by the Meiju cloud Lua status endpoint.
+    """Device backed by the Meiju cloud Lua endpoints.
 
     Status keys are identical to the LAN device because the cloud runs the
-    same Lua protocol. The Meiju cloud exposes no Lua control endpoint, so
-    control entities are read-only.
+    same Lua protocol, so controls use the same status keys and are sent
+    through /mjl/v1/device/lua/control.
     """
 
     def __init__(
@@ -456,6 +456,7 @@ class CloudV1Device(BaseCloudDevice):
             self._mapping.get("polling_query") or self._initial_query
         )
         self._default_values = dict(self._mapping.get("default_values") or {})
+        self._centralized = list(self._mapping.get("centralized") or [])
         self._expression_evaluator = ExpressionEvaluator(
             self._mapping.get("calculate")
         )
@@ -531,13 +532,41 @@ class CloudV1Device(BaseCloudDevice):
             self._register_refresh_failure()
 
     def set_attribute(self, attr: str, value: Any) -> None:
-        """Cloud_v1 is read-only: the Meiju cloud has no control endpoint."""
+        """Send a single control through the cloud Lua endpoint."""
         self.set_attributes({attr: value})
 
     def set_attributes(self, controls: dict[str, Any]) -> None:
-        """Cloud_v1 is read-only; log the dropped control at debug level."""
-        _LOGGER.debug(
-            "[cloud_device] control ignored (cloud_v1 read-only): device_id=%s controls=%s",
-            self._device_id,
-            controls,
-        )
+        """Send controls through the Meiju cloud Lua endpoint."""
+        if controls:
+            self._schedule_async(self._async_send_controls(controls))
+
+    async def _async_send_controls(self, controls: dict[str, Any]) -> None:
+        """Send a control command and reflect the result optimistically."""
+        control = dict(controls)
+        # Devices with centralised keys need the remaining keys to stay in
+        # sync with the current state (same behaviour as the LAN device).
+        for key in self._centralized:
+            if key in control:
+                continue
+            if key in self._data:
+                control[key] = self._data[key]
+        try:
+            ok = await self._cloud.send_device_control(
+                self._appliance_code, control=control, status=self._data
+            )
+        except Exception as e:
+            _LOGGER.warning(
+                "[cloud_device] control failed: device_id=%s controls=%s error=%s",
+                self._device_id,
+                control,
+                e,
+            )
+            return
+        if ok:
+            self._apply_local_update(control)
+        else:
+            _LOGGER.warning(
+                "[cloud_device] control rejected: device_id=%s controls=%s",
+                self._device_id,
+                control,
+            )
