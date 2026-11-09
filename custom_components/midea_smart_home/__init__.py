@@ -348,7 +348,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             )
 
             if connection_type == CONNECTION_TYPE_LAN:
-                import asyncio
                 if initial_query and isinstance(initial_query, list):
                     for item in initial_query:
                         if isinstance(item, dict):
@@ -417,8 +416,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         except Exception as e:
             _LOGGER.error("[init] device initialization failed: device_id=%s error=%s", device_id, e)
             return None
-
-    import asyncio
 
     tasks = [init_single_device(device_data) for device_data in devices]
     results = await asyncio.gather(*tasks, return_exceptions=True)
