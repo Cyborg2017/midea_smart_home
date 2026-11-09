@@ -1,3 +1,4 @@
+import re
 from typing import Any, Optional, Union, Generator
 
 from homeassistant.config_entries import ConfigEntry
@@ -133,7 +134,10 @@ class MideaBaseEntity(CoordinatorEntity[MideaCoordinator]):
         self._attr_unique_id = f"{platform_name}.midea_{device_id}_{entity_key}" if platform_name else f"midea_{device_id}_{entity_key}"
 
         if platform_name:
-            self.entity_id = f"{platform_name}.midea_{device_id}_{entity_key.lower()}"
+            # Entity IDs must be slugified: cloud_v2 keys contain dots
+            # (e.g. "fishtank.silentswitch") and uppercase letters.
+            slug = re.sub(r"[^a-z0-9_]+", "_", entity_key.lower()).strip("_")
+            self.entity_id = f"{platform_name}.midea_{device_id}_{slug}"
 
         self._attr_translation_key = self._config.get("translation_key", entity_key)
 
