@@ -31,11 +31,12 @@ async def async_setup_entry(
                 switch_rationale = config.get("rationale", rationale)
                 condition = config.get("condition")
                 command = config.get("command")
+                control_key = config.get("control_key")
                 include_current = config.get("include_current")
                 entities.append(
                     MideaSwitchEntity(
                         coordinator, device_id, device_type, sn, sn8, device_name,
-                        switch_id, translation_key, switch_rationale, condition, command, include_current, model
+                        switch_id, translation_key, switch_rationale, condition, command, control_key, include_current, model
                     )
                 )
 
@@ -58,6 +59,7 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         rationale: list = None,
         condition: dict = None,
         command: dict = None,
+        control_key: str = None,
         include_current: list = None,
         model: str = None,
     ):
@@ -67,6 +69,7 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
             platform_name="switch", config=config, rationale=rationale, condition=condition
         )
         self._switch_id = switch_id
+        self._control_key = control_key or switch_id
         self._command = command
         self._include_current = include_current or []
 
@@ -98,7 +101,7 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
         merged_command = {}
         if isinstance(self._command, dict):
             merged_command.update(self._command)
-        merged_command[attribute_key] = value
+        merged_command[self._control_key] = value
 
         for attr in self._include_current:
             current_value = self._get_nested_value(attr)

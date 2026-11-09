@@ -585,6 +585,7 @@
             "sedentary_remind": { "default": "mdi:account-clock" },
             "self_clean": { "default": "mdi:washing-machine" },
             "set_germicidal_countdown": { "default": "mdi:calendar-alert" },
+            "silence_set_state": { "default": "mdi:volume-off" },
             "silent_mode": { "default": "mdi:volume-off" },
             "sleep_state1": { "default": "mdi:bed" },
             "sleep_state2": { "default": "mdi:bed" },

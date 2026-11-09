@@ -3646,6 +3646,9 @@
       "set_germicidal_countdown": {
         "name": "Sterilization Reminder"
       },
+      "silence_set_state": {
+        "name": "Silence"
+      },
       "silent_mode": {
         "name": "Silent Mode"
       },

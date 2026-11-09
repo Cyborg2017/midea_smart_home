@@ -351,6 +351,12 @@ DEVICE_MAPPING = {
                     "precision": 1
                 }
             },
+            Platform.SWITCH: {
+                "silence_set_state": {
+                    "control_key": "silence_function_state",
+                    "command": {"control_type": "5"},
+                }
+            },
             Platform.SENSOR: {
                 "cur_temp": {
                     "device_class": SensorDeviceClass.TEMPERATURE,

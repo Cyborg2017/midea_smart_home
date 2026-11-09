@@ -3646,6 +3646,9 @@
       "set_germicidal_countdown": {
         "name": "高温杀菌提醒"
       },
+      "silence_set_state": {
+        "name": "静音"
+      },
       "silent_mode": {
         "name": "超智能降噪"
       },
