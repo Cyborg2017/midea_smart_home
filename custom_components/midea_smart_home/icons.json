@@ -75,6 +75,7 @@
             "bath_heater": { "default": "mdi:shower-head" },
             "cooling_fan": { "default": "mdi:fan" },
             "electric_heater": { "default": "mdi:thermostat" },
+            "floor_heating": { "default": "mdi:radiator" },
             "freezing_zone": { "default": "mdi:fridge-bottom" },
             "heating": { "default": "mdi:radiator" },
             "storage_zone": { "default": "mdi:fridge-top" },

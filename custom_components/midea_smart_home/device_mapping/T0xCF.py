@@ -326,5 +326,45 @@ DEVICE_MAPPING = {
                 }
             }
         }
+    },
+    "00000M33": {
+        "rationale": ["off", "on"],
+        "initial_query": [{}],
+        "polling_query": [{}],
+        "entities": {
+            Platform.CLIMATE: {
+                "floor_heating": {
+                    "power": "power_state",
+                    "hvac_modes": {
+                        "off": {"power_state": "off"},
+                        "heat": {"power_state": "on", "run_mode": "heat"},
+                        "cool": {"power_state": "on", "run_mode": "cool"},
+                        "auto": {"power_state": "on", "run_mode": "auto"},
+                    },
+                    "target_temperature": "temp_set",
+                    "current_temperature": "cur_temp",
+                    "min_temp": 5,
+                    "max_temp": 55,
+                    "temperature_unit": UnitOfTemperature.CELSIUS,
+                    "precision": 1
+                }
+            },
+            Platform.SENSOR: {
+                "cur_temp": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT,
+                    "translation_key": "cur_temperature"
+                },
+                "temp_set": {
+                    "device_class": SensorDeviceClass.TEMPERATURE,
+                    "unit_of_measurement": UnitOfTemperature.CELSIUS,
+                    "state_class": SensorStateClass.MEASUREMENT
+                },
+                "error_code": {
+                    "device_class": SensorDeviceClass.ENUM
+                }
+            }
+        }
     }
 }

@@ -476,6 +476,9 @@
           }
         }
       },
+      "floor_heating": {
+        "name": "温控器(地暖)"
+      },
       "freezing_zone": {
         "name": "温控器(冷冻)"
       },

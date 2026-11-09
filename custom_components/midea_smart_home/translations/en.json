@@ -476,6 +476,9 @@
           }
         }
       },
+      "floor_heating": {
+        "name": "Thermostat (Floor Heating)"
+      },
       "freezing_zone": {
         "name": "Thermostat (Freezer)"
       },
