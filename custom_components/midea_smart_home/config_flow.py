@@ -613,6 +613,17 @@ async def _probe_device_resources(flow, info: dict) -> str:
 
     return "ok"
 
+def _shared_cloud_client(hass, account: str):
+    """Return the cloud client already used by the running integration.
+
+    Logging in again with the same account invalidates the running token (the
+    cloud keeps one session per account) and pushes a "new device signed in"
+    alert to the user, so probing must reuse the existing client when possible.
+    """
+    shared = hass.data.get(DOMAIN, {}).get("cloud_shared", {})
+    return (shared.get("clients") or {}).get(f"meiju:{account}")
+
+
 async def _probe_cloud_v2(flow, device_id: int, info: dict) -> bool:
     """Probe whether a discovered device is usable through cloud_v2.
 
@@ -1051,6 +1062,17 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors={"base": "all_devices_added"},
                 description_placeholders={"note": "All discovered devices have already been added"},
             )
+
+        shared_client = _shared_cloud_client(self.hass, self._account)
+        if shared_client is not None and getattr(shared_client, "_access_token", None):
+            _LOGGER.info(
+                "[config_flow] reuse shared cloud client: account=%s", self._account
+            )
+            self._user_cloud = shared_client
+            self._cloud_devices = await self._user_cloud.list_appliances(home_id=None) or {}
+            lua_common_dir = get_lua_common_path(self.hass.config.config_dir)
+            await self._download_common_lua_files(lua_common_dir)
+            return await self.async_step_select_device()
 
         if self._session is None:
             self._session = ClientSession()
@@ -1921,6 +1943,17 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         if not (self._account and self._password):
             return "no_account_password"
 
+        shared_client = _shared_cloud_client(self.hass, self._account)
+        if shared_client is not None and getattr(shared_client, "_access_token", None):
+            _LOGGER.info(
+                "[config_flow] reuse shared cloud client: account=%s", self._account
+            )
+            self._user_cloud = shared_client
+            self._cloud_devices = await self._user_cloud.list_appliances(home_id=None) or {}
+            lua_common_dir = get_lua_common_path(self.hass.config.config_dir)
+            await self._download_common_lua_files(lua_common_dir)
+            return None
+
         if self._session is None:
             self._session = ClientSession()
 
@@ -2134,7 +2167,16 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 description_placeholders={"note": "All discovered devices have already been added"},
             )
 
-        if self._session is None:
+        if self._user_cloud is None:
+            shared_client = _shared_cloud_client(self.hass, self._account)
+            if shared_client is not None and getattr(shared_client, "_access_token", None):
+                _LOGGER.info(
+                    "[config_flow] reuse shared cloud client: account=%s", self._account
+                )
+                self._user_cloud = shared_client
+                self._cloud_devices = await self._user_cloud.list_appliances(home_id=None) or {}
+
+        if self._session is None and self._user_cloud is None:
             self._session = ClientSession()
 
             try:
