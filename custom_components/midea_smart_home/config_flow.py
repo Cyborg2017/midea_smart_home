@@ -390,7 +390,7 @@ _FLOW_STRINGS: dict[str, dict[str, str]] = {
         "reason_no_lua": "Lua file unavailable",
         "reason_no_status": "Initialization query returned insufficient data",
         "reason_protocol": "V2 0x0110 protocol not supported",
-        "pending_notice": "The following device types are not supported yet — please open a GitHub issue to ask the original author for support: ",
+        "pending_notice": "These device types are not adapted yet. They are added as LAN devices, but may not expose any entities. Please open a GitHub issue to ask the original author for support: ",
     },
     "zh-Hans": {
         "pending_marker": "⏳ 待支持",
@@ -399,7 +399,7 @@ _FLOW_STRINGS: dict[str, dict[str, str]] = {
         "reason_no_lua": "无法获取 Lua 文件",
         "reason_no_status": "初始化查询数据长度不足",
         "reason_protocol": "V2 0x0110 协议暂不支持",
-        "pending_notice": "以下设备类型待支持，请到 GitHub 提 Issue 找原作者支持：",
+        "pending_notice": "以下设备类型尚未适配，已按局域网方式加入列表，可能没有可用实体。建议到 GitHub 提 Issue 找原作者支持：",
     },
 }
 
@@ -780,27 +780,30 @@ async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
     hybrid = getattr(flow, "_hybrid", True)
 
     for did, info in flow._discovered_devices.items():
-        if info.get("unsupported_protocol"):
-            unsupported[did] = "protocol"
-            continue
+        # V2 0x0110 devices cannot speak TCP, so the LAN probe is pointless.
+        unsupported_protocol = bool(info.get("unsupported_protocol"))
+        status = "protocol" if unsupported_protocol else ""
 
-        # 1) cloud_v2 (Thing Model) takes priority over LAN
-        if hybrid and await _probe_cloud_v2(flow, did, info):
+        # 1) cloud_v2 (Thing Model) takes priority over LAN. V2 0x0110
+        # devices skip straight to the cloud_v1 fallback below.
+        if hybrid and not unsupported_protocol and await _probe_cloud_v2(flow, did, info):
             info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V2
             supported[did] = info
             continue
 
         # 2) LAN validation (existing behavior)
-        status = await _probe_device_resources(flow, info)
-        if status == "ok":
-            if info.get(CONF_DEVICE_TYPE) not in DEVICE_TYPES:
-                pending[did] = info
+        if not unsupported_protocol:
+            status = await _probe_device_resources(flow, info)
+            if status == "ok":
+                # Unadapted types are still added over LAN, but they are also
+                # listed in the notice asking the author for support.
+                if info.get(CONF_DEVICE_TYPE) not in DEVICE_TYPES:
+                    pending[did] = info
+                info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_LAN
+                supported[did] = info
                 continue
-            info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_LAN
-            supported[did] = info
-            continue
 
-        # 3) cloud_v1 fallback for devices the LAN path cannot handle
+        # 3) cloud_v1 fallback for every device the LAN path cannot handle
         if hybrid and await _probe_cloud_v1(flow, did, info):
             info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V1
             supported[did] = info
@@ -1138,7 +1141,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="select_device",
             menu_options=["select_device_continue", "select_device_rescan"],
             description_placeholders={
-                "device_count": str(len(self._supported_devices) + len(self._pending_devices)),
+                "device_count": str(len(self._supported_devices)),
             },
         )
 
@@ -2247,7 +2250,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             step_id="select_device_option",
             menu_options=["select_device_continue_option", "select_device_rescan_option"],
             description_placeholders={
-                "device_count": str(len(self._supported_devices) + len(self._pending_devices)),
+                "device_count": str(len(self._supported_devices)),
             },
         )
 
