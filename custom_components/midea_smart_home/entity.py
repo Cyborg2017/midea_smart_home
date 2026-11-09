@@ -20,6 +20,7 @@ from .const import (
 )
 from .coordinator import MideaCoordinator, ControlValue
 from .device_mapping import get_device_mapping
+from .device_mapping.cloud_v2 import get_cloud_v2_mapping
 
 def iter_midea_device_configs(
     hass: HomeAssistant, entry: ConfigEntry
@@ -45,7 +46,18 @@ def iter_midea_device_configs(
         device_type_int = (
             int(device_type, 16) if isinstance(device_type, str) else device_type
         )
-        device_mapping = get_device_mapping(device_type_int, model, sn8, category)
+        # Cloud v2 devices use the Thing Model mappings, not the LAN ones.
+        if (
+            getattr(coordinator, "connection_type", CONNECTION_TYPE_LAN)
+            == CONNECTION_TYPE_CLOUD_V2
+        ):
+            device_mapping = get_cloud_v2_mapping(
+                device_type_int, model, sn8, category
+            )
+        else:
+            device_mapping = get_device_mapping(
+                device_type_int, model, sn8, category
+            )
         yield coordinator, device_id, device_type, sn, sn8, device_name, model, device_mapping
 
 
