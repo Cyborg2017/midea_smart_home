@@ -121,6 +121,29 @@ class CloudSecurity:
             len(aes_key),
         ).decode()
 
+    def aes_encrypt(
+        self,
+        data: Buffer | str,
+        key: bytes | None = None,
+        iv: bytes | None = None,
+    ) -> bytes:
+        if len(data) == 0:
+            return b""
+        aes_key = key if key is not None else self._aes_key
+        aes_iv = iv if iv is not None else self._aes_iv
+        if aes_key is None:
+            raise ValueError("Encrypt need a key")
+        if isinstance(data, str):
+            data = bytes.fromhex(data)
+        if aes_iv is None or aes_iv == b"0":
+            return AES.new(aes_key, AES.MODE_ECB).encrypt(pad(data, len(aes_key)))
+        return AES.new(aes_key, AES.MODE_CBC, iv=aes_iv).encrypt(
+            pad(data, len(aes_key)),
+        )
+
+    def aes_encrypt_with_fixed_key(self, data: Buffer) -> bytes:
+        return self.aes_encrypt(data, self._fixed_key, self._fixed_iv)
+
 
 class MeijuCloudSecurity(CloudSecurity):
     """Meiju Cloud Security."""
