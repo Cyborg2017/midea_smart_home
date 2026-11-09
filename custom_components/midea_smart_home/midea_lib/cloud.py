@@ -23,6 +23,10 @@ from .security import CloudSecurity, MeijuCloudSecurity, MideaAirSecurity
 SN8_MIN_SERIAL_LENGTH = 17
 # Max automatic relogin attempts after a token-invalid response (40002 etc.)
 TOKEN_INVALID_RELOGIN_LIMIT = 3
+# Minimum seconds between automatic relogins. Every successful login makes the
+# Midea app notify the user about a new signed-in device, so relogin storms must
+# never be allowed to repeat more often than this.
+LOGIN_MIN_INTERVAL = 300
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -85,6 +89,8 @@ class MideaCloud:
         self._last_error: tuple[int, str] | None = None
         # Consecutive automatic relogins triggered by token-invalid responses
         self._token_invalid_retry_count = 0
+        # Monotonic timestamp of the last successful login (rate limiting)
+        self._last_login_at = 0.0
 
     def _make_general_data(self) -> dict[str, Any]:
         return {}
@@ -110,6 +116,18 @@ class MideaCloud:
             or ("token" in msg_lower and "not exist" in msg_lower)
             or "token校验不通过" in msg
         )
+
+    def _relogin_allowed(self) -> bool:
+        """Rate-limit automatic relogins so the cloud/app is not spammed."""
+        elapsed = time.monotonic() - self._last_login_at
+        if elapsed < LOGIN_MIN_INTERVAL:
+            _LOGGER.warning(
+                "[cloud] skip auto relogin: last login %.0fs ago (min interval %ss)",
+                elapsed,
+                LOGIN_MIN_INTERVAL,
+            )
+            return False
+        return True
 
     async def _api_request(
         self,
@@ -182,6 +200,8 @@ class MideaCloud:
                     endpoint,
                     self._token_invalid_retry_count,
                 )
+                return None
+            if not self._relogin_allowed():
                 return None
             self._token_invalid_retry_count += 1
             _LOGGER.warning(
@@ -326,6 +346,7 @@ class MeijuCloud(MideaCloud):
             ):
                 self._access_token = response["mdata"]["accessToken"]
                 self._uid = (response["mdata"].get("userInfo") or {}).get("uid")
+                self._last_login_at = time.monotonic()
                 self._security.set_aes_keys(
                     self._security.aes_decrypt_with_fixed_key(response["key"]),
                     b"0",
@@ -528,6 +549,8 @@ class MeijuCloud(MideaCloud):
                     self._token_invalid_retry_count,
                 )
                 return None
+            if not self._relogin_allowed():
+                return None
             self._token_invalid_retry_count += 1
             _LOGGER.warning(
                 "[cloud] thing api token invalid, relogin and retry: endpoint=%s retry_count=%s",
@@ -729,6 +752,7 @@ class MideaAirCloud(MideaCloud):
                 self._access_token = response["accessToken"]
                 self._uid = response["userId"]
                 self._session_id = response["sessionId"]
+                self._last_login_at = time.monotonic()
                 return True
         if self._last_error:
             raise CloudLoginError(self._last_error[0], self._last_error[1])
