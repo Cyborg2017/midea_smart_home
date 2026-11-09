@@ -26,7 +26,7 @@ TOKEN_INVALID_RELOGIN_LIMIT = 3
 # Minimum seconds between automatic relogins. Every successful login makes the
 # Midea app notify the user about a new signed-in device, so relogin storms must
 # never be allowed to repeat more often than this.
-LOGIN_MIN_INTERVAL = 300
+LOGIN_MIN_INTERVAL = 30
 
 _LOGGER = logging.getLogger(__name__)
 
