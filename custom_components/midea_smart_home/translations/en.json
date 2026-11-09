@@ -136,7 +136,7 @@
         "data": {
           "devices": "Devices"
         },
-        "description": "Select devices to add. The badge shows how each device is connected (🖥️Local LAN / ☁️Cloud V2 / ☁️Cloud V1).{pending_notice}{unsupported_list}",
+        "description": "Select devices to add. The badge shows how each device is connected (🖥️Lan / ☁️Cloud V2 / ☁️Cloud V1).{pending_notice}{unsupported_list}",
         "title": "Select Devices"
       },
       "user": {
@@ -3993,7 +3993,7 @@
         "data": {
           "devices": "Devices"
         },
-        "description": "Select devices to add. The badge shows how each device is connected (🖥️Local LAN / ☁️Cloud V2 / ☁️Cloud V1).{pending_notice}{unsupported_list}",
+        "description": "Select devices to add. The badge shows how each device is connected (🖥️Lan / ☁️Cloud V2 / ☁️Cloud V1).{pending_notice}{unsupported_list}",
         "title": "Select New Devices"
       },
       "select_device_option": {

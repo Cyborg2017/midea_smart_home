@@ -136,7 +136,7 @@
         "data": {
           "devices": "设备"
         },
-        "description": "选择要添加的设备，图标表示连接方式（🖥️Local 局域网 / ☁️Cloud V2 云端 v2 / ☁️Cloud V1 云端 v1）。{pending_notice}{unsupported_list}",
+        "description": "选择要添加的设备，图标表示连接方式（🖥️Lan → 局域网 / ☁️Cloud V2 → 云端 v2 / ☁️Cloud V1 → 云端 v1）。{pending_notice}{unsupported_list}",
         "title": "选择设备"
       },
       "user": {
@@ -3993,7 +3993,7 @@
         "data": {
           "devices": "设备"
         },
-        "description": "选择要添加的设备，图标表示连接方式（🖥️Local 局域网 / ☁️Cloud V2 云端 v2 / ☁️Cloud V1 云端 v1）。{pending_notice}{unsupported_list}",
+        "description": "选择要添加的设备，图标表示连接方式（🖥️Lan → 局域网 / ☁️Cloud V2 → 云端 v2 / ☁️Cloud V1 → 云端 v1）。{pending_notice}{unsupported_list}",
         "title": "选择新设备"
       },
       "select_device_option": {
