@@ -153,11 +153,22 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         if not self.hass or self.hass.is_stopping or not self._active:
             return
 
+        # Defensive: the event loop might have been closed between the checks
+        # above and call_soon_threadsafe below during HA shutdown.
+        loop = self.hass.loop
+        if loop.is_closed():
+            return
+
         self._check_availability_change()
 
-        self.hass.loop.call_soon_threadsafe(
-            self.async_set_updated_data, self.device.data
-        )
+        try:
+            loop.call_soon_threadsafe(
+                self.async_set_updated_data, self.device.data
+            )
+        except RuntimeError as e:
+            if "Event loop is closed" in str(e):
+                return
+            raise
 
     def _check_availability_change(self) -> None:
         """Check if device availability changed and send notifications."""

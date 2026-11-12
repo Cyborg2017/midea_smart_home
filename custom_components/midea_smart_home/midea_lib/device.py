@@ -118,6 +118,8 @@ class DeviceController(threading.Thread):
         self._is_run = False
         self._stop_event.set()
         self._close_socket()
+        if self.is_alive():
+            self.join(timeout=3.0)
 
     def _close_socket(self) -> None:
         self._buffer = b""
@@ -395,6 +397,7 @@ class DeviceController(threading.Thread):
         else:
             control = {attr: value}
         control_hex = self._codec.build_control(control, current_status)
+        _LOGGER.debug("[device] send control: %s -> %s", control, control_hex)
         if not control_hex:
             return {}
         self._send_message(control_hex)
@@ -839,6 +842,13 @@ class MideaDevice:
         for callback in self._callbacks:
             try:
                 callback()
+            except RuntimeError as e:
+                # Event loop being closed during HA shutdown is expected;
+                # do not spam the logs as errors for this specific case.
+                if "Event loop is closed" in str(e):
+                    _LOGGER.debug("[device] callback skipped (loop closed): %s", self._device_id)
+                else:
+                    _LOGGER.error("[device] callback failed: %s", e)
             except Exception as e:
                 _LOGGER.error("[device] callback failed: %s", e)
 
