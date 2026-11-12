@@ -783,6 +783,9 @@
       "air_set_hour": {
         "name": "Antibacterial Storage Time"
       },
+      "appoint_time_minutes": {
+        "name": "Appointment Time"
+      },
       "boiling_water_temperature": {
         "name": "Boiling Water Set Temperature"
       },
@@ -815,6 +818,9 @@
       },
       "hosting_upper": {
         "name": "PM2.5 Upper (Auto Purification)"
+      },
+      "keep_warm_time_minutes": {
+        "name": "Keep-warm Time"
       },
       "leak_water_protection_value": {
         "name": "Leak Water Protection Value"
@@ -905,6 +911,9 @@
       },
       "work_second": {
         "name": "Set Second"
+      },
+      "work_time_minutes": {
+        "name": "Work Time Setting"
       }
     },
     "select": {
@@ -2239,6 +2248,25 @@
           "off": "Off"
         }
       },
+      "steamer_control": {
+        "name": "Control",
+        "state": {
+          "pause": "Pause",
+          "resume": "Resume",
+          "standby": "Standby"
+        }
+      },
+      "steamer_start": {
+        "name": "Start",
+        "state": {
+          "schedule_kuaidun": "Scheduled Fast Stew",
+          "schedule_kuaizheng": "Scheduled Fast Steam",
+          "schedule_now": "Scheduled (last mode)",
+          "start_kuaidun": "Fast Stew",
+          "start_kuaizheng": "Fast Steam",
+          "start_now": "Start now (last mode)"
+        }
+      },
       "sweep_mop_mode": {
         "name": "Sweep Mop Mode",
         "state": {
@@ -2544,6 +2572,9 @@
       "air_left_hour": {
         "name": "Air Remaining Time"
       },
+      "appoint_time_min": {
+        "name": "Appointment Time"
+      },
       "appointment_time": {
         "name": "Appointment Time"
       },
@@ -2685,11 +2716,17 @@
       "cur_temperature_underside": {
         "name": "Lower Tube Temperature"
       },
+      "curr_work_step": {
+        "name": "Current Step"
+      },
       "current_bath_set_temperature": {
         "name": "Bath Set Temperature"
       },
       "current_heat_set_temperature": {
         "name": "Heating Set Temperature"
+      },
+      "current_temperature": {
+        "name": "Current Temperature"
       },
       "current_time_power": {
         "name": "Real-time Power"
@@ -2930,6 +2967,9 @@
       "flushing_days": {
         "name": "Flushing Days"
       },
+      "food_type": {
+        "name": "Food Type"
+      },
       "freezing_real_temperature": {
         "name": "Freezer Actual Temperature"
       },
@@ -2980,6 +3020,9 @@
       },
       "input_temperature_sensing": {
         "name": "Inlet Water Temperature"
+      },
+      "keep_warm_time_min": {
+        "name": "Keep-warm Time"
       },
       "lan_ip": {
         "name": "LAN IP"
@@ -3094,8 +3137,17 @@
       "regeneration_left_seconds": {
         "name": "Regeneration Time Remaining"
       },
+      "remain_appoint_time_min": {
+        "name": "Remaining Appointment Time"
+      },
+      "remain_keep_warm_time_min": {
+        "name": "Remaining Keep-warm Time"
+      },
       "remain_time": {
         "name": "Remaining Time"
+      },
+      "remain_work_time_min": {
+        "name": "Remaining Work Time"
       },
       "remind_maintenance_days": {
         "name": "Days Until Maintenance"
@@ -3123,6 +3175,9 @@
       },
       "room_temp5": {
         "name": "Room Temperature (Zone 5)"
+      },
+      "run_mode": {
+        "name": "Run Mode"
       },
       "running_status": {
         "name": "Running Status",
@@ -3177,6 +3232,9 @@
       },
       "target_indoor_fan_speed": {
         "name": "Target Indoor Fan Speed"
+      },
+      "target_temperature": {
+        "name": "Target Temperature"
       },
       "temp_set": {
         "name": "Target Temperature"
@@ -3280,6 +3338,9 @@
       "water_gage_bar": {
         "name": "Water Pressure"
       },
+      "water_shortage_state": {
+        "name": "Water Shortage"
+      },
       "water_status": {
         "name": "Water Box Status",
         "state": {
@@ -3319,6 +3380,9 @@
       },
       "work_time": {
         "name": "Work Time"
+      },
+      "work_time_min": {
+        "name": "Set Work Time"
       }
     },
     "switch": {
