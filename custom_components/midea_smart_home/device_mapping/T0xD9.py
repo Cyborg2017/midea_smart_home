@@ -799,7 +799,7 @@ DEVICE_MAPPING = {
             }
         }
     },
-    "384L1181": {
+    ("384L1161", "384L1181"): {
         "rationale": ["off", "on"],
         # Physical drum ids used by polling D9 devices. Most models report
         # left=1 / right=2, but some use left=3 / right=4 instead. The poll
