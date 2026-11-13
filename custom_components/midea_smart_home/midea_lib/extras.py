@@ -24,6 +24,13 @@ class DeviceLogicHandler:
         self._last_valid_input_temp: Any = None
         self._last_valid_env_temp: Any = None
 
+    def set_drum_locations(self, drum_locations: dict) -> None:
+        """Update D9 raw drum ids after runtime profile detection."""
+        self._drum_locations = {
+            "left": int(drum_locations.get("left", 1)),
+            "right": int(drum_locations.get("right", 2)),
+        }
+
     def adjust_control_status(self, data: dict, running_status: str, prefix: str) -> None:
         control_status = "start" if running_status == "start" else "pause"
         control_status_key = f"{prefix}_control_status" if prefix else "control_status"

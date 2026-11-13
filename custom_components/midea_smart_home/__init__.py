@@ -48,7 +48,7 @@ from .midea_lib.cloud import MeijuCloud
 from .midea_lib.cloud_device import CloudV1Device, CloudV2Device
 from .midea_lib.device import MideaDevice
 from .midea_lib.lua import write_file, ensure_lua_files
-from .device_mapping import get_device_mapping, is_d9_polling_device
+from .device_mapping import get_device_mapping, has_explicit_mapping, is_d9_polling_device
 from .device_mapping.cloud_v2 import get_cloud_v2_mapping
 
 _LOGGER = logging.getLogger(__name__)
@@ -216,6 +216,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             device_mapping = get_cloud_v2_mapping(device_type_int, model, sn8, category)
         else:
             device_mapping = get_device_mapping(device_type_int, model, sn8, category)
+        # Devices without an explicit model/sn8 entry are auto-detected at
+        # runtime (left/right drums vs top/bottom drums), so no per-model
+        # mapping entry is required.
+        explicit_mapping = has_explicit_mapping(device_type_int, model, sn8)
         calculate_config = device_mapping.get("calculate", {})
         centralized = list(device_mapping.get("centralized", []))
         default_values = dict(device_mapping.get("default_values", {}))
@@ -233,8 +237,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Get polling settings from device data (user configurable via Options)
         polling_enabled = device_data.get("polling_enabled", True)  # Default to enabled
         # D9 polling devices: per-drum refresh interval defaults to 1s
-        # (standby +1s), others default to 30s
-        polling_interval = device_data.get("polling_interval", 1 if d9_polling else 30)
+        # (standby +1s), others default to 30s. Auto-detected D9 devices use
+        # the polling default until the profile is known.
+        if d9_polling or (device_type_int == 0xD9 and not explicit_mapping):
+            default_interval = 1
+        else:
+            default_interval = 30
+        polling_interval = device_data.get("polling_interval", default_interval)
         # Only enable polling if both device_mapping supports it AND user has enabled it
         effective_polling = enable_polling and polling_enabled
         _LOGGER.debug(
@@ -336,6 +345,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 if device.available:
                     break
                 time.sleep(0.5)
+            if device_type_int == 0xD9 and not explicit_mapping:
+                # Probe the first responses to pick the drum layout instead of
+                # requiring an sn8 entry for every model.
+                device.apply_d9_profile(device.detect_d9_profile())
             return device
 
         try:

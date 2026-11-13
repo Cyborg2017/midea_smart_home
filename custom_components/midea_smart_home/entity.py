@@ -38,6 +38,9 @@ def iter_midea_device_configs(
         coordinator = data.get("coordinator")
         if not coordinator:
             continue
+        device = data.get("device")
+        # Runtime-detected T0xD9 drum layout: dual_drum_lr / dual_drum_lr_pro / dual_drum_tb.
+        d9_profile = getattr(device, "d9_profile", "") or ""
         device_id = data[CONF_DEVICE_ID]
         device_type = data[CONF_DEVICE_TYPE]
         sn8 = data.get(CONF_SN8, "")
@@ -58,7 +61,7 @@ def iter_midea_device_configs(
             )
         else:
             device_mapping = get_device_mapping(
-                device_type_int, model, sn8, category
+                device_type_int, model, sn8, category, d9_profile=d9_profile
             )
         yield coordinator, device_id, device_type, sn, sn8, device_name, model, device_mapping
 

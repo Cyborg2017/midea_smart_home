@@ -55,7 +55,34 @@ def load_device_mappings():
 
 load_device_mappings()
 
-def get_device_mapping(device_type: int, model: str = "", sn8: str = "", category: str = "") -> dict:
+def _find_explicit(mapping: dict, key: str):
+    """Return the mapping entry for an exact key or a tuple alias."""
+    if not key:
+        return None
+    if key in mapping:
+        return mapping[key]
+    for candidate in mapping:
+        if isinstance(candidate, tuple) and key in candidate:
+            return mapping[candidate]
+    return None
+
+def has_explicit_mapping(device_type: int, model: str = "", sn8: str = "") -> bool:
+    """Check whether a device is covered by an explicit model/sn8 entry."""
+    mapping = DEVICE_MAPPINGS.get(device_type, {})
+    if not mapping:
+        return False
+    return (
+        _find_explicit(mapping, format_model(model)) is not None
+        or _find_explicit(mapping, sn8) is not None
+    )
+
+def get_device_mapping(
+    device_type: int,
+    model: str = "",
+    sn8: str = "",
+    category: str = "",
+    d9_profile: str = "",
+) -> dict:
     """Get device mapping for specified device type.
 
     Args:
@@ -63,11 +90,13 @@ def get_device_mapping(device_type: int, model: str = "", sn8: str = "", categor
         model: Device model string, used to get specific device mapping (highest priority)
         sn8: Device model code (8 digits), used to get specific device mapping
         category: Product category from cloud, used for default mapping fallback
+        d9_profile: Runtime-detected profile key (e.g. "dual_drum_lr"), used
+            before the category fallback for devices without an explicit entry
 
     Returns:
         Device mapping dict, returns model mapping if available,
         otherwise sn8 mapping if available,
-        otherwise default+category if exists, finally fallback to default
+        otherwise detected profile, category, default, finally fallback to default
     """
     mapping = DEVICE_MAPPINGS.get(device_type, {})
 
@@ -78,22 +107,13 @@ def get_device_mapping(device_type: int, model: str = "", sn8: str = "", categor
 
     formatted_model = format_model(model)
     if formatted_model:
-        if formatted_model in mapping:
-            result = mapping[formatted_model]
-        else:
-            for key in mapping:
-                if isinstance(key, tuple) and formatted_model in key:
-                    result = mapping[key]
-                    break
+        result = _find_explicit(mapping, formatted_model)
 
     if result is None and sn8:
-        if sn8 in mapping:
-            result = mapping[sn8]
-        else:
-            for key in mapping:
-                if isinstance(key, tuple) and sn8 in key:
-                    result = mapping[key]
-                    break
+        result = _find_explicit(mapping, sn8)
+
+    if result is None and d9_profile:
+        result = mapping.get(f"default_{d9_profile}")
 
     if result is None and category:
         category_key = f"default_{category.replace('-', '_')}"
