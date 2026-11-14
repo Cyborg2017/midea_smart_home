@@ -2973,11 +2973,17 @@
           "working_control_nonsupport": "Control Not Supported While Running"
         }
       },
+      "fan_cleanliness": {
+        "name": "Fan Cleanliness"
+      },
       "fan_output": {
         "name": "Fan Status"
       },
       "fan_type": {
         "name": "Fan Mode"
+      },
+      "filter_cleanliness": {
+        "name": "Filter Cleanliness"
       },
       "filter_install_time_slot1": {
         "name": "Physical Filter Last Replacement Time"
@@ -3117,6 +3123,12 @@
       "mode_set5": {
         "name": "Mode (Zone 5)"
       },
+      "monthly_energy_consumption": {
+        "name": "Monthly Energy Consumption"
+      },
+      "monthly_water_consumption": {
+        "name": "Monthly Water Consumption"
+      },
       "mouthfeel": {
         "name": "Mouthfeel"
       },
@@ -3125,6 +3137,9 @@
       },
       "night_light_brightness": {
         "name": "Night Light Brightness"
+      },
+      "oil_box_cleanliness": {
+        "name": "Oil Box Cleanliness"
       },
       "order_time": {
         "name": "Order Remaining Time"
@@ -3290,8 +3305,14 @@
       "temperature_bottom": {
         "name": "Bottom Temperature"
       },
+      "today_energy_consumption": {
+        "name": "Today's Energy Consumption"
+      },
       "today_feed_count": {
         "name": "Today's Feed Count"
+      },
+      "today_water_consumption": {
+        "name": "Today's Water Consumption"
       },
       "top_temperature": {
         "name": "Top Temperature"
@@ -3386,6 +3407,12 @@
       "water_volume": {
         "name": "Outlet Water Flow Rate"
       },
+      "weekly_energy_consumption": {
+        "name": "This Week's Energy Consumption"
+      },
+      "weekly_water_consumption": {
+        "name": "This Week's Water Consumption"
+      },
       "wind_pressure": {
         "name": "Wind Pressure"
       },
@@ -3413,6 +3440,12 @@
       },
       "work_time": {
         "name": "Work Time"
+      },
+      "yearly_energy_consumption": {
+        "name": "Yearly Energy Consumption"
+      },
+      "yearly_water_consumption": {
+        "name": "Yearly Water Consumption"
       }
     },
     "switch": {

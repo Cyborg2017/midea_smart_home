@@ -84,6 +84,9 @@ class MideaCloud:
         self._api_url = api_url
         self._access_token: str | None = None
         self._uid: str | None = None
+        # Numeric IoT user id, used by H5/plugin endpoints that identify the
+        # user by this value instead of the (GUID) account uid.
+        self._iot_user_id: str | None = None
         self._login_id = ""
         # (code, msg) of the last non-zero cloud response, None on success
         self._last_error: tuple[int, str] | None = None
@@ -94,6 +97,16 @@ class MideaCloud:
 
     def _make_general_data(self) -> dict[str, Any]:
         return {}
+
+    @property
+    def uid(self) -> str | None:
+        """Return the account uid of the logged-in user."""
+        return self._uid
+
+    @property
+    def iot_user_id(self) -> str | None:
+        """Return the numeric IoT user id of the logged-in user."""
+        return self._iot_user_id
 
     @staticmethod
     def _is_login_endpoint(endpoint: str) -> bool:
@@ -346,6 +359,11 @@ class MeijuCloud(MideaCloud):
             ):
                 self._access_token = response["mdata"]["accessToken"]
                 self._uid = (response["mdata"].get("userInfo") or {}).get("uid")
+                self._iot_user_id = str(
+                    response.get("iotUserId")
+                    or (response["mdata"].get("userInfo") or {}).get("userId")
+                    or ""
+                ) or None
                 self._last_login_at = time.monotonic()
                 self._security.set_aes_keys(
                     self._security.aes_decrypt_with_fixed_key(response["key"]),
@@ -585,6 +603,152 @@ class MeijuCloud(MideaCloud):
                 msg,
             )
         return None
+
+    async def app_plugin_request(
+        self,
+        alias: str,
+        data: dict[str, Any],
+        header: dict[str, Any] | None = None,
+        sign_request: bool = True,
+        _retried_after_login: bool = False,
+    ) -> dict | None:
+        """Request an App plugin endpoint through the cloud proxy.
+
+        Plugin responses use their own envelopes (retCode/errCode/errorCode)
+        instead of the standard code/data pair, so the raw JSON body is
+        returned and callers interpret the result.
+        """
+        header = dict(header or {})
+        random = str(int(time.time()))
+        url = self._api_url + alias
+        dump_data = json.dumps(data)
+        header["content-type"] = "application/json"
+        if sign_request:
+            sign = self._security.sign("", dump_data, random)
+            if sign:
+                header["sign"] = sign
+            header["secretVersion"] = "1"
+            header["random"] = random
+        if self._access_token is not None:
+            # App gateway endpoints use camelCase, the H5 plugin gateways
+            # use the hyphenated spelling.
+            if sign_request:
+                header["accessToken"] = self._access_token
+            else:
+                header["access-token"] = self._access_token
+        if sign_request and self._uid is not None:
+            header["uid"] = str(self._uid)
+        else:
+            header.setdefault("accept", "application/json, text/plain, */*")
+            header.setdefault("origin", "https://ismart.zhinengxiyifang.cn")
+            header.setdefault("referer", "https://ismart.zhinengxiyifang.cn/")
+
+        response: Any = None
+        try:
+            async with self._api_lock:
+                r = await self._session.request(
+                    "POST",
+                    url,
+                    headers=header,
+                    data=dump_data,
+                    timeout=ClientTimeout(10),
+                )
+                raw = await r.read()
+                status = r.status
+                response = json.loads(raw)
+        except (TimeoutError, ClientConnectionError, json.JSONDecodeError) as e:
+            _LOGGER.warning(
+                "[cloud] app plugin request failed: alias=%s error=%s",
+                alias,
+                repr(e),
+            )
+            return None
+        if not isinstance(response, dict):
+            return None
+        _LOGGER.debug(
+            "[cloud] app plugin response: alias=%s status=%s body=%s",
+            alias,
+            status,
+            response,
+        )
+        if status != 200:
+            _LOGGER.warning(
+                "[cloud] app plugin HTTP error: alias=%s status=%s body=%s",
+                alias,
+                status,
+                response,
+            )
+            return None
+
+        try:
+            code: int | None = int(response.get("code"))
+        except (TypeError, ValueError):
+            code = None
+        if code is not None and code != 0:
+            if (
+                not _retried_after_login
+                and self._is_token_invalid_response(response)
+            ):
+                if (
+                    self._token_invalid_retry_count >= TOKEN_INVALID_RELOGIN_LIMIT
+                    or not self._relogin_allowed()
+                ):
+                    return None
+                self._token_invalid_retry_count += 1
+                _LOGGER.warning(
+                    "[cloud] app plugin token invalid, relogin and retry: alias=%s",
+                    alias,
+                )
+                self._access_token = None
+                try:
+                    if await self.login():
+                        return await self.app_plugin_request(
+                            alias=alias,
+                            data=data,
+                            header=header,
+                            sign_request=sign_request,
+                            _retried_after_login=True,
+                        )
+                except CloudLoginError as e:
+                    _LOGGER.warning(
+                        "[cloud] relogin failed: alias=%s error=%s", alias, e
+                    )
+            msg = str(
+                response.get("msg")
+                or response.get("errMsg")
+                or response.get("desc")
+                or ""
+            )
+            self._last_error = (code, msg)
+            _LOGGER.warning(
+                "[cloud] app plugin error: alias=%s code=%s msg=%s",
+                alias,
+                code,
+                msg,
+            )
+            return None
+        plugin_code = None
+        for key in ("retCode", "errCode", "errorCode"):
+            if key in response:
+                plugin_code = response[key]
+                break
+        if plugin_code is not None and str(plugin_code) != "0":
+            msg = str(
+                response.get("desc")
+                or response.get("errMsg")
+                or response.get("msg")
+                or ""
+            )
+            _LOGGER.warning(
+                "[cloud] app plugin error: alias=%s code=%s msg=%s",
+                alias,
+                plugin_code,
+                msg,
+            )
+            return None
+        if _retried_after_login:
+            self._token_invalid_retry_count = 0
+        return response
 
     async def query_thing_properties(
         self,

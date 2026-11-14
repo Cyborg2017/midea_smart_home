@@ -34,6 +34,7 @@ from .const import (
     CONNECTION_TYPE_CLOUD_V2,
     CONNECTION_TYPE_LAN,
     DEFAULT_CLOUD_SCAN_INTERVAL,
+    DEFAULT_CLOUD_STATS_SCAN_INTERVAL,
     DEFAULT_PORT,
     DEVICE_TYPES,
     DOMAIN,
@@ -43,8 +44,9 @@ from .const import (
     ProtocolVersion,
 )
 from .config_flow import get_lua_custom_path, get_lua_file_path
-from .coordinator import MideaCoordinator
+from .coordinator import MideaCloudStatsCoordinator, MideaCoordinator
 from .midea_lib.cloud import MeijuCloud
+from .midea_lib.cloud_stats import CLOUD_STATS_DEVICE_TYPES
 from .midea_lib.cloud_device import CloudV1Device, CloudV2Device
 from .midea_lib.device import MideaDevice
 from .midea_lib.lua import write_file, ensure_lua_files
@@ -265,16 +267,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     attr_name = ecfg.get("attribute", entity_key)
                     default_values[attr_name] = ecfg["default_value"]
 
-        # Cloud devices need a logged-in cloud client; LAN devices do not.
+        # Cloud devices need a logged-in cloud client. LAN devices only need
+        # one when they expose cloud statistics and the account is available.
         # Both cloud_v2 and cloud_v1 use the Meiju account.
+        stats_supported = device_type_int in CLOUD_STATS_DEVICE_TYPES
         cloud_kind = {
             CONNECTION_TYPE_CLOUD_V2: "meiju",
             CONNECTION_TYPE_CLOUD_V1: "meiju",
         }.get(connection_type)
+        if (
+            cloud_kind is None
+            and stats_supported
+            and entry.data.get(CONF_ACCOUNT)
+            and entry.data.get(CONF_PASSWORD)
+        ):
+            cloud_kind = "meiju"
         cloud_client = None
         if cloud_kind:
             cloud_client = await get_cloud_client(cloud_kind)
-            if cloud_client is None:
+            if cloud_client is None and connection_type != CONNECTION_TYPE_LAN:
                 _LOGGER.error(
                     "[init] cloud device not initialised (no cloud client): "
                     "device_id=%s name=%s connection_type=%s",
@@ -367,6 +378,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 device_mapping=device_mapping,
             )
 
+            cloud_stats_coordinator = None
+            if stats_supported and cloud_client is not None:
+                cloud_stats_coordinator = MideaCloudStatsCoordinator(
+                    hass,
+                    cloud_client,
+                    device_id=device_id,
+                    device_type=device_type_int,
+                    sn8=sn8,
+                    category=category,
+                    project_no=str(device_data.get("project_no") or ""),
+                    update_interval=DEFAULT_CLOUD_STATS_SCAN_INTERVAL,
+                )
+
             if connection_type == CONNECTION_TYPE_LAN:
                 if initial_query and isinstance(initial_query, list):
                     for item in initial_query:
@@ -432,6 +456,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 CONF_PROTOCOL: protocol,
                 CONF_CATEGORY: category,
                 CONF_CONNECTION_TYPE: connection_type,
+                "cloud_stats_coordinator": cloud_stats_coordinator,
             }
         except Exception as e:
             _LOGGER.error("[init] device initialization failed: device_id=%s error=%s", device_id, e)
@@ -446,6 +471,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         elif result is not None:
             device_id = result[CONF_DEVICE_ID]
             hass.data[DOMAIN][entry.entry_id][str(device_id)] = result
+            stats_coordinator = result.get("cloud_stats_coordinator")
+            if stats_coordinator is not None:
+                hass.async_create_task(stats_coordinator.async_refresh())
 
     try:
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -467,6 +495,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             coordinator = data.get("coordinator")
             if coordinator:
                 coordinator.deactivate()
+            stats_coordinator = data.get("cloud_stats_coordinator")
+            if stats_coordinator:
+                await stats_coordinator.async_shutdown()
             device = data.get("device")
             if device:
                 device.close()

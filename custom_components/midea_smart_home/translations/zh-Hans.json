@@ -2973,11 +2973,17 @@
           "working_control_nonsupport": "工作中不支持控制"
         }
       },
+      "fan_cleanliness": {
+        "name": "风机洁净度"
+      },
       "fan_output": {
         "name": "风机状态"
       },
       "fan_type": {
         "name": "风机模式"
+      },
+      "filter_cleanliness": {
+        "name": "滤网洁净度"
       },
       "filter_install_time_slot1": {
         "name": "物理滤材最近更换时间"
@@ -3117,6 +3123,12 @@
       "mode_set5": {
         "name": "模式(子设备5)"
       },
+      "monthly_energy_consumption": {
+        "name": "月度用电量"
+      },
+      "monthly_water_consumption": {
+        "name": "月度用水量"
+      },
       "mouthfeel": {
         "name": "口感"
       },
@@ -3125,6 +3137,9 @@
       },
       "night_light_brightness": {
         "name": "夜灯亮度"
+      },
+      "oil_box_cleanliness": {
+        "name": "油盒洁净度"
       },
       "order_time": {
         "name": "预约剩余时间"
@@ -3290,8 +3305,14 @@
       "temperature_bottom": {
         "name": "底部温度"
       },
+      "today_energy_consumption": {
+        "name": "今日用电量"
+      },
       "today_feed_count": {
         "name": "今日投喂次数"
+      },
+      "today_water_consumption": {
+        "name": "今日用水量"
       },
       "top_temperature": {
         "name": "顶部温度"
@@ -3386,6 +3407,12 @@
       "water_volume": {
         "name": "出水流量"
       },
+      "weekly_energy_consumption": {
+        "name": "本周用电量"
+      },
+      "weekly_water_consumption": {
+        "name": "本周用水量"
+      },
       "wind_pressure": {
         "name": "风压"
       },
@@ -3413,6 +3440,12 @@
       },
       "work_time": {
         "name": "工作时间"
+      },
+      "yearly_energy_consumption": {
+        "name": "年度用电量"
+      },
+      "yearly_water_consumption": {
+        "name": "年度用水量"
       }
     },
     "switch": {
