@@ -107,5 +107,39 @@ CLOUD_STATS_SENSORS = {
             "precision": 1,
             "icon": "mdi:water",
         }
+    ],
+    0xE3: [
+        {
+            "key": "today_water_consumption",
+            "device_class": SensorDeviceClass.WATER,
+            "unit": UnitOfVolume.LITERS,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 1,
+            "icon": "mdi:water",
+        },
+        {
+            "key": "today_gas_consumption",
+            "device_class": SensorDeviceClass.GAS,
+            "unit": UnitOfVolume.CUBIC_METERS,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 3,
+            "icon": "mdi:fire",
+        },
+        {
+            "key": "monthly_water_consumption",
+            "device_class": SensorDeviceClass.WATER,
+            "unit": UnitOfVolume.LITERS,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 1,
+            "icon": "mdi:water",
+        },
+        {
+            "key": "monthly_gas_consumption",
+            "device_class": SensorDeviceClass.GAS,
+            "unit": UnitOfVolume.CUBIC_METERS,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 3,
+            "icon": "mdi:fire",
+        }
     ]
 }

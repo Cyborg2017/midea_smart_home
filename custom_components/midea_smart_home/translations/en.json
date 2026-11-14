@@ -3126,6 +3126,9 @@
       "monthly_energy_consumption": {
         "name": "Monthly Energy Consumption"
       },
+      "monthly_gas_consumption": {
+        "name": "Monthly Gas Consumption"
+      },
       "monthly_water_consumption": {
         "name": "Monthly Water Consumption"
       },
@@ -3310,6 +3313,9 @@
       },
       "today_feed_count": {
         "name": "Today's Feed Count"
+      },
+      "today_gas_consumption": {
+        "name": "Today's Gas Consumption"
       },
       "today_water_consumption": {
         "name": "Today's Water Consumption"

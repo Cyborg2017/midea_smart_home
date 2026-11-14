@@ -3126,6 +3126,9 @@
       "monthly_energy_consumption": {
         "name": "月度用电量"
       },
+      "monthly_gas_consumption": {
+        "name": "月度用气量"
+      },
       "monthly_water_consumption": {
         "name": "月度用水量"
       },
@@ -3310,6 +3313,9 @@
       },
       "today_feed_count": {
         "name": "今日投喂次数"
+      },
+      "today_gas_consumption": {
+        "name": "今日用气量"
       },
       "today_water_consumption": {
         "name": "今日用水量"
