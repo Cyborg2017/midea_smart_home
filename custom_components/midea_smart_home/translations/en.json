@@ -762,6 +762,21 @@
       "common_light": {
         "name": "Light"
       },
+      "fish_light": {
+        "name": "Fish Tank Light",
+        "state_attributes": {
+          "effect": {
+            "state": {
+              "light_scene_0": "Dazzling Sun",
+              "light_scene_1": "Silver Screen",
+              "light_scene_2": "Antarctic Ocean",
+              "light_scene_3": "Deep-sea Vent",
+              "light_scene_4": "Photosynthesis",
+              "light_scene_5": "Rainbow Flow"
+            }
+          }
+        }
+      },
       "light": {
         "name": "Smart Light",
         "state_attributes": {
@@ -771,12 +786,6 @@
               "film": "Cinema",
               "ledmanual": "Custom",
               "life": "Daily Life",
-              "light_scene_0": "Dazzling Sun",
-              "light_scene_1": "Silver Screen",
-              "light_scene_2": "Antarctic Ocean",
-              "light_scene_3": "Deep-sea Vent",
-              "light_scene_4": "Photosynthesis",
-              "light_scene_5": "Rainbow Flow",
               "manual": "Manual",
               "mild": "Soft",
               "moon": "Night",

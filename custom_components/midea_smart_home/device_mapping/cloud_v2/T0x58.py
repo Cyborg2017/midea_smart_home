@@ -214,7 +214,7 @@ DEVICE_MAPPING = {
             },
             Platform.LIGHT: {
                 "light": {
-                    "translation_key": "light",
+                    "translation_key": "fish_light",
                     "power_key": "light.power",
                     "brightness_key": "light.brightness",
                     "effect_key": "light.currentExecutionSence",
