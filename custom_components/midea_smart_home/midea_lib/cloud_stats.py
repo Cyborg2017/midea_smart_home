@@ -14,11 +14,12 @@ from uuid import uuid4
 _LOGGER = logging.getLogger(__name__)
 
 # Device types that expose cloud statistics.
-CLOUD_STATS_DEVICE_TYPES = frozenset({0xB6, 0xAC, 0xDB})
+CLOUD_STATS_DEVICE_TYPES = frozenset({0xB6, 0xAC, 0xDB, 0xE3})
 
 # App plugin aliases (appended to the cloud proxy base url).
 _RANGE_HOOD_API = "/cfhrs/b6/v1/api"
 _AC_ELEC_API = "/jykt/bluetooth/control/queryElec"
+_GAS_WATER_HEATER_API = "/cfhrs/e3/v1/api"
 _WASH_CONSUMPTION_API = (
     "/xyj/h5/washConsumption/energy/v1/consumption/get{period}Consumption"
 )
@@ -26,6 +27,13 @@ _WASH_CONSUMPTION_API = (
 # Defaults used by the washing machine consumption endpoint.
 _WASH_DEFAULT_CATEGORY = "DB"
 _WASH_DEFAULT_PROJECT_NO = "13153"
+
+# The gas water heater report carries month-to-date series (31 values), week
+# series (7 values) on models that do not report the full month, and a 12 month
+# series where the last value is the current month.
+_E3_DAILY_SERIES_LENGTH = 31
+_E3_WEEK_SERIES_LENGTH = 7
+_E3_MONTHLY_SERIES_LENGTH = 12
 
 def _plugin_result(response: dict | None, code_key: str) -> Any:
     """Return the result payload when the plugin response reports success."""
@@ -58,6 +66,30 @@ def _to_float(value: Any) -> float | None:
         return float(value)
     except (TypeError, ValueError):
         return None
+
+def _parse_series(value: Any, length: int) -> tuple[float, ...]:
+    """Parse a comma separated numeric series, keeping the newest entries."""
+    if not isinstance(value, str):
+        return ()
+    parts = value.split(",")
+    if len(parts) < length:
+        return ()
+    try:
+        return tuple(float(part) for part in parts[-length:])
+    except ValueError:
+        return ()
+
+def _latest_daily_value(result: dict, monthly_key: str, weekly_key: str) -> float | None:
+    """Return the newest value of a daily series."""
+    series = _parse_series(result.get(monthly_key), _E3_DAILY_SERIES_LENGTH)
+    if not series:
+        series = _parse_series(result.get(weekly_key), _E3_WEEK_SERIES_LENGTH)
+    return series[-1] if series else None
+
+def _latest_monthly_value(result: dict, key: str) -> float | None:
+    """Return the current month value of a monthly series."""
+    series = _parse_series(result.get(key), _E3_MONTHLY_SERIES_LENGTH)
+    return series[-1] if series else None
 
 async def _fetch_range_hood(cloud, appliance_code, sn8: str) -> dict[str, Any]:
     """Fetch range hood cleanliness percentages."""
@@ -113,6 +145,27 @@ async def _fetch_air_conditioner(
                     else "yearly_energy_consumption"
                 ] = value
     return stats
+
+async def _fetch_gas_water_heater(cloud, appliance_code) -> dict[str, Any]:
+    """Fetch today/month water and gas usage for a gas water heater."""
+    response = await cloud.app_plugin_request(
+        _GAS_WATER_HEATER_API,
+        {
+            "msg": "dayReportV2",
+            "params": {"applianceId": str(appliance_code)},
+        },
+    )
+    result = _plugin_result(response, "retCode")
+    if not isinstance(result, dict):
+        return {}
+    return {
+        "today_water_consumption": _latest_daily_value(
+            result, "hotwaterUsem", "hotwaterUse7"
+        ),
+        "today_gas_consumption": _latest_daily_value(result, "gasUsem", "gasUse7"),
+        "monthly_water_consumption": _latest_monthly_value(result, "hotwaterUsey"),
+        "monthly_gas_consumption": _latest_monthly_value(result, "gasUsey"),
+    }
 
 def _wash_body(
     appliance_code,
@@ -248,4 +301,6 @@ async def async_fetch_cloud_stats(
             category or _WASH_DEFAULT_CATEGORY,
             project_no or _WASH_DEFAULT_PROJECT_NO,
         )
+    if device_type == 0xE3:
+        return await _fetch_gas_water_heater(cloud, appliance_code)
     return {}
