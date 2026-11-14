@@ -36,6 +36,9 @@ _LOGGER = logging.getLogger(__name__)
 
 GITHUB_API_URL = "https://api.github.com/repos/Cyborg2017/midea_smart_home/releases"
 GITHUB_RELEASE_URL = "https://github.com/Cyborg2017/midea_smart_home/releases/tag"
+# Only releases whose tag carries this suffix are offered to hybrid builds.
+HYBRID_TAG_SUFFIX = "-hybrid"
+RELEASES_PER_PAGE = 30
 DOWNLOAD_TIMEOUT = 300  # 5 minutes per attempt
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds between retries
@@ -52,6 +55,12 @@ def _read_installed_version() -> str | None:
     except (OSError, json.JSONDecodeError) as e:
         _LOGGER.error("[update] manifest read failed: error=%s", e)
         return None
+
+def _base_version(version: str | None) -> str | None:
+    """Strip the hybrid tag suffix so versions stay comparable."""
+    if not version:
+        return version
+    return version.lower().split(HYBRID_TAG_SUFFIX, 1)[0]
 
 async def _schedule_periodic_check(
     hass: HomeAssistant,
@@ -167,7 +176,7 @@ class MideaUpdateEntity(UpdateEntity):
             timeout = aiohttp.ClientTimeout(total=API_TIMEOUT)
             async with session.get(
                 GITHUB_API_URL,
-                params={"per_page": 1},
+                params={"per_page": RELEASES_PER_PAGE},
                 timeout=timeout,
                 headers={"Accept": "application/vnd.github+json"},
             ) as response:
@@ -180,7 +189,24 @@ class MideaUpdateEntity(UpdateEntity):
                     _LOGGER.debug("[update] no releases found on github")
                     return
 
-                latest_release = releases[0]
+                latest_release = next(
+                    (
+                        release
+                        for release in releases
+                        if HYBRID_TAG_SUFFIX
+                        in (release.get("tag_name") or "").lower()
+                    ),
+                    None,
+                )
+                if latest_release is None:
+                    _LOGGER.debug(
+                        "[update] no hybrid release found: suffix=%s",
+                        HYBRID_TAG_SUFFIX,
+                    )
+                    self._attr_latest_version = self._attr_installed_version
+                    self.async_write_ha_state()
+                    return
+
                 tag_name = latest_release.get("tag_name", "")
                 latest_version = tag_name.removeprefix("v") if tag_name else None
 
@@ -191,7 +217,9 @@ class MideaUpdateEntity(UpdateEntity):
                 installed_version = await self._hass.async_add_executor_job(_read_installed_version)
                 self._attr_installed_version = installed_version
 
-                if self._is_newer_version(latest_version, installed_version):
+                if self._is_newer_version(
+                    _base_version(latest_version), _base_version(installed_version)
+                ):
                     self._attr_latest_version = latest_version
                     body = latest_release.get("body", "")
                     self._release_notes = body if body else None
