@@ -53,6 +53,9 @@ CONNECTION_TYPE_BADGES = {
 # Default polling interval (seconds) for cloud-connected devices.
 DEFAULT_CLOUD_SCAN_INTERVAL = 30
 
+# Default polling interval (seconds) for cloud statistics sensors (6 hours).
+DEFAULT_CLOUD_STATS_SCAN_INTERVAL = 6 * 60 * 60
+
 # Setup mode: "auto" (account login + LAN discovery) or "manual" (no cloud)
 SETUP_MODE_AUTO = "auto"
 SETUP_MODE_MANUAL = "manual"
