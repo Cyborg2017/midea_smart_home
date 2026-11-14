@@ -108,6 +108,72 @@ CLOUD_STATS_SENSORS = {
             "icon": "mdi:water",
         }
     ],
+    0xE1: [
+        {
+            "key": "today_water_consumption",
+            "device_class": SensorDeviceClass.WATER,
+            "unit": UnitOfVolume.LITERS,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 1,
+            "icon": "mdi:water",
+        },
+        {
+            "key": "today_energy_consumption",
+            "device_class": SensorDeviceClass.ENERGY,
+            "unit": UnitOfEnergy.KILO_WATT_HOUR,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 3,
+            "icon": "mdi:lightning-bolt",
+        },
+        {
+            "key": "weekly_water_consumption",
+            "device_class": SensorDeviceClass.WATER,
+            "unit": UnitOfVolume.LITERS,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 1,
+            "icon": "mdi:water",
+        },
+        {
+            "key": "weekly_energy_consumption",
+            "device_class": SensorDeviceClass.ENERGY,
+            "unit": UnitOfEnergy.KILO_WATT_HOUR,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 3,
+            "icon": "mdi:lightning-bolt",
+        },
+        {
+            "key": "monthly_water_consumption",
+            "device_class": SensorDeviceClass.WATER,
+            "unit": UnitOfVolume.LITERS,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 1,
+            "icon": "mdi:water",
+        },
+        {
+            "key": "monthly_energy_consumption",
+            "device_class": SensorDeviceClass.ENERGY,
+            "unit": UnitOfEnergy.KILO_WATT_HOUR,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 3,
+            "icon": "mdi:lightning-bolt",
+        },
+        {
+            "key": "yearly_water_consumption",
+            "device_class": SensorDeviceClass.WATER,
+            "unit": UnitOfVolume.LITERS,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 1,
+            "icon": "mdi:water",
+        },
+        {
+            "key": "yearly_energy_consumption",
+            "device_class": SensorDeviceClass.ENERGY,
+            "unit": UnitOfEnergy.KILO_WATT_HOUR,
+            "state_class": SensorStateClass.TOTAL,
+            "precision": 3,
+            "icon": "mdi:lightning-bolt",
+        }
+    ],
     0xE3: [
         {
             "key": "today_water_consumption",

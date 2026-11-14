@@ -14,11 +14,12 @@ from uuid import uuid4
 _LOGGER = logging.getLogger(__name__)
 
 # Device types that expose cloud statistics.
-CLOUD_STATS_DEVICE_TYPES = frozenset({0xB6, 0xAC, 0xDB, 0xE3})
+CLOUD_STATS_DEVICE_TYPES = frozenset({0xB6, 0xAC, 0xDB, 0xE1, 0xE3})
 
 # App plugin aliases (appended to the cloud proxy base url).
 _RANGE_HOOD_API = "/cfhrs/b6/v1/api"
 _AC_ELEC_API = "/jykt/bluetooth/control/queryElec"
+_DISHWASHER_API = "/cfhrs/e1/v1/api"
 _GAS_WATER_HEATER_API = "/cfhrs/e3/v1/api"
 _WASH_CONSUMPTION_API = (
     "/xyj/h5/washConsumption/energy/v1/consumption/get{period}Consumption"
@@ -66,6 +67,17 @@ def _to_float(value: Any) -> float | None:
         return float(value)
     except (TypeError, ValueError):
         return None
+
+def _sum_field(items: list, key: str) -> float | None:
+    """Sum a numeric field over a list of dicts."""
+    total = None
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        value = _to_float(item.get(key))
+        if value is not None:
+            total = (total or 0.0) + value
+    return total
 
 def _parse_series(value: Any, length: int) -> tuple[float, ...]:
     """Parse a comma separated numeric series, keeping the newest entries."""
@@ -166,6 +178,49 @@ async def _fetch_gas_water_heater(cloud, appliance_code) -> dict[str, Any]:
         "monthly_water_consumption": _latest_monthly_value(result, "hotwaterUsey"),
         "monthly_gas_consumption": _latest_monthly_value(result, "gasUsey"),
     }
+
+async def _fetch_dishwasher(cloud, appliance_code, today: date) -> dict[str, Any]:
+    """Fetch today/week/month/year water and energy usage for a dishwasher."""
+    uid = str(cloud.iot_user_id or cloud.uid or "")
+    common = {
+        "applianceId": str(appliance_code),
+        "userId": uid,
+        "authUserId": uid,
+    }
+    stats: dict[str, Any] = {}
+    for query_type, prefix in (
+        ("week", "weekly"),
+        ("month", "monthly"),
+        ("year", "yearly"),
+    ):
+        response = await cloud.app_plugin_request(
+            _DISHWASHER_API,
+            {
+                "msg": "WaterDisherConsumptionV2",
+                "params": {**common, "queryType": query_type},
+            },
+        )
+        result = _plugin_result(response, "retCode")
+        if not isinstance(result, dict):
+            continue
+        entries = result.get("data")
+        if not isinstance(entries, list):
+            continue
+        if query_type == "month":
+            # In the month report xTime is the day of the month.
+            entry = _find_item(entries, "xTime", str(today.day))
+            if entry:
+                stats["today_water_consumption"] = _to_float(entry.get("yWater"))
+                stats["today_energy_consumption"] = _to_float(
+                    entry.get("yElectricity")
+                )
+        water = _sum_field(entries, "yWater")
+        energy = _sum_field(entries, "yElectricity")
+        if water is not None:
+            stats[f"{prefix}_water_consumption"] = water
+        if energy is not None:
+            stats[f"{prefix}_energy_consumption"] = energy
+    return stats
 
 def _wash_body(
     appliance_code,
@@ -301,6 +356,8 @@ async def async_fetch_cloud_stats(
             category or _WASH_DEFAULT_CATEGORY,
             project_no or _WASH_DEFAULT_PROJECT_NO,
         )
+    if device_type == 0xE1:
+        return await _fetch_dishwasher(cloud, appliance_code, today)
     if device_type == 0xE3:
         return await _fetch_gas_water_heater(cloud, appliance_code)
     return {}
