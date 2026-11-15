@@ -3455,6 +3455,9 @@
       },
       "yearly_water_consumption": {
         "name": "Yearly Water Consumption"
+      },
+      "yesterday_energy_consumption": {
+        "name": "Yesterday Energy Consumption"
       }
     },
     "switch": {

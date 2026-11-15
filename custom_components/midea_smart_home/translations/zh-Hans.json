@@ -3455,6 +3455,9 @@
       },
       "yearly_water_consumption": {
         "name": "年度用水量"
+      },
+      "yesterday_energy_consumption": {
+        "name": "昨日用电量"
       }
     },
     "switch": {
