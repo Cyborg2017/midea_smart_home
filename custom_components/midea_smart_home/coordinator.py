@@ -15,7 +15,10 @@ from .const import (
 from .midea_lib.cloud_stats import async_fetch_cloud_stats
 from .midea_lib.device import MideaDevice
 
+from .midea_lib.logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[coord]")
 
 StatusDict = dict[str, Union[str, int, float, bool, None]]
 ControlValue = Union[str, int, float, bool, None]
@@ -186,15 +189,15 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
         if self._was_available is None:
             self._was_available = current_available
-            _LOGGER.debug("[coord] initial availability: device_id=%s available=%s", self.device.device_id, current_available)
+            _LOGGER.debug("initial availability: device_id=%s available=%s", self.device.device_id, current_available)
             return
 
         if not self._initialized:
             if current_available:
                 self._initialized = True
-                _LOGGER.info("[coord] device initialized: device_id=%s was_available=%s", self.device.device_id, self._was_available)
+                _LOGGER.info("device initialized: device_id=%s was_available=%s", self.device.device_id, self._was_available)
             if self._was_available is not None and current_available != self._was_available:
-                _LOGGER.info("[coord] availability changed during init: device_id=%s available=%s->%s", self.device.device_id, self._was_available, current_available)
+                _LOGGER.info("availability changed during init: device_id=%s available=%s->%s", self.device.device_id, self._was_available, current_available)
                 self._was_available = current_available
                 self.hass.loop.call_soon_threadsafe(self._async_send_notification, current_available)
             else:
@@ -204,7 +207,7 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         if current_available == self._was_available:
             return
 
-        _LOGGER.info("[coord] availability changed: device_id=%s available=%s->%s", self.device.device_id, self._was_available, current_available)
+        _LOGGER.info("availability changed: device_id=%s available=%s->%s", self.device.device_id, self._was_available, current_available)
         self._was_available = current_available
         self.hass.loop.call_soon_threadsafe(self._async_send_notification, current_available)
 
@@ -215,14 +218,14 @@ class MideaCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         entry_data = self.config_entry.data if self.config_entry else {}
         if is_online:
             if not entry_data.get("notify_online", True):
-                _LOGGER.debug("[coord] online notification suppressed by config: device_id=%s", self.device.device_id)
+                _LOGGER.debug("online notification suppressed by config: device_id=%s", self.device.device_id)
                 return
         else:
             if not entry_data.get("notify_offline", True):
-                _LOGGER.debug("[coord] offline notification suppressed by config: device_id=%s", self.device.device_id)
+                _LOGGER.debug("offline notification suppressed by config: device_id=%s", self.device.device_id)
                 return
 
-        _LOGGER.info("[coord] sending availability notification: device_id=%s is_online=%s", self.device.device_id, is_online)
+        _LOGGER.info("sending availability notification: device_id=%s is_online=%s", self.device.device_id, is_online)
         async_update_device_status_notification(
             self.hass,
             str(self.device.device_id),

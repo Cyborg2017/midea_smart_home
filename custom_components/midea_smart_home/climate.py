@@ -22,7 +22,10 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .coordinator import MideaCoordinator
 from .entity import MideaBaseEntity, iter_midea_device_configs
 
+from .midea_lib.logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[entity]")
 
 # HA 2026.11 split ClimateEntity into its own module and switched the
 # temperature attributes to the `native_*` naming (`_attr_native_temperature_unit`,
@@ -385,7 +388,7 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             tem_dec = self._get_nested_value(self._key_target_temperature[1])
         except IndexError as e:
             _LOGGER.error(
-                "[entity] target temperature index error: keys=%s len=%d",
+                "target temperature index error: keys=%s len=%d",
                 self._key_target_temperature,
                 len(self._key_target_temperature)
             )
@@ -606,29 +609,29 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             # Grouped mode: find corresponding options based on current preset mode
             current_mode = self.preset_mode
             if current_mode is None:
-                _LOGGER.warning("[entity] set fan mode failed: reason=preset_mode_is_none")
+                _LOGGER.warning("set fan mode failed: reason=preset_mode_is_none")
                 return
             mode_config = self._fan_modes_config.get(current_mode)
             if not (mode_config and isinstance(mode_config, dict)):
-                _LOGGER.warning("[entity] fan config missing: preset_mode=%s", current_mode)
+                _LOGGER.warning("fan config missing: preset_mode=%s", current_mode)
                 return
             options = mode_config.get("options")
             if not options:
                 return
             fan_config = options.get(fan_mode)
             if not fan_config:
-                _LOGGER.warning("[entity] fan mode not found: fan_mode=%s preset_mode=%s", fan_mode, current_mode)
+                _LOGGER.warning("fan mode not found: fan_mode=%s preset_mode=%s", fan_mode, current_mode)
                 return
 
             # Use unified control builder if device needs full control
             if self._needs_full_control_for_mode(current_mode):
                 speed_key = mode_config.get("key")
                 if not speed_key:
-                    _LOGGER.warning("[entity] fan config missing: field=speed_key")
+                    _LOGGER.warning("fan config missing: field=speed_key")
                     return
                 speed_value = fan_config.get(speed_key)
                 if speed_value is None:
-                    _LOGGER.warning("[entity] fan config missing value: field=speed_value")
+                    _LOGGER.warning("fan config missing value: field=speed_value")
                     return
 
                 # Get direction configuration
@@ -698,11 +701,11 @@ class MideaClimateEntity(MideaBaseEntity, ClimateEntity):
             # Get direction key and value
             dir_key = mode_config.get("key")
             if not dir_key:
-                _LOGGER.warning("[entity] swing config missing: field=direction_key")
+                _LOGGER.warning("swing config missing: field=direction_key")
                 return
             dir_value = swing_config.get(dir_key)
             if dir_value is None:
-                _LOGGER.warning("[entity] swing config missing value: field=direction_value")
+                _LOGGER.warning("swing config missing value: field=direction_value")
                 return
 
             # Get current speed

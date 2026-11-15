@@ -15,6 +15,7 @@ from .exceptions import CannotAuthenticate, DataUnexpectedLength, MessageWrongFo
 from .lua import MideaCodec
 from .extras import DeviceLogicHandler
 from .expression import ExpressionEvaluator
+from .logger import device_logger
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -43,10 +44,13 @@ class DeviceController(threading.Thread):
         token: str,
         key: str,
         codec: MideaCodec,
-        protocol: int = 3
+        protocol: int = 3,
+        device_name: str = "",
     ):
         threading.Thread.__init__(self)
         self._device_id = device_id
+        self._device_name = device_name or "unknown"
+        self._logger = device_logger(_LOGGER, self._device_name, device_id)
         self._ip = ip_address
         self._port = port
         self._token = token
@@ -94,12 +98,12 @@ class DeviceController(threading.Thread):
         self._updates.append(update)
 
     def update_all(self, status: dict[str, Any], poll_location: Optional[int] = None) -> None:
-        _LOGGER.debug("[device] status update: id=%s %s", self._device_id, status)
+        self._logger.debug("status update: %s", status)
         for update in self._updates:
             try:
                 update(status, poll_location=poll_location)
             except Exception as e:
-                _LOGGER.error("[device] update callback failed: id=%s %s", self._device_id, e)
+                self._logger.error("update callback failed: %s", e)
 
     def set_available(self, available: bool = True) -> None:
         self._available = available
@@ -167,7 +171,7 @@ class DeviceController(threading.Thread):
                 response = self._sock.recv(256)
 
                 if len(response) < 72:
-                    _LOGGER.debug("[device] handshake raw response: id=%s len=%d hex=%s", self._device_id, len(response), response.hex())
+                    self._logger.debug("handshake raw response: len=%d hex=%s", len(response), response.hex())
                     raise DataUnexpectedLength(f"Response too short: {len(response)}")
 
                 auth_data = response[8:72]
@@ -179,17 +183,17 @@ class DeviceController(threading.Thread):
             self._sock.settimeout(SOCKET_TIMEOUT)
             self._connected = True
             self._update_retry_delay(True)
-            _LOGGER.debug("[device] connected: id=%s protocol=V%s", self._device_id, self._protocol)
+            self._logger.debug("connected: protocol=V%s", self._protocol)
             return True
 
         except (socket.timeout, socket.error, OSError) as e:
-            _LOGGER.debug("[device] connection failed: id=%s %s", self._device_id, e)
+            self._logger.debug("connection failed: %s", e)
         except (CannotAuthenticate, DataUnexpectedLength, MessageWrongFormat) as e:
-            _LOGGER.debug("[device] auth failed: id=%s %s", self._device_id, e)
+            self._logger.debug("auth failed: %s", e)
         except ValueError as e:
-            _LOGGER.debug("[device] invalid token/key: id=%s %s", self._device_id, e)
+            self._logger.debug("invalid token/key: %s", e)
         except AttributeError as e:
-            _LOGGER.debug("[device] socket closed during connect: id=%s %s", self._device_id, e)
+            self._logger.debug("socket closed during connect: %s", e)
 
         self._update_retry_delay(False)
         self._connected = False
@@ -251,7 +255,7 @@ class DeviceController(threading.Thread):
                             status = self._codec.decode_status(decrypted.hex())
                             if status:
                                 device_type_hex = hex(self._codec._device_type) if hasattr(self._codec, '_device_type') else 'unknown'
-                                _LOGGER.debug("[device] status received: type=%s time=%.3f %s", device_type_hex, receive_time, status)
+                                self._logger.debug("status received: type=%s time=%.3f %s", device_type_hex, receive_time, status)
                                 # Only 03db poll responses consume the pending
                                 # poll location; a 04db push arriving between
                                 # query and response must not steal it (it
@@ -264,7 +268,7 @@ class DeviceController(threading.Thread):
                                 self.update_all(status, poll_location=poll_location)
             return True
         except Exception as e:
-            _LOGGER.error("[device] message parse failed: id=%s %s", self._device_id, e)
+            self._logger.error("message parse failed: %s", e)
             return False
 
     def refresh_status(self, query: Optional[dict] = None) -> None:
@@ -294,7 +298,7 @@ class DeviceController(threading.Thread):
             else:
                 sock.send(packet)
         except (socket.error, OSError, AttributeError) as e:
-            _LOGGER.debug("[device] send failed: id=%s %s", self._device_id, e)
+            self._logger.debug("send failed: %s", e)
             self._close_socket()
 
     def _send_heartbeat(self) -> None:
@@ -320,13 +324,13 @@ class DeviceController(threading.Thread):
             if self._sock is not None:
                 break
             if self._connect_internal():
-                _LOGGER.info("[device] connection established: id=%s, querying status", self._device_id)
+                self._logger.info("connection established, querying status")
                 self.set_available(True)
                 if not self._skip_initial_refresh:
                     self.refresh_status()
                 break
             self._close_socket()
-            _LOGGER.warning("[device] connect retry: id=%s delay=%.1fs errors=%d", self._device_id, self._retry_delay, self._connection_errors)
+            self._logger.warning("connect retry: delay=%.1fs errors=%d", self._retry_delay, self._connection_errors)
             # Interruptible wait so close() can stop the thread immediately
             self._stop_event.wait(self._retry_delay)
 
@@ -359,7 +363,7 @@ class DeviceController(threading.Thread):
                 except socket.timeout:
                     timeout_counter += 1
                     if timeout_counter >= 12:
-                        _LOGGER.debug("[device] heartbeat timeout: id=%s", self._device_id)
+                        self._logger.debug("heartbeat timeout")
                         self._close_socket()
                         self.set_available(False)
                         break
@@ -367,7 +371,7 @@ class DeviceController(threading.Thread):
                 except (socket.error, OSError, ConnectionResetError) as e:
                     if not self._is_run:
                         break
-                    _LOGGER.debug("[device] connection error: id=%s %s", self._device_id, e)
+                    self._logger.debug("connection error: %s", e)
                     self._close_socket()
                     self.set_available(False)
                     break
@@ -375,13 +379,13 @@ class DeviceController(threading.Thread):
                 except AttributeError as e:
                     if not self._is_run:
                         break
-                    _LOGGER.debug("[device] socket closed: id=%s %s", self._device_id, e)
+                    self._logger.debug("socket closed: %s", e)
                     self._close_socket()
                     self.set_available(False)
                     break
 
                 except Exception as e:
-                    _LOGGER.error("[device] unexpected error: id=%s %s", self._device_id, e)
+                    self._logger.error("unexpected error: %s", e)
                     self._close_socket()
                     self.set_available(False)
                     break
@@ -497,7 +501,10 @@ class MideaDevice:
             key=key,
             codec=self._codec,
             protocol=protocol,
+            device_name=device_name,
         )
+        self._device_name = device_name or "unknown"
+        self._logger = device_logger(_LOGGER, self._device_name, device_id)
 
         self._data = {}
         self._available = False
@@ -601,7 +608,7 @@ class MideaDevice:
                         # no need to poll; idle until woken by push update
                         time.sleep(float(self._polling_interval))
                 except Exception as e:
-                    _LOGGER.debug("[device] poll query error: id=%s %s", self._device_id, e)
+                    self._logger.debug("poll query error: %s", e)
             else:
                 time.sleep(1.0)
 
@@ -610,9 +617,8 @@ class MideaDevice:
         if self._attribute_poll_thread is not None:
             return
         self._attribute_poll_run = True
-        _LOGGER.info(
-            "[device] attribute poll started: id=%s interval=%ds",
-            self._device_id,
+        self._logger.info(
+            "attribute poll started: interval=%ds",
             self._polling_interval
         )
         self._attribute_poll_thread = threading.Thread(target=self._attribute_poll_loop, daemon=True)
@@ -636,9 +642,8 @@ class MideaDevice:
                 try:
                     # Log every 10 polls
                     if poll_count % 10 == 0:
-                        _LOGGER.debug(
-                            "[device] polling status: id=%s interval=%ds count=%d",
-                            self._device_id,
+                        self._logger.debug(
+                            "polling status: interval=%ds count=%d",
                             self._polling_interval,
                             poll_count
                         )
@@ -690,7 +695,7 @@ class MideaDevice:
                     poll_count += 1
 
                 except Exception as e:
-                    _LOGGER.debug("[device] attribute poll error: id=%s %s", self._device_id, e)
+                    self._logger.debug("attribute poll error: %s", e)
                     time.sleep(5.0)
             else:
                 time.sleep(1.0)
@@ -850,7 +855,7 @@ class MideaDevice:
                 else:
                     _LOGGER.error("[device] callback failed: %s", e)
             except Exception as e:
-                _LOGGER.error("[device] callback failed: %s", e)
+                self._logger.error("callback failed: %s", e)
 
     def _update_d9_alternate_polling(self, status: dict) -> None:
         """Toggle alternate drum polling based on db_power.
@@ -865,14 +870,14 @@ class MideaDevice:
         new_state = power in ('on', 1, True)
         if new_state != self._d9_alternate_polling:
             self._d9_alternate_polling = new_state
-            _LOGGER.debug(
-                "[device] d9 alternate polling %s: id=%s db_power=%s",
-                'enabled' if new_state else 'disabled', self._device_id, power,
+            self._logger.debug(
+                "d9 alternate polling %s: db_power=%s",
+                'enabled' if new_state else 'disabled', power,
             )
 
     def set_attribute(self, attr: str, value: Any):
         """Set a device attribute."""
-        _LOGGER.debug("[device] set attribute: %s=%s", attr, value)
+        self._logger.debug("set attribute: %s=%s", attr, value)
 
         control = {attr: value}
 
@@ -904,7 +909,7 @@ class MideaDevice:
 
     def set_attributes(self, controls: dict):
         """Set multiple device attributes as a single command."""
-        _LOGGER.debug("[device] set attributes: %s", controls)
+        self._logger.debug("set attributes: %s", controls)
 
         control = controls.copy()
 

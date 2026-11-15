@@ -28,7 +28,10 @@ TOKEN_INVALID_RELOGIN_LIMIT = 3
 # never be allowed to repeat more often than this.
 LOGIN_MIN_INTERVAL = 30
 
+from .logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[cloud]")
 
 SUPPORTED_CLOUDS = {
     "Meiju Cloud": {
@@ -135,7 +138,7 @@ class MideaCloud:
         elapsed = time.monotonic() - self._last_login_at
         if elapsed < LOGIN_MIN_INTERVAL:
             _LOGGER.warning(
-                "[cloud] skip auto relogin: last login %.0fs ago (min interval %ss)",
+                "skip auto relogin: last login %.0fs ago (min interval %ss)",
                 elapsed,
                 LOGIN_MIN_INTERVAL,
             )
@@ -188,14 +191,14 @@ class MideaCloud:
                     code = int(response.get("code", -1))
                     if code in TRANSIENT_CLOUD_ERROR_CODES and attempt < 2:
                         _LOGGER.debug(
-                            "[cloud] transient error, retrying: endpoint=%s code=%s",
+                            "transient error, retrying: endpoint=%s code=%s",
                             endpoint, code,
                         )
                         await asyncio.sleep(1.0 * (attempt + 1))
                         continue
                     break
             except (TimeoutError, ClientConnectionError, json.JSONDecodeError) as e:
-                _LOGGER.warning("[cloud] request failed: endpoint=%s error=%s", endpoint, repr(e))
+                _LOGGER.warning("request failed: endpoint=%s error=%s", endpoint, repr(e))
         code = int(response.get("code", -1))
         if code == 0 and "data" in response:
             self._last_error = None
@@ -209,7 +212,7 @@ class MideaCloud:
         ):
             if self._token_invalid_retry_count >= TOKEN_INVALID_RELOGIN_LIMIT:
                 _LOGGER.warning(
-                    "[cloud] token invalid relogin retries exhausted: endpoint=%s retry_count=%s",
+                    "token invalid relogin retries exhausted: endpoint=%s retry_count=%s",
                     endpoint,
                     self._token_invalid_retry_count,
                 )
@@ -218,7 +221,7 @@ class MideaCloud:
                 return None
             self._token_invalid_retry_count += 1
             _LOGGER.warning(
-                "[cloud] token invalid, relogin and retry: endpoint=%s retry_count=%s",
+                "token invalid, relogin and retry: endpoint=%s retry_count=%s",
                 endpoint,
                 self._token_invalid_retry_count,
             )
@@ -233,13 +236,13 @@ class MideaCloud:
                     )
             except CloudLoginError as e:
                 _LOGGER.warning(
-                    "[cloud] relogin failed: endpoint=%s error=%s", endpoint, e
+                    "relogin failed: endpoint=%s error=%s", endpoint, e
                 )
         if code != -1:
             msg = str(response.get("msg") or "")
             self._last_error = (code, msg)
             _LOGGER.warning(
-                "[cloud] API error: endpoint=%s code=%s msg=%s", endpoint, code, msg
+                "API error: endpoint=%s code=%s msg=%s", endpoint, code, msg
             )
         return None
 
@@ -375,7 +378,7 @@ class MeijuCloud(MideaCloud):
         self._last_login_at = time.monotonic()
         if self._last_error:
             raise CloudLoginError(self._last_error[0], self._last_error[1])
-        _LOGGER.warning("[cloud] login failed: account=%s device_id=%s", self._account, self._device_id)
+        _LOGGER.warning("login failed: account=%s device_id=%s", self._account, self._device_id)
         return False
 
     async def list_appliances(
@@ -538,7 +541,7 @@ class MeijuCloud(MideaCloud):
                 )
                 raw = await r.read()
                 _LOGGER.debug(
-                    "[cloud] thing api: endpoint=%s method=%s data=%s response=%s",
+                    "thing api: endpoint=%s method=%s data=%s response=%s",
                     endpoint,
                     method,
                     data,
@@ -547,7 +550,7 @@ class MeijuCloud(MideaCloud):
                 response = json.loads(raw)
         except (TimeoutError, ClientConnectionError, json.JSONDecodeError) as e:
             _LOGGER.warning(
-                "[cloud] thing api request failed: endpoint=%s error=%s",
+                "thing api request failed: endpoint=%s error=%s",
                 endpoint,
                 repr(e),
             )
@@ -565,7 +568,7 @@ class MeijuCloud(MideaCloud):
         ):
             if self._token_invalid_retry_count >= TOKEN_INVALID_RELOGIN_LIMIT:
                 _LOGGER.warning(
-                    "[cloud] thing api token invalid relogin retries exhausted: endpoint=%s retry_count=%s",
+                    "thing api token invalid relogin retries exhausted: endpoint=%s retry_count=%s",
                     endpoint,
                     self._token_invalid_retry_count,
                 )
@@ -574,7 +577,7 @@ class MeijuCloud(MideaCloud):
                 return None
             self._token_invalid_retry_count += 1
             _LOGGER.warning(
-                "[cloud] thing api token invalid, relogin and retry: endpoint=%s retry_count=%s",
+                "thing api token invalid, relogin and retry: endpoint=%s retry_count=%s",
                 endpoint,
                 self._token_invalid_retry_count,
             )
@@ -590,14 +593,14 @@ class MeijuCloud(MideaCloud):
                     )
             except CloudLoginError as e:
                 _LOGGER.warning(
-                    "[cloud] relogin failed: endpoint=%s error=%s", endpoint, e
+                    "relogin failed: endpoint=%s error=%s", endpoint, e
                 )
             return None
         if code != -1:
             msg = str(response.get("msg") or "")
             self._last_error = (code, msg)
             _LOGGER.warning(
-                "[cloud] thing api error: endpoint=%s code=%s msg=%s",
+                "thing api error: endpoint=%s code=%s msg=%s",
                 endpoint,
                 code,
                 msg,
@@ -658,7 +661,7 @@ class MeijuCloud(MideaCloud):
                 response = json.loads(raw)
         except (TimeoutError, ClientConnectionError, json.JSONDecodeError) as e:
             _LOGGER.warning(
-                "[cloud] app plugin request failed: alias=%s error=%s",
+                "app plugin request failed: alias=%s error=%s",
                 alias,
                 repr(e),
             )
@@ -666,14 +669,14 @@ class MeijuCloud(MideaCloud):
         if not isinstance(response, dict):
             return None
         _LOGGER.debug(
-            "[cloud] app plugin response: alias=%s status=%s body=%s",
+            "app plugin response: alias=%s status=%s body=%s",
             alias,
             status,
             response,
         )
         if status != 200:
             _LOGGER.warning(
-                "[cloud] app plugin HTTP error: alias=%s status=%s body=%s",
+                "app plugin HTTP error: alias=%s status=%s body=%s",
                 alias,
                 status,
                 response,
@@ -696,7 +699,7 @@ class MeijuCloud(MideaCloud):
                     return None
                 self._token_invalid_retry_count += 1
                 _LOGGER.warning(
-                    "[cloud] app plugin token invalid, relogin and retry: alias=%s",
+                    "app plugin token invalid, relogin and retry: alias=%s",
                     alias,
                 )
                 self._access_token = None
@@ -711,7 +714,7 @@ class MeijuCloud(MideaCloud):
                         )
                 except CloudLoginError as e:
                     _LOGGER.warning(
-                        "[cloud] relogin failed: alias=%s error=%s", alias, e
+                        "relogin failed: alias=%s error=%s", alias, e
                     )
             msg = str(
                 response.get("msg")
@@ -721,7 +724,7 @@ class MeijuCloud(MideaCloud):
             )
             self._last_error = (code, msg)
             _LOGGER.warning(
-                "[cloud] app plugin error: alias=%s code=%s msg=%s",
+                "app plugin error: alias=%s code=%s msg=%s",
                 alias,
                 code,
                 msg,
@@ -740,7 +743,7 @@ class MeijuCloud(MideaCloud):
                 or ""
             )
             _LOGGER.warning(
-                "[cloud] app plugin error: alias=%s code=%s msg=%s",
+                "app plugin error: alias=%s code=%s msg=%s",
                 alias,
                 plugin_code,
                 msg,
@@ -921,14 +924,14 @@ class MideaAirCloud(MideaCloud):
                     code = int(response.get("errorCode", -1))
                     if code in TRANSIENT_CLOUD_ERROR_CODES and attempt < 2:
                         _LOGGER.debug(
-                            "[cloud] transient error, retrying: endpoint=%s code=%s",
+                            "transient error, retrying: endpoint=%s code=%s",
                             endpoint, code,
                         )
                         await asyncio.sleep(1.0 * (attempt + 1))
                         continue
                     break
             except (TimeoutError, ClientConnectionError, json.JSONDecodeError) as e:
-                _LOGGER.warning("[cloud] request failed: endpoint=%s error=%s", endpoint, repr(e))
+                _LOGGER.warning("request failed: endpoint=%s error=%s", endpoint, repr(e))
         code = int(response.get("errorCode", -1))
         if code == 0 and "result" in response:
             self._last_error = None
@@ -937,7 +940,7 @@ class MideaAirCloud(MideaCloud):
             msg = str(response.get("msg") or "")
             self._last_error = (code, msg)
             _LOGGER.warning(
-                "[cloud] API error: endpoint=%s code=%s msg=%s", endpoint, code, msg
+                "API error: endpoint=%s code=%s msg=%s", endpoint, code, msg
             )
         return None
 
@@ -968,7 +971,7 @@ class MideaAirCloud(MideaCloud):
         self._last_login_at = time.monotonic()
         if self._last_error:
             raise CloudLoginError(self._last_error[0], self._last_error[1])
-        _LOGGER.warning("[cloud] login failed: account=%s device_id=%s", self._account, self._device_id)
+        _LOGGER.warning("login failed: account=%s device_id=%s", self._account, self._device_id)
         return False
 
     async def list_appliances(
@@ -1066,7 +1069,7 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
     headers["random"] = random
     headers["sign"] = sign
 
-    _LOGGER.debug("[cloud] lua download request: %s", lua_data)
+    _LOGGER.debug("lua download request: %s", lua_data)
 
     # Send request
     api_url = "https://mp-prod.smartmidea.net/mas/v5/app/proxy?alias=/v1/appliance/protocol/lua/luaGet"
@@ -1076,7 +1079,7 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
             async with session.post(api_url, headers=headers, data=json_data, timeout=30) as response:
                 result = await response.json()
 
-                _LOGGER.debug("[cloud] lua download response: %s", result)
+                _LOGGER.debug("lua download response: %s", result)
 
                 if str(result.get("code")) == "0" and "data" in result:
                     data_section = result["data"]
@@ -1204,12 +1207,12 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
                                 modified = modified.replace("\r\n", "\n")
                                 return True, modified
                             else:
-                                _LOGGER.error("[cloud] lua file download failed: HTTP %s", lua_response.status)
+                                _LOGGER.error("lua file download failed: HTTP %s", lua_response.status)
                     else:
-                        _LOGGER.error("[cloud] lua download: no URL in response")
+                        _LOGGER.error("lua download: no URL in response")
                 else:
-                    _LOGGER.error("[cloud] lua download API failed: %s", result)
+                    _LOGGER.error("lua download API failed: %s", result)
     except Exception as e:
-        _LOGGER.error("[cloud] lua download error: %s", e)
+        _LOGGER.error("lua download error: %s", e)
 
     return False, ""

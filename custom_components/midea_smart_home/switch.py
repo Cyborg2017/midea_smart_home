@@ -11,7 +11,10 @@ from .const import DOMAIN
 from .coordinator import MideaCoordinator
 from .entity import MideaBaseEntity, iter_midea_device_configs
 
+from .midea_lib.logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[entity]")
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -86,7 +89,7 @@ class MideaSwitchEntity(MideaBaseEntity, SwitchEntity):
             if status == 'delay_off':
                 return False
             _LOGGER.warning(
-                "[entity] status value not in rationale: attribute=%s value=%s rationale=%s",
+                "status value not in rationale: attribute=%s value=%s rationale=%s",
                 attribute_key, status, self._rationale
             )
         return False

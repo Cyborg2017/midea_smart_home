@@ -20,7 +20,10 @@ if TYPE_CHECKING:
 
     from .cloud import MeijuCloud
 
+from .logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[cloud_device]")
 
 # Mark the device unavailable after this many consecutive failed refreshes
 FAILURE_THRESHOLD = 2
@@ -138,7 +141,7 @@ class BaseCloudDevice:
                 raise
             except Exception as e:
                 _LOGGER.error(
-                    "[cloud_device] polling refresh failed: device_id=%s error=%s",
+                    "polling refresh failed: device_id=%s error=%s",
                     self._device_id,
                     e,
                 )
@@ -189,7 +192,7 @@ class BaseCloudDevice:
         if not self._available:
             self._available = True
             _LOGGER.info(
-                "[cloud_device] device online: device_id=%s", self._device_id
+                "device online: device_id=%s", self._device_id
             )
         self._notify_update()
 
@@ -199,7 +202,7 @@ class BaseCloudDevice:
         if self._available and self._consecutive_failures >= FAILURE_THRESHOLD:
             self._available = False
             _LOGGER.warning(
-                "[cloud_device] device offline: device_id=%s consecutive_failures=%s",
+                "device offline: device_id=%s consecutive_failures=%s",
                 self._device_id,
                 self._consecutive_failures,
             )
@@ -218,7 +221,7 @@ class BaseCloudDevice:
                 callback()
             except Exception as e:
                 _LOGGER.error(
-                    "[cloud_device] update callback failed: device_id=%s error=%s",
+                    "update callback failed: device_id=%s error=%s",
                     self._device_id,
                     e,
                 )
@@ -405,7 +408,7 @@ class CloudV2Device(BaseCloudDevice):
                 )
             except Exception as e:
                 _LOGGER.debug(
-                    "[cloud_device] specific endpoint failed: device_id=%s section=%s error=%s",
+                    "specific endpoint failed: device_id=%s section=%s error=%s",
                     self._device_id, section, e,
                 )
                 data = None
@@ -486,7 +489,7 @@ class CloudV2Device(BaseCloudDevice):
                     optimistic[attr] = position
                 else:
                     _LOGGER.debug(
-                        "[cloud_device] unmapped cover value: device_id=%s attribute=%s value=%r",
+                        "unmapped cover value: device_id=%s attribute=%s value=%r",
                         self._device_id,
                         attr,
                         value,
@@ -536,7 +539,7 @@ class CloudV2Device(BaseCloudDevice):
                 self._appliance_code, properties
             ):
                 _LOGGER.warning(
-                    "[cloud_device] set thing properties failed: device_id=%s properties=%s",
+                    "set thing properties failed: device_id=%s properties=%s",
                     self._device_id,
                     list(properties),
                 )
@@ -546,7 +549,7 @@ class CloudV2Device(BaseCloudDevice):
             )
             if response is None:
                 _LOGGER.warning(
-                    "[cloud_device] perform thing action failed: device_id=%s module=%s action=%s",
+                    "perform thing action failed: device_id=%s module=%s action=%s",
                     self._device_id,
                     module_code,
                     action_code,
@@ -658,7 +661,7 @@ class CloudV1Device(BaseCloudDevice):
                 )
             except Exception as e:
                 _LOGGER.warning(
-                    "[cloud_device] status query error: device_id=%s query=%s error=%s",
+                    "status query error: device_id=%s query=%s error=%s",
                     self._device_id,
                     query_params,
                     e,
@@ -695,7 +698,7 @@ class CloudV1Device(BaseCloudDevice):
             )
         except Exception as e:
             _LOGGER.warning(
-                "[cloud_device] control failed: device_id=%s controls=%s error=%s",
+                "control failed: device_id=%s controls=%s error=%s",
                 self._device_id,
                 control,
                 e,
@@ -705,7 +708,7 @@ class CloudV1Device(BaseCloudDevice):
             self._apply_local_update(control)
         else:
             _LOGGER.warning(
-                "[cloud_device] control rejected: device_id=%s controls=%s",
+                "control rejected: device_id=%s controls=%s",
                 self._device_id,
                 control,
             )
