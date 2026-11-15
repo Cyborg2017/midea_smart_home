@@ -757,12 +757,13 @@ class MideaDevice:
             # D9 push devices rely on push updates and fall through below.
             if self._d9_polling_device:
                 # D9 polling devices use the dedicated poll thread.
+                data_type = status.get('data_type')
                 if poll_location is None:
                     # 04db push: sync db_power to state and toggle alternate
                     # polling. Only db_power is consumed; other shared fields
                     # are ignored because 04db payloads may carry polluted
                     # loc=2 values copied from loc=1.
-                    if status.get('data_type') == '04db':
+                    if data_type == '04db':
                         power = status.get('db_power')
                         if power is not None and self._data.get('db_power') != power:
                             new_data = {**self._data, 'db_power': power}
@@ -774,16 +775,22 @@ class MideaDevice:
                             self._data = new_data
                             self._notify_update()
                         self._update_d9_alternate_polling(status)
+                        return
+                    if data_type != '03db':
+                        return
+                elif data_type != '03db':
                     return
 
-                data_type = status.get('data_type')
-                if data_type != '03db':
-                    return
-
+                # The payload's own db_location is authoritative: a poll reply
+                # and a push can interleave, so a mismatched pending location
+                # must not discard a valid drum status (it would leave that
+                # drum unknown after a restart/reload).
                 db_location = status.get("db_location")
+                if db_location is None:
+                    db_location = poll_location
                 left_loc = self._d9_drum_locations["left"]
                 right_loc = self._d9_drum_locations["right"]
-                if db_location not in (left_loc, right_loc) or db_location != poll_location:
+                if db_location not in (left_loc, right_loc):
                     return
 
                 db_position = status.get('db_position')
@@ -979,12 +986,18 @@ class MideaDevice:
         return None
 
     def _has_dc_keys(self) -> bool:
-        return any(str(key).startswith("dc_") for key in self._data)
+        """Return True when the status carries a dryer (dc) bucket.
+
+        Only real dryer fields count: a stray ``dc_`` key from a probe must not
+        turn a left/right machine into a top/bottom one.
+        """
+        return "dc_power" in self._data or "dc_running_status" in self._data
 
     def _infer_dual_profile(self) -> Optional[str]:
         locations = self._d9_observed_locations
-        # Compound machines report the bottom drum as location 2 only.
-        # Left/right machines answer 1+2, or 3+4 on some models.
+        # Compound machines report the bottom drum as location 2 only, so a
+        # single raw id is not enough to claim a left/right layout. Left/right
+        # machines answer 1+2, or 3+4 on some models.
         if locations & {3, 4}:
             return "dual_drum_lr_pro"
         if len(locations & {1, 2}) >= 2:
@@ -1015,6 +1028,9 @@ class MideaDevice:
         self._d9_drum_locations = locations
         self._logic_handler.set_drum_locations(locations)
         self._d9_polling_device = True
+        # Poll both drums on the first cycle so neither drum's entities stay
+        # unknown after a restart/reload.
+        self._d9_alternate_polling = True
         self._controller.set_skip_initial_refresh(True)
         self._start_poll_thread()
         _LOGGER.info(
