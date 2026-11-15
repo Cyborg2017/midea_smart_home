@@ -134,8 +134,9 @@ def get_device_mapping(
 def is_d9_polling_device(device_type: int, device_mapping: dict) -> bool:
     """Check if a T0xD9 device uses the dedicated poll thread.
 
-    D9 devices whose initial_query contains only one drum key (da/db/dc)
-    are polled by a dedicated thread; multi-drum devices rely on push.
+    Only left/right layouts query a single drum key (da/db/dc) per cycle and
+    are driven by the dedicated poll thread; top/bottom layouts carry both
+    drums (db+dc) and rely on push.
     """
     if device_type != 0xD9:
         return False
@@ -145,4 +146,22 @@ def is_d9_polling_device(device_type: int, device_mapping: dict) -> bool:
             initial_keys |= query
         elif isinstance(query, dict):
             initial_keys |= set(query.keys())
-    return len(initial_keys) <= 1
+    return len(initial_keys) == 1 and initial_keys <= {"da", "db", "dc"}
+
+def d9_may_need_polling(device_type: int) -> bool:
+    """Whether a D9 device type has any polling-capable profile mapping.
+
+    Used by the options flow: an unmapped D9 unit is auto-detected at runtime
+    and may end up on the dedicated drum-polling thread, so the polling
+    interval must stay configurable even if the static default mapping looks
+    push-driven.
+    """
+    if device_type != 0xD9:
+        return False
+    mapping = DEVICE_MAPPINGS.get(device_type, {})
+    for key, profile in mapping.items():
+        if not key.startswith("default_"):
+            continue
+        if is_d9_polling_device(device_type, profile):
+            return True
+    return False

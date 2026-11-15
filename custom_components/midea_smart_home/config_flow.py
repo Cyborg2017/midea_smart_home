@@ -2982,7 +2982,11 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             return default
 
         # Find devices that have polling_attributes configured in their device_mapping
-        from .device_mapping import get_device_mapping, is_d9_polling_device
+        from .device_mapping import (
+            d9_may_need_polling,
+            get_device_mapping,
+            is_d9_polling_device,
+        )
         configurable_devices = []
 
         # Define polling options: disabled and intervals in seconds
@@ -3058,6 +3062,11 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             device_mapping = get_device_mapping(device_type_int, model, sn8, category)
             polling_query = device_mapping.get("polling_query")
             d9_polling = is_d9_polling_device(device_type_int, device_mapping)
+            # An unmapped D9 device is auto-detected at runtime and may switch
+            # to the dedicated drum-polling thread even when its static default
+            # mapping is push-driven, so keep the interval configurable.
+            if device_type_int == 0xD9 and d9_may_need_polling(device_type_int):
+                d9_polling = True
             # Check if device supports polling (based on existence of polling_query,
             # or the dedicated poll thread for D9 polling devices)
             enable_polling = (
