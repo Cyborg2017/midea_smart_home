@@ -32,7 +32,10 @@ from .const import (
     UPDATE_CHECK_OFF,
 )
 
+from .midea_lib.logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[update]")
 
 GITHUB_API_URL = "https://api.github.com/repos/Cyborg2017/midea_smart_home/releases"
 GITHUB_RELEASE_URL = "https://github.com/Cyborg2017/midea_smart_home/releases/tag"
@@ -53,7 +56,7 @@ def _read_installed_version() -> str | None:
             manifest = json.load(f)
         return manifest.get("version")
     except (OSError, json.JSONDecodeError) as e:
-        _LOGGER.error("[update] manifest read failed: error=%s", e)
+        _LOGGER.error("manifest read failed: error=%s", e)
         return None
 
 def _base_version(version: str | None) -> str | None:
@@ -82,9 +85,9 @@ async def _schedule_periodic_check(
                 entity.async_periodic_check,
                 timedelta(hours=hours),
             )
-            _LOGGER.info("[update] periodic check scheduled: interval_hours=%d", hours)
+            _LOGGER.info("periodic check scheduled: interval_hours=%d", hours)
         except (ValueError, TypeError):
-            _LOGGER.warning("[update] invalid check interval: value=%s", interval)
+            _LOGGER.warning("invalid check interval: value=%s", interval)
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -181,12 +184,12 @@ class MideaUpdateEntity(UpdateEntity):
                 headers={"Accept": "application/vnd.github+json"},
             ) as response:
                 if response.status != 200:
-                    _LOGGER.warning("[update] github api request failed: status=%d", response.status)
+                    _LOGGER.warning("github api request failed: status=%d", response.status)
                     return
 
                 releases = await response.json()
                 if not releases:
-                    _LOGGER.debug("[update] no releases found on github")
+                    _LOGGER.debug("no releases found on github")
                     return
 
                 latest_release = next(
@@ -200,7 +203,7 @@ class MideaUpdateEntity(UpdateEntity):
                 )
                 if latest_release is None:
                     _LOGGER.debug(
-                        "[update] no hybrid release found: suffix=%s",
+                        "no hybrid release found: suffix=%s",
                         HYBRID_TAG_SUFFIX,
                     )
                     self._attr_latest_version = self._attr_installed_version
@@ -211,7 +214,7 @@ class MideaUpdateEntity(UpdateEntity):
                 latest_version = tag_name.removeprefix("v") if tag_name else None
 
                 if not latest_version:
-                    _LOGGER.warning("[update] latest release missing tag_name")
+                    _LOGGER.warning("latest release missing tag_name")
                     return
 
                 installed_version = await self._hass.async_add_executor_job(_read_installed_version)
@@ -228,7 +231,7 @@ class MideaUpdateEntity(UpdateEntity):
                     self._download_url = self._get_download_url(latest_release)
                     self._latest_tag = tag_name
                     _LOGGER.info(
-                        "[update] update available: latest=%s installed=%s",
+                        "update available: latest=%s installed=%s",
                         latest_version,
                         installed_version,
                     )
@@ -240,12 +243,12 @@ class MideaUpdateEntity(UpdateEntity):
                     # Clear a stale restart_required issue left over from a
                     # previous update that has already been applied.
                     ir.async_delete_issue(self._hass, DOMAIN, "restart_required")
-                    _LOGGER.debug("[update] already up to date: version=%s", installed_version)
+                    _LOGGER.debug("already up to date: version=%s", installed_version)
 
                 self.async_write_ha_state()
 
         except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-            _LOGGER.warning("[update] update check failed: error=%s", e)
+            _LOGGER.warning("update check failed: error=%s", e)
             # Restore installed version as latest if check fails
             self._attr_latest_version = self._attr_installed_version
             self.async_write_ha_state()
@@ -269,13 +272,13 @@ class MideaUpdateEntity(UpdateEntity):
         for asset in assets:
             if asset.get("name") == "midea_smart_home.zip":
                 return asset.get("browser_download_url")
-        _LOGGER.warning("[update] release asset not found: asset=midea_smart_home.zip")
+        _LOGGER.warning("release asset not found: asset=midea_smart_home.zip")
         return None
 
     async def async_install(self, version: str | None, backup: bool, **kwargs: Any) -> None:
         """Install the update by downloading and extracting the zip."""
         if not self._download_url:
-            _LOGGER.error("[update] install failed: reason=no_download_url")
+            _LOGGER.error("install failed: reason=no_download_url")
             return
 
         session = async_get_clientsession(self._hass)
@@ -285,7 +288,7 @@ class MideaUpdateEntity(UpdateEntity):
         for attempt in range(MAX_RETRIES):
             try:
                 _LOGGER.info(
-                    "[update] downloading release zip: attempt=%d/%d url=%s",
+                    "downloading release zip: attempt=%d/%d url=%s",
                     attempt + 1,
                     MAX_RETRIES,
                     self._download_url,
@@ -306,7 +309,7 @@ class MideaUpdateEntity(UpdateEntity):
                 self._attr_latest_version = version
                 self.async_write_ha_state()
 
-                _LOGGER.info("[update] update installed: version=%s restart_required=true", version)
+                _LOGGER.info("update installed: version=%s restart_required=true", version)
 
                 # Create a repair issue like HACS does; the user can restart
                 # by clicking submit on the "Restart required" repair card.
@@ -322,13 +325,13 @@ class MideaUpdateEntity(UpdateEntity):
                 return
 
             except (aiohttp.ClientError, asyncio.TimeoutError, OSError) as e:
-                _LOGGER.warning("[update] install attempt failed: attempt=%d error=%s", attempt + 1, e)
+                _LOGGER.warning("install attempt failed: attempt=%d error=%s", attempt + 1, e)
                 if attempt < MAX_RETRIES - 1:
                     await asyncio.sleep(RETRY_DELAY)
                 else:
                     self._attr_in_progress = False
                     self.async_write_ha_state()
-                    _LOGGER.error("[update] install failed after retries: attempts=%d", MAX_RETRIES)
+                    _LOGGER.error("install failed after retries: attempts=%d", MAX_RETRIES)
                     raise
 
     async def _download_zip(self, session: aiohttp.ClientSession) -> bytes:
@@ -390,4 +393,4 @@ class MideaUpdateEntity(UpdateEntity):
                     shutil.move(str(backup_dir), str(component_dir))
                 raise
 
-            _LOGGER.info("[update] integration files replaced")
+            _LOGGER.info("integration files replaced")

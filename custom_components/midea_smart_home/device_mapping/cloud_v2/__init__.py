@@ -9,7 +9,10 @@ import logging
 
 from .. import format_model
 
+from ...midea_lib.logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[mapping][cloud_v2]")
 
 CLOUD_V2_MAPPINGS: dict[int, dict] = {}
 
@@ -18,7 +21,7 @@ def load_cloud_v2_mappings():
     mapping_dir = Path(__file__).parent
 
     if not mapping_dir.exists():
-        _LOGGER.error("[mapping][cloud_v2] mapping directory not found: path=%s", mapping_dir)
+        _LOGGER.error("mapping directory not found: path=%s", mapping_dir)
         return
 
     try:
@@ -34,13 +37,13 @@ def load_cloud_v2_mappings():
                         device_type = int(file.stem.replace('T0x', ''), 16)
                         CLOUD_V2_MAPPINGS[device_type] = module.DEVICE_MAPPING
                         _LOGGER.debug(
-                            "[mapping][cloud_v2] loaded: file=%s device_type=0x%X",
+                            "loaded: file=%s device_type=0x%X",
                             file.stem, device_type
                         )
                 except (ImportError, ValueError, AttributeError) as e:
-                    _LOGGER.error("[mapping][cloud_v2] load failed: file=%s error=%s", file.name, e)
+                    _LOGGER.error("load failed: file=%s error=%s", file.name, e)
     except OSError as e:
-        _LOGGER.error("[mapping][cloud_v2] directory iterate failed: error=%s", e)
+        _LOGGER.error("directory iterate failed: error=%s", e)
 
 load_cloud_v2_mappings()
 

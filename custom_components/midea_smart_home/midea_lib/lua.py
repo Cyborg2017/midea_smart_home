@@ -21,7 +21,10 @@ import lupa.lua51
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 
+from .logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[lua]")
 
 # cjson.lua
 CJSON_LUA = "LS0KLS0gY2pzb24ubHVhCi0tCi0tIENvcHlyaWdodCAoYykgMjAxOCByeGkKLS0KLS0gUGVybWlzc2lvbiBpcyBoZXJlYnkgZ3JhbnRlZCwgZnJlZSBvZiBjaGFyZ2UsIHRvIGFueSBwZXJzb24gb2J0YWluaW5nIGEgY29weSBvZgotLSB0aGlzIHNvZnR3YXJlIGFuZCBhc3NvY2lhdGVkIGRvY3VtZW50YXRpb24gZmlsZXMgKHRoZSAiU29mdHdhcmUiKSwgdG8gZGVhbCBpbgotLSB0aGUgU29mdHdhcmUgd2l0aG91dCByZXN0cmljdGlvbiwgaW5jbHVkaW5nIHdpdGhvdXQgbGltaXRhdGlvbiB0aGUgcmlnaHRzIHRvCi0tIHVzZSwgY29weSwgbW9kaWZ5LCBtZXJnZSwgcHVibGlzaCwgZGlzdHJpYnV0ZSwgc3VibGljZW5zZSwgYW5kL29yIHNlbGwgY29waWVzCi0tIG9mIHRoZSBTb2Z0d2FyZSwgYW5kIHRvIHBlcm1pdCBwZXJzb25zIHRvIHdob20gdGhlIFNvZnR3YXJlIGlzIGZ1cm5pc2hlZCB0byBkbwotLSBzbywgc3ViamVjdCB0byB0aGUgZm9sbG93aW5nIGNvbmRpdGlvbnM6Ci0tCi0tIFRoZSBhYm92ZSBjb3B5cmlnaHQgbm90aWNlIGFuZCB0aGlzIHBlcm1pc3Npb24gbm90aWNlIHNoYWxsIGJlIGluY2x1ZGVkIGluIGFsbAotLSBjb3BpZXMgb3Igc3Vic3RhbnRpYWwgcG9ydGlvbnMgb2YgdGhlIFNvZnR3YXJlLgotLQotLSBUSEUgU09GVFdBUkUgSVMgUFJPVklERUQgIkFTIElTIiwgV0lUSE9VVCBXQVJSQU5UWSBPRiBBTlkgS0lORCwgRVhQUkVTUyBPUgotLSBJTVBMSUVELCBJTkNMVURJTkcgQlVUIE5PVCBMSU1JVEVEIFRPIFRIRSBXQVJSQU5USUVTIE9GIE1FUkNIQU5UQUJJTElUWSwKLS0gRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UgQU5EIE5PTklORlJJTkdFTUVOVC4gSU4gTk8gRVZFTlQgU0hBTEwgVEhFCi0tIEFVVEhPUlMgT1IgQ09QWVJJR0hUIEhPTERFUlMgQkUgTElBQkxFIEZPUiBBTlkgQ0xBSU0sIERBTUFHRVMgT1IgT1RIRVIKLS0gTElBQklMSVRZLCBXSEVUSEVSIElOIEFOIEFDVElPTiBPRiBDT05UUkFDVCwgVE9SVCBPUiBPVEhFUldJU0UsIEFSSVNJTkcgRlJPTSwKLS0gT1VUIE9GIE9SIElOIENPTk5FQ1RJT04gV0lUSCBUSEUgU09GVFdBUkUgT1IgVEhFIFVTRSBPUiBPVEhFUiBERUFMSU5HUyBJTiBUSEUKLS0gU09GVFdBUkUuCi0tCgpsb2NhbCBjanNvbiA9IHsgX3ZlcnNpb24gPSAiMC4xLjEiIH0KCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLS0gRW5jb2RlCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCmxvY2FsIGVuY29kZQoKbG9jYWwgZXNjYXBlX2NoYXJfbWFwID0gewogIFsgIlxcIiBdID0gIlxcXFwiLAogIFsgIlwiIiBdID0gIlxcXCIiLAogIFsgIlxiIiBdID0gIlxcYiIsCiAgWyAiXGYiIF0gPSAiXFxmIiwKICBbICJcbiIgXSA9ICJcXG4iLAogIFsgIlxyIiBdID0gIlxcciIsCiAgWyAiXHQiIF0gPSAiXFx0IiwKfQoKbG9jYWwgZXNjYXBlX2NoYXJfbWFwX2ludiA9IHsgWyAiXFwvIiBdID0gIi8iIH0KZm9yIGssIHYgaW4gcGFpcnMoZXNjYXBlX2NoYXJfbWFwKSBkbwogIGVzY2FwZV9jaGFyX21hcF9pbnZbdl0gPSBrCmVuZAoKCmxvY2FsIGZ1bmN0aW9uIGVzY2FwZV9jaGFyKGMpCiAgcmV0dXJuIGVzY2FwZV9jaGFyX21hcFtjXSBvciBzdHJpbmcuZm9ybWF0KCJcXHUlMDR4IiwgYzpieXRlKCkpCmVuZAoKCmxvY2FsIGZ1bmN0aW9uIGVuY29kZV9uaWwodmFsKQogIHJldHVybiAibnVsbCIKZW5kCgoKbG9jYWwgZnVuY3Rpb24gZW5jb2RlX3RhYmxlKHZhbCwgc3RhY2spCiAgbG9jYWwgcmVzID0ge30KICBzdGFjayA9IHN0YWNrIG9yIHt9CgogIC0tIENpcmN1bGFyIHJlZmVyZW5jZT8KICBpZiBzdGFja1t2YWxdIHRoZW4gZXJyb3IoImNpcmN1bGFyIHJlZmVyZW5jZSIpIGVuZAoKICBzdGFja1t2YWxdID0gdHJ1ZQoKICBpZiB2YWxbMV0gfj0gbmlsIG9yIG5leHQodmFsKSA9PSBuaWwgdGhlbgogICAgLS0gVHJlYXQgYXMgYXJyYXkgLS0gY2hlY2sga2V5cyBhcmUgdmFsaWQgYW5kIGl0IGlzIG5vdCBzcGFyc2UKICAgIGxvY2FsIG4gPSAwCiAgICBmb3IgayBpbiBwYWlycyh2YWwpIGRvCiAgICAgIGlmIHR5cGUoaykgfj0gIm51bWJlciIgdGhlbgogICAgICAgIGVycm9yKCJpbnZhbGlkIHRhYmxlOiBtaXhlZCBvciBpbnZhbGlkIGtleSB0eXBlcyIpCiAgICAgIGVuZAogICAgICBuID0gbiArIDEKICAgIGVuZAotLSAgICAgaWYgbiB+PSAjdmFsIHRoZW4KLS0gICAgICAgZXJyb3IoImludmFsaWQgdGFibGU6IHNwYXJzZSBhcnJheSIpCi0tICAgICBlbmQKICAgIC0tIEVuY29kZQogICAgZm9yIGksIHYgaW4gaXBhaXJzKHZhbCkgZG8KICAgICAgdGFibGUuaW5zZXJ0KHJlcywgZW5jb2RlKHYsIHN0YWNrKSkKICAgIGVuZAogICAgc3RhY2tbdmFsXSA9IG5pbAogICAgcmV0dXJuICJbIiAuLiB0YWJsZS5jb25jYXQocmVzLCAiLCIpIC4uICJdIgoKICBlbHNlCiAgICAtLSBUcmVhdCBhcyBhbiBvYmplY3QKICAgIGZvciBrLCB2IGluIHBhaXJzKHZhbCkgZG8KICAgICAgaWYgdHlwZShrKSB+PSAic3RyaW5nIiB0aGVuCiAgICAgICAgZXJyb3IoImludmFsaWQgdGFibGU6IG1peGVkIG9yIGludmFsaWQga2V5IHR5cGVzIikKICAgICAgZW5kCiAgICAgIHRhYmxlLmluc2VydChyZXMsIGVuY29kZShrLCBzdGFjaykgLi4gIjoiIC4uIGVuY29kZSh2LCBzdGFjaykpCiAgICBlbmQKICAgIHN0YWNrW3ZhbF0gPSBuaWwKICAgIHJldHVybiAieyIgLi4gdGFibGUuY29uY2F0KHJlcywgIiwiKSAuLiAifSIKICBlbmQKZW5kCgoKbG9jYWwgZnVuY3Rpb24gZW5jb2RlX3N0cmluZyh2YWwpCiAgcmV0dXJuICciJyAuLiB2YWw6Z3N1YignWyV6XDEtXDMxXFwiXScsIGVzY2FwZV9jaGFyKSAuLiAnIicKZW5kCgoKbG9jYWwgZnVuY3Rpb24gZW5jb2RlX251bWJlcih2YWwpCiAgLS0gQ2hlY2sgZm9yIE5hTiwgLWluZiBhbmQgaW5mCiAgaWYgdmFsIH49IHZhbCBvciB2YWwgPD0gLW1hdGguaHVnZSBvciB2YWwgPj0gbWF0aC5odWdlIHRoZW4KICAgIGVycm9yKCJ1bmV4cGVjdGVkIG51bWJlciB2YWx1ZSAnIiAuLiB0b3N0cmluZyh2YWwpIC4uICInIikKICBlbmQKICByZXR1cm4gc3RyaW5nLmZvcm1hdCgiJS4xNGciLCB2YWwpCmVuZAoKCmxvY2FsIHR5cGVfZnVuY19tYXAgPSB7CiAgWyAibmlsIiAgICAgXSA9IGVuY29kZV9uaWwsCiAgWyAidGFibGUiICAgXSA9IGVuY29kZV90YWJsZSwKICBbICJzdHJpbmciICBdID0gZW5jb2RlX3N0cmluZywKICBbICJudW1iZXIiICBdID0gZW5jb2RlX251bWJlciwKICBbICJib29sZWFuIiBdID0gdG9zdHJpbmcsCn0KCgplbmNvZGUgPSBmdW5jdGlvbih2YWwsIHN0YWNrKQogIGxvY2FsIHQgPSB0eXBlKHZhbCkKICBsb2NhbCBmID0gdHlwZV9mdW5jX21hcFt0XQogIGlmIGYgdGhlbgogICAgcmV0dXJuIGYodmFsLCBzdGFjaykKICBlbmQKICBlcnJvcigidW5leHBlY3RlZCB0eXBlICciIC4uIHQgLi4gIiciKQplbmQKCgpmdW5jdGlvbiBjanNvbi5lbmNvZGUodmFsKQogIHJldHVybiAoIGVuY29kZSh2YWwpICkKZW5kCgoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQotLSBEZWNvZGUKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKbG9jYWwgcGFyc2UKCmxvY2FsIGZ1bmN0aW9uIGNyZWF0ZV9zZXQoLi4uKQogIGxvY2FsIHJlcyA9IHt9CiAgZm9yIGkgPSAxLCBzZWxlY3QoIiMiLCAuLi4pIGRvCiAgICByZXNbIHNlbGVjdChpLCAuLi4pIF0gPSB0cnVlCiAgZW5kCiAgcmV0dXJuIHJlcwplbmQKCmxvY2FsIHNwYWNlX2NoYXJzICAgPSBjcmVhdGVfc2V0KCIgIiwgIlx0IiwgIlxyIiwgIlxuIikKbG9jYWwgZGVsaW1fY2hhcnMgICA9IGNyZWF0ZV9zZXQoIiAiLCAiXHQiLCAiXHIiLCAiXG4iLCAiXSIsICJ9IiwgIiwiKQpsb2NhbCBlc2NhcGVfY2hhcnMgID0gY3JlYXRlX3NldCgiXFwiLCAiLyIsICciJywgImIiLCAiZiIsICJuIiwgInIiLCAidCIsICJ1IikKbG9jYWwgbGl0ZXJhbHMgICAgICA9IGNyZWF0ZV9zZXQoInRydWUiLCAiZmFsc2UiLCAibnVsbCIpCgpsb2NhbCBsaXRlcmFsX21hcCA9IHsKICBbICJ0cnVlIiAgXSA9IHRydWUsCiAgWyAiZmFsc2UiIF0gPSBmYWxzZSwKICBbICJudWxsIiAgXSA9IG5pbCwKfQoKCmxvY2FsIGZ1bmN0aW9uIG5leHRfY2hhcihzdHIsIGlkeCwgc2V0LCBuZWdhdGUpCiAgZm9yIGkgPSBpZHgsICNzdHIgZG8KICAgIGlmIHNldFtzdHI6c3ViKGksIGkpXSB+PSBuZWdhdGUgdGhlbgogICAgICByZXR1cm4gaQogICAgZW5kCiAgZW5kCiAgcmV0dXJuICNzdHIgKyAxCmVuZAoKCmxvY2FsIGZ1bmN0aW9uIGRlY29kZV9lcnJvcihzdHIsIGlkeCwgbXNnKQogIGxvY2FsIGxpbmVfY291bnQgPSAxCiAgbG9jYWwgY29sX2NvdW50ID0gMQogIGZvciBpID0gMSwgaWR4IC0gMSBkbwogICAgY29sX2NvdW50ID0gY29sX2NvdW50ICsgMQogICAgaWYgc3RyOnN1YihpLCBpKSA9PSAiXG4iIHRoZW4KICAgICAgbGluZV9jb3VudCA9IGxpbmVfY291bnQgKyAxCiAgICAgIGNvbF9jb3VudCA9IDEKICAgIGVuZAogIGVuZAogIGVycm9yKCBzdHJpbmcuZm9ybWF0KCIlcyBhdCBsaW5lICVkIGNvbCAlZCIsIG1zZywgbGluZV9jb3VudCwgY29sX2NvdW50KSApCmVuZAoKCmxvY2FsIGZ1bmN0aW9uIGNvZGVwb2ludF90b191dGY4KG4pCiAgLS0gaHR0cDovL3NjcmlwdHMuc2lsLm9yZy9jbXMvc2NyaXB0cy9wYWdlLnBocD9zaXRlX2lkPW5yc2kmaWQ9aXdzLWFwcGVuZGl4YQogIGxvY2FsIGYgPSBtYXRoLmZsb29yCiAgaWYgbiA8PSAweDdmIHRoZW4KICAgIHJldHVybiBzdHJpbmcuY2hhcihuKQogIGVsc2VpZiBuIDw9IDB4N2ZmIHRoZW4KICAgIHJldHVybiBzdHJpbmcuY2hhcihmKG4gLyA2NCkgKyAxOTIsIG4gJSA2NCArIDEyOCkKICBlbHNlaWYgbiA8PSAweGZmZmYgdGhlbgogICAgcmV0dXJuIHN0cmluZy5jaGFyKGYobiAvIDQwOTYpICsgMjI0LCBmKG4gJSA0MDk2IC8gNjQpICsgMTI4LCBuICUgNjQgKyAxMjgpCiAgZWxzZWlmIG4gPD0gMHgxMGZmZmYgdGhlbgogICAgcmV0dXJuIHN0cmluZy5jaGFyKGYobiAvIDI2MjE0NCkgKyAyNDAsIGYobiAlIDI2MjE0NCAvIDQwOTYpICsgMTI4LAogICAgICAgICAgICAgICAgICAgICAgIGYobiAlIDQwOTYgLyA2NCkgKyAxMjgsIG4gJSA2NCArIDEyOCkKICBlbmQKICBlcnJvciggc3RyaW5nLmZvcm1hdCgiaW52YWxpZCB1bmljb2RlIGNvZGVwb2ludCAnJXgnIiwgbikgKQplbmQKCgpsb2NhbCBmdW5jdGlvbiBwYXJzZV91bmljb2RlX2VzY2FwZShzKQogIGxvY2FsIG4xID0gdG9udW1iZXIoIHM6c3ViKDMsIDYpLCAgMTYgKQogIGxvY2FsIG4yID0gdG9udW1iZXIoIHM6c3ViKDksIDEyKSwgMTYgKQogIC0tIFN1cnJvZ2F0ZSBwYWlyPwogIGlmIG4yIHRoZW4KICAgIHJldHVybiBjb2RlcG9pbnRfdG9fdXRmOCgobjEgLSAweGQ4MDApICogMHg0MDAgKyAobjIgLSAweGRjMDApICsgMHgxMDAwMCkKICBlbHNlCiAgICByZXR1cm4gY29kZXBvaW50X3RvX3V0ZjgobjEpCiAgZW5kCmVuZAoKCmxvY2FsIGZ1bmN0aW9uIHBhcnNlX3N0cmluZyhzdHIsIGkpCiAgbG9jYWwgaGFzX3VuaWNvZGVfZXNjYXBlID0gZmFsc2UKICBsb2NhbCBoYXNfc3Vycm9nYXRlX2VzY2FwZSA9IGZhbHNlCiAgbG9jYWwgaGFzX2VzY2FwZSA9IGZhbHNlCiAgbG9jYWwgbGFzdAogIGZvciBqID0gaSArIDEsICNzdHIgZG8KICAgIGxvY2FsIHggPSBzdHI6Ynl0ZShqKQoKICAgIGlmIHggPCAzMiB0aGVuCiAgICAgIGRlY29kZV9lcnJvcihzdHIsIGosICJjb250cm9sIGNoYXJhY3RlciBpbiBzdHJpbmciKQogICAgZW5kCgogICAgaWYgbGFzdCA9PSA5MiB0aGVuIC0tICJcXCIgKGVzY2FwZSBjaGFyKQogICAgICBpZiB4ID09IDExNyB0aGVuIC0tICJ1IiAodW5pY29kZSBlc2NhcGUgc2VxdWVuY2UpCiAgICAgICAgbG9jYWwgaGV4ID0gc3RyOnN1YihqICsgMSwgaiArIDUpCiAgICAgICAgaWYgbm90IGhleDpmaW5kKCIleCV4JXgleCIpIHRoZW4KICAgICAgICAgIGRlY29kZV9lcnJvcihzdHIsIGosICJpbnZhbGlkIHVuaWNvZGUgZXNjYXBlIGluIHN0cmluZyIpCiAgICAgICAgZW5kCiAgICAgICAgaWYgaGV4OmZpbmQoIl5bZERdWzg5YUFiQl0iKSB0aGVuCiAgICAgICAgICBoYXNfc3Vycm9nYXRlX2VzY2FwZSA9IHRydWUKICAgICAgICBlbHNlCiAgICAgICAgICBoYXNfdW5pY29kZV9lc2NhcGUgPSB0cnVlCiAgICAgICAgZW5kCiAgICAgIGVsc2UKICAgICAgICBsb2NhbCBjID0gc3RyaW5nLmNoYXIoeCkKICAgICAgICBpZiBub3QgZXNjYXBlX2NoYXJzW2NdIHRoZW4KICAgICAgICAgIGRlY29kZV9lcnJvcihzdHIsIGosICJpbnZhbGlkIGVzY2FwZSBjaGFyICciIC4uIGMgLi4gIicgaW4gc3RyaW5nIikKICAgICAgICBlbmQKICAgICAgICBoYXNfZXNjYXBlID0gdHJ1ZQogICAgICBlbmQKICAgICAgbGFzdCA9IG5pbAoKICAgIGVsc2VpZiB4ID09IDM0IHRoZW4gLS0gJyInIChlbmQgb2Ygc3RyaW5nKQogICAgICBsb2NhbCBzID0gc3RyOnN1YihpICsgMSwgaiAtIDEpCiAgICAgIGlmIGhhc19zdXJyb2dhdGVfZXNjYXBlIHRoZW4KICAgICAgICBzID0gczpnc3ViKCJcXHVbZERdWzg5YUFiQl0uLlxcdS4uLi4iLCBwYXJzZV91bmljb2RlX2VzY2FwZSkKICAgICAgZW5kCiAgICAgIGlmIGhhc191bmljb2RlX2VzY2FwZSB0aGVuCiAgICAgICAgcyA9IHM6Z3N1YigiXFx1Li4uLiIsIHBhcnNlX3VuaWNvZGVfZXNjYXBlKQogICAgICBlbmQKICAgICAgaWYgaGFzX2VzY2FwZSB0aGVuCiAgICAgICAgcyA9IHM6Z3N1YigiXFwuIiwgZXNjYXBlX2NoYXJfbWFwX2ludikKICAgICAgZW5kCiAgICAgIHJldHVybiBzLCBqICsgMQoKICAgIGVsc2UKICAgICAgbGFzdCA9IHgKICAgIGVuZAogIGVuZAogIGRlY29kZV9lcnJvcihzdHIsIGksICJleHBlY3RlZCBjbG9zaW5nIHF1b3RlIGZvciBzdHJpbmciKQplbmQKCgpsb2NhbCBmdW5jdGlvbiBwYXJzZV9udW1iZXIoc3RyLCBpKQogIGxvY2FsIHggPSBuZXh0X2NoYXIoc3RyLCBpLCBkZWxpbV9jaGFycykKICBsb2NhbCBzID0gc3RyOnN1YihpLCB4IC0gMSkKICBsb2NhbCBuID0gdG9udW1iZXIocykKICBpZiBub3QgbiB0aGVuCiAgICBkZWNvZGVfZXJyb3Ioc3RyLCBpLCAiaW52YWxpZCBudW1iZXIgJyIgLi4gcyAuLiAiJyIpCiAgZW5kCiAgcmV0dXJuIG4sIHgKZW5kCgoKbG9jYWwgZnVuY3Rpb24gcGFyc2VfbGl0ZXJhbChzdHIsIGkpCiAgbG9jYWwgeCA9IG5leHRfY2hhcihzdHIsIGksIGRlbGltX2NoYXJzKQogIGxvY2FsIHdvcmQgPSBzdHI6c3ViKGksIHggLSAxKQogIGlmIG5vdCBsaXRlcmFsc1t3b3JkXSB0aGVuCiAgICBkZWNvZGVfZXJyb3Ioc3RyLCBpLCAiaW52YWxpZCBsaXRlcmFsICciIC4uIHdvcmQgLi4gIiciKQogIGVuZAogIHJldHVybiBsaXRlcmFsX21hcFt3b3JkXSwgeAplbmQKCgpsb2NhbCBmdW5jdGlvbiBwYXJzZV9hcnJheShzdHIsIGkpCiAgbG9jYWwgcmVzID0ge30KICBsb2NhbCBuID0gMQogIGkgPSBpICsgMQogIHdoaWxlIDEgZG8KICAgIGxvY2FsIHgKICAgIGkgPSBuZXh0X2NoYXIoc3RyLCBpLCBzcGFjZV9jaGFycywgdHJ1ZSkKICAgIC0tIEVtcHR5IC8gZW5kIG9mIGFycmF5PwogICAgaWYgc3RyOnN1YihpLCBpKSA9PSAiXSIgdGhlbgogICAgICBpID0gaSArIDEKICAgICAgYnJlYWsKICAgIGVuZAogICAgLS0gUmVhZCB0b2tlbgogICAgeCwgaSA9IHBhcnNlKHN0ciwgaSkKICAgIHJlc1tuXSA9IHgKICAgIG4gPSBuICsgMQogICAgLS0gTmV4dCB0b2tlbgogICAgaSA9IG5leHRfY2hhcihzdHIsIGksIHNwYWNlX2NoYXJzLCB0cnVlKQogICAgbG9jYWwgY2hyID0gc3RyOnN1YihpLCBpKQogICAgaSA9IGkgKyAxCiAgICBpZiBjaHIgPT0gIl0iIHRoZW4gYnJlYWsgZW5kCiAgICBpZiBjaHIgfj0gIiwiIHRoZW4gZGVjb2RlX2Vycm9yKHN0ciwgaSwgImV4cGVjdGVkICddJyBvciAnLCciKSBlbmQKICBlbmQKICByZXR1cm4gcmVzLCBpCmVuZAoKCmxvY2FsIGZ1bmN0aW9uIHBhcnNlX29iamVjdChzdHIsIGkpCiAgbG9jYWwgcmVzID0ge30KICBpID0gaSArIDEKICB3aGlsZSAxIGRvCiAgICBsb2NhbCBrZXksIHZhbAogICAgaSA9IG5leHRfY2hhcihzdHIsIGksIHNwYWNlX2NoYXJzLCB0cnVlKQogICAgLS0gRW1wdHkgLyBlbmQgb2Ygb2JqZWN0PwogICAgaWYgc3RyOnN1YihpLCBpKSA9PSAifSIgdGhlbgogICAgICBpID0gaSArIDEKICAgICAgYnJlYWsKICAgIGVuZAogICAgLS0gUmVhZCBrZXkKICAgIGlmIHN0cjpzdWIoaSwgaSkgfj0gJyInIHRoZW4KICAgICAgZGVjb2RlX2Vycm9yKHN0ciwgaSwgImV4cGVjdGVkIHN0cmluZyBmb3Iga2V5IikKICAgIGVuZAogICAga2V5LCBpID0gcGFyc2Uoc3RyLCBpKQogICAgLS0gUmVhZCAnOicgZGVsaW1pdGVyCiAgICBpID0gbmV4dF9jaGFyKHN0ciwgaSwgc3BhY2VfY2hhcnMsIHRydWUpCiAgICBpZiBzdHI6c3ViKGksIGkpIH49ICI6IiB0aGVuCiAgICAgIGRlY29kZV9lcnJvcihzdHIsIGksICJleHBlY3RlZCAnOicgYWZ0ZXIga2V5IikKICAgIGVuZAogICAgaSA9IG5leHRfY2hhcihzdHIsIGkgKyAxLCBzcGFjZV9jaGFycywgdHJ1ZSkKICAgIC0tIFJlYWQgdmFsdWUKICAgIHZhbCwgaSA9IHBhcnNlKHN0ciwgaSkKICAgIC0tIFNldAogICAgcmVzW2tleV0gPSB2YWwKICAgIC0tIE5leHQgdG9rZW4KICAgIGkgPSBuZXh0X2NoYXIoc3RyLCBpLCBzcGFjZV9jaGFycywgdHJ1ZSkKICAgIGxvY2FsIGNociA9IHN0cjpzdWIoaSwgaSkKICAgIGkgPSBpICsgMQogICAgaWYgY2hyID09ICJ9IiB0aGVuIGJyZWFrIGVuZAogICAgaWYgY2hyIH49ICIsIiB0aGVuIGRlY29kZV9lcnJvcihzdHIsIGksICJleHBlY3RlZCAnfScgb3IgJywnIikgZW5kCiAgZW5kCiAgcmV0dXJuIHJlcywgaQplbmQKCgpsb2NhbCBjaGFyX2Z1bmNfbWFwID0gewogIFsgJyInIF0gPSBwYXJzZV9zdHJpbmcsCiAgWyAiMCIgXSA9IHBhcnNlX251bWJlciwKICBbICIxIiBdID0gcGFyc2VfbnVtYmVyLAogIFsgIjIiIF0gPSBwYXJzZV9udW1iZXIsCiAgWyAiMyIgXSA9IHBhcnNlX251bWJlciwKICBbICI0IiBdID0gcGFyc2VfbnVtYmVyLAogIFsgIjUiIF0gPSBwYXJzZV9udW1iZXIsCiAgWyAiNiIgXSA9IHBhcnNlX251bWJlciwKICBbICI3IiBdID0gcGFyc2VfbnVtYmVyLAogIFsgIjgiIF0gPSBwYXJzZV9udW1iZXIsCiAgWyAiOSIgXSA9IHBhcnNlX251bWJlciwKICBbICItIiBdID0gcGFyc2VfbnVtYmVyLAogIFsgInQiIF0gPSBwYXJzZV9saXRlcmFsLAogIFsgImYiIF0gPSBwYXJzZV9saXRlcmFsLAogIFsgIm4iIF0gPSBwYXJzZV9saXRlcmFsLAogIFsgIlsiIF0gPSBwYXJzZV9hcnJheSwKICBbICJ7IiBdID0gcGFyc2Vfb2JqZWN0LAp9CgoKcGFyc2UgPSBmdW5jdGlvbihzdHIsIGlkeCkKICBsb2NhbCBjaHIgPSBzdHI6c3ViKGlkeCwgaWR4KQogIGxvY2FsIGYgPSBjaGFyX2Z1bmNfbWFwW2Nocl0KICBpZiBmIHRoZW4KICAgIHJldHVybiBmKHN0ciwgaWR4KQogIGVuZAogIGRlY29kZV9lcnJvcihzdHIsIGlkeCwgInVuZXhwZWN0ZWQgY2hhcmFjdGVyICciIC4uIGNociAuLiAiJyIpCmVuZAoKCmZ1bmN0aW9uIGNqc29uLmRlY29kZShzdHIpCiAgaWYgdHlwZShzdHIpIH49ICJzdHJpbmciIHRoZW4KICAgIGVycm9yKCJleHBlY3RlZCBhcmd1bWVudCBvZiB0eXBlIHN0cmluZywgZ290ICIgLi4gdHlwZShzdHIpKQogIGVuZAogIGxvY2FsIHJlcywgaWR4ID0gcGFyc2Uoc3RyLCBuZXh0X2NoYXIoc3RyLCAxLCBzcGFjZV9jaGFycywgdHJ1ZSkpCiAgaWR4ID0gbmV4dF9jaGFyKHN0ciwgaWR4LCBzcGFjZV9jaGFycywgdHJ1ZSkKICBpZiBpZHggPD0gI3N0ciB0aGVuCiAgICBkZWNvZGVfZXJyb3Ioc3RyLCBpZHgsICJ0cmFpbGluZyBnYXJiYWdlIikKICBlbmQKICByZXR1cm4gcmVzCmVuZApyZXR1cm4gY2pzb24="
@@ -50,7 +53,7 @@ def write_file(file_path: Union[str, Path], content: str) -> bool:
             fp.write(content)
         return True
     except OSError as e:
-        _LOGGER.error("[lua] write file failed: path=%s error=%s", file_path, e)
+        _LOGGER.error("write file failed: path=%s error=%s", file_path, e)
         return False
 
 def ensure_lua_files(lua_path: str) -> tuple:
@@ -115,7 +118,7 @@ end
         try:
             self._runtime.execute('cjson = require "cjson"')
         except lupa.lua51.LuaError as e:
-            _LOGGER.warning("[lua] cjson load failed: %s", e)
+            _LOGGER.warning("cjson load failed: %s", e)
             try:
                 def lua_json_encode(obj):
                     return json.dumps(obj)
@@ -135,15 +138,15 @@ _G.cjson = cjson
                 self._runtime.globals()['lua_json_encode'] = lua_json_encode
                 self._runtime.globals()['lua_json_decode'] = lua_json_decode
                 self._runtime.execute(cjson_lib)
-                _LOGGER.info("[lua] using python json fallback for cjson")
+                _LOGGER.info("using python json fallback for cjson")
             except (json.JSONDecodeError, TypeError) as e2:
-                _LOGGER.error("[lua] cjson fallback setup failed: %s", e2)
+                _LOGGER.error("cjson fallback setup failed: %s", e2)
 
         try:
             self._runtime.execute('bit = require "bit"')
-            _LOGGER.debug("[lua] bit library loaded from file")
+            _LOGGER.debug("bit library loaded from file")
         except lupa.lua51.LuaError as e:
-            _LOGGER.warning("[lua] bit load failed: %s", e)
+            _LOGGER.warning("bit load failed: %s", e)
 
         try:
             with open(file_path, "r", encoding="utf-8") as f:
@@ -173,15 +176,15 @@ _G.cjson = cjson
             try:
                 return self._json_to_data(json_value)
             except lupa.lua51.LuaError as e:
-                _LOGGER.error("[lua] json_to_data failed: %s", e)
-                _LOGGER.debug("[lua] json_to_data input (first 200 chars): %s", str(json_value)[:200])
+                _LOGGER.error("json_to_data failed: %s", e)
+                _LOGGER.debug("json_to_data input (first 200 chars): %s", str(json_value)[:200])
                 return ""
 
     def data_to_json(self, data_value: str) -> str:
         with self._lock:
             try:
                 result = self._data_to_json(data_value)
-                _LOGGER.debug("[lua] data_to_json input length: %d", len(data_value) if data_value else 0)
+                _LOGGER.debug("data_to_json input length: %d", len(data_value) if data_value else 0)
 
                 # Handle None or empty result from Lua function
                 if not result:
@@ -195,7 +198,7 @@ _G.cjson = cjson
                 # Treat any non-string result as an empty status payload.
                 if not isinstance(result, str):
                     _LOGGER.debug(
-                        "[lua] data_to_json returned non-string (%s), skipping parse",
+                        "data_to_json returned non-string (%s), skipping parse",
                         type(result).__name__
                     )
                     return '{"status":{"version":0}}'
@@ -222,15 +225,15 @@ _G.cjson = cjson
                 )
                 if is_nil_value_issue:
                     _LOGGER.debug(
-                        "[lua] data_to_json skipped (nil value in device data): %s "
+                        "data_to_json skipped (nil value in device data): %s "
                         "data_length=%d",
                         error_msg.split("\n")[0],  # Only first line to keep logs clean
                         len(data_value) if data_value else 0
                     )
                     return '{"status":{"version":0}}'
                 else:
-                    _LOGGER.error("[lua] data_to_json failed: %s", e)
-                    _LOGGER.debug("[lua] data_to_json input (first 200 chars): %s", str(data_value)[:200])
+                    _LOGGER.error("data_to_json failed: %s", e)
+                    _LOGGER.debug("data_to_json input (first 200 chars): %s", str(data_value)[:200])
                     return ""
 
 
@@ -260,7 +263,7 @@ class MideaCodec(LuaRuntime):
             }))
             return result or ""
         except (json.JSONEncodeError, TypeError) as e:
-            _LOGGER.error("[lua] build_query failed: %s", e)
+            _LOGGER.error("build_query failed: %s", e)
             return ""
 
     def build_control(
@@ -276,7 +279,7 @@ class MideaCodec(LuaRuntime):
             }))
             return result or ""
         except (json.JSONEncodeError, TypeError) as e:
-            _LOGGER.error("[lua] build_control failed: %s", e)
+            _LOGGER.error("build_control failed: %s", e)
             return ""
 
     def decode_status(
@@ -296,8 +299,8 @@ class MideaCodec(LuaRuntime):
                 return status
             return None
         except json.JSONDecodeError as e:
-            _LOGGER.error("[lua] decode_status json parse failed: %s", e)
+            _LOGGER.error("decode_status json parse failed: %s", e)
             return None
         except lupa.lua51.LuaError as e:
-            _LOGGER.error("[lua] decode_status lua execution failed: %s", e)
+            _LOGGER.error("decode_status lua execution failed: %s", e)
             return None

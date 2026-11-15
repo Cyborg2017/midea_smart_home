@@ -9,7 +9,10 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .coordinator import MideaCoordinator
 from .entity import MideaBaseEntity, iter_midea_device_configs
 
+from .midea_lib.logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[entity]")
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -77,7 +80,7 @@ class MideaNumberEntity(MideaBaseEntity, NumberEntity):
         try:
             return float(value)
         except (ValueError, TypeError):
-            _LOGGER.warning("[entity] value conversion failed: value=%s entity=%s", value, self._entity_key)
+            _LOGGER.warning("value conversion failed: value=%s entity=%s", value, self._entity_key)
             return None
 
     async def async_set_native_value(self, value: float) -> None:

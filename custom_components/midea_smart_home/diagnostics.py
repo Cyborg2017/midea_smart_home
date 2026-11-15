@@ -27,7 +27,10 @@ from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
 
+from .midea_lib.logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[diag]")
 
 DIAG_TTL = 600  # seconds
 DIAG_DIR = "midea_smart_home"  # under config/www
@@ -99,7 +102,7 @@ def _sweep_expired(diag_dir: Path) -> None:
             if stale.stat().st_mtime < cutoff:
                 stale.unlink()
         except OSError as err:
-            _LOGGER.warning("[diag] stale archive removal failed: path=%s error=%s", stale, err)
+            _LOGGER.warning("stale archive removal failed: path=%s error=%s", stale, err)
 
 def _collect_device_attributes(hass: HomeAssistant, entry: ConfigEntry) -> dict:
     """Gather metadata + current attribute dict for every configured device."""
@@ -187,10 +190,10 @@ def build_diagnostics_archive(
                 ),
             )
     except OSError as err:
-        _LOGGER.error("[diag] archive build failed: error=%s", err)
+        _LOGGER.error("archive build failed: error=%s", err)
         return None, {"record_count": record_count, "device_count": device_count}
 
-    _LOGGER.info("[diag] archive written: path=%s", zip_path)
+    _LOGGER.info("archive written: path=%s", zip_path)
     return (
         f"/local/{DIAG_DIR}/{zip_path.name}",
         {"record_count": record_count, "device_count": device_count},

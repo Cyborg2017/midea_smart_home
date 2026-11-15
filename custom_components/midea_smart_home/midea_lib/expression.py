@@ -5,7 +5,10 @@ import re
 import ast
 from typing import Union, Any, Optional
 
+from .logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[expr]")
 
 
 class ExpressionEvaluator:
@@ -36,7 +39,7 @@ class ExpressionEvaluator:
         dangerous_patterns = ['__', 'import', 'exec', 'eval', 'compile', 'open', 'file', 'input']
         for pattern in dangerous_patterns:
             if pattern in result_expr.lower():
-                _LOGGER.warning("[expr] dangerous pattern rejected: pattern=%s expression=%s", pattern, expression)
+                _LOGGER.warning("dangerous pattern rejected: pattern=%s expression=%s", pattern, expression)
                 return None
 
         try:
@@ -47,12 +50,12 @@ class ExpressionEvaluator:
                 if isinstance(node_type, (ast.Call, ast.Attribute, ast.Subscript)):
                     if isinstance(node_type, ast.Attribute):
                         if node_type.attr.startswith('_'):
-                            _LOGGER.warning("[expr] private attribute access denied: attr=%s", node_type.attr)
+                            _LOGGER.warning("private attribute access denied: attr=%s", node_type.attr)
                             return None
 
             return eval(compile(node, '<string>', 'eval'), {"__builtins__": {}}, allowed_names)
         except (SyntaxError, ValueError, TypeError, NameError, AttributeError) as e:
-            _LOGGER.warning("[expr] expression evaluation failed: expression=%s error=%s", expression, e)
+            _LOGGER.warning("expression evaluation failed: expression=%s error=%s", expression, e)
             return None
 
     def apply_calculations(self, data: dict) -> dict:

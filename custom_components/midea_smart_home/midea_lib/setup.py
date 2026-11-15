@@ -8,7 +8,10 @@ from .device import DeviceController
 from .lua import MideaCodec
 from .exceptions import CannotAuthenticate
 
+from .logger import prefix_logger
+
 _LOGGER = logging.getLogger(__name__)
+_LOGGER = prefix_logger(_LOGGER, "[setup]")
 
 async def validate_device(
     hass,
@@ -39,7 +42,7 @@ async def validate_device(
         if result != 0:
             return False, "cannot_connect"
     except Exception as e:
-        _LOGGER.error("[setup] socket connect failed: ip=%s port=%s error=%s", ip_address, port, e)
+        _LOGGER.error("socket connect failed: ip=%s port=%s error=%s", ip_address, port, e)
         return False, "cannot_connect"
 
     # 2. Test authentication and protocol
@@ -117,12 +120,12 @@ async def validate_device(
                     controller.join(timeout=3.0)
                     if controller.is_alive():
                         _LOGGER.warning(
-                            "[setup] controller thread did not stop within 3s: device_id=%s",
+                            "controller thread did not stop within 3s: device_id=%s",
                             device_id,
                         )
 
         return await hass.async_add_executor_job(_test_connection)
 
     except Exception as e:
-        _LOGGER.error("[setup] device validation failed: device_id=%s error=%s", device_id, e)
+        _LOGGER.error("device validation failed: device_id=%s error=%s", device_id, e)
         return False, "unknown"
