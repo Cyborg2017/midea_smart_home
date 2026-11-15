@@ -7,7 +7,7 @@ work for LAN, cloud v1 and cloud v2 connected devices.
 from __future__ import annotations
 
 import logging
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Any
 from uuid import uuid4
 
@@ -128,26 +128,31 @@ async def _fetch_range_hood(cloud, appliance_code, sn8: str) -> dict[str, Any]:
 async def _fetch_air_conditioner(
     cloud, appliance_code, today: date
 ) -> dict[str, Any]:
-    """Fetch today/month/year energy consumption for an air conditioner."""
+    """Fetch yesterday/month/year energy consumption for an air conditioner."""
     stats: dict[str, Any] = {}
+    # The cloud only finalises a day's consumption after midnight, so today is
+    # always reported as 0 while the day is still running.  Expose the latest
+    # completed day instead, and query the week that contains it so the value is
+    # still found on Mondays.
+    yesterday = today - timedelta(days=1)
     for stat_type in (1, 2, 3):
         response = await cloud.app_plugin_request(
             _AC_ELEC_API,
             {
                 "applianceId": str(appliance_code),
                 "type": stat_type,
-                "date": today.isoformat(),
+                "date": (yesterday if stat_type == 1 else today).isoformat(),
             },
         )
         result = _plugin_result(response, "errCode")
         if not isinstance(result, dict):
             continue
         if stat_type == 1:
-            # type 1 is the current week: pick today's entry.
-            item = _find_item(result.get("elecDetails"), "key", today.isoformat())
+            # type 1 is the current week: pick yesterday's entry.
+            item = _find_item(result.get("elecDetails"), "key", yesterday.isoformat())
             value = _to_float(item.get("value")) if item else None
             if value is not None:
-                stats["today_energy_consumption"] = value
+                stats["yesterday_energy_consumption"] = value
         else:
             value = _to_float(result.get("totalValue"))
             if value is not None:

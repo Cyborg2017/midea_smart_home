@@ -34,7 +34,7 @@ CLOUD_STATS_SENSORS = {
     ],
     0xAC: [
         {
-            "key": "today_energy_consumption",
+            "key": "yesterday_energy_consumption",
             "device_class": SensorDeviceClass.ENERGY,
             "unit": UnitOfEnergy.KILO_WATT_HOUR,
             "state_class": SensorStateClass.TOTAL,
