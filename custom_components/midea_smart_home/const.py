@@ -89,6 +89,7 @@ DEVICE_TYPES = {
     0xB3: "Disinfection Cabinet",
     0xB6: "Range Hood",
     0xB8: "Smart Robot Vacuum",
+    0xBC: "Air Detector",
     0xBF: "Microwave Steam Oven",
     0xC2: "Smart Toilet",
     0xCA: "Multi-Door Fridge",
