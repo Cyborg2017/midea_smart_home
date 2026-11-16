@@ -762,6 +762,40 @@ async def _store_cloud_device(flow, info: dict) -> None:
         device_id, device_data.get(CONF_CONNECTION_TYPE),
     )
 
+async def _resolve_0110_cloud_ids(flow) -> None:
+    """Map V2 0x0110 broadcasts to their cloud appliance id using the LAN IP.
+
+    A 0x0110 reply does not expose a usable appliance id, but the Meiju cloud
+    reports each appliance's current LAN IP (linkType / routerIpV4), so the IP
+    from the broadcast identifies the cloud entry.
+    """
+    meiju = getattr(flow, "_user_cloud", None)
+    cloud_devices = getattr(flow, "_cloud_devices", None) or {}
+    if meiju is None or not cloud_devices:
+        return
+    resolved: dict = {}
+    for did, info in flow._discovered_devices.items():
+        cloud_id = None
+        if info.get("unsupported_protocol"):
+            device_type = info.get(CONF_DEVICE_TYPE)
+            ip_address = info.get(CONF_IP)
+            for candidate, cloud_device in cloud_devices.items():
+                if cloud_device.get("type") != device_type:
+                    continue
+                if await meiju.get_device_ip(candidate) == ip_address:
+                    cloud_id = candidate
+                    break
+        if cloud_id is None or cloud_id == did:
+            resolved[did] = info
+            continue
+        _LOGGER.info(
+            "resolved 0x0110 cloud id by ip: lan_id=%s cloud_id=%s ip=%s",
+            did, cloud_id, info.get(CONF_IP),
+        )
+        info[CONF_DEVICE_ID] = cloud_id
+        resolved[cloud_id] = info
+    flow._discovered_devices = resolved
+
 async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
     """Classify discovered devices into (supported, unsupported, pending).
 
@@ -782,6 +816,11 @@ async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
     pending: dict = {}
     # LAN-only mode keeps the original behaviour and skips the cloud probes.
     hybrid = getattr(flow, "_hybrid", True)
+
+    # 0x0110 broadcasts carry no usable id; align them with the cloud entry by IP
+    # so the cloud_v1 probe and the stored config entry use the appliance id.
+    if hybrid:
+        await _resolve_0110_cloud_ids(flow)
 
     for did, info in flow._discovered_devices.items():
         # V2 0x0110 devices cannot speak TCP, so the LAN probe is pointless.

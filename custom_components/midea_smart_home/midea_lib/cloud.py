@@ -286,6 +286,10 @@ class MideaCloud:
     ) -> dict[int, dict[str, Any]] | None:
         raise NotImplementedError
 
+    async def get_device_ip(self, appliance_id: int) -> str | None:
+        """Return the LAN IP the appliance currently reports to the cloud."""
+        return None
+
 
 class MeijuCloud(MideaCloud):
     """Meiju Cloud."""
@@ -432,6 +436,17 @@ class MeijuCloud(MideaCloud):
                             self._home_group_map[int(appliance["applianceCode"])] = home_group_id
             return appliances
         return None
+
+    async def get_device_ip(self, appliance_id: int) -> str | None:
+        """Query /v1/appliance/linkType/<id>; its routerIpV4 is the device IP."""
+        response = await self._api_request(
+            endpoint=f"/v1/appliance/linkType/{appliance_id}",
+            data=self._make_general_data(),
+        )
+        if not response:
+            return None
+        network = response.get("network") or {}
+        return network.get("routerIpV4") or None
 
     async def get_cloud_keys(
         self, appliance_id: int, udpid: str | None = None
