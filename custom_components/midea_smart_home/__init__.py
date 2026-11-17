@@ -26,10 +26,12 @@ from .const import (
     CONF_MODEL_NUMBER,
     CONF_PORT,
     CONF_PROTOCOL,
+    CONF_CLOUD_STATS_INTERVAL,
     CONF_ROOM_NAME,
     CONF_SN,
     CONF_SN8,
     CONF_TOKEN,
+    CLOUD_STATS_INTERVAL_DEFAULT,
     CONNECTION_TYPE_CLOUD_V1,
     CONNECTION_TYPE_CLOUD_V2,
     CONNECTION_TYPE_LAN,
@@ -81,6 +83,14 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             _LOGGER.info("created bit.lua: path=%s", bit)
 
     return True
+
+def _cloud_stats_interval(entry: ConfigEntry) -> int:
+    """Return the configured cloud statistics polling interval in seconds."""
+    value = entry.data.get(CONF_CLOUD_STATS_INTERVAL, CLOUD_STATS_INTERVAL_DEFAULT)
+    try:
+        return int(value) * 60 * 60
+    except (TypeError, ValueError):
+        return DEFAULT_CLOUD_STATS_SCAN_INTERVAL
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
@@ -380,7 +390,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     sn8=sn8,
                     category=category,
                     project_no=str(device_data.get("project_no") or ""),
-                    update_interval=DEFAULT_CLOUD_STATS_SCAN_INTERVAL,
+                    update_interval=_cloud_stats_interval(entry),
                 )
 
             if connection_type == CONNECTION_TYPE_LAN:

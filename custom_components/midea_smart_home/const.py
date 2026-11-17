@@ -32,6 +32,7 @@ CONF_ROOM_NAME = "room_name"
 CONF_PROTOCOL = "protocol"
 CONF_CATEGORY = "category"
 CONF_UPDATE_CHECK_INTERVAL = "update_check_interval"
+CONF_CLOUD_STATS_INTERVAL = "cloud_stats_interval"
 CONF_CONNECTION_TYPE = "connection_type"
 
 # Connection type per device: how it is reached at runtime.
@@ -66,6 +67,14 @@ UPDATE_CHECK_OFF = "off"
 UPDATE_CHECK_12H = "12"
 UPDATE_CHECK_24H = "24"
 UPDATE_CHECK_DEFAULT = UPDATE_CHECK_24H
+
+# Cloud statistics polling interval options, stored as hour strings.
+CLOUD_STATS_INTERVAL_1H = "1"
+CLOUD_STATS_INTERVAL_3H = "3"
+CLOUD_STATS_INTERVAL_6H = "6"
+CLOUD_STATS_INTERVAL_12H = "12"
+CLOUD_STATS_INTERVAL_24H = "24"
+CLOUD_STATS_INTERVAL_DEFAULT = CLOUD_STATS_INTERVAL_6H
 
 
 class ProtocolVersion:

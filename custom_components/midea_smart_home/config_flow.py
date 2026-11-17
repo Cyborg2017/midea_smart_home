@@ -1929,7 +1929,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     ) -> FlowResult:
         return self.async_show_menu(
             step_id="init",
-            menu_options=["add_device_local", "add_device_auto", "add_device_manual", "update_account", "sync_cloud", "backup_config", "fetch_diagnostics", "clear_cache", "configure_polling", "configure_notifications", "configure_update_check"],
+            menu_options=["add_device_local", "add_device_auto", "add_device_manual", "update_account", "sync_cloud", "backup_config", "fetch_diagnostics", "clear_cache", "configure_polling", "configure_notifications", "configure_update_check", "configure_cloud_stats"],
         )
 
     async def async_step_add_device_local(
@@ -3369,6 +3369,92 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             }),
             description_placeholders={
                 "current_interval": interval_options.get(current_interval, current_interval),
+            },
+            last_step=True,
+        )
+
+    async def async_step_configure_cloud_stats(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Configure the cloud statistics polling interval."""
+        from datetime import timedelta
+
+        from homeassistant.helpers import translation as ha_translation
+        from .const import (
+            CLOUD_STATS_INTERVAL_1H,
+            CLOUD_STATS_INTERVAL_3H,
+            CLOUD_STATS_INTERVAL_6H,
+            CLOUD_STATS_INTERVAL_12H,
+            CLOUD_STATS_INTERVAL_24H,
+            CLOUD_STATS_INTERVAL_DEFAULT,
+            CONF_CLOUD_STATS_INTERVAL,
+            DEFAULT_CLOUD_STATS_SCAN_INTERVAL,
+        )
+
+        current_language = self.hass.config.language or "en"
+        translations = await ha_translation.async_get_translations(
+            self.hass, current_language, "options", {DOMAIN}
+        )
+
+        def _translate(key: str, default: str) -> str:
+            full_key = f"options.step.configure_cloud_stats.data.{key}"
+            for k in [full_key, f"component.{DOMAIN}.{full_key}"]:
+                if k in translations:
+                    return translations[k]
+            return default
+
+        interval_options = {
+            CLOUD_STATS_INTERVAL_1H: _translate("option_1h", "1h"),
+            CLOUD_STATS_INTERVAL_3H: _translate("option_3h", "3h"),
+            CLOUD_STATS_INTERVAL_6H: _translate("option_6h", "6h"),
+            CLOUD_STATS_INTERVAL_12H: _translate("option_12h", "12h"),
+            CLOUD_STATS_INTERVAL_24H: _translate("option_24h", "24h"),
+        }
+
+        current_data = dict(self._config_entry.data)
+        current_interval = current_data.get(
+            CONF_CLOUD_STATS_INTERVAL, CLOUD_STATS_INTERVAL_DEFAULT
+        )
+
+        if user_input is not None:
+            new_interval = user_input.get(
+                CONF_CLOUD_STATS_INTERVAL, CLOUD_STATS_INTERVAL_DEFAULT
+            )
+            self.hass.config_entries.async_update_entry(
+                self._config_entry,
+                data={**current_data, CONF_CLOUD_STATS_INTERVAL: new_interval},
+            )
+            try:
+                seconds = int(new_interval) * 60 * 60
+            except (TypeError, ValueError):
+                seconds = DEFAULT_CLOUD_STATS_SCAN_INTERVAL
+            # Reschedule the running coordinators instead of reloading the entry,
+            # which would disconnect and reconnect every device.
+            entry_data = self.hass.data.get(DOMAIN, {}).get(
+                self._config_entry.entry_id, {}
+            )
+            for item in entry_data.values():
+                if not isinstance(item, dict):
+                    continue
+                coordinator = item.get("cloud_stats_coordinator")
+                if coordinator is None:
+                    continue
+                coordinator.update_interval = timedelta(seconds=seconds)
+                await coordinator.async_request_refresh()
+            return self.async_create_entry(title="", data={})
+
+        return self.async_show_form(
+            step_id="configure_cloud_stats",
+            data_schema=vol.Schema({
+                vol.Required(
+                    CONF_CLOUD_STATS_INTERVAL,
+                    default=current_interval,
+                ): vol.In(interval_options),
+            }),
+            description_placeholders={
+                "current_interval": interval_options.get(
+                    current_interval, current_interval
+                ),
             },
             last_step=True,
         )

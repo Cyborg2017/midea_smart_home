@@ -4058,6 +4058,18 @@
         "description": "Clear local configuration files:\n\n    📁 Local lua/json configuration files will be cleared and backed up to: .storage/midea_smart_home-backup\n\n    ⚠️ Note: This operation will completely remove configuration files. Do not proceed unless you need to fully reconfigure the integration",
         "title": "Clear Local Configuration"
       },
+      "configure_cloud_stats": {
+        "data": {
+          "cloud_stats_interval": "Cloud Statistics Polling Interval",
+          "option_1h": "Every 1 hour",
+          "option_3h": "Every 3 hours",
+          "option_6h": "Every 6 hours",
+          "option_12h": "Every 12 hours",
+          "option_24h": "Every 24 hours"
+        },
+        "description": "Configure how often the integration polls Midea Cloud for energy statistics (yesterday/monthly/yearly consumption).\n\n💡 Longer intervals reduce cloud requests and the chance of triggering \"account login\" alerts in the Midea app. Yesterday's consumption is finalised after midnight, so 6 hours or more is usually enough.\n\nCurrent setting: {current_interval}",
+        "title": "Configure Cloud Statistics Interval"
+      },
       "configure_notifications": {
         "data": {
           "notify_offline": "Send notification when device goes offline",
@@ -4118,6 +4130,7 @@
           "add_device_manual": "✍️ Manual Add Device (no account)",
           "backup_config": "📦 Backup & Download Local Configuration",
           "clear_cache": "🗑️ Clear local configuration files",
+          "configure_cloud_stats": "⚡ Configure Cloud Statistics Interval",
           "configure_notifications": "🔔 Configure Device Notifications",
           "configure_polling": "⏱️ Configure Polling Interval",
           "configure_update_check": "🔄 Configure Integration Update Check",

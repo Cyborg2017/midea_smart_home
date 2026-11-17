@@ -4058,6 +4058,18 @@
         "description": "清理本地配置文件：\n\n    📁 本地lua及json配置文件将被清理，另存为：.storage/midea_smart_home-backup\n\n    ⚠️ 请注意：本操作会彻底移除配置文件，除非完全重新配置集成，否则勿动",
         "title": "清理配置文件"
       },
+      "configure_cloud_stats": {
+        "data": {
+          "cloud_stats_interval": "云统计轮询频率",
+          "option_1h": "每 1 小时",
+          "option_3h": "每 3 小时",
+          "option_6h": "每 6 小时",
+          "option_12h": "每 12 小时",
+          "option_24h": "每 24 小时"
+        },
+        "description": "配置集成多久向美的云查询一次用能统计（昨日/本月/本年用电量）。\n\n💡 间隔越长，云端请求越少，触发美的 App「账号登录提醒」的概率也越低。昨日用电量在过零点后才结算，因此 6 小时及以上通常足够。\n\n当前设置: {current_interval}",
+        "title": "配置云统计轮询间隔"
+      },
       "configure_notifications": {
         "data": {
           "notify_offline": "设备离线时发送通知",
@@ -4118,6 +4130,7 @@
           "add_device_manual": "✍️ 手动添加设备（无需账号）",
           "backup_config": "📦 备份本地配置文件",
           "clear_cache": "🗑️ 清理本地配置文件",
+          "configure_cloud_stats": "⚡ 配置云统计轮询间隔",
           "configure_notifications": "🔔 配置设备上下线通知",
           "configure_polling": "⏱️ 配置轮询间隔时间",
           "configure_update_check": "🔄 配置集成更新检查",
