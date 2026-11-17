@@ -73,7 +73,7 @@ DEVICE_MAPPING = {
                 },
                 "water_volume": {
                     "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
-                    "unit_of_measurement": UnitOfVolumeFlowRate.LITERS_PER_HOUR,
+                    "unit_of_measurement": LITERS_PER_HOUR,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             }
@@ -151,7 +151,7 @@ DEVICE_MAPPING = {
                 },
                 "water_volume": {
                     "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
-                    "unit_of_measurement": UnitOfVolumeFlowRate.LITERS_PER_HOUR,
+                    "unit_of_measurement": LITERS_PER_HOUR,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             }
@@ -237,7 +237,7 @@ DEVICE_MAPPING = {
                 },
                 "water_volume": {
                     "device_class": SensorDeviceClass.VOLUME_FLOW_RATE,
-                    "unit_of_measurement": UnitOfVolumeFlowRate.LITERS_PER_HOUR,
+                    "unit_of_measurement": LITERS_PER_HOUR,
                     "state_class": SensorStateClass.MEASUREMENT
                 }
             }

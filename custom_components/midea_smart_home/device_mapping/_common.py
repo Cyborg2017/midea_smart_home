@@ -54,6 +54,11 @@ else:
         CONCENTRATION_PARTS_PER_MILLION,
     )
 
+# `UnitOfVolumeFlowRate.LITERS_PER_HOUR` only exists on newer cores. Expose a
+# stable name so the mapping module still imports on older versions instead of
+# failing to load the whole device mapping.
+LITERS_PER_HOUR = getattr(UnitOfVolumeFlowRate, "LITERS_PER_HOUR", "L/h")
+
 __all__ = [
     # homeassistant.const
     "Platform",
@@ -78,6 +83,8 @@ __all__ = [
     "SensorDeviceClass",
     "SensorStateClass",
     "SwitchDeviceClass",
+    # version-compat volume flow rate unit
+    "LITERS_PER_HOUR",
     # version-compat concentration units
     "CONCENTRATION_MICROGRAMS_PER_CUBIC_METER",
     "CONCENTRATION_MILLIGRAMS_PER_CUBIC_METER",
