@@ -33,6 +33,22 @@ from .logger import prefix_logger
 _LOGGER = logging.getLogger(__name__)
 _LOGGER = prefix_logger(_LOGGER, "[cloud]")
 
+def with_cache_buster(data: dict[str, Any]) -> dict[str, Any]:
+    """Add per-request unique fields so the gateway cannot serve a cached reply.
+
+    The App plugin gateways cache responses keyed by the request payload, so a
+    body that only carries an appliance id keeps returning the first response
+    for hours.  The washing machine endpoints already send these fields; mirror
+    them for every plugin request.
+    """
+    if "stamp" in data or "reqId" in data:
+        return data
+    return {
+        **data,
+        "stamp": datetime.now().strftime("%Y%m%d%H%M%S"),
+        "reqId": str(uuid4()),
+    }
+
 SUPPORTED_CLOUDS = {
     "Meiju Cloud": {
         "class_name": "MeijuCloud",
@@ -649,6 +665,7 @@ class MeijuCloud(MideaCloud):
         returned and callers interpret the result.
         """
         header = dict(header or {})
+        data = with_cache_buster(data)
         random = str(int(time.time()))
         url = self._api_url + alias
         dump_data = json.dumps(data)
