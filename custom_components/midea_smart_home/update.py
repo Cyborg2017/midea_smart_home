@@ -157,6 +157,11 @@ class MideaUpdateEntity(UpdateEntity):
 
     async def async_check_for_update(self) -> None:
         """Check GitHub for the latest release."""
+        # Guard: skip if entity is not yet fully initialized
+        if self.hass is None:
+            _LOGGER.debug('hass is None, skipping update check')
+            return
+
         # Clear previous update state before checking for new updates
         self._attr_latest_version = None
         self._attr_release_summary = None
