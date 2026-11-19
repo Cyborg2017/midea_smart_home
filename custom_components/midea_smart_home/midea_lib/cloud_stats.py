@@ -24,10 +24,14 @@ _GAS_WATER_HEATER_API = "/cfhrs/e3/v1/api"
 _WASH_CONSUMPTION_API = (
     "/xyj/h5/washConsumption/energy/v1/consumption/get{period}Consumption"
 )
+_WASH_WATERPOWER_API = (
+    "/xyj/h5/washConsumption/api/v1/waterpower/get{period}Consumption"
+)
 
 # Defaults used by the washing machine consumption endpoint.
 _WASH_DEFAULT_CATEGORY = "DB"
 _WASH_DEFAULT_PROJECT_NO = "13153"
+_WASH_WATERPOWER_PROJECT_NO = "12614"
 
 # The gas water heater report carries month-to-date series (31 values), week
 # series (7 values) on models that do not report the full month, and a 12 month
@@ -335,6 +339,92 @@ async def _fetch_washing_machine(
 
     return stats
 
+def _wash_waterpower_body(
+    appliance_code,
+    uid: str | None,
+    category: str,
+    project_no: str,
+) -> dict[str, Any]:
+    """Build the common request body for waterpower consumption endpoints."""
+    return {
+        "stamp": datetime.now().strftime("%Y%m%d%H%M%S"),
+        "reqId": str(uuid4()),
+        "requestId": str(uuid4()),
+        "activityId": "xxxxxx",
+        "userId": str(uid or ""),
+        "applianceId": str(appliance_code),
+        "category": category,
+        "project_no": str(project_no),
+    }
+
+async def _fetch_washing_machine_waterpower(
+    cloud,
+    appliance_code,
+    today: date,
+    category: str,
+    project_no: str,
+) -> dict[str, Any]:
+    """Fetch consumption for washers using the waterpower API variant."""
+    uid = cloud.iot_user_id or cloud.uid
+    today_str = today.isoformat()
+    stats: dict[str, Any] = {}
+
+    week_start = today - timedelta(days=today.weekday())
+    week_body = _wash_waterpower_body(
+        appliance_code, uid, category, project_no
+    )
+    week_body.update(
+        {
+            "startTime": week_start.isoformat(),
+            "endTime": (week_start + timedelta(days=6)).isoformat(),
+        }
+    )
+    response = await cloud.app_plugin_request(
+        _WASH_WATERPOWER_API.format(period="Week"),
+        week_body,
+        sign_request=False,
+    )
+    result = _plugin_result(response, "errorCode")
+    if isinstance(result, list) and result and isinstance(result[0], dict):
+        week_item = result[0]
+        for source, target in (
+            ("weekPower", "weekly_energy_consumption"),
+            ("weekWater", "weekly_water_consumption"),
+        ):
+            value = _to_float(week_item.get(source))
+            if value is not None:
+                stats[target] = value
+        day_item = _find_item(week_item.get("dayList"), "day", today_str)
+        if day_item:
+            for source, target in (
+                ("dayPower", "today_energy_consumption"),
+                ("dayWater", "today_water_consumption"),
+            ):
+                value = _to_float(day_item.get(source))
+                if value is not None:
+                    stats[target] = value
+
+    month_body = _wash_waterpower_body(
+        appliance_code, uid, category, project_no
+    )
+    month_body["month"] = today.strftime("%Y-%m")
+    response = await cloud.app_plugin_request(
+        _WASH_WATERPOWER_API.format(period="Month"),
+        month_body,
+        sign_request=False,
+    )
+    result = _plugin_result(response, "errorCode")
+    if isinstance(result, dict):
+        for source, target in (
+            ("monthPower", "monthly_energy_consumption"),
+            ("monthWater", "monthly_water_consumption"),
+        ):
+            value = _to_float(result.get(source))
+            if value is not None:
+                stats[target] = value
+
+    return stats
+
 async def async_fetch_cloud_stats(
     cloud,
     *,
@@ -354,12 +444,14 @@ async def async_fetch_cloud_stats(
     if device_type == 0xAC:
         return await _fetch_air_conditioner(cloud, appliance_code, today)
     if device_type == 0xDB:
+        category = category or _WASH_DEFAULT_CATEGORY
+        project_no = project_no or _WASH_DEFAULT_PROJECT_NO
+        if project_no == _WASH_WATERPOWER_PROJECT_NO:
+            return await _fetch_washing_machine_waterpower(
+                cloud, appliance_code, today, category, project_no
+            )
         return await _fetch_washing_machine(
-            cloud,
-            appliance_code,
-            today,
-            category or _WASH_DEFAULT_CATEGORY,
-            project_no or _WASH_DEFAULT_PROJECT_NO,
+            cloud, appliance_code, today, category, project_no
         )
     if device_type == 0xE1:
         return await _fetch_dishwasher(cloud, appliance_code, today)
