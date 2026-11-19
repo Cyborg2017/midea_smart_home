@@ -113,6 +113,8 @@ class MideaCloud:
         self._token_invalid_retry_count = 0
         # Monotonic timestamp of the last login attempt (rate limiting)
         self._last_login_at = 0.0
+        # Appliance project number reported by the device status
+        self._project_no_map: dict[int, str] = {}
 
     def _make_general_data(self) -> dict[str, Any]:
         return {}
@@ -313,6 +315,10 @@ class MideaCloud:
         """Return the LAN IP the appliance currently reports to the cloud."""
         return None
 
+    async def get_project_no(self, appliance_id: int) -> str | None:
+        """Return the appliance project number reported by the device status."""
+        return None
+
 
 class MeijuCloud(MideaCloud):
     """Meiju Cloud."""
@@ -475,6 +481,25 @@ class MeijuCloud(MideaCloud):
             return None
         network = response.get("network") or {}
         return network.get("routerIpV4") or None
+
+    async def get_project_no(self, appliance_id: int) -> str | None:
+        """Return the appliance project_no, cached from the device status.
+
+        The project number identifies the midea app project that owns the
+        device; the consumption endpoints only report data for a device when
+        the request carries its own project number.
+        """
+        cached = self._project_no_map.get(int(appliance_id))
+        if cached:
+            return cached
+        status = await self.get_device_status(appliance_id)
+        if not isinstance(status, dict):
+            return None
+        value = status.get("project_no")
+        if value is None:
+            return None
+        self._project_no_map[int(appliance_id)] = str(value)
+        return str(value)
 
     async def get_cloud_keys(
         self, appliance_id: int, udpid: str | None = None

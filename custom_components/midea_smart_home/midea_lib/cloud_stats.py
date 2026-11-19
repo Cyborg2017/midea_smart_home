@@ -445,7 +445,11 @@ async def async_fetch_cloud_stats(
         return await _fetch_air_conditioner(cloud, appliance_code, today)
     if device_type == 0xDB:
         category = category or _WASH_DEFAULT_CATEGORY
-        project_no = project_no or _WASH_DEFAULT_PROJECT_NO
+        project_no = (
+            project_no
+            or await cloud.get_project_no(appliance_code)
+            or _WASH_DEFAULT_PROJECT_NO
+        )
         if project_no == _WASH_WATERPOWER_PROJECT_NO:
             return await _fetch_washing_machine_waterpower(
                 cloud, appliance_code, today, category, project_no
