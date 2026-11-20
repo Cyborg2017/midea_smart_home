@@ -3188,11 +3188,29 @@
       "monthly_energy_consumption": {
         "name": "月度用电量"
       },
+      "monthly_energy_consumption_b": {
+        "name": "本月用电量(下筒)"
+      },
+      "monthly_energy_consumption_l": {
+        "name": "本月用电量(左筒)"
+      },
+      "monthly_energy_consumption_r": {
+        "name": "本月用电量(右筒)"
+      },
       "monthly_gas_consumption": {
         "name": "月度用气量"
       },
       "monthly_water_consumption": {
         "name": "月度用水量"
+      },
+      "monthly_water_consumption_b": {
+        "name": "本月用水量(下筒)"
+      },
+      "monthly_water_consumption_l": {
+        "name": "本月用水量(左筒)"
+      },
+      "monthly_water_consumption_r": {
+        "name": "本月用水量(右筒)"
       },
       "mouthfeel": {
         "name": "口感"
@@ -3373,6 +3391,15 @@
       "today_energy_consumption": {
         "name": "今日用电量"
       },
+      "today_energy_consumption_b": {
+        "name": "今日用电量(下筒)"
+      },
+      "today_energy_consumption_l": {
+        "name": "今日用电量(左筒)"
+      },
+      "today_energy_consumption_r": {
+        "name": "今日用电量(右筒)"
+      },
       "today_feed_count": {
         "name": "今日投喂次数"
       },
@@ -3381,6 +3408,15 @@
       },
       "today_water_consumption": {
         "name": "今日用水量"
+      },
+      "today_water_consumption_b": {
+        "name": "今日用水量(下筒)"
+      },
+      "today_water_consumption_l": {
+        "name": "今日用水量(左筒)"
+      },
+      "today_water_consumption_r": {
+        "name": "今日用水量(右筒)"
       },
       "top_temperature": {
         "name": "顶部温度"
@@ -3478,8 +3514,26 @@
       "weekly_energy_consumption": {
         "name": "本周用电量"
       },
+      "weekly_energy_consumption_b": {
+        "name": "本周用电量(下筒)"
+      },
+      "weekly_energy_consumption_l": {
+        "name": "本周用电量(左筒)"
+      },
+      "weekly_energy_consumption_r": {
+        "name": "本周用电量(右筒)"
+      },
       "weekly_water_consumption": {
         "name": "本周用水量"
+      },
+      "weekly_water_consumption_b": {
+        "name": "本周用水量(下筒)"
+      },
+      "weekly_water_consumption_l": {
+        "name": "本周用水量(左筒)"
+      },
+      "weekly_water_consumption_r": {
+        "name": "本周用水量(右筒)"
       },
       "wind_pressure": {
         "name": "风压"

@@ -270,6 +270,8 @@ class MideaCloudStatsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         category: str = "",
         project_no: str = "",
         update_interval: int = DEFAULT_CLOUD_STATS_SCAN_INTERVAL,
+        model_number: int | str = 0,
+        drum_locations: dict[str, int] | None = None,
     ):
         self._cloud = cloud
         self._device_id = device_id
@@ -277,6 +279,8 @@ class MideaCloudStatsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._sn8 = sn8
         self._category = category
         self._project_no = project_no
+        self._model_number = model_number
+        self._drum_locations = drum_locations or None
 
         super().__init__(
             hass,
@@ -293,6 +297,8 @@ class MideaCloudStatsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             sn8=self._sn8,
             category=self._category,
             project_no=self._project_no,
+            model_number=self._model_number,
+            drum_locations=self._drum_locations,
         )
         if not data:
             _LOGGER.warning(

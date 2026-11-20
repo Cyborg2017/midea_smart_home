@@ -3188,11 +3188,29 @@
       "monthly_energy_consumption": {
         "name": "Monthly Energy Consumption"
       },
+      "monthly_energy_consumption_b": {
+        "name": "Monthly Energy Consumption (Bottom Drum)"
+      },
+      "monthly_energy_consumption_l": {
+        "name": "Monthly Energy Consumption (Left Drum)"
+      },
+      "monthly_energy_consumption_r": {
+        "name": "Monthly Energy Consumption (Right Drum)"
+      },
       "monthly_gas_consumption": {
         "name": "Monthly Gas Consumption"
       },
       "monthly_water_consumption": {
         "name": "Monthly Water Consumption"
+      },
+      "monthly_water_consumption_b": {
+        "name": "Monthly Water Consumption (Bottom Drum)"
+      },
+      "monthly_water_consumption_l": {
+        "name": "Monthly Water Consumption (Left Drum)"
+      },
+      "monthly_water_consumption_r": {
+        "name": "Monthly Water Consumption (Right Drum)"
       },
       "mouthfeel": {
         "name": "Mouthfeel"
@@ -3373,6 +3391,15 @@
       "today_energy_consumption": {
         "name": "Today's Energy Consumption"
       },
+      "today_energy_consumption_b": {
+        "name": "Today's Energy Consumption (Bottom Drum)"
+      },
+      "today_energy_consumption_l": {
+        "name": "Today's Energy Consumption (Left Drum)"
+      },
+      "today_energy_consumption_r": {
+        "name": "Today's Energy Consumption (Right Drum)"
+      },
       "today_feed_count": {
         "name": "Today's Feed Count"
       },
@@ -3381,6 +3408,15 @@
       },
       "today_water_consumption": {
         "name": "Today's Water Consumption"
+      },
+      "today_water_consumption_b": {
+        "name": "Today's Water Consumption (Bottom Drum)"
+      },
+      "today_water_consumption_l": {
+        "name": "Today's Water Consumption (Left Drum)"
+      },
+      "today_water_consumption_r": {
+        "name": "Today's Water Consumption (Right Drum)"
       },
       "top_temperature": {
         "name": "Top Temperature"
@@ -3478,8 +3514,26 @@
       "weekly_energy_consumption": {
         "name": "This Week's Energy Consumption"
       },
+      "weekly_energy_consumption_b": {
+        "name": "Weekly Energy Consumption (Bottom Drum)"
+      },
+      "weekly_energy_consumption_l": {
+        "name": "Weekly Energy Consumption (Left Drum)"
+      },
+      "weekly_energy_consumption_r": {
+        "name": "Weekly Energy Consumption (Right Drum)"
+      },
       "weekly_water_consumption": {
         "name": "This Week's Water Consumption"
+      },
+      "weekly_water_consumption_b": {
+        "name": "Weekly Water Consumption (Bottom Drum)"
+      },
+      "weekly_water_consumption_l": {
+        "name": "Weekly Water Consumption (Left Drum)"
+      },
+      "weekly_water_consumption_r": {
+        "name": "Weekly Water Consumption (Right Drum)"
       },
       "wind_pressure": {
         "name": "Wind Pressure"

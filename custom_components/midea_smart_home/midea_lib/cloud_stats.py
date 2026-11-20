@@ -14,7 +14,7 @@ from uuid import uuid4
 _LOGGER = logging.getLogger(__name__)
 
 # Device types that expose cloud statistics.
-CLOUD_STATS_DEVICE_TYPES = frozenset({0xB6, 0xAC, 0xDB, 0xE1, 0xE3})
+CLOUD_STATS_DEVICE_TYPES = frozenset({0xB6, 0xAC, 0xD9, 0xDB, 0xE1, 0xE3})
 
 # App plugin aliases (appended to the cloud proxy base url).
 _RANGE_HOOD_API = "/cfhrs/b6/v1/api"
@@ -32,6 +32,14 @@ _WASH_WATERPOWER_API = (
 _WASH_DEFAULT_CATEGORY = "DB"
 _WASH_DEFAULT_PROJECT_NO = "13153"
 _WASH_WATERPOWER_PROJECT_NO = "12614"
+
+# Compound (three-drum) washers report one consumption series per drum and
+# expect the app category plus a sub category on every request.
+_D9_CATEGORY = "D9"
+_D9_SUB_CATEGORY = "DB"
+_D9_DEFAULT_LOCATIONS = {"bottom": 2, "left": 3, "right": 4}
+_D9_SUFFIXES = {"bottom": "_b", "left": "_l", "right": "_r"}
+_D9_PROJECT_CACHE: dict[str, str] = {}
 
 # The gas water heater report carries month-to-date series (31 values), week
 # series (7 values) on models that do not report the full month, and a 12 month
@@ -237,13 +245,15 @@ def _wash_body(
     category: str,
     project_no: str,
     query_time: str,
+    location: int | None = None,
+    sub_category: str = "",
 ) -> dict[str, Any]:
     """Build the request body shared by the wash consumption endpoints.
 
     The consumption service identifies the user by the numeric IoT user id;
     the account uid (a GUID) is rejected as "no permission for this device".
     """
-    return {
+    body = {
         "stamp": datetime.now().strftime("%Y%m%d%H%M%S"),
         "reqId": str(uuid4()),
         "requestId": str(uuid4()),
@@ -254,6 +264,11 @@ def _wash_body(
         "project_no": str(project_no),
         "queryTime": query_time,
     }
+    if location is not None:
+        body["location"] = location
+    if sub_category:
+        body["sub_category"] = sub_category
+    return body
 
 async def _fetch_wash_period(
     cloud,
@@ -263,10 +278,15 @@ async def _fetch_wash_period(
     project_no,
     period: str,
     query_time: str,
+    location: int | None = None,
+    sub_category: str = "",
 ) -> list[dict]:
     response = await cloud.app_plugin_request(
         _WASH_CONSUMPTION_API.format(period=period),
-        _wash_body(appliance_code, uid, category, project_no, query_time),
+        _wash_body(
+            appliance_code, uid, category, project_no, query_time,
+            location, sub_category,
+        ),
         sign_request=False,
     )
     result = _plugin_result(response, "errorCode")
@@ -280,13 +300,31 @@ async def _fetch_washing_machine(
     project_no: str,
 ) -> dict[str, Any]:
     """Fetch today/week/month energy and water usage for a washing machine."""
-    uid = cloud.iot_user_id or cloud.uid
+    return await _wash_stats(
+        cloud, appliance_code, cloud.iot_user_id or cloud.uid,
+        category, project_no, today,
+    )
+
+async def _wash_stats(
+    cloud,
+    appliance_code,
+    uid,
+    category,
+    project_no,
+    today: date,
+    suffix: str = "",
+    location: int | None = None,
+    sub_category: str = "",
+) -> dict[str, Any]:
+    """Collect today/week/month usage, appending ``suffix`` to every key."""
     today_str = today.isoformat()
+    kwargs = {"location": location, "sub_category": sub_category}
     stats: dict[str, Any] = {}
 
     day_item = _find_item(
         await _fetch_wash_period(
-            cloud, appliance_code, uid, category, project_no, "Day", today_str
+            cloud, appliance_code, uid, category, project_no, "Day", today_str,
+            **kwargs,
         ),
         "day",
         today_str,
@@ -298,10 +336,11 @@ async def _fetch_washing_machine(
         ):
             value = _to_float(day_item.get(source))
             if value is not None:
-                stats[target] = value
+                stats[target + suffix] = value
 
     week_items = await _fetch_wash_period(
-        cloud, appliance_code, uid, category, project_no, "Week", today_str
+        cloud, appliance_code, uid, category, project_no, "Week", today_str,
+        **kwargs,
     )
     week_item = next(
         (
@@ -319,11 +358,12 @@ async def _fetch_washing_machine(
         ):
             value = _to_float(week_item.get(source))
             if value is not None:
-                stats[target] = value
+                stats[target + suffix] = value
 
     month_item = _find_item(
         await _fetch_wash_period(
-            cloud, appliance_code, uid, category, project_no, "Month", today_str
+            cloud, appliance_code, uid, category, project_no, "Month", today_str,
+            **kwargs,
         ),
         "month",
         today.strftime("%Y-%m"),
@@ -335,8 +375,60 @@ async def _fetch_washing_machine(
         ):
             value = _to_float(month_item.get(source))
             if value is not None:
-                stats[target] = value
+                stats[target + suffix] = value
 
+    return stats
+
+async def _d9_project_no(cloud, appliance_code, project_no: str) -> str:
+    """Resolve the project number expected by the compound washer API.
+
+    The API rejects the default wash project numbers; the app sends the
+    model number instead, which LAN-only entries may not have stored.
+    """
+    if project_no:
+        return project_no
+    code = str(appliance_code)
+    if code in _D9_PROJECT_CACHE:
+        return _D9_PROJECT_CACHE[code]
+    project_no = str(await cloud.get_project_no(appliance_code) or "")
+    if not project_no:
+        appliances = await cloud.list_appliances(None) or {}
+        for key, info in appliances.items():
+            if str(key) == code:
+                project_no = str((info or {}).get("model_number") or "")
+                break
+    if project_no:
+        _D9_PROJECT_CACHE[code] = project_no
+    return project_no
+
+async def _fetch_compound_washer(
+    cloud,
+    appliance_code,
+    today: date,
+    drum_locations: dict[str, int] | None,
+    project_no: str,
+) -> dict[str, Any]:
+    """Fetch per-drum energy and water usage for a compound washer."""
+    locations = drum_locations or _D9_DEFAULT_LOCATIONS
+    project_no = await _d9_project_no(cloud, appliance_code, project_no)
+    stats: dict[str, Any] = {}
+    for drum, location in locations.items():
+        suffix = _D9_SUFFIXES.get(drum)
+        if suffix is None:
+            continue
+        stats.update(
+            await _wash_stats(
+                cloud,
+                appliance_code,
+                cloud.iot_user_id or cloud.uid,
+                _D9_CATEGORY,
+                project_no,
+                today,
+                suffix=suffix,
+                location=location,
+                sub_category=_D9_SUB_CATEGORY,
+            )
+        )
     return stats
 
 def _wash_waterpower_body(
@@ -433,6 +525,8 @@ async def async_fetch_cloud_stats(
     sn8: str = "",
     category: str = "",
     project_no: str = "",
+    model_number: int | str = 0,
+    drum_locations: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     """Fetch all cloud statistics supported for a device type."""
     if cloud is None:
@@ -443,6 +537,14 @@ async def async_fetch_cloud_stats(
         return await _fetch_range_hood(cloud, appliance_code, sn8)
     if device_type == 0xAC:
         return await _fetch_air_conditioner(cloud, appliance_code, today)
+    if device_type == 0xD9:
+        return await _fetch_compound_washer(
+            cloud,
+            appliance_code,
+            today,
+            drum_locations,
+            str(project_no or model_number or ""),
+        )
     if device_type == 0xDB:
         category = category or _WASH_DEFAULT_CATEGORY
         project_no = (

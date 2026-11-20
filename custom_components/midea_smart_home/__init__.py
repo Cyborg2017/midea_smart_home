@@ -278,6 +278,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # one when they expose cloud statistics and the account is available.
         # Both cloud_v2 and cloud_v1 use the Meiju account.
         stats_supported = device_type_int in CLOUD_STATS_DEVICE_TYPES
+        if (
+            stats_supported
+            and device_type_int == 0xD9
+            and not is_d9_push_driven(device_mapping)
+        ):
+            # Only compound (three-drum) washers expose per-drum statistics.
+            stats_supported = False
         cloud_kind = {
             CONNECTION_TYPE_CLOUD_V2: "meiju",
             CONNECTION_TYPE_CLOUD_V1: "meiju",
@@ -299,6 +306,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     device_id, device_name, connection_type,
                 )
                 return None
+        elif stats_supported:
+            _LOGGER.debug(
+                "cloud stats skipped (no account in entry): device_id=%s", device_id
+            )
 
         def init_device():
             if connection_type == CONNECTION_TYPE_CLOUD_V2:
@@ -393,6 +404,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     category=category,
                     project_no=str(device_data.get("project_no") or ""),
                     update_interval=_cloud_stats_interval(entry),
+                    model_number=device_data.get(CONF_MODEL_NUMBER, 0),
+                    drum_locations=device_mapping.get("drum_locations"),
                 )
 
             if connection_type == CONNECTION_TYPE_LAN:
