@@ -126,3 +126,12 @@ def is_d9_polling_device(device_type: int, device_mapping: dict) -> bool:
         elif isinstance(query, dict):
             initial_keys |= set(query.keys())
     return len(initial_keys) <= 1
+
+def is_d9_push_driven(device_mapping: dict) -> bool:
+    """Check if a T0xD9 mapping is a three-drum push-driven model.
+
+    Three-drum models (bottom + left + right) report state through 04db
+    pushes, so they never need a polling interval at runtime.
+    """
+    drum_locations = device_mapping.get("drum_locations") or {}
+    return {"bottom", "left", "right"} <= set(drum_locations)

@@ -15,11 +15,16 @@ class DeviceLogicHandler:
         self._control_type = control_type
         # D9 raw drum ids per model (most: left=1/right=2, some: 3/4).
         # Canonical 1 (left) / 2 (right) is translated to raw on control.
+        # Three-drum models additionally declare "bottom".
         loc_map = drum_locations or {}
         self._drum_locations = {
-            "left": int(loc_map.get("left", 1)),
-            "right": int(loc_map.get("right", 2)),
+            name: int(value) for name, value in loc_map.items()
         }
+        # Legacy defaults for mappings that don't declare drum locations.
+        self._drum_locations.setdefault("left", 1)
+        self._drum_locations.setdefault("right", 2)
+        # Three-drum models trust the device: reported status is used as-is.
+        self._three_drum = {"bottom", "left", "right"} <= set(self._drum_locations)
         self._last_standby_status: Any = None
         self._last_high_float_type: Any = None
         self._last_valid_humidity: Any = None
@@ -197,17 +202,30 @@ class DeviceLogicHandler:
 
         running_status = data[status_key]
 
+        # The drum's own db_power wins over the shared field: push-driven
+        # three-drum models report power per drum.
+        drum_power = raw_status.get("db_power") if raw_status else None
+        if drum_power is None:
+            drum_power = data.get("db_power")
+
         # When db is powered off, the device may keep reporting a stale
         # running status for a drum (including 'end'). Handle power-off before
         # the end validation below so a stale 'end' cannot abort the update and
         # leave the entity stuck. Also reset the shared db_running_status here
         # so it stays consistent regardless of db_position.
-        if data.get("db_power") in ("off", 0):
+        if drum_power in ("off", 0):
             running_status = "standby"
             data[status_key] = running_status
             self._d9_polling_device_running_status_for_power_off(data)
-            self.adjust_control_status(data, running_status, prefix="db")
-        elif running_status == "end" and not self._validate_end_status(raw_status):
+            if data.get("db_power") in ("off", 0):
+                # Shared fields follow the panel-selected drum.
+                self.adjust_control_status(data, running_status, prefix="db")
+        elif (
+            running_status == "end"
+            # Three-drum models report 'end' with a non-zero progress; trust it.
+            and not self._three_drum
+            and not self._validate_end_status(raw_status)
+        ):
             return False
 
         # Handle common (non-suffixed) fields from the first poll response
@@ -228,7 +246,7 @@ class DeviceLogicHandler:
         if remain_time_key in data:
             self._adjust_remain_time_by_status(data, remain_time_key, running_status)
 
-        # Calculate db_remain_time_long as max of left and right remain times
+        # Calculate db_remain_time_long as the max over all drums
         self._calculate_db_remain_time_long(data)
 
         return True
@@ -276,24 +294,16 @@ class DeviceLogicHandler:
 
     @staticmethod
     def _calculate_db_remain_time_long(data: dict) -> None:
-        """Calculate db_remain_time_long as max of left and right remain times.
+        """Calculate db_remain_time_long as the max remain time over all drums.
 
-        Rules:
-        - If both are unknown (None), result is unknown
-        - If one is unknown and other has value, result is the value
-        - If both have values, result is the maximum
+        Drums with unknown remain time are ignored; unknown when all are.
         """
-        remain_l = data.get("db_remain_time_l")
-        remain_r = data.get("db_remain_time_r")
-
-        if remain_l is None and remain_r is None:
-            data["db_remain_time_long"] = None
-        elif remain_l is None:
-            data["db_remain_time_long"] = remain_r
-        elif remain_r is None:
-            data["db_remain_time_long"] = remain_l
-        else:
-            data["db_remain_time_long"] = max(remain_l, remain_r)
+        values = [
+            data.get(key) for key in
+            ("db_remain_time_l", "db_remain_time_r", "db_remain_time_b")
+            if data.get(key) is not None
+        ]
+        data["db_remain_time_long"] = max(values) if values else None
 
     def _d9_polling_device_running_status_for_power_off(self, data: dict) -> None:
         db_power = data.get("db_power")
@@ -309,15 +319,15 @@ class DeviceLogicHandler:
         apply_special_handling_for_poll never runs and entities would
         otherwise stay stuck at their stale pre-power-off values.
         """
-        for key in ("db_running_status", "db_running_status_l", "db_running_status_r"):
+        for key in ("db_running_status", "db_running_status_l", "db_running_status_r", "db_running_status_b"):
             if key in data:
                 data[key] = "standby"
-        for key in ("db_progress", "db_progress_l", "db_progress_r"):
+        for key in ("db_progress", "db_progress_l", "db_progress_r", "db_progress_b"):
             if key in data:
                 data[key] = "idle"
         for key in (
             "db_remain_time", "db_remain_time_l", "db_remain_time_r",
-            "db_remain_time_long"
+            "db_remain_time_b", "db_remain_time_long"
         ):
             if key in data:
                 data[key] = None
@@ -449,19 +459,18 @@ class DeviceLogicHandler:
                 control["bucket"] = "db"
                 if "db_location" not in control and current_data and "db_location" in current_data:
                     control["db_location"] = current_data["db_location"]
-                # Compat fallback: if a control still carries canonical ids
-                # 1/2 on a device whose drums are 3/4, translate them to the
-                # raw ids. Raw values (3/4 or 1/2 matching the device) pass
-                # through unchanged.
+                # Compat fallback: canonical 1/2 ids are translated to raw
+                # ids unless the value already matches a declared location.
                 if "db_location" in control:
                     try:
                         loc_value = int(control["db_location"])
                     except (TypeError, ValueError):
                         loc_value = None
-                    if loc_value == 1:
-                        control["db_location"] = self._drum_locations["left"]
-                    elif loc_value == 2:
-                        control["db_location"] = self._drum_locations["right"]
+                    if loc_value is not None and loc_value not in self._drum_locations.values():
+                        if loc_value == 1:
+                            control["db_location"] = self._drum_locations["left"]
+                        elif loc_value == 2:
+                            control["db_location"] = self._drum_locations["right"]
         if self.device_type in (0x9B, 0xBF):
             # Cooking parameters are only bundled with a cooking-start
             # command (work_mode); lock and work_status controls must stay

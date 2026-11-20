@@ -198,6 +198,9 @@
       "db_detergent_needed_r": {
         "name": "洗涤剂状态(右筒)"
       },
+      "db_softener_needed_b": {
+        "name": "柔顺剂状态(下筒)"
+      },
       "detergent_lack": {
         "name": "洗涤剂状态"
       },
@@ -1153,9 +1156,20 @@
           "timer_240": "定时240"
         }
       },
+      "db_fresh_air_time": {
+        "name": "忘取无忧",
+        "state": {
+          "2_hours": "2小时",
+          "4_hours": "4小时",
+          "6_hours": "6小时",
+          "8_hours": "8小时",
+          "off": "关闭"
+        }
+      },
       "db_location": {
         "name": "选择筒",
         "state": {
+          "bottom": "下筒",
           "left": "左筒",
           "right": "右筒"
         }
@@ -1193,10 +1207,13 @@
           "color": "护色",
           "cook_wash": "高温煮洗",
           "cotton": "棉麻",
+          "deep_tub_self_clean": "深度筒自洁",
           "dehydration_min": "脱水定时",
+          "detergent_box_clean": "洗衣液智投盒清洁",
           "down_jacket": "羽绒服",
           "eco": "节能",
           "enzyme": "加酶",
+          "essence_wash": "精华洗",
           "fast_wash": "快洗",
           "fast_wash_30": "快洗30",
           "fast_wash_min": "快洗定时",
@@ -1204,6 +1221,7 @@
           "fitness_clothes": "健身服",
           "fresh_air": "清新空气",
           "fresh_remove_wrinkle": "清新除皱",
+          "green_wool": "羊毛",
           "heart_wash": "爱心洗",
           "insight_wash": "洞见洗",
           "intelligent": "智能",
@@ -1228,7 +1246,10 @@
           "silk": "真丝",
           "silk_wash": "真丝洗",
           "single_dehytration": "单脱水",
+          "single_drying": "单烘干",
+          "smart_wash_dry": "智洗烘",
           "soft_wash": "柔洗",
+          "softener_box_clean": "柔顺剂智投盒清洁",
           "specialist": "专洗",
           "sport_clothes": "运动服",
           "spring_autumn_wash": "春秋洗",
@@ -1258,6 +1279,43 @@
           "water_underwear": "水洗内衣",
           "winter_wash": "冬季洗",
           "wool": "羊毛"
+        }
+      },
+      "db_program_l": {
+        "name": "洗涤程序(左筒)",
+        "state": {
+          "air_wash": "空气洗",
+          "cook_wash": "煮洗",
+          "fast_wash": "快洗15分钟",
+          "fast_wash_30": "快洗30分钟",
+          "mixed_wash": "混合洗",
+          "remove_mite_wash": "除螨洗",
+          "rinsing_dehydration": "漂+脱",
+          "single_dehytration": "单脱水",
+          "single_drying": "单烘干",
+          "smart_wash_dry": "智洗烘",
+          "socks": "袜子",
+          "ssp": "筒自洁"
+        }
+      },
+      "db_program_r": {
+        "name": "洗涤程序(右筒)",
+        "state": {
+          "air_wash": "空气洗",
+          "blood_stain_wash": "血渍洗",
+          "bra": "Bra",
+          "cook_wash": "煮洗",
+          "detergent_box_clean": "智投盒清洁",
+          "fast_wash": "快洗15分钟",
+          "fast_wash_30": "快洗30分钟",
+          "mixed_wash": "混合洗",
+          "remove_mite_wash": "除螨洗",
+          "rinsing_dehydration": "漂+脱",
+          "single_dehytration": "单脱水",
+          "single_drying": "单烘干",
+          "smart_wash_dry": "智洗烘",
+          "ssp": "筒自洁",
+          "underwear": "内裤"
         }
       },
       "db_rinse_count_b": {
@@ -1359,6 +1417,7 @@
       "detergent": {
         "name": "洗衣液(智投)",
         "state": {
+          "auto": "自动",
           "l1": "L1",
           "l2": "L2",
           "l3": "L3",
@@ -2851,7 +2910,7 @@
         "name": "剩余时间(左筒)"
       },
       "db_remain_time_long": {
-        "name": "双筒最长剩余时间"
+        "name": "剩余时间(最长)"
       },
       "db_remain_time_r": {
         "name": "剩余时间(右筒)"
@@ -3556,6 +3615,9 @@
       },
       "db_cycle_memory_b": {
         "name": "记忆洗(下筒)"
+      },
+      "db_nightly_wash": {
+        "name": "夜间洗"
       },
       "db_power_b": {
         "name": "电源(下筒)"

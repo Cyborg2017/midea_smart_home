@@ -28,6 +28,8 @@ HEARTBEAT_INTERVAL = 10
 MIN_MSG_LENGTH = 56
 _LINGER_TIMEOUT = 2
 _SKIP_KEYS = frozenset({'data_type', 'bucket', 'category', 'version'})
+# Suffix appended to per-drum status keys for each declared D9 drum.
+_D9_DRUM_SUFFIXES = {"left": "_l", "right": "_r", "bottom": "_b"}
 
 
 class DeviceController(threading.Thread):
@@ -459,14 +461,19 @@ class MideaDevice:
         self._polling_query = polling_query or []
         # D9 polling device flag (only meaningful for T0xD9)
         self._d9_polling_device = False
-        # D9 drum location ids: raw values differ per model (most use 1/2,
-        # some use 3/4). Internally 1 (left) / 2 (right) are canonical;
-        # translation happens on the wire boundary only.
+        # D9 raw drum ids per model (most: left=1/right=2, some: 3/4); canonical
+        # 1/2 translate to raw on control. Three-drum models also declare
+        # "bottom". Declared order is preserved for poll cycling.
         loc_map = drum_locations or {}
         self._d9_drum_locations = {
-            "left": int(loc_map.get("left", 1)),
-            "right": int(loc_map.get("right", 2)),
+            name: int(value) for name, value in loc_map.items()
         }
+        # Legacy defaults for mappings that don't declare drum locations.
+        self._d9_drum_locations.setdefault("left", 1)
+        self._d9_drum_locations.setdefault("right", 2)
+        # Three-drum models (bottom + left + right) are push-driven: 04db
+        # pushes carry runtime state and the poll thread only seeds once.
+        self._d9_push_driven = {"bottom", "left", "right"} <= set(self._d9_drum_locations)
         # D9 alternate polling toggled by db_power from 04db push / 03db poll.
         # Defaults to True so the first poll cycle queries both drums and
         # populates initial status for the right drum; corrected by db_power
@@ -593,16 +600,31 @@ class MideaDevice:
         while self._poll_run:
             if self._controller.connected:
                 try:
+                    if self._d9_push_driven:
+                        # Seed each drum once, then stop: runtime state comes
+                        # from 04db pushes. Fixed 1s gap leaves room for each
+                        # response before the next query overwrites it.
+                        for location in self._d9_drum_locations.values():
+                            self._logger.debug("d9 seed query: db_location=%s", location)
+                            self._controller.send_poll_query(location)
+                            time.sleep(1.0)
+                            if not self._poll_run:
+                                break
+                        self._logger.debug(
+                            "d9 startup poll cycle complete: drums=%s "
+                            "(push-driven, thread exiting)",
+                            self._d9_drum_locations,
+                        )
+                        break
                     if self._d9_alternate_polling:
-                        # Power on: alternate between two drums per cycle
+                        # Power on: cycle through every declared drum per cycle
                         interval = float(self._polling_interval)
-                        gap = interval / 2
-                        self._controller.send_poll_query(self._d9_drum_locations["left"])
-                        time.sleep(gap)
-                        if not self._poll_run:
-                            break
-                        self._controller.send_poll_query(self._d9_drum_locations["right"])
-                        time.sleep(gap)
+                        gap = interval / len(self._d9_drum_locations)
+                        for location in self._d9_drum_locations.values():
+                            self._controller.send_poll_query(location)
+                            time.sleep(gap)
+                            if not self._poll_run:
+                                break
                     else:
                         # Power off: device pushes 04db on power change,
                         # no need to poll; idle until woken by push update
@@ -748,12 +770,13 @@ class MideaDevice:
             # D9 push devices rely on push updates and fall through below.
             if self._d9_polling_device:
                 # D9 polling devices use the dedicated poll thread.
-                if poll_location is None:
+                data_type = status.get('data_type')
+                if poll_location is None and not self._d9_push_driven:
                     # 04db push: sync db_power to state and toggle alternate
                     # polling. Only db_power is consumed; other shared fields
                     # are ignored because 04db payloads may carry polluted
                     # loc=2 values copied from loc=1.
-                    if status.get('data_type') == '04db':
+                    if data_type == '04db':
                         power = status.get('db_power')
                         if power is not None and self._data.get('db_power') != power:
                             new_data = {**self._data, 'db_power': power}
@@ -767,21 +790,36 @@ class MideaDevice:
                         self._update_d9_alternate_polling(status)
                     return
 
-                data_type = status.get('data_type')
-                if data_type != '03db':
+                # Push-driven models also accept 04db pushes; poll-only
+                # models only accept 03db poll responses.
+                if data_type not in ('03db', '04db'):
+                    return
+                if data_type == '04db' and not self._d9_push_driven:
                     return
 
                 db_location = status.get("db_location")
-                left_loc = self._d9_drum_locations["left"]
-                right_loc = self._d9_drum_locations["right"]
-                if db_location not in (left_loc, right_loc) or db_location != poll_location:
+                drum_names = [
+                    name for name, loc in self._d9_drum_locations.items()
+                    if loc == db_location
+                ]
+                # Poll responses must match the queried drum; 04db pushes
+                # and push-driven 03db responses are matched by their own
+                # db_location (a slow response may arrive after the next
+                # query overwrote the pending location).
+                if not drum_names:
+                    return
+                if (
+                    data_type == '03db'
+                    and not self._d9_push_driven
+                    and db_location != poll_location
+                ):
                     return
 
                 db_position = status.get('db_position')
-                suffix = "_l" if db_location == left_loc else "_r"
+                suffix = _D9_DRUM_SUFFIXES[drum_names[0]]
                 poll_keys = (
                     "db_detergent_needed", "db_remain_time", "db_progress",
-                    "db_running_status", "db_error_code"
+                    "db_running_status", "db_error_code", "db_program"
                 )
 
                 new_data = self._data.copy()
@@ -862,7 +900,8 @@ class MideaDevice:
 
         Driven by 04db push updates (and synced from 03db poll responses).
         Only the power field is consumed from 04db; other fields are ignored
-        because 04db payloads may carry polluted shared fields.
+        because 04db payloads may carry polluted shared fields. Only poll-only
+        models reach this path: push-driven models never poll at runtime.
         """
         power = status.get('db_power')
         if power is None:

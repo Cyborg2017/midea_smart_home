@@ -52,7 +52,7 @@ from .midea_lib.cloud_stats import CLOUD_STATS_DEVICE_TYPES
 from .midea_lib.cloud_device import CloudV1Device, CloudV2Device
 from .midea_lib.device import MideaDevice
 from .midea_lib.lua import write_file, ensure_lua_files
-from .device_mapping import get_device_mapping, is_d9_polling_device
+from .device_mapping import get_device_mapping, is_d9_polling_device, is_d9_push_driven
 from .device_mapping.cloud_v2 import get_cloud_v2_mapping
 
 from .midea_lib.logger import prefix_logger
@@ -243,9 +243,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Check if polling is supported (based on existence of polling_query,
         # or the dedicated poll thread for D9 polling devices)
         d9_polling = is_d9_polling_device(device_type_int, device_mapping)
+        # Three-drum models are push-driven: no polling interval to configure
+        push_driven = is_d9_push_driven(device_mapping)
         enable_polling = (
             polling_query is not None and isinstance(polling_query, list) and len(polling_query) > 0
-        ) or d9_polling
+        ) or (d9_polling and not push_driven)
         # Get polling settings from device data (user configurable via Options)
         polling_enabled = device_data.get("polling_enabled", True)  # Default to enabled
         # D9 polling devices: per-drum refresh interval defaults to 1s

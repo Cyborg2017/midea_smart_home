@@ -198,6 +198,9 @@
       "db_detergent_needed_r": {
         "name": "Right Bucket Detergent Needed"
       },
+      "db_softener_needed_b": {
+        "name": "Bottom Drum Softener Status"
+      },
       "detergent_lack": {
         "name": "Detergent Status"
       },
@@ -1153,9 +1156,20 @@
           "timer_240": "Timer 240"
         }
       },
+      "db_fresh_air_time": {
+        "name": "Fresh Air Time",
+        "state": {
+          "2_hours": "2 Hours",
+          "4_hours": "4 Hours",
+          "6_hours": "6 Hours",
+          "8_hours": "8 Hours",
+          "off": "Off"
+        }
+      },
       "db_location": {
         "name": "Bucket Selection",
         "state": {
+          "bottom": "Bottom Bucket",
           "left": "Left Bucket",
           "right": "Right Bucket"
         }
@@ -1193,10 +1207,13 @@
           "color": "Color",
           "cook_wash": "Cook Wash",
           "cotton": "Cotton",
+          "deep_tub_self_clean": "Deep Tub Self Clean",
           "dehydration_min": "Dehydration Min",
+          "detergent_box_clean": "Detergent Auto-Dispenser Clean",
           "down_jacket": "Down Jacket",
           "eco": "Eco",
           "enzyme": "Enzyme",
+          "essence_wash": "Essence Wash",
           "fast_wash": "Quick Wash",
           "fast_wash_30": "Quick Wash 30",
           "fast_wash_min": "Quick Wash Min",
@@ -1204,6 +1221,7 @@
           "fitness_clothes": "Fitness Clothes",
           "fresh_air": "Fresh Air",
           "fresh_remove_wrinkle": "Fresh Remove Wrinkle",
+          "green_wool": "Wool",
           "heart_wash": "Heart Wash",
           "insight_wash": "Insight Wash",
           "intelligent": "Intelligent",
@@ -1228,7 +1246,10 @@
           "silk": "Silk",
           "silk_wash": "Silk Wash",
           "single_dehytration": "Spin Only",
+          "single_drying": "Dry Only",
+          "smart_wash_dry": "Smart Wash & Dry",
           "soft_wash": "Soft Wash",
+          "softener_box_clean": "Softener Auto-Dispenser Clean",
           "specialist": "Specialist",
           "sport_clothes": "Sport Clothes",
           "spring_autumn_wash": "Spring Autumn Wash",
@@ -1258,6 +1279,43 @@
           "water_underwear": "Water Underwear",
           "winter_wash": "Winter Wash",
           "wool": "Wool"
+        }
+      },
+      "db_program_l": {
+        "name": "Left Bucket Program",
+        "state": {
+          "air_wash": "Air Wash",
+          "cook_wash": "Cook Wash",
+          "fast_wash": "Quick Wash",
+          "fast_wash_30": "Quick Wash 30",
+          "mixed_wash": "Mixed Wash",
+          "remove_mite_wash": "Mite Removal",
+          "rinsing_dehydration": "Rinse+Spin",
+          "single_dehytration": "Spin Only",
+          "single_drying": "Dry Only",
+          "smart_wash_dry": "Smart Wash & Dry",
+          "socks": "Socks",
+          "ssp": "Self Clean"
+        }
+      },
+      "db_program_r": {
+        "name": "Right Bucket Program",
+        "state": {
+          "air_wash": "Air Wash",
+          "blood_stain_wash": "Blood Stain Wash",
+          "bra": "Bra",
+          "cook_wash": "Cook Wash",
+          "detergent_box_clean": "Auto-Dispenser Clean",
+          "fast_wash": "Quick Wash",
+          "fast_wash_30": "Quick Wash 30",
+          "mixed_wash": "Mixed Wash",
+          "remove_mite_wash": "Mite Removal",
+          "rinsing_dehydration": "Rinse+Spin",
+          "single_dehytration": "Spin Only",
+          "single_drying": "Dry Only",
+          "smart_wash_dry": "Smart Wash & Dry",
+          "ssp": "Self Clean",
+          "underwear": "Underwear"
         }
       },
       "db_rinse_count_b": {
@@ -1359,6 +1417,7 @@
       "detergent": {
         "name": "Detergent (Smart)",
         "state": {
+          "auto": "Auto",
           "l1": "L1",
           "l2": "L2",
           "l3": "L3",
@@ -3556,6 +3615,9 @@
       },
       "db_cycle_memory_b": {
         "name": "Bottom Drum Cycle Memory"
+      },
+      "db_nightly_wash": {
+        "name": "Night Wash"
       },
       "db_power_b": {
         "name": "Bottom Drum Power"
