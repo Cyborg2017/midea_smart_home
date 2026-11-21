@@ -3670,6 +3670,9 @@
       "db_cycle_memory_b": {
         "name": "记忆洗(下筒)"
       },
+      "db_fast_clean_wash_b": {
+        "name": "快净(下筒)"
+      },
       "db_nightly_wash": {
         "name": "夜间洗"
       },

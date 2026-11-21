@@ -513,6 +513,7 @@
             "damp_dry_signal": { "default": "mdi:water-percent" },
             "db_control_status_b": { "default": "mdi:play-pause" },
             "db_cycle_memory_b": { "default": "mdi:refresh" },
+            "db_fast_clean_wash_b": { "default": "mdi:clock-fast" },
             "db_nightly_wash": { "default": "mdi:weather-night" },
             "db_power_b": { "default": "mdi:power" },
             "db_voice_not_disturb_switch_b": { "default": "mdi:volume-off" },

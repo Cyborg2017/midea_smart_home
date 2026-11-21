@@ -996,6 +996,11 @@ DEVICE_MAPPING = {
                     "device_class": SwitchDeviceClass.SWITCH,
                     "rationale": [0, 1],
                     "translation_key": "steam_wash"
+                },
+                "db_fast_clean_wash": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "rationale": [0, 1],
+                    "translation_key": "db_fast_clean_wash_b"
                 }
             },
             Platform.SELECT: {

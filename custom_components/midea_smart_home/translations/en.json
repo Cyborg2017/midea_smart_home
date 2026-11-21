@@ -3670,6 +3670,9 @@
       "db_cycle_memory_b": {
         "name": "Bottom Drum Cycle Memory"
       },
+      "db_fast_clean_wash_b": {
+        "name": "Bottom Drum Fast Clean"
+      },
       "db_nightly_wash": {
         "name": "Night Wash"
       },
