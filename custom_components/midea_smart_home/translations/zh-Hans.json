@@ -1147,11 +1147,15 @@
       "db_dry": {
         "name": "烘干时间",
         "state": {
+          "little": "少量",
           "off": "关闭",
           "smart": "智能",
+          "standard": "标准",
           "timer_30": "定时30",
           "timer_60": "定时60",
+          "timer_90": "定时90",
           "timer_120": "定时120",
+          "timer_150": "定时150",
           "timer_180": "定时180",
           "timer_240": "定时240"
         }
@@ -1179,21 +1183,38 @@
         "state": {
           "baby_clothes": "Baby衣",
           "baby_clothes_dry": "婴童服烘",
+          "blood_stain_wash": "血渍洗",
           "clean_stains": "特渍洗",
           "cold_wash": "冷水洗",
           "cook_wash": "高温煮洗",
+          "cotton": "棉麻",
+          "custom_detergent_box_clean": "自定义智投盒清洁",
+          "degerm": "除菌螨",
+          "detergent_box_clean": "洗衣液智投盒清洁",
           "fast_wash": "快洗",
+          "fast_wash_30": "快洗30分钟",
+          "fast_wash_drying": "速洗烘",
           "hot_wind_dry": "热风暖衣",
+          "light_down_jacket": "轻薄羽绒",
+          "mixed_dry": "混合烘",
+          "oil_stains": "油渍",
           "rinsing_dehydration": "漂+脱",
           "self_wash_5": "筒自洁",
+          "shirt": "衬衫",
+          "silk_low_temp_dry": "真丝低温烘",
           "single_dehytration": "单脱水",
           "single_drying": "单烘干",
           "small_wash_dry": "小件智洗烘",
           "socks": "袜子",
+          "socks_dry": "袜子烘",
           "standard": "标准",
+          "strong_wash": "强劲洗",
           "underpants": "内裤",
+          "underpants_dry": "内裤烘",
           "underwear": "文胸",
-          "water_ssp": "深度洁筒"
+          "underwear_dry": "内衣烘",
+          "water_ssp": "深度洁筒",
+          "yoga_clothes": "瑜伽服"
         }
       },
       "db_program_b": {

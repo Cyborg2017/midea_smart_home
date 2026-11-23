@@ -1147,11 +1147,15 @@
       "db_dry": {
         "name": "Drying Time",
         "state": {
+          "little": "Little",
           "off": "Off",
           "smart": "Smart",
+          "standard": "Standard",
           "timer_30": "Timer 30",
           "timer_60": "Timer 60",
+          "timer_90": "Timer 90",
           "timer_120": "Timer 120",
+          "timer_150": "Timer 150",
           "timer_180": "Timer 180",
           "timer_240": "Timer 240"
         }
@@ -1179,21 +1183,38 @@
         "state": {
           "baby_clothes": "Baby Clothes",
           "baby_clothes_dry": "Baby Clothes Dry",
+          "blood_stain_wash": "Blood Stain Wash",
           "clean_stains": "Stain Wash",
           "cold_wash": "Cold Wash",
           "cook_wash": "High Temp Wash",
+          "cotton": "Cotton",
+          "custom_detergent_box_clean": "Custom Auto-Dispenser Clean",
+          "degerm": "Mite Removal & Sterilization",
+          "detergent_box_clean": "Detergent Auto-Dispenser Clean",
           "fast_wash": "Quick Wash",
+          "fast_wash_30": "Quick Wash 30min",
+          "fast_wash_drying": "Quick Wash & Dry",
           "hot_wind_dry": "Hot Wind Dry",
+          "light_down_jacket": "Light Down Jacket",
+          "mixed_dry": "Mixed Dry",
+          "oil_stains": "Oil Stains",
           "rinsing_dehydration": "Rinse+Spin",
           "self_wash_5": "Self Clean",
+          "shirt": "Shirt",
+          "silk_low_temp_dry": "Silk Low Temp Dry",
           "single_dehytration": "Spin Only",
           "single_drying": "Dry Only",
           "small_wash_dry": "Small Wash&Dry",
           "socks": "Socks",
+          "socks_dry": "Socks Dry",
           "standard": "Standard",
+          "strong_wash": "Strong Wash",
           "underpants": "Underpants",
+          "underpants_dry": "Underpants Dry",
           "underwear": "Underwear",
-          "water_ssp": "Deep Clean"
+          "underwear_dry": "Underwear Dry",
+          "water_ssp": "Deep Clean",
+          "yoga_clothes": "Yoga Clothes"
         }
       },
       "db_program_b": {

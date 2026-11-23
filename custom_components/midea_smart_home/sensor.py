@@ -24,7 +24,7 @@ from .const import (
 )
 from .coordinator import MideaCoordinator
 from .entity import MideaBaseEntity, iter_midea_device_configs
-from .sensor_stats import CLOUD_STATS_SENSORS
+from .sensor_stats import CLOUD_STATS_SENSORS, drum_for_stats_key
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -84,7 +84,12 @@ async def async_setup_entry(
             connection_type = device_runtime.get(
                 CONF_CONNECTION_TYPE, CONNECTION_TYPE_LAN
             )
+            drum_locations = device_mapping.get("drum_locations") or {}
             for config in CLOUD_STATS_SENSORS.get(device_type_int, []):
+                drum = drum_for_stats_key(str(config.get("key", "")))
+                if drum and drum_locations and drum not in drum_locations:
+                    # Two-drum models have no bottom drum series.
+                    continue
                 entities.append(
                     MideaCloudStatsSensor(
                         stats_coordinator, device_id, device_type, sn, device_name,

@@ -48,7 +48,7 @@ from .const import (
 from .config_flow import get_lua_custom_path, get_lua_file_path
 from .coordinator import MideaCloudStatsCoordinator, MideaCoordinator
 from .midea_lib.cloud import MeijuCloud
-from .midea_lib.cloud_stats import CLOUD_STATS_DEVICE_TYPES
+from .midea_lib.cloud_stats import is_cloud_stats_supported
 from .midea_lib.cloud_device import CloudV1Device, CloudV2Device
 from .midea_lib.device import MideaDevice
 from .midea_lib.lua import write_file, ensure_lua_files
@@ -277,14 +277,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Cloud devices need a logged-in cloud client. LAN devices only need
         # one when they expose cloud statistics and the account is available.
         # Both cloud_v2 and cloud_v1 use the Meiju account.
-        stats_supported = device_type_int in CLOUD_STATS_DEVICE_TYPES
-        if (
-            stats_supported
-            and device_type_int == 0xD9
-            and not is_d9_push_driven(device_mapping)
-        ):
-            # Only compound (three-drum) washers expose per-drum statistics.
-            stats_supported = False
+        stats_supported = is_cloud_stats_supported(
+            device_type_int,
+            device_data.get(CONF_MODEL_NUMBER, 0),
+        )
         cloud_kind = {
             CONNECTION_TYPE_CLOUD_V2: "meiju",
             CONNECTION_TYPE_CLOUD_V1: "meiju",

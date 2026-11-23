@@ -7,6 +7,17 @@ MideaCloudStatsCoordinator.
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfVolume
 
+# Per-drum statistics keys end with a drum suffix; map it to the drum name
+# used by the "drum_locations" declaration of the device mapping.
+_DRUM_SUFFIXES = {"_b": "bottom", "_l": "left", "_r": "right"}
+
+def drum_for_stats_key(key: str) -> str | None:
+    """Return the drum a statistics key belongs to, or None if it is global."""
+    for suffix, drum in _DRUM_SUFFIXES.items():
+        if key.endswith(suffix):
+            return drum
+    return None
+
 # Cloud statistics sensors keyed by device type.
 CLOUD_STATS_SENSORS = {
     0xB6: [

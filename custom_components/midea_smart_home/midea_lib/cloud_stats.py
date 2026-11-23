@@ -16,6 +16,12 @@ _LOGGER = logging.getLogger(__name__)
 # Device types that expose cloud statistics.
 CLOUD_STATS_DEVICE_TYPES = frozenset({0xB6, 0xAC, 0xD9, 0xDB, 0xE1, 0xE3})
 
+# T0xD9 covers single, double and three-drum washers that share the same
+# device type, so only the model numbers verified to return per-drum series
+# from the cloud endpoints are enabled, grouped by drum count.
+_D9_TWO_DRUM_STATS_MODELS = frozenset({13368})
+_D9_THREE_DRUM_STATS_MODELS = frozenset({13363})
+
 # App plugin aliases (appended to the cloud proxy base url).
 _RANGE_HOOD_API = "/cfhrs/b6/v1/api"
 _AC_ELEC_API = "/jykt/bluetooth/control/queryElec"
@@ -33,7 +39,7 @@ _WASH_DEFAULT_CATEGORY = "DB"
 _WASH_DEFAULT_PROJECT_NO = "13153"
 _WASH_WATERPOWER_PROJECT_NO = "12614"
 
-# Compound (three-drum) washers report one consumption series per drum and
+# Compound (two/three-drum) washers report one consumption series per drum and
 # expect the app category plus a sub category on every request.
 _D9_CATEGORY = "D9"
 _D9_SUB_CATEGORY = "DB"
@@ -47,6 +53,28 @@ _D9_PROJECT_CACHE: dict[str, str] = {}
 _E3_DAILY_SERIES_LENGTH = 31
 _E3_WEEK_SERIES_LENGTH = 7
 _E3_MONTHLY_SERIES_LENGTH = 12
+
+def is_cloud_stats_supported(
+    device_type: int,
+    model_number: int | str = 0,
+) -> bool:
+    """Return whether cloud statistics are available for a device.
+
+    T0xD9 maps single, double and three-drum washers, so the compound models
+    that report per-drum series are enabled by model number.
+    """
+    if device_type not in CLOUD_STATS_DEVICE_TYPES:
+        return False
+    if device_type != 0xD9:
+        return True
+    try:
+        model = int(model_number)
+    except (TypeError, ValueError):
+        return False
+    return (
+        model in _D9_TWO_DRUM_STATS_MODELS
+        or model in _D9_THREE_DRUM_STATS_MODELS
+    )
 
 def _plugin_result(response: dict | None, code_key: str) -> Any:
     """Return the result payload when the plugin response reports success."""
