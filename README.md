@@ -11,7 +11,7 @@ Home Assistant 美的设备集成：本地局域网直连控制，同时支持�
 
 - 欢迎加入QQ群交流，获取最新更新和帮助：
 
-![加入QQ群](docs/images/zh/12.png)
+![加入QQ群](docs/images/8.png)
 
 ## 功能特点
 
