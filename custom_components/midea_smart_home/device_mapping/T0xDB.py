@@ -172,6 +172,9 @@ DEVICE_MAPPING = {
                 "detergent_lack": {
                     "device_class": BinarySensorDeviceClass.PROBLEM,
                 },
+                "softener_lack": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                },
                 "bucket_water_overheating": {
                     "device_class": BinarySensorDeviceClass.PROBLEM,
                 },
@@ -388,6 +391,9 @@ DEVICE_MAPPING = {
                     "device_class": BinarySensorDeviceClass.OPENING,
                 },
                 "detergent_lack": {
+                    "device_class": BinarySensorDeviceClass.PROBLEM,
+                },
+                "softener_lack": {
                     "device_class": BinarySensorDeviceClass.PROBLEM,
                 },
                 "bucket_water_overheating": {
