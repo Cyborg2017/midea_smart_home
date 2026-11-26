@@ -1,4 +1,3 @@
-"""T0xBC 空气检测仪设备映射定义"""
 from custom_components.midea_smart_home.device_mapping._common import *
 
 DEVICE_MAPPING = {

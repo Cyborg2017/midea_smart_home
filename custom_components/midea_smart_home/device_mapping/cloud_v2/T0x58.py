@@ -1,4 +1,3 @@
-"""T0x58 智能鱼缸设备映射定义（Thing Model V2 / v2_thing）"""
 from custom_components.midea_smart_home.device_mapping._common import *
 
 DEVICE_SPECIFIC_ENDPOINTS = {

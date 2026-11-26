@@ -1,4 +1,3 @@
-"""T0x14 电动窗帘设备映射定义（Thing Model V2 / v2_thing）"""
 from custom_components.midea_smart_home.device_mapping._common import *
 
 DEVICE_MAPPING = {
