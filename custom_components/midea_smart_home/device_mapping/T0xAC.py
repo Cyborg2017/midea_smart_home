@@ -132,6 +132,7 @@ DEVICE_MAPPING = {
                 },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
                 },
                 "ptc": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -401,6 +402,7 @@ DEVICE_MAPPING = {
                 },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
                 },
                 "ptc": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -692,7 +694,8 @@ DEVICE_MAPPING = {
                     "translation_key": "buzzer"
                 },
                 "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
                 },
                 "air_remove_odor": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -1071,6 +1074,7 @@ DEVICE_MAPPING = {
                 },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
                 },
                 "ptc": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -1313,6 +1317,7 @@ DEVICE_MAPPING = {
                 },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
                 },
                 "ptc": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -1562,6 +1567,7 @@ DEVICE_MAPPING = {
                 },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
                 },
                 "ptc": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -1869,7 +1875,8 @@ DEVICE_MAPPING = {
                     "translation_key": "buzzer"
                 },
                 "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
                 },
                 "air_remove_odor": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -2189,6 +2196,7 @@ DEVICE_MAPPING = {
                 },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
                 },
                 "ptc": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -2422,7 +2430,8 @@ DEVICE_MAPPING = {
                     "translation_key": "display_on_off"
                 },
                 "dry": {
-                    "device_class": SwitchDeviceClass.SWITCH
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
                 },
                 "light_sensitive": {
                     "device_class": SwitchDeviceClass.SWITCH,
@@ -2681,6 +2690,7 @@ DEVICE_MAPPING = {
                 },
                 "dry": {
                     "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
                 },
                 "ptc": {
                     "device_class": SwitchDeviceClass.SWITCH
@@ -3470,6 +3480,10 @@ DEVICE_MAPPING = {
                 },
                 "self_clean": {
                     "device_class": SwitchDeviceClass.SWITCH
+                },
+                "dry": {
+                    "device_class": SwitchDeviceClass.SWITCH,
+                    "translation_key": "ac_dry"
                 }
             },
             Platform.SENSOR: {
