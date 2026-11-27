@@ -1115,6 +1115,7 @@ LUA_DOWNLOAD_ALLOWED_HOSTS = (
     "smartmidea.net",
     "midea.com",
     "midea.cn",
+    "midea-file.oss-cn-hangzhou.aliyuncs.com",
 )
 # Hard cap on downloaded Lua size to prevent memory-exhaustion DoS.
 LUA_DOWNLOAD_MAX_BYTES = 1 * 1024 * 1024
@@ -1202,7 +1203,19 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
                         # prevent memory-exhaustion from an oversized response.
                         async with session.get(lua_url, timeout=30) as lua_response:
                             if lua_response.status == 200:
-                                raw_bytes = await lua_response.content.read(LUA_DOWNLOAD_MAX_BYTES + 1)
+                                # StreamReader.read(n) may return a single
+                                # chunk before EOF for streamed responses,
+                                # which truncated the file and broke hex
+                                # decoding. Loop until EOF or the size cap.
+                                raw_chunks: list[bytes] = []
+                                remaining = LUA_DOWNLOAD_MAX_BYTES + 1
+                                while remaining > 0:
+                                    chunk = await lua_response.content.read(remaining)
+                                    if not chunk:
+                                        break
+                                    raw_chunks.append(chunk)
+                                    remaining -= len(chunk)
+                                raw_bytes = b"".join(raw_chunks)
                                 if len(raw_bytes) > LUA_DOWNLOAD_MAX_BYTES:
                                     _LOGGER.error(
                                         "lua download rejected: response too large (%d bytes, limit %d, device=%s)",
