@@ -8,6 +8,7 @@ This module consolidates all Lua-related logic, including:
 """
 
 import base64
+import hashlib
 import json
 import logging
 import os
@@ -51,6 +52,14 @@ def write_file(file_path: Union[str, Path], content: str) -> bool:
 
         with open(file_path, "w", encoding="utf-8") as fp:
             fp.write(content)
+
+        # For Lua scripts, write a SHA-256 sidecar (<file>.sha256) so the
+        # runtime can detect on-disk tampering or corruption before executing.
+        if file_path.suffix == ".lua":
+            digest = hashlib.sha256(content.encode("utf-8")).hexdigest()
+            hash_path = file_path.with_name(file_path.name + ".sha256")
+            with open(hash_path, "w", encoding="utf-8") as hp:
+                hp.write(digest)
         return True
     except OSError as e:
         _LOGGER.error("write file failed: path=%s error=%s", file_path, e)
@@ -67,15 +76,22 @@ def ensure_lua_files(lua_path: str) -> tuple:
     return cjson, bit, cjson_lua, bit_lua
 
 def decrypt_lua_code(lua_code: str) -> str:
-    """Decrypt Lua code downloaded from cloud."""
+    """Decrypt Lua code downloaded from cloud.
+
+    Returns the decrypted source on success, or an empty string on failure.
+    Callers must treat an empty result as a hard failure and refuse to load
+    the content: the previous behaviour of returning the raw input on failure
+    could let malformed / non-hex content through to the Lua runtime.
+    """
     try:
         fixed_key = format(10864842703515613082, 'x').encode("ascii")
         encrypted_bytes = bytes.fromhex(lua_code.strip())
         cipher = AES.new(fixed_key, AES.MODE_ECB)
         decrypted = unpad(cipher.decrypt(encrypted_bytes), len(fixed_key))
         return decrypted.decode("utf-8", errors="ignore")
-    except (ValueError, OSError):
-        return lua_code
+    except (ValueError, OSError) as e:
+        _LOGGER.warning("lua decrypt failed (%s); rejecting content", e)
+        return ""
 
 
 class LuaRuntime:
@@ -88,6 +104,13 @@ class LuaRuntime:
 
     def __init__(self, file_path: str, lua_default_dir: str):
         self._runtime = lupa.lua51.LuaRuntime()
+
+        # Apply the security sandbox BEFORE loading any device script. The
+        # default lupa runtime exposes os/io/debug and, critically, a global
+        # `python` table that lets Lua call arbitrary Python code
+        # (python.builtins.__import__('os').system(...)) -> full RCE. The
+        # sandbox removes these before untrusted Lua ever runs.
+        self._apply_lua_sandbox()
 
         # Override Lua's print function to redirect output to Python logger
         # instead of stdout, which avoids cluttering logs with debug output
@@ -151,6 +174,24 @@ _G.cjson = cjson
         try:
             with open(file_path, "r", encoding="utf-8") as f:
                 lua_content = f.read()
+
+            # Integrity check: if a <file>.sha256 sidecar exists (written when
+            # the file was downloaded), verify the on-disk content still
+            # matches. A mismatch means tampering or corruption, so refuse to
+            # execute. Files without a sidecar (user-supplied custom lua, or
+            # legacy files written before this check) load unverified.
+            lua_path = Path(file_path)
+            hash_path = lua_path.with_name(lua_path.name + ".sha256")
+            if hash_path.is_file():
+                expected = hash_path.read_text(encoding="utf-8").strip()
+                actual = hashlib.sha256(lua_content.encode("utf-8")).hexdigest()
+                if expected != actual:
+                    raise RuntimeError(
+                        f"Lua file integrity check failed for {file_path}: "
+                        f"expected sha256 {expected[:16]}..., got {actual[:16]}... "
+                        "(file may have been tampered with or corrupted)"
+                    )
+
             lua_content = lua_content.replace('local bit = require("bit")', '-- bit library loaded')
             self._runtime.execute(lua_content)
         except FileNotFoundError:
@@ -170,6 +211,70 @@ _G.cjson = cjson
             )
         except lupa.lua51.LuaError as e:
             raise RuntimeError(f"Lua file {file_path} missing required functions (jsonToData/dataToJson): {e}")
+
+    def _apply_lua_sandbox(self) -> None:
+        """Restrict the Lua runtime so untrusted device scripts cannot escape.
+
+        Blocks:
+        - io / debug libraries (file system + introspection)
+        - loadstring / load / dofile (dynamic code compilation & loading)
+        - os.execute / os.exit / os.remove / os.getenv etc. (os is replaced
+          with a read-only time subset; legitimate protocol scripts only need
+          os.time / os.date)
+        - the lupa-exposed global `python` table, which would otherwise let
+          Lua call python.builtins.__import__('os').system(...) for arbitrary
+          code execution
+        - package.loaded.os / io / debug / python (otherwise a script can
+          recover the blocked libraries via package.loaded.*)
+        - package.loadlib (loading of arbitrary native shared libraries)
+        - require() is whitelisted to cjson and bit only.
+
+        If the sandbox cannot be applied the runtime is unusable, so we raise
+        rather than silently execute untrusted code in an unrestricted env.
+        """
+        sandbox_code = r"""
+local original_require = require
+
+io = nil
+debug = nil
+loadstring = nil
+load = nil
+dofile = nil
+
+local safe_os = {
+    time = os.time,
+    date = os.date,
+    clock = os.clock,
+    difftime = os.difftime,
+}
+os = safe_os
+
+local safe_modules = { cjson = true, bit = true }
+function require(module)
+    if safe_modules[module] then
+        return original_require(module)
+    end
+    error("Module '" .. module .. "' is not allowed in sandboxed environment")
+end
+_G.require = require
+
+python = nil
+
+package.loaded.os = nil
+package.loaded.io = nil
+package.loaded.debug = nil
+package.loaded.python = nil
+package.preload.os = nil
+package.preload.io = nil
+package.preload.debug = nil
+package.preload.python = nil
+
+package.loadlib = nil
+"""
+        try:
+            self._runtime.execute(sandbox_code)
+        except lupa.lua51.LuaError as e:
+            raise RuntimeError(f"Failed to apply Lua sandbox: {e}")
 
     def json_to_data(self, json_value: str) -> str:
         with self._lock:

@@ -9,6 +9,7 @@ import time
 from datetime import UTC, datetime
 from secrets import token_hex
 from typing import Any, cast
+from urllib.parse import urlparse
 from uuid import uuid4
 
 from aiohttp import ClientConnectionError, ClientSession, ClientTimeout
@@ -1107,6 +1108,30 @@ def get_midea_cloud(
         ),
     )
 
+# Hosts allowed to serve cloud-downloaded Lua scripts. A compromised cloud
+# response could otherwise hand us an attacker-controlled URL; we refuse to
+# fetch Lua from any origin outside this allowlist.
+LUA_DOWNLOAD_ALLOWED_HOSTS = (
+    "smartmidea.net",
+    "midea.com",
+    "midea.cn",
+)
+# Hard cap on downloaded Lua size to prevent memory-exhaustion DoS.
+LUA_DOWNLOAD_MAX_BYTES = 1 * 1024 * 1024
+
+def _is_allowed_lua_url(url: str) -> bool:
+    """Return True only if url is http(s) and its host is in the allowlist."""
+    try:
+        parsed = urlparse(url)
+    except (ValueError, TypeError):
+        return False
+    if parsed.scheme not in ("http", "https"):
+        return False
+    host = (parsed.hostname or "").lower()
+    if not host:
+        return False
+    return any(host == allowed or host.endswith("." + allowed) for allowed in LUA_DOWNLOAD_ALLOWED_HOSTS)
+
 async def download_lua_file(hass, access_token: str, sn: str, device_type: int, mf_code: str, model_number: str = "0") -> tuple[bool, str]:
     """Download and process Lua file from cloud.
 
@@ -1163,14 +1188,48 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
                     if "url" in data_section:
                         lua_url = data_section["url"]
 
-                        # Download Lua file content
+                        # SECURITY: only fetch Lua from allowlisted Midea hosts.
+                        # A compromised cloud response could otherwise point us
+                        # at an attacker-controlled origin.
+                        if not _is_allowed_lua_url(lua_url):
+                            _LOGGER.error(
+                                "lua download rejected: host not in allowlist (device=%s, type=0x%X, url=%s)",
+                                sn, device_type, lua_url,
+                            )
+                            return False, ""
+
+                        # Download Lua file content with a hard size cap to
+                        # prevent memory-exhaustion from an oversized response.
                         async with session.get(lua_url, timeout=30) as lua_response:
                             if lua_response.status == 200:
-                                lua_content = await lua_response.text()
+                                raw_bytes = await lua_response.content.read(LUA_DOWNLOAD_MAX_BYTES + 1)
+                                if len(raw_bytes) > LUA_DOWNLOAD_MAX_BYTES:
+                                    _LOGGER.error(
+                                        "lua download rejected: response too large (%d bytes, limit %d, device=%s)",
+                                        len(raw_bytes), LUA_DOWNLOAD_MAX_BYTES, sn,
+                                    )
+                                    return False, ""
+                                lua_content = raw_bytes.decode("utf-8", errors="ignore")
+
+                                # Audit log: origin, size and content hash so a
+                                # later misbehaving device can be traced to the
+                                # exact script it loaded.
+                                content_hash = hashlib.sha256(raw_bytes).hexdigest()[:16]
+                                _LOGGER.info(
+                                    "lua downloaded: device=%s type=0x%X host=%s size=%d sha256=%s",
+                                    sn, device_type, urlparse(lua_url).hostname,
+                                    len(raw_bytes), content_hash,
+                                )
 
                                 # Decrypt and process Lua code
                                 from .lua import decrypt_lua_code
                                 formatted_lua = decrypt_lua_code(lua_content)
+                                if not formatted_lua:
+                                    _LOGGER.error(
+                                        "lua download rejected: decryption failed (device=%s, type=0x%X)",
+                                        sn, device_type,
+                                    )
+                                    return False, ""
 
                                 # Remove local bit = require("bit")
                                 modified = formatted_lua.replace('local bit = require("bit")', '')
