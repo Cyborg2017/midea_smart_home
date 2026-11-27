@@ -579,9 +579,7 @@ class CloudV1Device(BaseCloudDevice):
         subtype: int = 0,
         model_number: str | int = 0,
         manufacturer_code: str = "0000",
-        category: str = "",
-        lua_file: str = "",
-        lua_common_dir: str = "",
+        category: str = ""
     ) -> None:
         super().__init__(
             hass=hass,
