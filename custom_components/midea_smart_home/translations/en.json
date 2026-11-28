@@ -39,7 +39,7 @@
           "scan_address": "Enter router address (e.g., 192.168.1.1) to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
           "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
         },
-        "description": "Sign in with the Midea Meiju app credentials, download the required cloud resources, then probe each device in the order ☁️Cloud V2 → 🖥️Lan → ☁️Cloud V1.",
+        "description": "Sign in with the Midea Meiju app credentials, download the required cloud resources, then probe each device in the order 🖥️Lan → ☁️Cloud V1 → ☁️Cloud V2.",
         "title": "Hybrid Add Devices"
       },
       "discover": {
@@ -156,7 +156,7 @@
         "title": "Select Devices"
       },
       "user": {
-        "description": "Choose how to add devices. LAN mode connects locally only; hybrid mode probes ☁️Cloud V2 → 🖥️Lan → ☁️Cloud V1:",
+        "description": "Choose how to add devices. LAN mode connects locally only; hybrid mode probes 🖥️Lan → ☁️Cloud V1 → ☁️Cloud V2:",
         "menu_options": {
           "auto_add_device": "☁️ Hybrid Mode (cloud + LAN auto probe)",
           "local_add_device": "🖥️ LAN Mode (local only, no cloud probing)",
@@ -4171,7 +4171,7 @@
           "scan_address": "Enter router address to scan entire subnet, device IP to scan specific device, or 'auto' for automatic detection",
           "scan_mode": "Note: In broadcast mode, if the device list is repeatedly incomplete, try unicast mode (scanning may take longer in this mode; please wait patiently)."
         },
-        "description": "Scan the local network and probe each device in the order ☁️Cloud V2 → 🖥️Lan → ☁️Cloud V1 (already added devices will be filtered out).",
+        "description": "Scan the local network and probe each device in the order 🖥️Lan → ☁️Cloud V1 → ☁️Cloud V2 (already added devices will be filtered out).",
         "title": "Hybrid Add Device"
       },
       "add_device_local": {

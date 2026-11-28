@@ -59,7 +59,7 @@ from .midea_lib.packet_builder import PacketBuilder
 from .midea_lib.discovery import discover_devices, DISCOVERY_TIMEOUT
 from .midea_lib.lua import write_file, decrypt_lua_code, ensure_lua_files
 from .midea_lib.setup import validate_device
-from .midea_lib.cloud import download_lua_file
+from .midea_lib.cloud import download_lua_file, ensure_plugin_file
 from .midea_lib.cloud_device import build_query_params
 from .midea_lib.exceptions import CloudLoginError, MideaError
 
@@ -404,7 +404,7 @@ _FLOW_STRINGS: dict[str, dict[str, str]] = {
             "{count} discovered device(s) are already added to this integration "
             "and are not listed again."
         ),
-        "pending_notice": "These device types are not adapted yet. They are added as LAN devices, but may not expose any entities. Please open a GitHub issue to ask the original author for support: ",
+        "pending_notice": "These device types are not adapted yet. They are added with the best available path, but may not expose any entities. Please open a GitHub issue to ask the original author for support: ",
     },
     "zh-Hans": {
         "pending_marker": "⏳ 待支持",
@@ -419,7 +419,7 @@ _FLOW_STRINGS: dict[str, dict[str, str]] = {
         "reason_cloud_no_data": "云端未返回状态数据（设备离线或该型号无法云端查询）",
         "offline_marker": "⚪ 离线",
         "already_added_notice": "局域网扫描到 {count} 个已配置设备，不重复列出。",
-        "pending_notice": "以下设备类型尚未适配，已按局域网方式加入列表，可能没有可用实体。建议到 GitHub 提 Issue 找原作者支持：",
+        "pending_notice": "以下设备类型尚未适配，已按可用方式加入列表，可能没有可用实体。建议到 GitHub 提 Issue 找原作者支持：",
     },
 }
 
@@ -494,13 +494,21 @@ def _reason_strings(strings: dict) -> dict[str, str]:
 async def _build_device_selector_options(flow) -> dict[str, str]:
     """Build the device options map for the multi-select form.
 
-    Unsupported and pending devices are excluded (multi_select has no
-    disabled state) and are listed in the step description instead.
+    Unsupported devices are listed in the step description instead. Devices
+    whose type or Lua mapping is not adapted are still selectable, but they are
+    tagged with the pending marker because they may expose no entities.
     """
-    return {
-        str(did): _device_label(flow._cloud_devices, info)
-        for did, info in flow._supported_devices.items()
-    }
+    pending = getattr(flow, "_pending_devices", None) or {}
+    marker = (
+        await _get_flow_strings(flow.hass)
+    ).get("pending_marker", "⏳ Pending")
+    options = {}
+    for did, info in flow._supported_devices.items():
+        label = _device_label(flow._cloud_devices, info)
+        if did in pending:
+            label = f"{label} | {marker}"
+        options[str(did)] = label
+    return options
 
 async def _build_already_added_notice(hass, count: int) -> str:
     """Build the notice listing devices skipped because they are configured."""
@@ -670,28 +678,27 @@ def _shared_cloud_client(hass, account: str):
     shared = hass.data.get(DOMAIN, {}).get("cloud_shared", {})
     return (shared.get("clients") or {}).get(f"meiju:{account}")
 
-async def _probe_cloud_v2(flow, device_id: int, info: dict) -> bool:
-    """Probe whether a discovered device is usable through cloud_v2.
+def _mapping_platforms(mapping: dict | None) -> set[str]:
+    """Return the platform names a device mapping defines entities for."""
+    entities = (mapping or {}).get("entities") or {}
+    return {str(getattr(platform, "value", platform)).lower() for platform in entities}
 
-    Requirements: present in the Meiju cloud account, a Thing Model mapping
-    exists for the type/model, and the Thing properties query returns data.
-    Any failure degrades to the next probe step.
+async def _probe_cloud_v2(flow, device_id: int, info: dict) -> str | None:
+    """Probe whether the Midea cloud answers the Thing Model query.
+
+    Returns None when the property query returned data, otherwise the reason
+    ("cloud_unbound", "cloud_no_data"). The mapping is checked separately by
+    the caller: a device whose type has no cloud_v2 mapping is still added (it
+    answers the cloud) but is flagged as pending support.
     """
     cloud_device = (getattr(flow, "_cloud_devices", None) or {}).get(device_id)
     cloud_client = getattr(flow, "_user_cloud", None)
     if cloud_device is None or cloud_client is None:
-        return False
-
-    device_type = info.get(CONF_DEVICE_TYPE)
-    model = info.get(CONF_PRODUCT_MODEL) or cloud_device.get("model", "")
-    sn8 = info.get(CONF_SN8) or cloud_device.get("sn8", "")
-    category = info.get(CONF_CATEGORY) or cloud_device.get("category", "")
-    if not has_cloud_v2_mapping(device_type, model, sn8, category):
         _LOGGER.debug(
-            "cloud_v2 probe skipped: device_id=%s reason=no_thing_mapping",
+            "cloud_v2 probe failed: device_id=%s reason=not_in_account",
             device_id,
         )
-        return False
+        return "cloud_unbound"
 
     try:
         properties = await cloud_client.query_thing_properties(device_id)
@@ -700,18 +707,18 @@ async def _probe_cloud_v2(flow, device_id: int, info: dict) -> bool:
             "cloud_v2 probe failed: device_id=%s error=%s",
             device_id, err,
         )
-        return False
+        return "cloud_no_data"
     if not properties:
         _LOGGER.debug(
             "cloud_v2 probe failed: device_id=%s reason=empty_properties",
             device_id,
         )
-        return False
+        return "cloud_no_data"
     _LOGGER.info(
         "cloud_v2 probe ok: device_id=%s properties=%d",
         device_id, len(properties),
     )
-    return True
+    return None
 
 async def _probe_cloud_v1(flow, device_id: int, info: dict) -> str | None:
     """Probe whether a discovered device is usable through cloud_v1.
@@ -952,16 +959,21 @@ def _log_classified(device_id: int, info: dict, bucket: str) -> None:
 async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
     """Classify discovered devices into (supported, unsupported, pending).
 
-    Probes in priority order cloud_v2 > lan > cloud_v1 and tags each device
-    with its resolved CONF_CONNECTION_TYPE.
+    Probes each device independently and tags it with its resolved
+    CONF_CONNECTION_TYPE, so two units of the same model can end up on
+    different paths (a LAN-capable unit keeps local control while a unit that
+    only answers the cloud is reached through cloud_v2 / cloud_v1).
 
-    - cloud_v2: present in the Meiju cloud account, has a Thing Model mapping
-      and the Thing properties query returns data
-    - lan: existing local validation succeeded and the type is supported
-    - cloud_v1: LAN validation failed but the device is bound to the Meiju
-      account and answers the cloud Lua status query
-    - pending: LAN validation succeeded but the type is not in DEVICE_TYPES
-      (no cloud_v1 probe is attempted for these)
+    - lan: local validation succeeded and the type is supported
+    - cloud_v1: the Lua mapping can decode the device and the cloud still
+      serves its Lua script, so it is probed right after LAN; the Lua path
+      keeps full control while the Thing Model may be partial
+    - cloud_v2: LAN and the Lua path failed, but the device is in the Meiju
+      account and answers the Thing Model property query; a type without a
+      cloud_v2 mapping is still added and flagged as pending support
+    - pending: the device is added over LAN or cloud_v1, but it has no Lua
+      mapping (empty entity set) or its type is not listed in DEVICE_TYPES, so
+      the selection page asks the author for support
     - unsupported: none of the probes succeeded
     """
     supported: dict = {}
@@ -990,16 +1002,10 @@ async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
                 _log_classified(did, info, "cloud_offline")
                 continue
 
-            # 1) cloud_v2 (Thing Model) takes priority over LAN. V2 0x0110
-            # devices skip straight to the cloud_v1 fallback below.
-            if hybrid and not unsupported_protocol and await _probe_cloud_v2(flow, did, info):
-                info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V2
-                supported[did] = info
-                _log_classified(did, info, "cloud_v2")
-                continue
-
-            # 2) LAN validation (existing behavior). Cloud-only candidates have
-            # no LAN address, so they go straight to the cloud_v1 fallback.
+            # 1) LAN validation comes first: a unit that speaks the local
+            # protocol keeps local control even when the same model also
+            # answers the cloud Thing Model. Cloud-only candidates have no LAN
+            # address, so they skip straight to the cloud probes below.
             if not unsupported_protocol and not info.get("cloud_only"):
                 status = await _probe_device_resources(flow, info)
                 if status == "ok":
@@ -1012,10 +1018,57 @@ async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
                     _log_classified(did, info, "lan")
                     continue
 
-            # 3) cloud_v1 fallback for every device the LAN path cannot handle
-            if hybrid:
+            if hybrid and not unsupported_protocol:
+                cloud_info = (getattr(flow, "_cloud_devices", None) or {}).get(did) or {}
+                device_type = info.get(CONF_DEVICE_TYPE) or 0
+                model = info.get(CONF_PRODUCT_MODEL) or cloud_info.get("model", "")
+                sn8 = info.get(CONF_SN8) or cloud_info.get("sn8", "")
+                category = info.get(CONF_CATEGORY) or cloud_info.get("category", "")
+
+                # 2) cloud_v1 first: a downloadable Lua script means the Lua
+                # path works, so the Thing API is only the fallback for devices
+                # whose Lua the cloud no longer serves.
                 cloud_reason = await _probe_cloud_v1(flow, did, info)
                 if cloud_reason is None:
+                    # An empty Lua mapping still yields a device, but it will
+                    # expose no entities, so flag it as pending support.
+                    if not _mapping_platforms(
+                        get_device_mapping(device_type, model, sn8, category)
+                    ):
+                        pending[did] = info
+                    info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V1
+                    supported[did] = info
+                    _log_classified(did, info, "cloud_v1(preferred)")
+                    continue
+                status = status or cloud_reason
+
+                # 3) cloud_v2 (Thing Model) for units the Lua path cannot serve.
+                v2_reason = await _probe_cloud_v2(flow, did, info)
+                if v2_reason is None:
+                    # A missing Thing mapping means the device will expose no
+                    # entities: add it anyway and flag it as pending support.
+                    if not has_cloud_v2_mapping(device_type, model, sn8, category):
+                        pending[did] = info
+                    info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V2
+                    supported[did] = info
+                    _log_classified(did, info, "cloud_v2")
+                    continue
+                status = status or v2_reason
+
+            elif hybrid:
+                # V2 0x0110 devices cannot speak TCP or the Thing API, so
+                # cloud_v1 is their only remaining path.
+                cloud_reason = await _probe_cloud_v1(flow, did, info)
+                if cloud_reason is None:
+                    if not _mapping_platforms(
+                        get_device_mapping(
+                            info.get(CONF_DEVICE_TYPE) or 0,
+                            info.get(CONF_PRODUCT_MODEL) or "",
+                            info.get(CONF_SN8) or "",
+                            info.get(CONF_CATEGORY) or "",
+                        )
+                    ):
+                        pending[did] = info
                     info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V1
                     supported[did] = info
                     _log_classified(did, info, "cloud_v1")
@@ -1036,7 +1089,38 @@ async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
         "classification done: supported=%d unsupported=%d pending=%d",
         len(supported), len(unsupported), len(pending),
     )
+
+    # Best effort: cache the App plugin package of every addable device so new
+    # models can be adapted from their UI bundle without a manual download.
+    for did, info in supported.items():
+        await _ensure_plugin_file(flow, did, info)
+
     return supported, unsupported, pending
+
+async def _ensure_plugin_file(flow, device_id: int, info: dict) -> None:
+    """Download the App plugin package of a device, if the cloud offers one."""
+    cloud = getattr(flow, "_user_cloud", None)
+    if cloud is None:
+        return
+    cloud_device = (getattr(flow, "_cloud_devices", None) or {}).get(device_id) or {}
+    if not cloud_device:
+        return
+    try:
+        await ensure_plugin_file(
+            flow.hass,
+            cloud,
+            appliance_code=device_id,
+            device_type=info.get(CONF_DEVICE_TYPE) or cloud_device.get("type") or 0,
+            sn8=info.get(CONF_SN8) or cloud_device.get("sn8", ""),
+            model_number=str(
+                info.get(CONF_MODEL_NUMBER) or cloud_device.get("model_number") or "0"
+            ),
+            manufacturer_code=info.get(CONF_MANUFACTURER_CODE)
+            or cloud_device.get("manufacturer_code", "0000"),
+            smart_product_id=str(cloud_device.get("smart_product_id") or ""),
+        )
+    except Exception as err:  # noqa: BLE001 - plugin files are optional
+        _LOGGER.debug("plugin download failed: device_id=%s error=%s", device_id, err)
 
 
 class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -1085,7 +1169,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_auto_add_device(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Hybrid mode: probe cloud_v2 > LAN > cloud_v1."""
+        """Hybrid mode: probe LAN > cloud_v1 > cloud_v2."""
         self._hybrid = True
         return await self._async_auto_add(user_input)
 
@@ -2159,7 +2243,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_add_device_auto(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Hybrid mode: probe cloud_v2 > LAN > cloud_v1."""
+        """Hybrid mode: probe LAN > cloud_v1 > cloud_v2."""
         self._hybrid = True
         return await self._async_add_device_auto(user_input)
 
