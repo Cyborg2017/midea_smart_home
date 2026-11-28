@@ -28,6 +28,33 @@ _LOGGER = prefix_logger(_LOGGER, "[cloud_device]")
 # Mark the device unavailable after this many consecutive failed refreshes
 FAILURE_THRESHOLD = 2
 
+def build_query_params(query_config: Any) -> dict[str, Any]:
+    """Convert a device mapping query entry into a cloud Lua query dict.
+
+    Mirrors the query conversion of the LAN polling loop. Shared with the
+    setup-time cloud_v1 probe so probing and polling send identical queries.
+    """
+    if isinstance(query_config, dict):
+        if len(query_config) == 1:
+            key = list(query_config.keys())[0]
+            key = (
+                ",".join([k.strip() for k in key.split(",")])
+                if "," in key
+                else key
+            )
+            return {"query_type": key}
+        return {}
+    if isinstance(query_config, (set, frozenset, list, tuple)):
+        if len(query_config) == 1:
+            key = list(query_config)[0]
+            key = (
+                ",".join([k.strip() for k in key.split(",")])
+                if "," in key
+                else key
+            )
+            return {"query_type": key}
+    return {}
+
 
 class _CloudControllerStub:
     """Minimal controller stand-in so coordinator code can read .ip."""
@@ -603,30 +630,8 @@ class CloudV1Device(BaseCloudDevice):
 
     @staticmethod
     def _build_query_params(query_config: Any) -> dict[str, Any]:
-        """Convert a mapping query entry into a cloud Lua query dict.
-
-        Mirrors the query conversion of the LAN polling loop.
-        """
-        if isinstance(query_config, dict):
-            if len(query_config) == 1:
-                key = list(query_config.keys())[0]
-                key = (
-                    ",".join([k.strip() for k in key.split(",")])
-                    if "," in key
-                    else key
-                )
-                return {"query_type": key}
-            return {}
-        if isinstance(query_config, (set, frozenset, list, tuple)):
-            if len(query_config) == 1:
-                key = list(query_config)[0]
-                key = (
-                    ",".join([k.strip() for k in key.split(",")])
-                    if "," in key
-                    else key
-                )
-                return {"query_type": key}
-        return {}
+        """Convert a mapping query entry into a cloud Lua query dict."""
+        return build_query_params(query_config)
 
     def _apply_status_logic(self, status: dict[str, Any]) -> dict[str, Any]:
         """Apply default values and calculations over the merged state."""
