@@ -9,6 +9,7 @@ DOMAIN = "midea_smart_home"
 JSON_FILES_PATH = f".storage/{DOMAIN}/json_files"
 LUA_DEVICE_PATH = f".storage/{DOMAIN}/lua_devices"
 LUA_COMMON_PATH = f".storage/{DOMAIN}/lua_common"
+PLUGIN_DEVICE_PATH = f".storage/{DOMAIN}/plugin_devices"
 LUA_CUSTOM_PATH = "lua"
 
 CONF_ACCOUNT = "account"

@@ -7,12 +7,16 @@ import json
 import logging
 import time
 from datetime import UTC, datetime
+from pathlib import Path
 from secrets import token_hex
 from typing import Any, cast
 from urllib.parse import urlparse
 from uuid import uuid4
 
 from aiohttp import ClientConnectionError, ClientSession, ClientTimeout
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
+
+from ..const import PLUGIN_DEVICE_PATH
 
 from .exceptions import (
     TRANSIENT_CLOUD_ERROR_CODES,
@@ -452,6 +456,9 @@ class MeijuCloud(MideaCloud):
                             "model": appliance.get("productModel"),
                             "online": appliance.get("onlineStatus") == "1",
                             "category": appliance.get("category", ""),
+                            "smart_product_id": str(
+                                appliance.get("smartProductId") or ""
+                            ),
                             "home_name": home_name,
                             "room_name": room_name,
                         }
@@ -501,6 +508,54 @@ class MeijuCloud(MideaCloud):
             return None
         self._project_no_map[int(appliance_id)] = str(value)
         return str(value)
+
+    async def get_plugin_info(
+        self,
+        appliance_code: int,
+        device_type: int,
+        sn8: str,
+        model_number: str = "0",
+        manufacturer_code: str = "0000",
+        smart_product_id: str = "",
+    ) -> dict[str, Any] | None:
+        """Return the App plugin package entry of a device, or None.
+
+        The App fetches its device UI package from
+        /v1/plugin/update/getPluginV3, one appliance per request; the reply
+        carries the download url and the package title (with its version).
+        """
+        appliance_info = {
+            "appModel": sn8,
+            "appEnterprise": manufacturer_code,
+            "appType": f"0x{device_type:02X}",
+            "applianceCode": str(appliance_code),
+            "smartProductId": str(smart_product_id or ""),
+            "modelNumber": model_number or "0",
+            "versionCode": 0,
+        }
+        response = await self._api_request(
+            endpoint="/v1/plugin/update/getPluginV3",
+            data={
+                "applianceList": json.dumps([appliance_info]),
+                "iotAppId": self._app_id,
+                "match": "1",
+                "clientType": "1",
+                "clientVersion": 201,
+            },
+        )
+        plugins = (response or {}).get("list") or []
+        expected = f"0x{device_type:02X}"
+        for plugin in plugins:
+            if plugin.get("appType") == expected:
+                return plugin
+        if plugins:
+            _LOGGER.debug(
+                "plugin type mismatch: device_id=%s expected=%s returned=%s",
+                appliance_code,
+                expected,
+                [plugin.get("appType") for plugin in plugins],
+            )
+        return None
 
     async def get_cloud_keys(
         self, appliance_id: int, udpid: str | None = None
@@ -1365,3 +1420,100 @@ async def download_lua_file(hass, access_token: str, sn: str, device_type: int, 
         _LOGGER.error("lua download error: %s", e)
 
     return False, ""
+
+# Plugin packages are only served by Midea infrastructure; the url comes back
+# inside a cloud response, so anything else is refused.
+PLUGIN_DOWNLOAD_ALLOWED_HOSTS = (
+    "smartmidea.net",
+    "midea.com",
+    "midea.cn",
+)
+
+def _is_allowed_plugin_url(url: str) -> bool:
+    """Return True when the plugin download url points at Midea infrastructure."""
+    try:
+        parsed = urlparse(url)
+    except (TypeError, ValueError):
+        return False
+    if parsed.scheme not in ("http", "https"):
+        return False
+    host = (parsed.hostname or "").lower()
+    if not host:
+        return False
+    return any(host == allowed or host.endswith("." + allowed) for allowed in PLUGIN_DOWNLOAD_ALLOWED_HOSTS)
+
+def get_plugin_file_path(hass_config_dir: str, device_type: int, sn8: str = "") -> Path:
+    """Get the cache path of a device plugin, mirroring the Lua naming scheme."""
+    base = f"T0x{device_type:02X}"
+    name = f"{base}_{sn8}.zip" if sn8 else f"{base}.zip"
+    return Path(hass_config_dir) / PLUGIN_DEVICE_PATH / name
+
+def _write_plugin_file(file_path: Path, content: bytes) -> Path:
+    """Write the plugin package, creating parent directories if needed."""
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    file_path.write_bytes(content)
+    return file_path
+
+async def ensure_plugin_file(
+    hass,
+    cloud,
+    appliance_code: int,
+    device_type: int,
+    sn8: str = "",
+    model_number: str = "0",
+    manufacturer_code: str = "0000",
+    smart_product_id: str = "",
+) -> Path | None:
+    """Download and cache the App plugin package of a device.
+
+    Returns the cached path, or None when the cloud offers no package for this
+    appliance. Every failure is swallowed: the plugin is only used for model
+    adaptation, so it must never break discovery or setup.
+    """
+    if not device_type:
+        return None
+    file_path = get_plugin_file_path(hass.config.config_dir, device_type, sn8)
+    if file_path.exists() and file_path.stat().st_size:
+        return file_path
+
+    plugin = await cloud.get_plugin_info(
+        appliance_code,
+        device_type,
+        sn8,
+        model_number,
+        manufacturer_code,
+        smart_product_id,
+    )
+    if not plugin:
+        _LOGGER.debug("plugin not offered: device_id=%s type=0x%02X", appliance_code, device_type)
+        return None
+
+    url = plugin.get("url")
+    if not url or not _is_allowed_plugin_url(url):
+        _LOGGER.warning("plugin url rejected: device_id=%s url=%s", appliance_code, url)
+        return None
+
+    try:
+        session = async_get_clientsession(hass)
+        async with session.get(url, timeout=30) as response:
+            if response.status != 200:
+                _LOGGER.warning("plugin download failed: device_id=%s HTTP %s", appliance_code, response.status)
+                return None
+            content = await response.read()
+    except Exception as e:
+        _LOGGER.warning("plugin download error: device_id=%s error=%s", appliance_code, e)
+        return None
+
+    if not content:
+        _LOGGER.warning("plugin download empty: device_id=%s url=%s", appliance_code, url)
+        return None
+
+    written = await hass.async_add_executor_job(_write_plugin_file, file_path, content)
+    _LOGGER.info(
+        "plugin downloaded: device_id=%s path=%s title=%s size=%d",
+        appliance_code,
+        written,
+        plugin.get("title"),
+        len(content),
+    )
+    return written
