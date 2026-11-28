@@ -2089,6 +2089,23 @@
           "off": "Off"
         }
       },
+      "purifier_wind_speed": {
+        "name": "Fan speed",
+        "state": {
+          "high": "High",
+          "low": "Low",
+          "middle": "Medium"
+        }
+      },
+      "purifier_work_mode": {
+        "name": "Work mode",
+        "state": {
+          "air_dry": "Air dry",
+          "hosting": "Smart hosting",
+          "manual": "Manual",
+          "sleep": "Sleep"
+        }
+      },
       "quantified_water_volume": {
         "name": "Quantified Water Volume",
         "state": {

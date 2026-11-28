@@ -2089,6 +2089,23 @@
           "off": "关闭"
         }
       },
+      "purifier_wind_speed": {
+        "name": "风速",
+        "state": {
+          "high": "高",
+          "low": "低",
+          "middle": "中"
+        }
+      },
+      "purifier_work_mode": {
+        "name": "工作模式",
+        "state": {
+          "air_dry": "风干",
+          "hosting": "智能托管",
+          "manual": "手动",
+          "sleep": "睡眠"
+        }
+      },
       "quantified_water_volume": {
         "name": "定量用水量",
         "state": {
