@@ -356,7 +356,9 @@ class CloudV2Device(BaseCloudDevice):
                     field = node.get("field")
                     if thing_key and field:
                         self._attr_to_field[attr] = (thing_key, field)
-                    if plat == "switch":
+                    if plat in ("switch", "lock"):
+                        # Lock entities send the generic "on"/"off" rationale
+                        # strings too, but Thing properties are real booleans.
                         self._bool_attrs.add(attr)
                 if node.get("section") and entity_key:
                     self._section_sensors.append(
@@ -367,6 +369,19 @@ class CloudV2Device(BaseCloudDevice):
                             node.get("list_match"),
                         )
                     )
+                # Dict-style options (grouped controls) write raw Thing
+                # properties that have no entity of their own, e.g. a noise
+                # preset sending autoModeSelection + wind speed offset.
+                options = node.get("options")
+                if isinstance(options, dict):
+                    for option_value in options.values():
+                        if not isinstance(option_value, dict):
+                            continue
+                        for option_key, value in option_value.items():
+                            if isinstance(value, (bool, int, float, str)):
+                                self._attr_to_thing.setdefault(
+                                    str(option_key), str(option_key)
+                                )
                 # Thing-style light configs use raw thing keys directly.
                 for key_name in ("power_key", "brightness_key", "effect_key"):
                     thing_key = node.get(key_name)
@@ -561,14 +576,17 @@ class CloudV2Device(BaseCloudDevice):
         properties: dict[str, Any],
         action_calls: list[tuple[str, str, dict[str, Any]]],
     ) -> None:
-        if properties:
+        # The Thing API rejects a batch body ("物模型参数校验失败"), so every
+        # property is written with its own PUT.
+        for key, value in properties.items():
             if not await self._cloud.set_thing_properties(
-                self._appliance_code, properties
+                self._appliance_code, {key: value}
             ):
                 _LOGGER.warning(
-                    "set thing properties failed: device_id=%s properties=%s",
+                    "set thing properties failed: device_id=%s property=%s value=%s",
                     self._device_id,
-                    list(properties),
+                    key,
+                    value,
                 )
         for module_code, action_code, body in action_calls:
             response = await self._cloud.perform_thing_action(
