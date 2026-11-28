@@ -60,6 +60,7 @@ from .midea_lib.discovery import discover_devices, DISCOVERY_TIMEOUT
 from .midea_lib.lua import write_file, decrypt_lua_code, ensure_lua_files
 from .midea_lib.setup import validate_device
 from .midea_lib.cloud import download_lua_file
+from .midea_lib.cloud_device import build_query_params
 from .midea_lib.exceptions import CloudLoginError, MideaError
 
 from .midea_lib.logger import prefix_logger
@@ -394,6 +395,15 @@ _FLOW_STRINGS: dict[str, dict[str, str]] = {
         "reason_no_lua": "Lua file unavailable",
         "reason_no_status": "Initialization query returned insufficient data",
         "reason_protocol": "V2 0x0110 protocol not supported",
+        "reason_cloud_no_lua": "Midea cloud has no Lua script for this model, cloud control unavailable",
+        "reason_cloud_unbound": "Device is not bound to this Meiju account",
+        "reason_cloud_offline": "Device is offline in the Midea app",
+        "reason_cloud_no_data": "The cloud returned no status data (device offline or not cloud-queryable)",
+        "offline_marker": "⚪ Offline",
+        "already_added_notice": (
+            "{count} discovered device(s) are already added to this integration "
+            "and are not listed again."
+        ),
         "pending_notice": "These device types are not adapted yet. They are added as LAN devices, but may not expose any entities. Please open a GitHub issue to ask the original author for support: ",
     },
     "zh-Hans": {
@@ -403,6 +413,12 @@ _FLOW_STRINGS: dict[str, dict[str, str]] = {
         "reason_no_lua": "无法获取 Lua 文件",
         "reason_no_status": "初始化查询数据长度不足",
         "reason_protocol": "V2 0x0110 协议暂不支持",
+        "reason_cloud_no_lua": "美居云端未提供该型号的 Lua 协议文件，无法通过云端控制",
+        "reason_cloud_unbound": "该设备未绑定到当前美居账号",
+        "reason_cloud_offline": "设备在美居显示离线",
+        "reason_cloud_no_data": "云端未返回状态数据（设备离线或该型号无法云端查询）",
+        "offline_marker": "⚪ 离线",
+        "already_added_notice": "局域网扫描到 {count} 个已配置设备，不重复列出。",
         "pending_notice": "以下设备类型尚未适配，已按局域网方式加入列表，可能没有可用实体。建议到 GitHub 提 Issue 找原作者支持：",
     },
 }
@@ -461,6 +477,18 @@ def _reason_strings(strings: dict) -> dict[str, str]:
             "Initialization query returned insufficient data",
         ),
         "protocol": strings.get("reason_protocol", "V2 0x0110 protocol not supported"),
+        "cloud_no_lua": strings.get(
+            "reason_cloud_no_lua", "Midea cloud has no Lua script for this model"
+        ),
+        "cloud_unbound": strings.get(
+            "reason_cloud_unbound", "Device is not bound to this Meiju account"
+        ),
+        "cloud_offline": strings.get(
+            "reason_cloud_offline", "Device is offline in the Midea app"
+        ),
+        "cloud_no_data": strings.get(
+            "reason_cloud_no_data", "The cloud returned no status data"
+        ),
     }
 
 async def _build_device_selector_options(flow) -> dict[str, str]:
@@ -473,6 +501,17 @@ async def _build_device_selector_options(flow) -> dict[str, str]:
         str(did): _device_label(flow._cloud_devices, info)
         for did, info in flow._supported_devices.items()
     }
+
+async def _build_already_added_notice(hass, count: int) -> str:
+    """Build the notice listing devices skipped because they are configured."""
+    if not count:
+        return ""
+    strings = await _get_flow_strings(hass)
+    template = strings.get(
+        "already_added_notice",
+        "{count} device(s) are already added and are not listed again.",
+    )
+    return "\n\n" + template.format(count=count)
 
 async def _build_pending_notice(
     hass, pending: dict, cloud_devices: dict
@@ -500,10 +539,14 @@ async def _build_unsupported_list(
         return ""
     strings = await _get_flow_strings(hass)
     marker = strings.get("unsupported_marker", "[Unsupported]")
+    offline_marker = strings.get("offline_marker", "⚪ Offline")
     reasons = _reason_strings(strings)
     lines = [
-        f"- {marker} {_device_label(cloud_devices, discovered[did])} | {reasons[reason]}"
+        f"- {offline_marker if reason == 'cloud_offline' else marker} "
+        f"{_device_label(cloud_devices, discovered[did])} | "
+        f"{reasons.get(reason) or reasons['no_status']}"
         for did, reason in unsupported.items()
+        if did in discovered
     ]
     return "\n\n" + "\n".join(lines)
 
@@ -670,17 +713,26 @@ async def _probe_cloud_v2(flow, device_id: int, info: dict) -> bool:
     )
     return True
 
-async def _probe_cloud_v1(flow, device_id: int, info: dict) -> bool:
+async def _probe_cloud_v1(flow, device_id: int, info: dict) -> str | None:
     """Probe whether a discovered device is usable through cloud_v1.
 
     Only the Meiju account is supported: the device must be bound to the
     account and answer the cloud Lua status query (/mjl/v1/device/status/lua/get,
     ref: midea_odm_device's v1_luaget devices).
+
+    Returns None when the device answers, otherwise the unsupported reason
+    ("" when the failure is generic and the caller should keep its own reason).
     """
     meiju = getattr(flow, "_user_cloud", None)
     cloud_devices = getattr(flow, "_cloud_devices", None) or {}
-    if meiju is None or device_id not in cloud_devices:
-        return False
+    if meiju is None:
+        return ""
+    if device_id not in cloud_devices:
+        _LOGGER.debug(
+            "cloud_v1 probe skipped: device_id=%s reason=not_in_account",
+            device_id,
+        )
+        return "cloud_unbound"
 
     device_type = info.get(CONF_DEVICE_TYPE)
     cloud_device = cloud_devices.get(device_id) or {}
@@ -689,25 +741,48 @@ async def _probe_cloud_v1(flow, device_id: int, info: dict) -> bool:
     category = info.get(CONF_CATEGORY) or cloud_device.get("category", "")
 
     mapping = get_device_mapping(device_type, model, sn8, category)
-    initial_query = mapping.get("initial_query") or [{}]
-    query = next((q for q in initial_query if isinstance(q, dict)), {})
+    # Same query conversion as CloudV1Device so the probe sends the queries the
+    # runtime polling loop will send (e.g. {"db"} -> {"query_type": "db"}).
+    queries = [
+        build_query_params(query_config)
+        for query_config in (mapping.get("initial_query") or [{}])
+    ] or [{}]
 
-    try:
-        response = await meiju.get_device_status(device_id, query)
-    except Exception as err:
+    reason = ""
+    previous_error = getattr(meiju, "_last_error", None)
+    for query in queries:
+        try:
+            response = await meiju.get_device_status(device_id, query)
+        except Exception as err:
+            _LOGGER.debug(
+                "cloud_v1 probe failed: device_id=%s query=%s error=%s",
+                device_id, query, err,
+            )
+            continue
+        if response:
+            _LOGGER.info("cloud_v1 probe ok: device_id=%s query=%s", device_id, query)
+            return None
+        last_error = getattr(meiju, "_last_error", None)
+        if not last_error or last_error == previous_error:
+            # No fresh cloud error for this query: the cloud answered but had
+            # no status data (typical for an offline device).
+            reason = reason or "cloud_no_data"
+            continue
+        previous_error = last_error
         _LOGGER.debug(
-            "cloud_v1 probe failed: device_id=%s error=%s",
-            device_id, err,
+            "cloud_v1 probe failed: device_id=%s query=%s code=%s msg=%s",
+            device_id, query, last_error[0], last_error[1],
         )
-        return False
-    if not response:
-        _LOGGER.debug(
-            "cloud_v1 probe failed: device_id=%s reason=no_response",
-            device_id,
-        )
-        return False
-    _LOGGER.info("cloud_v1 probe ok: device_id=%s", device_id)
-    return True
+        # 1318 / "lua script not exist": Midea has no Lua script for this
+        # model, so neither the cloud status nor the control endpoint can
+        # drive it (cloud_v1 is Lua-based by design).
+        if last_error[0] == 1318 or "lua" in str(last_error[1] or "").lower():
+            reason = "cloud_no_lua"
+        elif last_error[0] == 1307 or "offline" in str(last_error[1] or "").lower():
+            reason = "cloud_offline"
+        else:
+            reason = reason or "cloud_no_data"
+    return reason
 
 def _build_cloud_device_data(info: dict, cloud_device: dict) -> dict:
     """Build device_data for a cloud-connected device (no LAN resources)."""
@@ -796,6 +871,84 @@ async def _resolve_0110_cloud_ids(flow) -> None:
         resolved[cloud_id] = info
     flow._discovered_devices = resolved
 
+async def _merge_cloud_only_devices(flow) -> None:
+    """Add account-bound devices the LAN scan could not find as candidates.
+
+    Some cloud devices never answer the LAN discovery protocol, so hybrid
+    mode would silently lose them: the candidate list only holds discovered
+    devices. Add them as cloud candidates (``cloud_only``) so the cloud_v2 /
+    cloud_v1 probes can decide how to add them.
+    """
+    if not getattr(flow, "_hybrid", True):
+        return
+    cloud_devices = getattr(flow, "_cloud_devices", None) or {}
+    if not cloud_devices:
+        return
+    configured_ids = getattr(flow, "_configured_device_ids", None) or set()
+    # Only offer devices of the home the integration already covers: the
+    # account may hold appliances of other homes the user does not want here.
+    current_homes = {
+        cloud_devices[did].get("home_name")
+        for did in configured_ids
+        if did in cloud_devices and cloud_devices[did].get("home_name")
+    }
+    if not current_homes:
+        current_homes = {
+            d.get(CONF_HOME_NAME)
+            for d in (getattr(flow, "_devices_data", None) or [])
+            if d.get(CONF_HOME_NAME)
+        }
+    # 0x0110 LAN replies carry no usable cloud id; skipping by type avoids
+    # listing the same appliance twice.
+    unresolved_types = {
+        info.get(CONF_DEVICE_TYPE)
+        for info in flow._discovered_devices.values()
+        if info.get("unsupported_protocol")
+    }
+
+    added = 0
+    for cloud_id, cloud_device in cloud_devices.items():
+        if cloud_id in flow._discovered_devices or cloud_id in configured_ids:
+            continue
+        home_name = cloud_device.get("home_name") or ""
+        if current_homes and home_name not in current_homes:
+            _LOGGER.debug(
+                "cloud-only candidate skipped: device_id=%s reason=other_home home=%s",
+                cloud_id, home_name,
+            )
+            continue
+        device_type = cloud_device.get("type") or 0
+        if device_type in unresolved_types:
+            continue
+        flow._discovered_devices[cloud_id] = {
+            CONF_DEVICE_ID: cloud_id,
+            CONF_IP: "",
+            CONF_DEVICE_TYPE: device_type,
+            CONF_SN: cloud_device.get("sn") or "",
+            CONF_SN8: cloud_device.get("sn8") or "",
+            CONF_PROTOCOL: ProtocolVersion.V3,
+            CONF_PRODUCT_MODEL: cloud_device.get("model") or "",
+            CONF_MODEL_NUMBER: cloud_device.get("model_number") or "",
+            CONF_DEVICE_NAME: cloud_device.get("name") or "",
+            CONF_MANUFACTURER_CODE: cloud_device.get("manufacturer_code") or "0000",
+            CONF_CATEGORY: cloud_device.get("category") or "",
+            "cloud_only": True,
+            # The cloud already knows whether the appliance is online; probing
+            # an offline device only produces misleading failures.
+            "cloud_offline": not cloud_device.get("online", True),
+        }
+        added += 1
+    if added:
+        _LOGGER.info("cloud-only candidates added: count=%d", added)
+
+def _log_classified(device_id: int, info: dict, bucket: str) -> None:
+    """Log the classification result of a single discovered device."""
+    device_type = info.get(CONF_DEVICE_TYPE) or 0
+    _LOGGER.info(
+        "device classified: device_id=%s ip=%s type=0x%02X bucket=%s",
+        device_id, info.get(CONF_IP, "-"), device_type, bucket,
+    )
+
 async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
     """Classify discovered devices into (supported, unsupported, pending).
 
@@ -821,39 +974,68 @@ async def _classify_discovered_devices(flow) -> tuple[dict, dict, dict]:
     # so the cloud_v1 probe and the stored config entry use the appliance id.
     if hybrid:
         await _resolve_0110_cloud_ids(flow)
+        await _merge_cloud_only_devices(flow)
 
     for did, info in flow._discovered_devices.items():
-        # V2 0x0110 devices cannot speak TCP, so the LAN probe is pointless.
-        unsupported_protocol = bool(info.get("unsupported_protocol"))
-        status = "protocol" if unsupported_protocol else ""
+        try:
+            # V2 0x0110 devices cannot speak TCP, so the LAN probe is pointless.
+            unsupported_protocol = bool(info.get("unsupported_protocol"))
+            status = "protocol" if unsupported_protocol else ""
 
-        # 1) cloud_v2 (Thing Model) takes priority over LAN. V2 0x0110
-        # devices skip straight to the cloud_v1 fallback below.
-        if hybrid and not unsupported_protocol and await _probe_cloud_v2(flow, did, info):
-            info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V2
-            supported[did] = info
-            continue
-
-        # 2) LAN validation (existing behavior)
-        if not unsupported_protocol:
-            status = await _probe_device_resources(flow, info)
-            if status == "ok":
-                # Unadapted types are still added over LAN, but they are also
-                # listed in the notice asking the author for support.
-                if info.get(CONF_DEVICE_TYPE) not in DEVICE_TYPES:
-                    pending[did] = info
-                info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_LAN
-                supported[did] = info
+            # A device the cloud reports offline cannot be probed: neither the
+            # Thing properties nor the cloud Lua query returns data while it is
+            # offline, so label it as offline instead of unsupported.
+            if info.get("cloud_offline"):
+                unsupported[did] = "cloud_offline"
+                _log_classified(did, info, "cloud_offline")
                 continue
 
-        # 3) cloud_v1 fallback for every device the LAN path cannot handle
-        if hybrid and await _probe_cloud_v1(flow, did, info):
-            info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V1
-            supported[did] = info
-            continue
+            # 1) cloud_v2 (Thing Model) takes priority over LAN. V2 0x0110
+            # devices skip straight to the cloud_v1 fallback below.
+            if hybrid and not unsupported_protocol and await _probe_cloud_v2(flow, did, info):
+                info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V2
+                supported[did] = info
+                _log_classified(did, info, "cloud_v2")
+                continue
 
-        unsupported[did] = status
+            # 2) LAN validation (existing behavior). Cloud-only candidates have
+            # no LAN address, so they go straight to the cloud_v1 fallback.
+            if not unsupported_protocol and not info.get("cloud_only"):
+                status = await _probe_device_resources(flow, info)
+                if status == "ok":
+                    # Unadapted types are still added over LAN, but they are also
+                    # listed in the notice asking the author for support.
+                    if info.get(CONF_DEVICE_TYPE) not in DEVICE_TYPES:
+                        pending[did] = info
+                    info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_LAN
+                    supported[did] = info
+                    _log_classified(did, info, "lan")
+                    continue
 
+            # 3) cloud_v1 fallback for every device the LAN path cannot handle
+            if hybrid:
+                cloud_reason = await _probe_cloud_v1(flow, did, info)
+                if cloud_reason is None:
+                    info[CONF_CONNECTION_TYPE] = CONNECTION_TYPE_CLOUD_V1
+                    supported[did] = info
+                    _log_classified(did, info, "cloud_v1")
+                    continue
+                status = status or cloud_reason
+
+            unsupported[did] = status
+            _log_classified(did, info, f"unsupported({status or 'unknown'})")
+        except Exception as err:  # noqa: BLE001 - a probe must never drop a device
+            # Keep the device visible in the unsupported list instead of
+            # aborting the whole step (which hides every device from the user).
+            _LOGGER.warning(
+                "device probe error: device_id=%s error=%s", did, err,
+            )
+            unsupported[did] = ""
+
+    _LOGGER.info(
+        "classification done: supported=%d unsupported=%d pending=%d",
+        len(supported), len(unsupported), len(pending),
+    )
     return supported, unsupported, pending
 
 
@@ -877,6 +1059,8 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._unsupported_devices: dict = {}
         self._pending_devices: dict = {}
         self._hybrid: bool = True
+        self._configured_device_ids: set = set()
+        self._already_added_count: int = 0
 
     async def _cleanup_session(self):
         if self._session:
@@ -1102,19 +1286,22 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             discover_devices, DISCOVERY_TIMEOUT, self._scan_address, self._scan_mode
         )
 
-        if not self._discovered_devices:
+        if not self._discovered_devices and not self._hybrid:
             return self.async_show_form(
                 step_id="discover",
                 errors={"base": "no_devices_found"},
             )
 
         existing_device_ids = {d.get(CONF_DEVICE_ID) for d in self._devices_data}
+        self._configured_device_ids = existing_device_ids
+        discovered_count = len(self._discovered_devices)
         self._discovered_devices = {
             did: info for did, info in self._discovered_devices.items()
             if did not in existing_device_ids
         }
+        self._already_added_count = discovered_count - len(self._discovered_devices)
 
-        if not self._discovered_devices:
+        if not self._discovered_devices and not self._hybrid:
             return self.async_show_form(
                 step_id="discover",
                 errors={"base": "all_devices_added"},
@@ -1129,7 +1316,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._cloud_devices = await self._user_cloud.list_appliances(home_id=None) or {}
             lua_common_dir = get_lua_common_path(self.hass.config.config_dir)
             await self._download_common_lua_files(lua_common_dir)
-            return await self.async_step_select_device()
+            return await self._async_after_discovery()
 
         if self._session is None:
             self._session = ClientSession()
@@ -1169,6 +1356,28 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 await self._cleanup_session()
                 return self.async_abort(reason="auth_failed")
 
+        return await self._async_after_discovery()
+
+    async def _async_after_discovery(self) -> FlowResult:
+        """Merge cloud-only candidates and show the device selection step.
+
+        Hybrid mode also offers account-bound devices that never answered the
+        LAN scan, so a device that is only reachable through the cloud is not
+        silently missing from the candidate list.
+        """
+        if self._hybrid:
+            await _merge_cloud_only_devices(self)
+        if not self._discovered_devices:
+            return self.async_show_form(
+                step_id="discover",
+                errors={
+                    "base": (
+                        "all_devices_added"
+                        if self._already_added_count
+                        else "no_devices_found"
+                    )
+                },
+            )
         return await self.async_step_select_device()
 
     async def async_step_select_device(
@@ -1191,6 +1400,7 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_select_device_continue(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
+        options = await _build_device_selector_options(self)
         if user_input is not None:
             allowed = set(self._supported_devices)
             selected = [
@@ -1204,21 +1414,23 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 ]
                 self._current_device_index = 0
                 return await self.async_step_get_token()
+            if not options:
+                return self.async_abort(reason="no_devices")
 
-        all_device_ids = [
-            str(did)
-            for did in self._supported_devices
-        ]
-        return self.async_show_form(
-            step_id="select_device_continue",
-            data_schema=vol.Schema({
+        # Without addable devices there is nothing to select: show only the
+        # description (offline / unsupported notices) instead of an empty
+        # multi-select field.
+        data_schema = None
+        if options:
+            data_schema = vol.Schema({
                 vol.Required(
                     "devices",
-                    description={"suggested_value": all_device_ids}
-                ): cv.multi_select(
-                    await _build_device_selector_options(self)
-                ),
-            }),
+                    description={"suggested_value": list(options)},
+                ): cv.multi_select(options),
+            })
+        return self.async_show_form(
+            step_id="select_device_continue",
+            data_schema=data_schema,
             description_placeholders={
                 "pending_notice": await _build_pending_notice(
                     self.hass, self._pending_devices, self._cloud_devices,
@@ -1226,6 +1438,9 @@ class MideaSmartHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "unsupported_list": await _build_unsupported_list(
                     self.hass, self._discovered_devices, self._unsupported_devices,
                     self._cloud_devices,
+                ),
+                "already_added_notice": await _build_already_added_notice(
+                    self.hass, self._already_added_count,
                 ),
             },
         )
@@ -1763,6 +1978,8 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
         self._unsupported_devices: dict = {}
         self._pending_devices: dict = {}
         self._hybrid: bool = True
+        self._configured_device_ids: set = set()
+        self._already_added_count: int = 0
 
     async def _validate_token_key(
         self,
@@ -2219,19 +2436,22 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
             discover_devices, DISCOVERY_TIMEOUT, scan_address, scan_mode
         )
 
-        if not self._discovered_devices:
+        if not self._discovered_devices and not self._hybrid:
             return self.async_show_form(
                 step_id="add_device_auto",
                 errors={"base": "no_devices_found"},
             )
 
         existing_device_ids = {d.get(CONF_DEVICE_ID) for d in self._devices_data}
+        self._configured_device_ids = existing_device_ids
+        discovered_count = len(self._discovered_devices)
         self._discovered_devices = {
             did: info for did, info in self._discovered_devices.items()
             if did not in existing_device_ids
         }
+        self._already_added_count = discovered_count - len(self._discovered_devices)
 
-        if not self._discovered_devices:
+        if not self._discovered_devices and not self._hybrid:
             return self.async_show_form(
                 step_id="add_device_auto",
                 errors={"base": "all_devices_added"},
@@ -2278,6 +2498,21 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 _LOGGER.error("cloud login setup failed: error=%s", err)
                 await self._cleanup_session()
 
+        # Hybrid mode also offers account-bound devices the LAN scan missed.
+        if self._hybrid:
+            await _merge_cloud_only_devices(self)
+        if not self._discovered_devices:
+            return self.async_show_form(
+                step_id="add_device_auto",
+                errors={
+                    "base": (
+                        "all_devices_added"
+                        if self._already_added_count
+                        else "no_devices_found"
+                    )
+                },
+            )
+
         return await self.async_step_select_device_option()
 
     async def async_step_select_device_option(
@@ -2300,6 +2535,7 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_select_device_continue_option(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
+        options = await _build_device_selector_options(self)
         if user_input is not None:
             allowed = set(self._supported_devices)
             selected = [
@@ -2313,21 +2549,23 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 ]
                 self._current_device_index = 0
                 return await self.async_step_get_token_option()
+            if not options:
+                return self.async_abort(reason="no_devices")
 
-        all_device_ids = [
-            str(did)
-            for did in self._supported_devices
-        ]
-        return self.async_show_form(
-            step_id="select_device_continue_option",
-            data_schema=vol.Schema({
+        # Without addable devices there is nothing to select: show only the
+        # description (offline / unsupported notices) instead of an empty
+        # multi-select field.
+        data_schema = None
+        if options:
+            data_schema = vol.Schema({
                 vol.Required(
                     "devices",
-                    description={"suggested_value": all_device_ids}
-                ): cv.multi_select(
-                    await _build_device_selector_options(self)
-                ),
-            }),
+                    description={"suggested_value": list(options)},
+                ): cv.multi_select(options),
+            })
+        return self.async_show_form(
+            step_id="select_device_continue_option",
+            data_schema=data_schema,
             description_placeholders={
                 "pending_notice": await _build_pending_notice(
                     self.hass, self._pending_devices, self._cloud_devices,
@@ -2335,6 +2573,9 @@ class MideaSmartHomeOptionsFlowHandler(config_entries.OptionsFlow):
                 "unsupported_list": await _build_unsupported_list(
                     self.hass, self._discovered_devices, self._unsupported_devices,
                     self._cloud_devices,
+                ),
+                "already_added_notice": await _build_already_added_notice(
+                    self.hass, self._already_added_count,
                 ),
             },
         )
