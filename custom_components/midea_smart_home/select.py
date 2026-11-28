@@ -158,8 +158,17 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
                     match = False
                     break
             if match:
-                return mode, False
+                return self._option_label(mode), False
         return None, False
+
+    def _option_label(self, option: str) -> str:
+        """Translate a raw option key into its displayed label."""
+        if not self._options_translation_keys or option not in self._raw_options:
+            return option
+        try:
+            return self._attr_options[self._raw_options.index(option)]
+        except (ValueError, IndexError):
+            return option
 
     def _extract_deepest_value(self, config: dict) -> Any:
         for value in config.values():
@@ -222,8 +231,16 @@ class MideaSelectEntity(MideaBaseEntity, SelectEntity):
 
         merged_command = {}
 
-        if isinstance(self._options_map, dict) and option in self._options_map:
-            option_value = self._options_map[option]
+        if isinstance(self._options_map, dict):
+            # The selected value may be the translated label; map it back to the
+            # raw option key used by the options map.
+            option_key = option
+            if option_key not in self._options_map:
+                if option in self._attr_options:
+                    option_key = self._raw_options[self._attr_options.index(option)]
+                else:
+                    return
+            option_value = self._options_map.get(option_key)
             if isinstance(option_value, dict):
                 merged_command.update(option_value)
 
